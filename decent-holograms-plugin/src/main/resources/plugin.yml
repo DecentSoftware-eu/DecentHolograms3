@@ -1,0 +1,13 @@
+main: eu.decent.holograms.DecentHologramsPlugin
+name: DecentHolograms
+description: 'A lightweight yet very powerful hologram plugin.'
+version: '${version}'
+softdepend:
+  - PlaceholderAPI
+  - HeadDatabase
+api-version: 1.13
+prefix: DecentHolograms
+author: d0by
+website: github.decentsoftware.eu
+
+commands:

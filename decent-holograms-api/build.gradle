@@ -1,0 +1,8 @@
+repositories {
+    maven { url = 'https://mvnrepository.com/artifact/net.md-5/bungeecord-api' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    implementation 'net.md-5:bungeecord-chat:1.16-R0.4'
+}

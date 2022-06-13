@@ -1,0 +1,65 @@
+# # # # # # # # # # # # # # # # #
+#
+#  Welcome to DecentHolograms config.yml.
+#
+# # # # # # # # # #
+
+# Check for updates on startup?
+check-for-updates: true
+
+# Some default values.
+defaults:
+  menu-title: 'Unnamed Menu'
+
+# Timezone and formats of date and time.
+datetime:
+  time-format: 'HH:mm:ss'
+  date-format: 'dd:MM:yyyy'
+  zone: GMT+0
+
+
+
+# # # # # # # # # # # # # # # # #
+#
+#  Pinger
+#
+#   - Setup servers, that will automatically be pinged by the plugin
+#   making it available to use built-in placeholders in order to display
+#   information about them like online players or status.
+#
+# # # # # # # # # #
+
+pinger:
+  enabled: true
+  # Update interval in ticks (20 ticks = 1 second)
+  update-interval: 20
+  # Socket timeout (in ms) after which the server is assumed to be offline.
+  timeout: 500
+  # List of servers to ping. Format: <name>:<ip>:<port>
+  servers:
+    - 'Survival:127.0.0.1:25565'
+    - 'Lobby-01:127.0.0.1:25566'
+  # Define the look of status returned by the '{status: <server>}' placeholder.
+  status:
+    online: '&aOnline'
+    offline: '&cOffline'
+  # Some default values for offline servers.
+  defaults:
+    motd: 'This server is offline.'
+    max-players: 0
+  # Remove the leading and trailing spaced in MOTD?
+  trim-motd: true
+
+
+
+# # # # # # # # # # # # # # # # #
+#
+#  Messages
+#
+#   - You can edit any message here
+#
+# # # # # # # # # #
+
+messages:
+  # Use '{prefix}' in other messages, and it will be replaced with this.
+  prefix: '&8[&3DecentHolograms&8] &7'

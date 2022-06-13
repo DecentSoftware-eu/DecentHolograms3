@@ -1,0 +1,10 @@
+
+actions:
+  - type: title
+    title: "Example hologram"
+    subtitle: "Example hologram subtitle"
+    fade_in: 0.5
+    stay: 0.5
+    fade_out: 0.5
+  - type: message
+    message: "Example hologram message"
