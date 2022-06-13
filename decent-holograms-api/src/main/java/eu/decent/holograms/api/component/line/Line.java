@@ -2,7 +2,7 @@ package eu.decent.holograms.api.component.line;
 
 import eu.decent.holograms.api.component.common.IActionable;
 import eu.decent.holograms.api.component.common.IConditional;
-import eu.decent.holograms.api.component.common.IMovable;
+import eu.decent.holograms.api.component.common.PositionManager;
 import eu.decent.holograms.api.component.page.Page;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  */
-public interface Line extends IMovable, IActionable, IConditional {
+public interface Line extends IActionable, IConditional {
 
     /**
      * Get the parent {@link Page} of this line.
@@ -39,6 +39,14 @@ public interface Line extends IMovable, IActionable, IConditional {
      */
     @NotNull
     LineSettings getSettings();
+
+    /**
+     * Get the position manager of this line.
+     *
+     * @return The position manager of this line.
+     * @see PositionManager
+     */
+    PositionManager getPositionManager();
 
     /**
      * Get the raw content of this line.

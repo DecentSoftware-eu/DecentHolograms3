@@ -3,7 +3,7 @@ package eu.decent.holograms.api.component.hologram;
 import eu.decent.holograms.api.component.common.IActionable;
 import eu.decent.holograms.api.component.common.IConditional;
 import eu.decent.holograms.api.component.common.INameable;
-import eu.decent.holograms.api.component.common.IMovable;
+import eu.decent.holograms.api.component.common.PositionManager;
 
 /**
  * This class represents a hologram. A hologram is a collection of components
@@ -12,12 +12,11 @@ import eu.decent.holograms.api.component.common.IMovable;
  *
  * @author d0by
  */
-public interface Hologram extends INameable, IMovable, IActionable, IConditional {
+public interface Hologram extends INameable, IActionable, IConditional {
 
     // TODO:
     //  animations
     //  emission
-    //  location
 
     /**
      * Get the {@link HologramSettings} of this hologram.
@@ -42,5 +41,13 @@ public interface Hologram extends INameable, IMovable, IActionable, IConditional
      * @see HologramPageHolder
      */
     HologramPageHolder getPageHolder();
+
+    /**
+     * Get the position manager of this hologram.
+     *
+     * @return The position manager of this hologram.
+     * @see PositionManager
+     */
+    PositionManager getPositionManager();
 
 }

@@ -2,11 +2,13 @@ package eu.decent.holograms.components.line;
 
 import eu.decent.holograms.actions.DefaultActionHolder;
 import eu.decent.holograms.api.actions.ActionHolder;
+import eu.decent.holograms.api.component.common.PositionManager;
 import eu.decent.holograms.api.component.line.Line;
 import eu.decent.holograms.api.component.line.LineSettings;
 import eu.decent.holograms.api.component.line.LineType;
 import eu.decent.holograms.api.component.page.Page;
 import eu.decent.holograms.api.conditions.ConditionHolder;
+import eu.decent.holograms.components.common.DefaultPositionManager;
 import eu.decent.holograms.conditions.DefaultConditionHolder;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -15,11 +17,11 @@ public class DefaultLine implements Line {
 
     private final Page parent;
     private final LineSettings settings;
+    private final PositionManager positionManager;
     private final ActionHolder actionHolder;
     private final ConditionHolder conditionHolder;
     private LineType type;
     private String content;
-    private Location location;
 
     /**
      * Creates a new instance of {@link DefaultLine}.
@@ -30,8 +32,8 @@ public class DefaultLine implements Line {
      */
     public DefaultLine(@NotNull Page parent, @NotNull Location location, @NotNull String content) {
         this.parent = parent;
-        this.location = location;
         this.type = LineType.TEXT;
+        this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultLineSettings();
         this.actionHolder = new DefaultActionHolder();
         this.conditionHolder = new DefaultConditionHolder();
@@ -48,6 +50,11 @@ public class DefaultLine implements Line {
     @Override
     public LineSettings getSettings() {
         return settings;
+    }
+
+    @Override
+    public PositionManager getPositionManager() {
+        return positionManager;
     }
 
     @NotNull
@@ -77,19 +84,6 @@ public class DefaultLine implements Line {
         this.content = content;
 
         // TODO: parse content and set type
-    }
-
-    @NotNull
-    @Override
-    public Location getLocation() {
-        return location;
-    }
-
-    @Override
-    public void setLocation(@NotNull Location location) {
-        this.location = location;
-
-        // TODO: teleport the line
     }
 
 }
