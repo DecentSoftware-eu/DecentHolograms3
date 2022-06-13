@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 
 /**
  * This class represents a custom placeholder.
+ *
+ * @author d0by
  */
 public interface Placeholder {
 

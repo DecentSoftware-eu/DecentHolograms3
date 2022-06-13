@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This interface represents a condition.
+ *
+ * @author d0by
  */
 public interface Condition {
 

@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * This class represents a list with some useful methods.
  *
  * @param <T> Type of the items.
+ * @author d0by
  */
 @SuppressWarnings("unused")
 public class DList<T> extends ArrayList<T> {

@@ -16,7 +16,7 @@ public interface Hologram extends INameable, IActionable, IConditional {
 
     // TODO:
     //  animations
-    //  emission
+    //  lighting
 
     /**
      * Get the {@link HologramSettings} of this hologram.

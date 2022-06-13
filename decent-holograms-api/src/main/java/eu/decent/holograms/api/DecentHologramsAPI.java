@@ -4,6 +4,9 @@ import org.jetbrains.annotations.ApiStatus;
 
 /**
  * This class represents a provider of the current {@link DecentHolograms} instance.
+ *
+ * @author d0by
+ * @since 3.0.0
  */
 public final class DecentHologramsAPI {
 

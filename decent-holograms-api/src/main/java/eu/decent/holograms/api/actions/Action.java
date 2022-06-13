@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents an action, that can be executed for a specific profile.
+ *
+ * @author d0by
  */
 public interface Action {
 

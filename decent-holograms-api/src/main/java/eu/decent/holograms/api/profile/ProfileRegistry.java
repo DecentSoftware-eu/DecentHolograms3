@@ -1,12 +1,14 @@
 package eu.decent.holograms.api.profile;
 
-import eu.decent.holograms.api.utils.collection.DictRegistry;
+import eu.decent.holograms.api.utils.collection.Registry;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a registry of profiles.
+ *
+ * @author d0by
  */
-public abstract class ProfileRegistry extends DictRegistry<String, Profile> {
+public abstract class ProfileRegistry extends Registry<String, Profile> {
 
     /**
      * Creates a new profile for the given player.

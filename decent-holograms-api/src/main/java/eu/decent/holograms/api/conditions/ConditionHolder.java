@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a holder for conditions.
+ *
+ * @author d0by
  */
 public abstract class ConditionHolder extends DList<Condition> {
 

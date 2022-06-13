@@ -174,7 +174,7 @@ public interface HologramVisibilityManager {
 
         // Check if the player is in the view distance.
         boolean inViewDistance = M.inDistance(
-                getParent().getLocation(),
+                getParent().getPositionManager().getActualLocation(),
                 playerObj.getLocation(),
                 getParent().getSettings().getViewDistance()
         );

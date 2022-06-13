@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * Utility class for math operations.
  *
  * @author d0by
+ * @since 3.0.0
  */
 @UtilityClass
 public final class M {
@@ -56,7 +57,7 @@ public final class M {
      */
     @NotNull
     public static Location addOffsetsConsideringRotation(@NotNull Location location, double x, double y, double z) {
-        // TODO: test
+        // TESTME
         float yaw = location.getYaw();
         double x2 = location.getX() + x * Math.cos(Math.toRadians(yaw)) + z * Math.sin(Math.toRadians(yaw));
         double z2 = location.getZ() - x * Math.sin(Math.toRadians(yaw)) + z * Math.cos(Math.toRadians(yaw));

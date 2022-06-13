@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a holder for actions.
+ *
+ * @author d0by
  */
 public abstract class ActionHolder extends DList<Action> {
 

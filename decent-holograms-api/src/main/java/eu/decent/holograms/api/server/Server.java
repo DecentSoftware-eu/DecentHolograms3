@@ -5,6 +5,8 @@ import eu.decent.holograms.api.component.common.ITicked;
 
 /**
  * This class represents a server.
+ *
+ * @author d0by
  */
 public interface Server extends ITicked {
 

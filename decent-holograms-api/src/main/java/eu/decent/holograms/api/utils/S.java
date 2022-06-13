@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 
 /**
  * Utility class for scheduling tasks.
+ *
+ * @author d0by
  */
 @UtilityClass
 @SuppressWarnings({"unused", "deprecation"})
