@@ -3,7 +3,7 @@ package eu.decent.holograms.conditions.impl;
 import eu.decent.holograms.api.profile.Profile;
 import eu.decent.holograms.conditions.DefaultCondition;
 import eu.decent.holograms.conditions.ConditionType;
-import eu.decent.holograms.hooks.PAPI;
+import eu.decent.holograms.api.hooks.PAPI;
 import org.jetbrains.annotations.NotNull;
 
 public class ComparingCondition extends DefaultCondition {

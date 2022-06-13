@@ -6,7 +6,7 @@ import eu.decent.holograms.api.DecentHologramsAPI;
 import eu.decent.holograms.api.nms.NMSAdapter;
 import eu.decent.holograms.api.profile.Profile;
 import eu.decent.holograms.api.utils.Common;
-import eu.decent.holograms.hooks.PAPI;
+import eu.decent.holograms.api.hooks.PAPI;
 import eu.decent.holograms.utils.BungeeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

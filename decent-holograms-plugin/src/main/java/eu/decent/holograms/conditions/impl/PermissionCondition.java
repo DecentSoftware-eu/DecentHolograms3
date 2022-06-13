@@ -2,7 +2,7 @@ package eu.decent.holograms.conditions.impl;
 
 import eu.decent.holograms.api.profile.Profile;
 import eu.decent.holograms.conditions.DefaultCondition;
-import eu.decent.holograms.hooks.PAPI;
+import eu.decent.holograms.api.hooks.PAPI;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

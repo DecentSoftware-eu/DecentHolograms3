@@ -1,4 +1,4 @@
-package eu.decent.holograms.hooks;
+package eu.decent.holograms.api.hooks;
 
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.Bukkit;

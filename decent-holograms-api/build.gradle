@@ -1,8 +1,12 @@
 repositories {
+    maven { url = 'https://jitpack.io' }
     maven { url = 'https://mvnrepository.com/artifact/net.md-5/bungeecord-api' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
     implementation 'net.md-5:bungeecord-chat:1.16-R0.4'
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.1'
+    compileOnly 'com.arcaniax:HeadDatabase-API:1.3.1'
 }

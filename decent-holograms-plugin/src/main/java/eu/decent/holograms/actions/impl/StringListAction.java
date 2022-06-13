@@ -5,7 +5,7 @@ import eu.decent.holograms.actions.ActionType;
 import eu.decent.holograms.api.DecentHologramsAPI;
 import eu.decent.holograms.api.profile.Profile;
 import eu.decent.holograms.api.utils.Common;
-import eu.decent.holograms.hooks.PAPI;
+import eu.decent.holograms.api.hooks.PAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package eu.decent.holograms.hooks;
+package eu.decent.holograms.api.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -31,10 +31,6 @@ public final class PAPI {
      */
     public static String setPlaceholders(Player player, String string) {
         if (isAvailable()) {
-            // We have to hide the colour codes to avoid their replacement by PAPI.
-//            string = string.replace("&", "§");
-//            string = string.replace("§", "&");
-            // TESTME
             return PlaceholderAPI.setPlaceholders(player, string);
         }
         return string;
