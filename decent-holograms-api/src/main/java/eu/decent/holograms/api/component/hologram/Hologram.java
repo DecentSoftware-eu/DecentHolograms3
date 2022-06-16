@@ -4,6 +4,7 @@ import eu.decent.holograms.api.component.common.IActionable;
 import eu.decent.holograms.api.component.common.IConditional;
 import eu.decent.holograms.api.component.common.INameable;
 import eu.decent.holograms.api.component.common.PositionManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a hologram. A hologram is a collection of components
@@ -24,6 +25,7 @@ public interface Hologram extends INameable, IActionable, IConditional {
      * @return The {@link HologramSettings} of this hologram.
      * @see HologramSettings
      */
+    @NotNull
     HologramSettings getSettings();
 
     /**
@@ -32,6 +34,7 @@ public interface Hologram extends INameable, IActionable, IConditional {
      * @return The {@link HologramVisibilityManager} of this hologram.
      * @see HologramVisibilityManager
      */
+    @NotNull
     HologramVisibilityManager getVisibilityManager();
 
     /**
@@ -40,6 +43,7 @@ public interface Hologram extends INameable, IActionable, IConditional {
      * @return The {@link HologramPageHolder} of this hologram.
      * @see HologramPageHolder
      */
+    @NotNull
     HologramPageHolder getPageHolder();
 
     /**
@@ -48,6 +52,7 @@ public interface Hologram extends INameable, IActionable, IConditional {
      * @return The position manager of this hologram.
      * @see PositionManager
      */
+    @NotNull
     PositionManager getPositionManager();
 
 }

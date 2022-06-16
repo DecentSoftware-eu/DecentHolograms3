@@ -1,6 +1,7 @@
 package eu.decent.holograms.api.component.common;
 
 import eu.decent.holograms.api.actions.ActionHolder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for components that can have actions.
@@ -14,6 +15,7 @@ public interface IActionable {
      *
      * @return The action holder for this component.
      */
+    @NotNull
     ActionHolder getActions();
 
 }

@@ -17,6 +17,7 @@ public interface Page extends IActionable {
      *
      * @return The parent {@link Hologram} of this page.
      */
+    @NotNull
     Hologram getParent();
 
     /**
