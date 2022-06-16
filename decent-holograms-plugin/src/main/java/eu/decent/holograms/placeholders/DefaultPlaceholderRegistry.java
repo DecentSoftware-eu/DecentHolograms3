@@ -34,7 +34,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
     public void reload() {}
 
     @Override
-    public String replacePlaceholders(@NotNull Player player, @NotNull String string) {
+    public String replacePlaceholders(Player player, @NotNull String string) {
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(string);
         while (matcher.find()) {
             String replacement = this.getReplacement(player, matcher.group(1).trim());
@@ -55,7 +55,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
      *  if the given placeholder string cannot be replaced.
      */
     @Nullable
-    private String getReplacement(@NotNull Player player, @NotNull String placeholderString) {
+    private String getReplacement(Player player, @NotNull String placeholderString) {
         String placeholderIdentifier;
         String placeholderArgument;
         if (placeholderString.contains(":")) {
@@ -81,11 +81,11 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
         // -- Player placeholders
 
         this.register("player", new DefaultPlaceholder(
-                (player, argument) -> player.getName(),
+                (player, argument) -> player == null ? null : player.getName(),
                 "You")
         );
         this.register("display_name", new DefaultPlaceholder(
-                (player, argument) -> player.getDisplayName(),
+                (player, argument) -> player == null ? null : player.getDisplayName(),
                 "You")
         );
 

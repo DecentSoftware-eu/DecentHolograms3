@@ -18,6 +18,6 @@ public abstract class PlaceholderRegistry extends Registry<String, Placeholder> 
      * @param string The string.
      * @return The resulting String.
      */
-    public abstract String replacePlaceholders(@NotNull Player player, @NotNull String string);
+    public abstract String replacePlaceholders(Player player, @NotNull String string);
 
 }

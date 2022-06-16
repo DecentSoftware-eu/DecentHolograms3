@@ -56,31 +56,37 @@ public class DefaultHologram implements Hologram {
         return name;
     }
 
+    @NotNull
     @Override
     public HologramSettings getSettings() {
         return settings;
     }
 
+    @NotNull
     @Override
     public PositionManager getPositionManager() {
         return positionManager;
     }
 
+    @NotNull
     @Override
     public HologramVisibilityManager getVisibilityManager() {
         return visibilityManager;
     }
 
+    @NotNull
     @Override
     public HologramPageHolder getPageHolder() {
         return pageHolder;
     }
 
+    @NotNull
     @Override
     public ActionHolder getActions() {
         return actionHolder;
     }
 
+    @NotNull
     @Override
     public ConditionHolder getConditions() {
         return conditionHolder;

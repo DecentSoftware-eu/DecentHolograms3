@@ -20,6 +20,7 @@ public class DefaultPage implements Page {
         this.actionHolder = new DefaultActionHolder();
     }
 
+    @NotNull
     @Override
     public Hologram getParent() {
         return parent;
@@ -31,6 +32,7 @@ public class DefaultPage implements Page {
         return lineHolder;
     }
 
+    @NotNull
     @Override
     public ActionHolder getActions() {
         return actionHolder;
