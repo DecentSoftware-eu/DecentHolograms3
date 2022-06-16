@@ -46,7 +46,17 @@ public interface Line extends IActionable, IConditional {
      * @return The position manager of this line.
      * @see PositionManager
      */
+    @NotNull
     PositionManager getPositionManager();
+
+    /**
+     * Get the line renderer of this line.
+     *
+     * @return The line renderer of this line.
+     * @see LineRenderer
+     */
+    @NotNull
+    LineRenderer getRenderer();
 
     /**
      * Get the raw content of this line.
@@ -57,9 +67,10 @@ public interface Line extends IActionable, IConditional {
     String getContent();
 
     /**
-     * Set the content of this line.
+     * Set the raw content of this line. This method also parses the content and
+     * updates the line accordingly.
      *
-     * @param content The new content of this line.
+     * @param content The raw content of this line.
      */
     void setContent(@NotNull String content);
 
