@@ -7,6 +7,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -217,7 +218,17 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
      */
 
     @Override
-    public void spawnEntity(Player player, int eid, UUID id, int type, Location l) {
+    public int getEntityTypeId(EntityType type) {
+        return 0;
+    }
+
+    @Override
+    public double getEntityHeight(EntityType type) {
+        return 0;
+    }
+
+    @Override
+    public void spawnEntity(Player player, int eid, UUID id, EntityType type, Location l) {
         PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity();
         R r = new R(packet);
         r.set("a", eid);
@@ -226,16 +237,16 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
         r.set("d", MathHelper.floor(l.getZ() * 32.0D));
         r.set("h", MathHelper.d(l.getPitch() * 256.0F / 360.0F));
         r.set("i", MathHelper.d(l.getYaw() * 256.0F / 360.0F));
-        r.set("j", type);
+        r.set("j", getEntityTypeId(type));
         sendPacket(player, packet);
     }
 
     @Override
-    public void spawnEntityLiving(Player player, int eid, UUID id, int type, Location l) {
+    public void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l) {
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
         R r = new R(packet);
         r.set("a", eid);
-        r.set("b", type);
+        r.set("b", getEntityTypeId(type));
         r.set("c", MathHelper.floor(l.getX() * 32.0D));
         r.set("d", MathHelper.floor(l.getY() * 32.0D));
         r.set("e", MathHelper.floor(l.getZ() * 32.0D));
@@ -247,14 +258,9 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
     }
 
     @Override
-    public void spawnArmorStand(Player player, int eid, UUID id, Location l) {
-        spawnEntityLiving(player, eid, id, 78, l);
-    }
-
-    @Override
-    public void spawnItem(Player player, int eid, UUID id, Location l, org.bukkit.inventory.ItemStack itemStack) {
-        spawnEntity(player, eid, id, 2, l);
-        sendEntityMetadata(player, eid, getMetaItemStack(itemStack));
+    public void setHelmet(Player player, int eid, org.bukkit.inventory.ItemStack itemStack) {
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, 4, i(itemStack));
+        sendPacket(player, packet);
     }
 
     @Override
@@ -266,9 +272,9 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
     public void updatePassengers(Player player, int eid, int... passengers) {
         PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
         R r = new R(packet);
+        r.set("a", 0);
+        r.set("b", eid);
         for (int passenger : passengers) {
-            r.set("a", 0);
-            r.set("b", eid);
             r.set("c", passenger);
             sendPacket(player, packet);
         }

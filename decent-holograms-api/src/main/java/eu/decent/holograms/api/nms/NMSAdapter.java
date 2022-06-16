@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -136,13 +137,15 @@ public interface NMSAdapter {
      *  Entity
      */
 
-    void spawnEntity(Player player, int eid, UUID id, int type, Location l);
+    int getEntityTypeId(EntityType type);
 
-    void spawnEntityLiving(Player player, int eid, UUID id, int type, Location l);
+    double getEntityHeight(EntityType type);
 
-    void spawnArmorStand(Player player, int eid, UUID id, Location l);
+    void spawnEntity(Player player, int eid, UUID id, EntityType type, Location l);
 
-    void spawnItem(Player player, int eid, UUID id, Location l, ItemStack itemStack);
+    void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l);
+
+    void setHelmet(Player player, int eid, ItemStack itemStack);
 
     void teleportEntity(Player player, int eid, Location l, boolean onGround);
 
