@@ -272,12 +272,14 @@ public class NMSAdapter_v1_8_R1 implements NMSAdapter {
     public void updatePassengers(Player player, int eid, int... passengers) {
         PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
         R r = new R(packet);
-        for (int passenger : passengers) {
-            r.set("a", 0);
-            r.set("b", eid);
-            r.set("c", passenger);
-            sendPacket(player, packet);
+        r.set("a", 0);
+        r.set("b", eid);
+        if (passengers != null && passengers.length > 0) {
+            r.set("c", passengers[0]);
+        } else {
+            r.set("c", -1);
         }
+        sendPacket(player, packet);
     }
 
     @Override

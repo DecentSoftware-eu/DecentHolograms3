@@ -274,10 +274,12 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
         R r = new R(packet);
         r.set("a", 0);
         r.set("b", eid);
-        for (int passenger : passengers) {
-            r.set("c", passenger);
-            sendPacket(player, packet);
+        if (passengers != null && passengers.length > 0) {
+            r.set("c", passengers[0]);
+        } else {
+            r.set("c", -1);
         }
+        sendPacket(player, packet);
     }
 
     @Override

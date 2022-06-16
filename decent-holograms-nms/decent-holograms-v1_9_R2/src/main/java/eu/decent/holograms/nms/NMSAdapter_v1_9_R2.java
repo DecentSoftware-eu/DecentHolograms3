@@ -294,14 +294,11 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     @Override
     public void updatePassengers(Player player, int eid, int... passengers) {
-        PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
+        PacketPlayOutMount packet = new PacketPlayOutMount();
         R r = new R(packet);
-        for (int passenger : passengers) {
-            r.set("a", 0);
-            r.set("b", eid);
-            r.set("c", passenger);
-            sendPacket(player, packet);
-        }
+        r.set("a", eid);
+        r.set("b", passengers);
+        sendPacket(player, packet);
     }
 
     @Override
