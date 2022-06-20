@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class DefaultHologramSettings implements HologramSettings {
 
+    private boolean enabled;
     private boolean persistent;
     private boolean downOrigin;
     private boolean editable;
@@ -21,9 +22,11 @@ public class DefaultHologramSettings implements HologramSettings {
     /**
      * Creates a new instance of {@link DefaultHologramSettings} with default values.
      *
+     * @param enabled    Whether the hologram is enabled.
      * @param persistent Whether the hologram is persistent.
      */
-    public DefaultHologramSettings(boolean persistent) {
+    public DefaultHologramSettings(boolean enabled, boolean persistent) {
+        this.enabled = enabled;
         this.persistent = persistent;
         this.downOrigin = false;
         this.editable = true;
