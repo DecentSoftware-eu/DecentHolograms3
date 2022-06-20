@@ -7,6 +7,7 @@ import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
+import eu.decentsoftware.holograms.api.ticker.Ticker;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.nms.NMSProviderImpl;
@@ -14,6 +15,7 @@ import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
 import eu.decentsoftware.holograms.profile.ProfileListener;
 import eu.decentsoftware.holograms.server.DefaultServerRegistry;
+import eu.decentsoftware.holograms.ticker.DefaultTicker;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import lombok.AccessLevel;
@@ -34,6 +36,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
     @Getter(AccessLevel.NONE)
     private NMSProvider nmsProvider;
+    private Ticker ticker;
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
     private ReplacementRegistry replacementRegistry;
@@ -62,6 +65,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
             return;
         }
 
+        this.ticker = new DefaultTicker();
         this.profileRegistry = new DefaultProfileRegistry();
         this.serverRegistry = new DefaultServerRegistry();
         this.replacementRegistry = new DefaultReplacementRegistry();
@@ -74,29 +78,12 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         pm.registerEvents(new ProfileListener(), this);
 
         // -- Setup update checker if enabled
-        if (Config.CHECK_FOR_UPDATES) {
-            new UpdateChecker(96927).check((s) -> {
-                // Split the version string into 3 parts: major, minor, patch
-                String[] split = s.split("\\.");
-                int[] latest = Arrays.stream(split).mapToInt(Integer::parseInt).toArray();
-                int[] current = Arrays.stream(getDescription().getVersion().split("\\.")).mapToInt(Integer::parseInt).toArray();
-                // Compare the versions
-                Config.setUpdateAvailable(
-                        (latest[0] > current[0]) ||
-                        (latest[0] == current[0] && latest[1] > current[1]) ||
-                        (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2])
-                );
-                // Notify if an update is available
-                if (Config.isUpdateAvailable()) {
-                    Config.sendUpdateMessage(Bukkit.getConsoleSender());
-                }
-            });
-        }
+        setupUpdateChecker();
     }
 
     @Override
     public void onDisable() {
-// TODO:
+//      TODO:
 //        this.placeholderRegistry.shutdown();
 //        this.serverRegistry.shutdown();
 //        this.profileRegistry.shutdown();
@@ -118,6 +105,30 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     @Override
     public NMSProvider getNMSProvider() {
         return nmsProvider;
+    }
+
+    /**
+     * Set up the update checker and check for updates.
+     */
+    private void setupUpdateChecker() {
+        if (Config.CHECK_FOR_UPDATES) {
+            new UpdateChecker(96927).check((s) -> {
+                // Split the version string into 3 parts: major, minor, patch
+                String[] split = s.split("\\.");
+                int[] latest = Arrays.stream(split).mapToInt(Integer::parseInt).toArray();
+                int[] current = Arrays.stream(getDescription().getVersion().split("\\.")).mapToInt(Integer::parseInt).toArray();
+                // Compare the versions
+                Config.setUpdateAvailable(
+                        (latest[0] > current[0]) ||
+                                (latest[0] == current[0] && latest[1] > current[1]) ||
+                                (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2])
+                );
+                // Notify if an update is available
+                if (Config.isUpdateAvailable()) {
+                    Config.sendUpdateMessage(Bukkit.getConsoleSender());
+                }
+            });
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
+import eu.decentsoftware.holograms.api.ticker.Ticker;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -92,5 +93,13 @@ public abstract class DecentHolograms extends JavaPlugin {
      * @see HologramRegistry
      */
     public abstract HologramRegistry getHologramRegistry();
+
+    /**
+     * Get the ticker.
+     *
+     * @return The ticker.
+     * @see Ticker
+     */
+    public abstract Ticker getTicker();
 
 }
