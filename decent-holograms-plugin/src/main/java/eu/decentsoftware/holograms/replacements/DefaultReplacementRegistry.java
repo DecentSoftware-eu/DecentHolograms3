@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.components.page.placeholders;
+package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.api.DecentHolograms;
@@ -104,7 +104,7 @@ public class DefaultReplacementRegistry extends ReplacementRegistry {
                     int online;
                     if (argument != null) {
                         // -- Given worlds
-                        online = PlaceholderCommons.getFromWorldOrWorldsInt(
+                        online = ReplacementsCommons.getFromWorldOrWorldsInt(
                                 argument, (world) -> world.getPlayers().size()
                         );
                     } else if (player != null) {
@@ -123,7 +123,7 @@ public class DefaultReplacementRegistry extends ReplacementRegistry {
                 (player, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
-                        int online = PlaceholderCommons.getFromServerOrServersInt(
+                        int online = ReplacementsCommons.getFromServerOrServersInt(
                                 player, argument, (server) -> server.getData().getPlayers().getOnline()
                         );
                         if (online >= 0) {
@@ -140,7 +140,7 @@ public class DefaultReplacementRegistry extends ReplacementRegistry {
                 (player, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
-                        int online = PlaceholderCommons.getFromServerOrServersInt(
+                        int online = ReplacementsCommons.getFromServerOrServersInt(
                                 player, argument, (server) -> server.getData().getPlayers().getMax()
                         );
                         if (online >= 0) {

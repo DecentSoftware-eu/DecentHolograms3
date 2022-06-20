@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.components.page.placeholders;
+package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.api.replacements.Replacement;
 import eu.decentsoftware.holograms.api.replacements.ReplacementSupplier;

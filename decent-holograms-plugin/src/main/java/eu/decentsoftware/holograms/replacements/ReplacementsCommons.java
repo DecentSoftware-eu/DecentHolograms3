@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.placeholders;
+package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.api.DecentHolograms;
@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 @UtilityClass
-public final class PlaceholderCommons {
+public final class ReplacementsCommons {
 
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
 
