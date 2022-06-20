@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * This class represents a pinged server.
@@ -22,6 +23,7 @@ public class DefaultServer implements Server {
     private final String name;
     private final Pinger pinger;
     private final AtomicBoolean online;
+    private final AtomicLong lastUpdate;
     private PingerResponse data;
 
     /**
@@ -34,6 +36,7 @@ public class DefaultServer implements Server {
         this.name = name;
         this.pinger = new Pinger(address, Config.PINGER_TIMEOUT);
         this.online = new AtomicBoolean(false);
+        this.lastUpdate = new AtomicLong(0);
         this.startTicking();
     }
 
@@ -51,7 +54,11 @@ public class DefaultServer implements Server {
 
     @Override
     public void tick() {
-        this.update();
+        long now = System.currentTimeMillis();
+        if (now - lastUpdate.get() > Config.PINGER_UPDATE_INTERVAL * 50L) {
+            update();
+            lastUpdate.set(now);
+        }
     }
 
     /**
