@@ -90,9 +90,8 @@ public class DefaultHologram implements Hologram {
             }
         }
 
-        // Update the visibility of the hologram if the location is bound
-        // or if the time difference is greater than 500ms.
-        if (positionManager.isLocationBound() || 500L < timeDifference) {
+        // Update the visibility of the hologram if the time difference is greater than 500ms.
+        if (500L < timeDifference) {
             visibilityManager.updateVisibility();
         }
 

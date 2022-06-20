@@ -10,9 +10,4 @@ import eu.decentsoftware.holograms.api.utils.collection.Registry;
  */
 public abstract class HologramRegistry extends Registry<String, Hologram> {
 
-    /**
-     * Shutdown the registry. This method hides and removes all holograms.
-     */
-    public abstract void shutdown();
-
 }

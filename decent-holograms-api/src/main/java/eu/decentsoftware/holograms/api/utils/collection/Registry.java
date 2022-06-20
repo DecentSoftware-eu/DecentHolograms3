@@ -30,6 +30,13 @@ public abstract class Registry<K, V> {
     public abstract void reload();
 
     /**
+     * Shutdown this registry.
+     */
+    public void shutdown() {
+        this.map.clear();
+    }
+
+    /**
      * Clear this registry.
      */
     public void clear() {

@@ -88,5 +88,4 @@ public class DefaultServer implements Server {
         BungeeUtils.connect(player, name);
     }
 
-
 }

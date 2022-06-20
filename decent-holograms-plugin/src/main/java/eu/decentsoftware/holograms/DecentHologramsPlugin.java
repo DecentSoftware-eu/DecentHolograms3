@@ -83,12 +83,10 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
     @Override
     public void onDisable() {
-//      TODO:
-//        this.placeholderRegistry.shutdown();
-//        this.serverRegistry.shutdown();
-//        this.profileRegistry.shutdown();
-
         this.hologramRegistry.shutdown();
+        this.replacementRegistry.shutdown();
+        this.serverRegistry.shutdown();
+        this.profileRegistry.shutdown();
 
         BungeeUtils.shutdown();
         HandlerList.unregisterAll(this);
