@@ -2,13 +2,15 @@ package eu.decentsoftware.holograms;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
-import eu.decentsoftware.holograms.api.placeholders.PlaceholderRegistry;
+import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.nms.NMSProviderImpl;
-import eu.decentsoftware.holograms.placeholders.DefaultPlaceholderRegistry;
+import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
 import eu.decentsoftware.holograms.profile.ProfileListener;
 import eu.decentsoftware.holograms.server.DefaultServerRegistry;
@@ -34,7 +36,8 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     private NMSProvider nmsProvider;
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
-    private PlaceholderRegistry placeholderRegistry;
+    private ReplacementRegistry replacementRegistry;
+    private HologramRegistry hologramRegistry;
 
     /**
      * Default constructor.
@@ -61,7 +64,8 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         this.profileRegistry = new DefaultProfileRegistry();
         this.serverRegistry = new DefaultServerRegistry();
-        this.placeholderRegistry = new DefaultPlaceholderRegistry();
+        this.replacementRegistry = new DefaultReplacementRegistry();
+        this.hologramRegistry = new DefaultHologramRegistry();
 
         BungeeUtils.init();
 
@@ -92,9 +96,12 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
     @Override
     public void onDisable() {
-        this.placeholderRegistry.shutdown();
-        this.serverRegistry.shutdown();
-        this.profileRegistry.shutdown();
+// TODO:
+//        this.placeholderRegistry.shutdown();
+//        this.serverRegistry.shutdown();
+//        this.profileRegistry.shutdown();
+
+        this.hologramRegistry.shutdown();
 
         BungeeUtils.shutdown();
         HandlerList.unregisterAll(this);
