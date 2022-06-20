@@ -56,6 +56,9 @@ public class DefaultHologram implements Hologram {
         this.actionHolder = new DefaultActionHolder();
         this.lastTick = new AtomicLong(0);
 
+        // Start the ticking.
+        this.startTicking();
+
         // Loads the hologram from the file.
         this.file.load(() -> getSettings().setEnabled(enabled));
     }
@@ -69,11 +72,12 @@ public class DefaultHologram implements Hologram {
     @Override
     public void tick() {
         if (!getSettings().isEnabled()) {
+            // Do not tick if the hologram is disabled.
             return;
         }
 
-        // Update the visibility of the hologram.
-        visibilityManager.updateVisibility();
+        long currentTime = System.currentTimeMillis();
+        long timeDifference = currentTime - lastTick.get();
 
         // If the location is bound, update the location.
         if (positionManager.isLocationBound()) {
@@ -86,18 +90,24 @@ public class DefaultHologram implements Hologram {
             }
         }
 
-        // TODO: Check the update interval and update the hologram if necessary.
-        long currentTime = System.currentTimeMillis();
-        long timeDifference = currentTime - lastTick.get();
-        if (settings.getUpdateInterval() < timeDifference / 50) {
-            // Update the content of the hologram.
+        // Update the visibility of the hologram if the location is bound
+        // or if the time difference is greater than 500ms.
+        if (positionManager.isLocationBound() || 500L < timeDifference) {
+            visibilityManager.updateVisibility();
+        }
+
+        // Update the content of the hologram.
+        if (settings.getUpdateInterval() * 50L < timeDifference) {
             visibilityManager.updateContents();
         }
+
+        // Update the last tick.
+        lastTick.set(currentTime);
     }
 
     @Override
     public void destroy() {
-        settings.setEnabled(false);
+        this.stopTicking();
         visibilityManager.destroy();
     }
 

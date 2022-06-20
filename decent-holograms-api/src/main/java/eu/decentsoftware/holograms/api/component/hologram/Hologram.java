@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.component.hologram;
 
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.common.*;
+import eu.decentsoftware.holograms.api.ticker.ITicked;
 import org.jetbrains.annotations.NotNull;
 
 /**
