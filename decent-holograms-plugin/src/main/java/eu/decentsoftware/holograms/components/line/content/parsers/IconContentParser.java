@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.components.line.content;
+package eu.decentsoftware.holograms.components.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineRenderer;
@@ -15,10 +15,18 @@ public class IconContentParser implements ContentParser {
         if (!content.startsWith("#ICON:")) {
             return false;
         }
+        content = content.substring("#ICON:".length());
+
+        boolean glowing = content.matches(".*(?i)--glow(ing)?.*");
+        if (glowing) {
+            content = content.replaceAll("(?i)--glow(ing)?", "");
+        }
+
         LineItemStack itemStack = LineItemStack.fromString(content);
         if (itemStack == null) {
             return false;
         }
+
         LineRenderer renderer = new IconLineRenderer(line, itemStack);
         line.setRenderer(renderer);
         return true;

@@ -13,7 +13,6 @@ public abstract class AbstractLineRenderer implements LineRenderer {
     /*
      * TODO:
      *  - Add support for animations
-     *  - Add support for glowing
      *  - Add offsets to align the lines properly
      */
 
