@@ -1,9 +1,7 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
-import eu.decentsoftware.holograms.api.component.common.IActionable;
-import eu.decentsoftware.holograms.api.component.common.IConditional;
-import eu.decentsoftware.holograms.api.component.common.INameable;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
+import eu.decentsoftware.holograms.api.component.common.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,11 +11,25 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  */
-public interface Hologram extends INameable, IActionable, IConditional {
+public interface Hologram extends INameable, IActionable, IConditional, ITicked {
 
     // TODO:
     //  animations
     //  lighting
+
+    /**
+     * Destroy this hologram. This method hides the hologram and disables all components.
+     */
+    void destroy();
+
+    /**
+     * Get the {@link HologramConfig} of this hologram.
+     *
+     * @return The {@link HologramConfig} of this hologram.
+     * @see HologramConfig
+     */
+    @NotNull
+    HologramConfig getConfig();
 
     /**
      * Get the {@link HologramSettings} of this hologram.
