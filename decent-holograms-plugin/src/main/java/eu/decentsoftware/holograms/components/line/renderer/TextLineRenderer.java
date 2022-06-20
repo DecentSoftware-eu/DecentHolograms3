@@ -14,11 +14,17 @@ import java.util.UUID;
 public class TextLineRenderer extends AbstractLineRenderer {
 
     private final String text;
+    private final String hoverText;
     private final int eid;
 
     public TextLineRenderer(@NotNull Line parent, @NotNull String text) {
+        this(parent, text, null);
+    }
+
+    public TextLineRenderer(@NotNull Line parent, @NotNull String text, String hoverText) {
         super(parent, LineType.TEXT);
         this.text = text;
+        this.hoverText = hoverText;
         this.eid = getFreeEntityId();
     }
 
@@ -32,7 +38,7 @@ public class TextLineRenderer extends AbstractLineRenderer {
         String formattedText = text;
 
         // Replace custom replacements
-        formattedText = API.getPlaceholderRegistry().replacePlaceholders(player, formattedText);
+        formattedText = API.getReplacementRegistry().replacePlaceholders(player, formattedText);
         // Replace PAPI placeholders
         formattedText = PAPI.setPlaceholders(player, formattedText);
         // Colorize

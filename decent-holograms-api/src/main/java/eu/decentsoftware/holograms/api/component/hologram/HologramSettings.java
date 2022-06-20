@@ -8,6 +8,22 @@ package eu.decentsoftware.holograms.api.component.hologram;
 public interface HologramSettings {
 
     /**
+     * Check if this hologram is enabled. If this hologram is disabled, it will
+     * not be visible to players.
+     *
+     * @return True if this hologram is enabled.
+     */
+    boolean isEnabled();
+
+    /**
+     * Set if this hologram is enabled. If this hologram is disabled, it will
+     * not be visible to players.
+     *
+     * @param enabled True if this hologram is enabled.
+     */
+    void setEnabled(boolean enabled);
+
+    /**
      * Get if the hologram is persistent, meaning it will be saved and loaded
      * when the server is restarted.
      *

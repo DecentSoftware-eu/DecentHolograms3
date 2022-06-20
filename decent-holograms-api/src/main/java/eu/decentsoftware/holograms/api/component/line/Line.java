@@ -14,6 +14,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Line extends IActionable, IConditional {
 
+    /*
+     * TODO:
+     *  - Click actions, Hover actions
+     *  - Click conditions, View conditions
+     *  - Hover content for text lines
+     *  -
+     */
+
     /**
      * Get the parent {@link Page} of this line.
      *
