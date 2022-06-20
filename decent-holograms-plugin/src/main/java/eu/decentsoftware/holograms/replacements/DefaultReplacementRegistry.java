@@ -155,17 +155,18 @@ public class DefaultReplacementRegistry extends ReplacementRegistry {
         );
         this.register("motd", new DefaultReplacement(
                 (player, argument) -> {
+                    String motd = null;
                     if (argument != null) {
                         // -- Pinged server
                         Server server = PLUGIN.getServerRegistry().get(argument);
                         if (server != null && server.isOnline()) {
-                            return server.getData().getDescription();
+                            motd = server.getData().getDescription();
                         }
                     } else {
                         // -- This server
-                        return Bukkit.getServer().getMotd();
+                        motd = Bukkit.getServer().getMotd();
                     }
-                    return null;
+                    return (Config.PINGER_TRIM_MOTD && motd != null) ? motd.trim() : motd;
                 }, "")
         );
         this.register("status", new DefaultReplacement(
