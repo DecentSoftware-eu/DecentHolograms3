@@ -1,33 +1,33 @@
-package eu.decentsoftware.holograms.placeholders;
+package eu.decentsoftware.holograms.components.page.placeholders;
 
-import eu.decentsoftware.holograms.api.placeholders.Placeholder;
-import eu.decentsoftware.holograms.api.placeholders.PlaceholderReplacementSupplier;
+import eu.decentsoftware.holograms.api.replacements.Replacement;
+import eu.decentsoftware.holograms.api.replacements.ReplacementSupplier;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class DefaultPlaceholder implements Placeholder {
+public class DefaultReplacement implements Replacement {
 
-    private final PlaceholderReplacementSupplier replacementSupplier;
+    private final ReplacementSupplier replacementSupplier;
     private final String defaultReplacement;
 
     /**
-     * Create new {@link DefaultPlaceholder}.
+     * Create new {@link DefaultReplacement}.
      *
      * @param replacementSupplier The supplier, that finds a replacement for this placeholder.
      */
-    public DefaultPlaceholder(@NotNull PlaceholderReplacementSupplier replacementSupplier) {
+    public DefaultReplacement(@NotNull ReplacementSupplier replacementSupplier) {
         this(replacementSupplier, null);
     }
 
     /**
-     * Create new {@link DefaultPlaceholder}.
+     * Create new {@link DefaultReplacement}.
      *
      * @param replacementSupplier The supplier, that finds a replacement for this placeholder.
      * @param defaultReplacement The default replacement that will be used if the replacement supplier returns null.
      */
-    public DefaultPlaceholder(@NotNull PlaceholderReplacementSupplier replacementSupplier, String defaultReplacement) {
+    public DefaultReplacement(@NotNull ReplacementSupplier replacementSupplier, String defaultReplacement) {
         this.replacementSupplier = replacementSupplier;
         this.defaultReplacement = defaultReplacement;
     }

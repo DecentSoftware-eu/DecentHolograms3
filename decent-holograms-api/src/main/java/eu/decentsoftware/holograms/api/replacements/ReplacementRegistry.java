@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.placeholders;
+package eu.decentsoftware.holograms.api.replacements;
 
 import eu.decentsoftware.holograms.api.utils.collection.Registry;
 import org.bukkit.entity.Player;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  */
-public abstract class PlaceholderRegistry extends Registry<String, Placeholder> {
+public abstract class ReplacementRegistry extends Registry<String, Replacement> {
 
     /**
      * Replace all registered placeholders, that the given String contains.

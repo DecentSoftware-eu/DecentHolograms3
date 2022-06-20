@@ -1,10 +1,10 @@
-package eu.decentsoftware.holograms.placeholders;
+package eu.decentsoftware.holograms.components.page.placeholders;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.placeholders.Placeholder;
-import eu.decentsoftware.holograms.api.placeholders.PlaceholderRegistry;
+import eu.decentsoftware.holograms.api.replacements.Replacement;
+import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.server.Server;
 import eu.decentsoftware.holograms.utils.DatetimeUtils;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
+public class DefaultReplacementRegistry extends ReplacementRegistry {
 
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{(\\S+(:\\S+)?)}");
@@ -23,7 +23,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
     /**
      * Create a new instance of this registry.
      */
-    public DefaultPlaceholderRegistry() {
+    public DefaultReplacementRegistry() {
         this.registerDefaultPlaceholders();
     }
 
@@ -64,9 +64,9 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
             placeholderArgument = null;
         }
 
-        Placeholder placeholder = this.get(placeholderIdentifier);
-        if (placeholder != null) {
-            return placeholder.getReplacement(player, placeholderArgument);
+        Replacement replacement = this.get(placeholderIdentifier);
+        if (replacement != null) {
+            return replacement.getReplacement(player, placeholderArgument);
         }
         return null;
     }
@@ -77,29 +77,29 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
     private void registerDefaultPlaceholders() {
         // -- Player placeholders
 
-        this.register("player", new DefaultPlaceholder(
+        this.register("player", new DefaultReplacement(
                 (player, argument) -> player == null ? null : player.getName(),
                 "You")
         );
-        this.register("display_name", new DefaultPlaceholder(
+        this.register("display_name", new DefaultReplacement(
                 (player, argument) -> player == null ? null : player.getDisplayName(),
                 "You")
         );
 
         // -- Global placeholders
 
-        this.register("time", new DefaultPlaceholder(
+        this.register("time", new DefaultReplacement(
                 (player, argument) -> DatetimeUtils.getTimeFormatted(),
                 "-")
         );
-        this.register("date", new DefaultPlaceholder(
+        this.register("date", new DefaultReplacement(
                 (player, argument) -> DatetimeUtils.getDateFormatted(),
                 "-")
         );
 
         // -- World placeholders
 
-        this.register("world", new DefaultPlaceholder(
+        this.register("world", new DefaultReplacement(
                 (player, argument) -> {
                     int online;
                     if (argument != null) {
@@ -119,7 +119,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
 
         // -- Server & Pinger placeholders
 
-        this.register("online", new DefaultPlaceholder(
+        this.register("online", new DefaultReplacement(
                 (player, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
@@ -136,7 +136,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
                     return null;
                 }, "0")
         );
-        this.register("max_players", new DefaultPlaceholder(
+        this.register("max_players", new DefaultReplacement(
                 (player, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
@@ -153,7 +153,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
                     return null;
                 }, "0")
         );
-        this.register("motd", new DefaultPlaceholder(
+        this.register("motd", new DefaultReplacement(
                 (player, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
@@ -168,7 +168,7 @@ public class DefaultPlaceholderRegistry extends PlaceholderRegistry {
                     return null;
                 }, "")
         );
-        this.register("status", new DefaultPlaceholder(
+        this.register("status", new DefaultReplacement(
                 (player, argument) -> {
                     if (argument != null) {
                         // -- Pinged server

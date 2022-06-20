@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.placeholders;
+package eu.decentsoftware.holograms.api.replacements;
 
 import org.bukkit.entity.Player;
 
@@ -7,14 +7,14 @@ import org.bukkit.entity.Player;
  *
  * @author d0by
  */
-public interface Placeholder {
+public interface Replacement {
 
     /**
      * Get the replacement supplier for this placeholder.
      *
      * @return the replacement supplier.
      */
-    PlaceholderReplacementSupplier getReplacementSupplier();
+    ReplacementSupplier getReplacementSupplier();
 
     /**
      * Get the default replacement for this placeholder.

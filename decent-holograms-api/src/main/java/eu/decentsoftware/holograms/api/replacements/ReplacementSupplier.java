@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.placeholders;
+package eu.decentsoftware.holograms.api.replacements;
 
 import org.bukkit.entity.Player;
 
@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
  * @author d0by
  */
 @FunctionalInterface
-public interface PlaceholderReplacementSupplier {
+public interface ReplacementSupplier {
 
     /**
      * Get the replacement from this supplier.
