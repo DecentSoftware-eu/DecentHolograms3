@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
+import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
@@ -63,6 +64,14 @@ public abstract class DecentHolograms extends JavaPlugin {
     public abstract NMSProvider getNMSProvider();
 
     /**
+     * Get the ticker.
+     *
+     * @return The ticker.
+     * @see Ticker
+     */
+    public abstract Ticker getTicker();
+
+    /**
      * Get the profile registry.
      *
      * @return The profile registry.
@@ -87,19 +96,19 @@ public abstract class DecentHolograms extends JavaPlugin {
     public abstract ReplacementRegistry getReplacementRegistry();
 
     /**
+     * Get the content parser.
+     *
+     * @return The content parser.
+     * @see ContentParser
+     */
+    public abstract ContentParser getContentParser();
+
+    /**
      * Get the hologram registry.
      *
      * @return The hologram registry.
      * @see HologramRegistry
      */
     public abstract HologramRegistry getHologramRegistry();
-
-    /**
-     * Get the ticker.
-     *
-     * @return The ticker.
-     * @see Ticker
-     */
-    public abstract Ticker getTicker();
 
 }

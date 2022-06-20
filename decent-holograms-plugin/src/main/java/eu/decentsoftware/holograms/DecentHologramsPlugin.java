@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
+import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
@@ -10,6 +11,7 @@ import eu.decentsoftware.holograms.api.server.ServerRegistry;
 import eu.decentsoftware.holograms.api.ticker.Ticker;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.components.line.content.DefaultContentParser;
 import eu.decentsoftware.holograms.nms.NMSProviderImpl;
 import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
@@ -40,6 +42,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
     private ReplacementRegistry replacementRegistry;
+    private ContentParser contentParser;
     private HologramRegistry hologramRegistry;
 
     /**
@@ -69,6 +72,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         this.profileRegistry = new DefaultProfileRegistry();
         this.serverRegistry = new DefaultServerRegistry();
         this.replacementRegistry = new DefaultReplacementRegistry();
+        this.contentParser = new DefaultContentParser();
         this.hologramRegistry = new DefaultHologramRegistry();
 
         BungeeUtils.init();
