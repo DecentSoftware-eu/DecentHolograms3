@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.server;
 
 import eu.decentsoftware.holograms.api.utils.pinger.PingerResponse;
-import eu.decentsoftware.holograms.api.component.common.ITicked;
+import eu.decentsoftware.holograms.api.ticker.ITicked;
 
 /**
  * This class represents a server.

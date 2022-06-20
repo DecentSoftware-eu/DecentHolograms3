@@ -1,7 +1,8 @@
-package eu.decentsoftware.holograms.api.utils.color;
+package eu.decentsoftware.holograms.api.color;
 
 import com.google.common.collect.ImmutableMap;
 import eu.decent.holograms.api.utils.color.patterns.*;
+import eu.decentsoftware.holograms.api.color.patterns.*;
 import eu.decentsoftware.holograms.api.utils.color.patterns.*;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.experimental.UtilityClass;

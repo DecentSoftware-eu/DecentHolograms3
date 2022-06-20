@@ -1,6 +1,6 @@
-package eu.decentsoftware.holograms.api.utils.color.patterns;
+package eu.decentsoftware.holograms.api.color.patterns;
 
-import eu.decentsoftware.holograms.api.utils.color.DecentColorAPI;
+import eu.decentsoftware.holograms.api.color.DecentColorAPI;
 
 import java.awt.*;
 import java.util.regex.Matcher;

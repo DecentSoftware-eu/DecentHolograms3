@@ -1,7 +1,8 @@
-package eu.decentsoftware.holograms.api.utils.item;
+package eu.decentsoftware.holograms.api.component.line.content.objects;
 
 import eu.decentsoftware.holograms.api.hooks.HDB;
 import eu.decentsoftware.holograms.api.hooks.PAPI;
+import eu.decentsoftware.holograms.api.utils.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;

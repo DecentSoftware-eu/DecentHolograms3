@@ -54,16 +54,6 @@ public class DefaultServer implements Server {
         this.update();
     }
 
-    @Override
-    public void startTicking() {
-        // TODO: ticking
-    }
-
-    @Override
-    public void stopTicking() {
-
-    }
-
     /**
      * Check if the server is online.
      *

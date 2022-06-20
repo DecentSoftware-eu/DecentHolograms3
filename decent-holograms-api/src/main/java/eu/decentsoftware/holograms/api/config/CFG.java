@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.utils.config;
+package eu.decentsoftware.holograms.api.config;
 
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import lombok.experimental.UtilityClass;

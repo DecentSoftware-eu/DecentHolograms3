@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils;
 
-import eu.decentsoftware.holograms.api.utils.color.DecentColorAPI;
+import eu.decentsoftware.holograms.api.color.DecentColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
