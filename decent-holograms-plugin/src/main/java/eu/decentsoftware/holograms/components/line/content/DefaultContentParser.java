@@ -31,6 +31,7 @@ public class DefaultContentParser implements ContentParser {
         this.parsers.add(new HeadContentParser());
         this.parsers.add(new SmallHeadContentParser());
         this.parsers.add(new EntityContentParser());
+        this.parsers.add(new ImageContentParser());
     }
 
     @Override

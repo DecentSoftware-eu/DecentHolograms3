@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.components.line.content;
+package eu.decentsoftware.holograms.components.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineRenderer;
