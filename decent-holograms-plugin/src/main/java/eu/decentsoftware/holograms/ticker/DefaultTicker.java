@@ -54,9 +54,10 @@ public class DefaultTicker implements Ticker {
                     ticked.tick();
                 }
                 // Add and remove ticked objects
-                tickedObjects.removeAll(tickedObjectsToRemove);
                 tickedObjects.addAll(tickedObjectsToAdd);
+                tickedObjects.removeAll(tickedObjectsToRemove);
             }
+            ticking.set(false);
         }, 1L);
     }
 
