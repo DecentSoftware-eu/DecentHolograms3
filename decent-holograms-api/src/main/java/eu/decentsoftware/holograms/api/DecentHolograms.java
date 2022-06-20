@@ -1,7 +1,8 @@
 package eu.decentsoftware.holograms.api;
 
+import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
-import eu.decentsoftware.holograms.api.placeholders.PlaceholderRegistry;
+import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +21,32 @@ public abstract class DecentHolograms extends JavaPlugin {
 
     // The 'config.yml' file
     private File configFile;
+    // The '/holograms' file
+    private File hologramsFolder;
+
+    /**
+     * Get the "config.yml" file.
+     *
+     * @return The file.
+     */
+    public File getConfigFile() {
+        if (configFile == null) {
+            configFile = new File(getDataFolder(), "config.yml");
+        }
+        return configFile;
+    }
+
+    /**
+     * Get the "/holograms" folder.
+     *
+     * @return The folder.
+     */
+    public File getHologramFolder() {
+        if (hologramsFolder == null) {
+            hologramsFolder = new File(getDataFolder(), "holograms");
+        }
+        return hologramsFolder;
+    }
 
     /**
      * Reloads the plugin.
@@ -38,6 +65,7 @@ public abstract class DecentHolograms extends JavaPlugin {
      * Get the profile registry.
      *
      * @return The profile registry.
+     * @see ProfileRegistry
      */
     public abstract ProfileRegistry getProfileRegistry();
 
@@ -45,26 +73,24 @@ public abstract class DecentHolograms extends JavaPlugin {
      * Get the server registry.
      *
      * @return The server registry.
+     * @see ServerRegistry
      */
     public abstract ServerRegistry getServerRegistry();
 
     /**
-     * Get the placeholder registry.
+     * Get the replacement registry.
      *
-     * @return The placeholder registry.
+     * @return The replacement registry.
+     * @see ReplacementRegistry
      */
-    public abstract PlaceholderRegistry getPlaceholderRegistry();
+    public abstract ReplacementRegistry getReplacementRegistry();
 
     /**
-     * Get the "config.yml" file.
+     * Get the hologram registry.
      *
-     * @return The file.
+     * @return The hologram registry.
+     * @see HologramRegistry
      */
-    public File getConfigFile() {
-        if (configFile == null) {
-            configFile = new File(getDataFolder(), "config.yml");
-        }
-        return configFile;
-    }
+    public abstract HologramRegistry getHologramRegistry();
 
 }

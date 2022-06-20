@@ -55,8 +55,8 @@ public class DefaultPositionManager implements PositionManager {
     }
 
     @Override
-    public void unbindLocation() {
-        this.locationSupplier = null;
+    public Supplier<Location> getLocationBinder() {
+        return locationSupplier;
     }
 
     @Override

@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for managing the visibility of the hologram
@@ -91,10 +93,40 @@ public interface HologramVisibilityManager {
      * the view conditions and the view distance setting of this hologram.
      * The hologram's contents are updated for all players in this list.
      *
-     * @return The set of players that see this hologram.
+     * @return The set of nicknames of the player that see this hologram.
      */
     @NotNull
     Set<String> getViewers();
+
+    /**
+     * Get all the players that currently see this hologram according to
+     * the view conditions and the view distance setting of this hologram.
+     * The hologram's contents are updated for all players in this list.
+     *
+     * @return The set of players that see this hologram.
+     */
+    default Set<Player> getViewerPlayers() {
+        return getViewers().stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Get all the players that currently see this hologram according to
+     * the view conditions and the view distance setting of this hologram.
+     * The hologram's contents are updated for all players in this list.
+     *
+     * @param page The page of the players to get.
+     * @return The set of players that see this hologram at the given page.
+     */
+    default Set<Player> getViewerPlayers(int page) {
+        return getViewers().stream()
+                .filter(viewer -> getPlayerPages().get(viewer) == page)
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
 
     /**
      * Check if the given player is currently seeing this hologram according
@@ -286,7 +318,7 @@ public interface HologramVisibilityManager {
      * Set the page that is currently selected by the given player.
      *
      * @param player The player to set the page for.
-     * @param page The page to set.
+     * @param page   The page to set.
      */
     default void setPage(@NotNull Player player, int page) {
         getPlayerPages().put(player.getName(), page);

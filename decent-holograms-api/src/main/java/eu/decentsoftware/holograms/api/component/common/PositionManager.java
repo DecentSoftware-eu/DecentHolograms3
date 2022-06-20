@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.component.common;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -43,15 +44,27 @@ public interface PositionManager {
      * <p>This can be used for holograms, that are moving together with another entity or moving in a
      * certain direction.</p>
      *
-     * @param locationSupplier The supplier of the location of this hologram.
+     * @param locationSupplier The supplier of the location of this hologram. (null to unbind)
      */
-    void bindLocation(Supplier<Location> locationSupplier);
+    void bindLocation(@Nullable Supplier<Location> locationSupplier);
 
     /**
-     * Unbind this hologram from its location supplier. This method removes the location supplier
-     * from this hologram. Normal location will be used from now on.
+     * Get the supplier of the location of this hologram.
+     *
+     * @return The supplier of the location of this hologram.
+     * @see #bindLocation(Supplier)
      */
-    void unbindLocation();
+    Supplier<Location> getLocationBinder();
+
+    /**
+     * Check if this hologram is bound to a supplier of a location.
+     *
+     * @return True if this hologram is bound to a supplier of a location, false otherwise.
+     * @see #bindLocation(Supplier)
+     */
+    default boolean isLocationBound() {
+        return getLocationBinder() != null;
+    }
 
     /**
      * Get the offsets of this hologram. The offsets are used to offset the hologram from its

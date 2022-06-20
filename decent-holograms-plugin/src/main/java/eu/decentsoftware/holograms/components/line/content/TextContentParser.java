@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class TextContentParser implements ContentParser {
 
+    // TODO: hover content
+
     @Override
     public boolean parse(@NotNull Line line) {
         LineRenderer renderer = new TextLineRenderer(line, line.getContent());
