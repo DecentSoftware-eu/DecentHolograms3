@@ -5,6 +5,7 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'com.github.BeYkeRYkt.LightAPI:lightapi-bukkit-common:5.2.0-Bukkit'
+    implementation 'dev.dejvokep:boosted-yaml:1.2'
     implementation(project(":decent-holograms-api"))
     implementation(project(":decent-holograms-nms"))
 }
