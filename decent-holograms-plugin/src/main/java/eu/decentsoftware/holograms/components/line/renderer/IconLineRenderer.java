@@ -11,10 +11,16 @@ import org.jetbrains.annotations.NotNull;
 public class IconLineRenderer extends AbstractDoubleEntityLineRenderer {
 
     private final LineItemStack itemStack;
+    private final boolean glowing;
 
     public IconLineRenderer(@NotNull Line parent, @NotNull LineItemStack itemStack) {
+        this(parent, itemStack, false);
+    }
+
+    public IconLineRenderer(@NotNull Line parent, @NotNull LineItemStack itemStack, boolean glowing) {
         super(parent, LineType.ICON);
         this.itemStack = itemStack;
+        this.glowing = glowing;
     }
 
     @Override
@@ -22,7 +28,7 @@ public class IconLineRenderer extends AbstractDoubleEntityLineRenderer {
         ItemStack item = itemStack.toItemStack(player);
 
         // Create the item metadata objects
-        Object metaEntityItem = NMS.getMetaEntityProperties(false, false, false, false, false, false, false);
+        Object metaEntityItem = NMS.getMetaEntityProperties(false, false, false, false, false, glowing, false);
         Object metaItem = NMS.getMetaItemStack(item);
 
         // Display
