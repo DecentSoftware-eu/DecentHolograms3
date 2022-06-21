@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.components.line.content.parsers;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineRenderer;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
-import eu.decentsoftware.holograms.api.component.line.content.objects.LineItemStack;
+import eu.decentsoftware.holograms.components.line.content.objects.LineItemStack;
 import eu.decentsoftware.holograms.components.line.renderer.IconLineRenderer;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.component.line.content.objects;
+package eu.decentsoftware.holograms.components.line.content.objects;
 
 import eu.decentsoftware.holograms.api.hooks.HDB;
 import eu.decentsoftware.holograms.api.hooks.PAPI;
