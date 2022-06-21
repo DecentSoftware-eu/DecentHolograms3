@@ -2,6 +2,19 @@
 #
 #  Welcome to DecentHolograms config.yml.
 #
+# - We recommend you to visit our wiki for detailed explanation
+#   of all features and configuration options as this plugin has
+#   a ton of them.
+#
+# - You should also join our discord server for more information,
+#   support and updates. Our discord server is the main platform
+#   for support, reporting bugs or suggesting improvements.
+#
+# - Web: www.decentholograms.eu
+# - Wiki: wiki.decentholograms.eu
+# - Discord: discord.decentsoftware.eu
+# - GitHub: github.decentsoftware.eu
+#
 # # # # # # # # # #
 
 # Check for updates on startup?
@@ -9,7 +22,20 @@ check-for-updates: true
 
 # Some default values.
 defaults:
-  menu-title: 'Unnamed Menu'
+  # Default content of a hologram line
+  line-content: 'Blank Line'
+  # Default view distance of holograms
+  view-distance: 48
+  # Default update distance of holograms
+  update-distance: 48
+  # Default update interval of holograms
+  update-interval: 20
+  # Default value of down-origin of holograms
+  down-origin: false
+  # Default value of fixed-offsets setting of holograms
+  fixed-offsets: false
+  # Default value of fixed-rotation setting of holograms
+  fixed-rotation: false
 
 # Timezone and formats of date and time.
 datetime:
@@ -18,14 +44,13 @@ datetime:
   zone: GMT+0
 
 
-
 # # # # # # # # # # # # # # # # #
 #
-#  Pinger
+#  PINGER
 #
 #   - Setup servers, that will automatically be pinged by the plugin
-#   making it available to use built-in placeholders in order to display
-#   information about them like online players or status.
+#     making it available to use built-in placeholders in order to display
+#     information about them like online players or status.
 #
 # # # # # # # # # #
 
@@ -51,15 +76,35 @@ pinger:
   trim-motd: true
 
 
-
 # # # # # # # # # # # # # # # # #
 #
-#  Messages
+#  REPLACEMENTS
 #
-#   - You can edit any message here
+#   - Create custom "placeholders", that will be replaced in holograms
+#     with any value you want. You can even use unicode codes in order
+#     to use unicode characters. If you want to disable this feature,
+#     just remove all replacements (replacements: {}).
+#
+#   - Format: 'PLACEHOLDER: REPLACEMENT'
+#
+#     e.g.
+#       '[name]': '{player}' # Replace "[name]" with the player's name.
+#
+#   - Unicode: 'U+CODE;'
+#
+#     e.g.
+#       U+2588;
+#       U+2022; Text
 #
 # # # # # # # # # #
 
-messages:
-  # Use '{prefix}' in other messages, and it will be replaced with this.
-  prefix: '&8[&3DecentHolograms&8] &7'
+replacements:
+  '[x]': 'U+2588;'
+  '[X]': 'U+2588;'
+  '[/]': 'U+258C;'
+  '[.]': 'U+2591;'
+  '[..]': 'U+2592;'
+  '[...]': 'U+2593;'
+  '[p]': 'U+2022;'
+  '[P]': 'U+2022;'
+  '[|]': 'U+23B9;'
