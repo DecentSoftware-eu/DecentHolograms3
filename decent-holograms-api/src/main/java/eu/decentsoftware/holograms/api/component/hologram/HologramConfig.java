@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.component.hologram;
 import dev.dejvokep.boostedyaml.YamlDocument;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class represents a hologram config. It is responsible for loading and saving the parent hologram.
@@ -35,31 +36,17 @@ public interface HologramConfig {
 
     /**
      * Save the hologram file.
-     */
-    default void save() {
-        this.save(null);
-    }
-
-    /**
-     * Save the hologram file.
      *
-     * @param callback The callback to run after the hologram file has been saved.
+     * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
      */
-    void save(Runnable callback);
-
-    /**
-     * Load the hologram file.
-     */
-    default void load() {
-        this.load(null);
-    }
+    CompletableFuture<Boolean> save();
 
     /**
      * Load the hologram file.
      *
-     * @param callback The callback to run after the hologram file has been loaded.
+     * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
      */
-    void load(Runnable callback);
+    CompletableFuture<Boolean> load();
 
     /**
      * Delete the hologram file.
