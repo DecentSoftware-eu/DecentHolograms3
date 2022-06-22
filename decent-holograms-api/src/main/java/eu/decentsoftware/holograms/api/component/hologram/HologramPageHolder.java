@@ -39,6 +39,16 @@ public interface HologramPageHolder {
     }
 
     /**
+     * Get the index of the given page.
+     *
+     * @param page The page to get the index of.
+     * @return The index or -1 if the given page in not present in this page holder.
+     */
+    default int getIndex(@NotNull Page page) {
+        return getPages().contains(page) ? getPages().indexOf(page) : -1;
+    }
+
+    /**
      * Add a page to this hologram.
      *
      * @param page The page to add.
