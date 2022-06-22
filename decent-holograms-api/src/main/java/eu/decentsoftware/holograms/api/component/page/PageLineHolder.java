@@ -39,6 +39,16 @@ public interface PageLineHolder {
     }
 
     /**
+     * Get the index of the given line.
+     *
+     * @param line The line to get the index of.
+     * @return The index or -1 if the given line in not present in this line holder.
+     */
+    default int getIndex(@NotNull Line line) {
+        return getLines().contains(line) ? getLines().indexOf(line) : -1;
+    }
+
+    /**
      * Remove the line at the specified index.
      *
      * @param index The index of the line to remove.
