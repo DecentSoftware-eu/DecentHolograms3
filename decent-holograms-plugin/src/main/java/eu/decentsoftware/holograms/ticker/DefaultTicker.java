@@ -47,7 +47,7 @@ public class DefaultTicker implements Ticker {
 
     @Override
     public void start() {
-        taskId = S.scheduleAsync(() -> {
+        taskId = S.scheduleSync(() -> {
             if (ticking.compareAndSet(false, true)) {
                 // Tick all ticked objects
                 for (ITicked ticked : tickedObjects) {
