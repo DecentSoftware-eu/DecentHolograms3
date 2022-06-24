@@ -68,6 +68,7 @@ pinger:
   status:
     online: '&aOnline'
     offline: '&cOffline'
+    full: '&6Full'
   # Some default values for offline servers.
   defaults:
     motd: 'This server is offline.'
