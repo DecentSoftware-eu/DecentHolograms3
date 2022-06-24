@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.component.page;
 
-import eu.decentsoftware.holograms.api.component.common.IActionable;
+import eu.decentsoftware.holograms.api.component.common.IClickable;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  */
-public interface Page extends IActionable {
+public interface Page extends IClickable {
 
     /**
      * Get the parent {@link Hologram} of this page.
@@ -58,9 +58,23 @@ public interface Page extends IActionable {
      * Teleport this page for the specified player. This method teleports all the lines
      * of this page for the player.
      *
-     * @param player The player to teleport this page for.
+     * @param player   The player to teleport this page for.
      * @param location The location to teleport the page to.
      */
     void teleport(@NotNull Player player, @NotNull Location location);
+
+    /**
+     * Recalculates the positions of all the lines of this page. Making sure they are
+     * aligned correctly. This method also teleports the lines to the correct location
+     * for each viewer.
+     */
+    void recalculate();
+
+    /**
+     * Get the next {@link Location}, that's free to use for a line.
+     *
+     * @return The next {@link Location}, that's free to use for a line.
+     */
+    Location getNextLineLocation();
 
 }
