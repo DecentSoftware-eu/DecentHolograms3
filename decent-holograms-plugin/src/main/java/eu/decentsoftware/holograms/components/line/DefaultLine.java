@@ -79,19 +79,19 @@ public class DefaultLine implements Line {
 
     @NotNull
     @Override
-    public ConditionHolder getViewConditions() {
+    public ConditionHolder getViewConditionHolder() {
         return viewConditions;
     }
 
     @NotNull
     @Override
-    public ConditionHolder getClickConditions() {
+    public ConditionHolder getClickConditionHolder() {
         return clickConditions;
     }
 
     @NotNull
     @Override
-    public ActionHolder getClickActions() {
+    public ActionHolder getClickActionHolder() {
         return clickActions;
     }
 

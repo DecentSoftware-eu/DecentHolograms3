@@ -25,7 +25,7 @@ public final class ConfigUtils {
      * @return A string with the world name, x, y, z, yaw, and pitch of the location.
      */
     @NotNull
-    public static String getStringFromLocation(@NotNull Location l, boolean includeYawPitch) {
+    public static String locToString(@NotNull Location l, boolean includeYawPitch) {
         String location = String.format("%s:%.3f:%.3f:%.3f", l.getWorld().getName(), l.getX(), l.getY(), l.getZ());
         if (includeYawPitch) {
             location += String.format(":%.3f:%.3f", l.getYaw(), l.getPitch());
@@ -40,7 +40,7 @@ public final class ConfigUtils {
      * @return A location with the world name, x, y, z, yaw, and pitch of the string.
      */
     @NotNull
-    public static Location getLocationFromString(@NotNull String string) throws LocationParseException {
+    public static Location stringToLoc(@NotNull String string) throws LocationParseException {
         String[] spl = string.replace(",", ".").split(":");
         Location location;
         if (spl.length >= 4) {

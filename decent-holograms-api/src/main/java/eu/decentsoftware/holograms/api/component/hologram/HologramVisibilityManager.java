@@ -212,7 +212,7 @@ public interface HologramVisibilityManager {
         );
 
         // Check if the player satisfies the view conditions.
-        boolean meetsConditions = !isVisibleByDefault() || getParent().getViewConditions().check(profile);
+        boolean meetsConditions = !isVisibleByDefault() || getParent().getViewConditionHolder().check(profile);
 
         if (isViewing(player) && (!inViewDistance || !meetsConditions)) {
             // If the player is currently viewing the hologram but is no

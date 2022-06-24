@@ -1,15 +1,13 @@
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.actions.DefaultActionHolder;
-import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.api.utils.S;
 import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,8 +21,6 @@ public class DefaultHologram implements Hologram {
     private final HologramVisibilityManager visibilityManager;
     private final HologramPageHolder pageHolder;
     private final ConditionHolder conditionHolder;
-    private final ActionHolder actionHolder;
-
     private final AtomicLong lastTick;
 
     /**
@@ -53,7 +49,6 @@ public class DefaultHologram implements Hologram {
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
         this.pageHolder = new DefaultHologramPageHolder(this);
         this.conditionHolder = new DefaultConditionHolder();
-        this.actionHolder = new DefaultActionHolder();
         this.lastTick = new AtomicLong(0);
 
         // Start the ticking.
@@ -82,23 +77,17 @@ public class DefaultHologram implements Hologram {
 
         // If the location is bound, update the location.
         if (positionManager.isLocationBound()) {
-            Location location = positionManager.getActualLocation();
-            for (int i = 0; i < pageHolder.getPages().size(); i++) {
-                Page page = pageHolder.getPages().get(i);
-                for (Player player : visibilityManager.getViewerPlayers(i)) {
-                    page.teleport(player, location);
-                }
-            }
+            S.async(() -> pageHolder.getPages().forEach(Page::recalculate));
         }
 
         // Update the visibility of the hologram if the time difference is greater than 500ms.
         if (500L < timeDifference) {
-            visibilityManager.updateVisibility();
+            S.async(visibilityManager::updateVisibility);
         }
 
         // Update the content of the hologram.
         if (settings.getUpdateInterval() * 50L < timeDifference) {
-            visibilityManager.updateContents();
+            S.async(visibilityManager::updateContents);
         }
 
         // Update the last tick.
@@ -143,13 +132,7 @@ public class DefaultHologram implements Hologram {
 
     @NotNull
     @Override
-    public ActionHolder getActions() {
-        return actionHolder;
-    }
-
-    @NotNull
-    @Override
-    public ConditionHolder getConditions() {
+    public ConditionHolder getViewConditionHolder() {
         return conditionHolder;
     }
 

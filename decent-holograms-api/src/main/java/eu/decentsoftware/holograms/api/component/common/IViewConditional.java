@@ -17,6 +17,6 @@ public interface IViewConditional {
      * @return The view condition holder for this component.
      */
     @NotNull
-    ConditionHolder getViewConditions();
+    ConditionHolder getViewConditionHolder();
 
 }

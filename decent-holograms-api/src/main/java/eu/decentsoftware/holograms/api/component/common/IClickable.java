@@ -26,8 +26,8 @@ public interface IClickable {
      */
     default boolean onClick(@NotNull Player player, @NotNull ClickType clickType) {
         Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
-        if (getClickConditions().check(profile)) {
-            getClickActions().execute(profile);
+        if (getClickConditionHolder().check(profile)) {
+            getClickActionHolder().execute(profile);
             return true;
         }
         return false;
@@ -40,7 +40,7 @@ public interface IClickable {
      * @see ConditionHolder
      */
     @NotNull
-    ConditionHolder getClickConditions();
+    ConditionHolder getClickConditionHolder();
 
     /**
      * Get the click actions of this object.
@@ -49,6 +49,6 @@ public interface IClickable {
      * @see ActionHolder
      */
     @NotNull
-    ActionHolder getClickActions();
+    ActionHolder getClickActionHolder();
 
 }

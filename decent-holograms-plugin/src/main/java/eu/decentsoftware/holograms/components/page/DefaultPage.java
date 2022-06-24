@@ -43,13 +43,13 @@ public class DefaultPage implements Page {
 
     @NotNull
     @Override
-    public ConditionHolder getClickConditions() {
+    public ConditionHolder getClickConditionHolder() {
         return clickConditions;
     }
 
     @NotNull
     @Override
-    public ActionHolder getClickActions() {
+    public ActionHolder getClickActionHolder() {
         return clickActions;
     }
 
