@@ -5,7 +5,7 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import eu.decentsoftware.holograms.api.config.ConfigUtils;
+import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import org.bukkit.Location;
 

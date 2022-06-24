@@ -2,8 +2,8 @@ package eu.decentsoftware.holograms;
 
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.config.CFG;
-import eu.decentsoftware.holograms.api.config.ConfigValue;
+import eu.decentsoftware.holograms.api.utils.config.CFG;
+import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 

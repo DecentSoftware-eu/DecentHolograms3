@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.color;
+package eu.decentsoftware.holograms.api.utils.color;
 
 import com.google.common.collect.ImmutableMap;
 import eu.decent.holograms.api.utils.color.patterns.*;

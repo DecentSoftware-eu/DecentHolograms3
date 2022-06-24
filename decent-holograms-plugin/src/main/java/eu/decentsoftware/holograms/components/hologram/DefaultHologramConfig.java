@@ -11,7 +11,7 @@ import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineSettings;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
-import eu.decentsoftware.holograms.api.config.ConfigUtils;
+import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.S;
 import eu.decentsoftware.holograms.components.line.DefaultLine;

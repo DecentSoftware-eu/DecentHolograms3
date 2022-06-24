@@ -5,7 +5,7 @@ import eu.decentsoftware.holograms.actions.impl.StringAction;
 import eu.decentsoftware.holograms.actions.impl.StringListAction;
 import eu.decentsoftware.holograms.actions.impl.TeleportAction;
 import eu.decentsoftware.holograms.api.actions.Action;
-import eu.decentsoftware.holograms.api.config.ConfigUtils;
+import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import lombok.Getter;
 import org.bukkit.Location;

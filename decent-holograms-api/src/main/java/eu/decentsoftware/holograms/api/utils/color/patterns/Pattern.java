@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.color.patterns;
+package eu.decentsoftware.holograms.api.utils.color.patterns;
 
 public interface Pattern {
 

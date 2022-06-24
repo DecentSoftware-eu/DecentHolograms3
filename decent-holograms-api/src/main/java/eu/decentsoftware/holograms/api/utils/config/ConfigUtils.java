@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.config;
+package eu.decentsoftware.holograms.api.utils.config;
 
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import lombok.experimental.UtilityClass;
