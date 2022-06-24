@@ -84,7 +84,8 @@ public interface PageLineHolder {
      * @param line The line to set.
      */
     default void setLine(int index, @NotNull Line line) {
-        getLines().set(index, line);
+        removeLine(index);
+        addLine(index, line);
     }
 
     /**

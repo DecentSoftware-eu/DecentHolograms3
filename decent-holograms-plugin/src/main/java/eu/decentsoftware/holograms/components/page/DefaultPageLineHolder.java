@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultPageLineHolder implements PageLineHolder {
@@ -36,38 +37,73 @@ public class DefaultPageLineHolder implements PageLineHolder {
 
     @Override
     public Line removeLine(int index) {
-        // TODO: hide the line and recalculate the hologram
+        // Remove the line from the list
         Line line = PageLineHolder.super.removeLine(index);
 
+        // Hide the line to all viewers
+        for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+            line.getRenderer().hide(viewerPlayer);
+        }
+
+        // Realign other lines
+        parent.recalculate();
         return line;
     }
 
     @Override
     public void addLine(@NotNull Line line) {
-        // TODO: show the line and recalculate the hologram
+        // Add the line to the list
         PageLineHolder.super.addLine(line);
 
+        // Show the line to all viewers
+        for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+            // TODO: check view conditions
+            line.getRenderer().display(viewerPlayer);
+        }
+
+        // Realign other lines
+        parent.recalculate();
     }
 
     @Override
     public void addLine(int index, @NotNull Line line) {
-        // TODO: show the line and recalculate the hologram
+        // Add the line to the list
         PageLineHolder.super.addLine(index, line);
 
+        // Show the line to all viewers
+        for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+            // TODO: check view conditions
+            line.getRenderer().display(viewerPlayer);
+        }
+
+        // Realign other lines
+        parent.recalculate();
     }
 
     @Override
     public void setLine(int index, @NotNull Line line) {
-        // TODO: hide the old line and show the new line and recalculate the hologram
-        PageLineHolder.super.setLine(index, line);
+        // Remove the previous line from the list
+        Line previousLine = PageLineHolder.super.removeLine(index);
 
+        // Hide the previous line to all viewers
+        for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+            previousLine.getRenderer().hide(viewerPlayer);
+        }
+
+        // Add the new line
+        addLine(index, line);
     }
 
     @Override
     public void clearLines() {
-        // TODO: hide all lines and recalculate the hologram
+        // Hide all lines from all viewers
+        for (Line line : lines) {
+            for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+                line.getRenderer().hide(viewerPlayer);
+            }
+        }
+
+        // Clear the list
         PageLineHolder.super.clearLines();
-
-
     }
 }
