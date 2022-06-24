@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 public class DefaultServer implements Server {
 
-    // TODO: motd lines, full status
+    // TODO: motd lines
 
     private final String name;
     private final Pinger pinger;
@@ -43,21 +43,19 @@ public class DefaultServer implements Server {
     public void tick() {
         long now = System.currentTimeMillis();
         if (now - lastUpdate.get() > Config.PINGER_UPDATE_INTERVAL * 50L) {
-            update();
+            S.async(this::update);
             lastUpdate.set(now);
         }
     }
 
     @Override
     public void update() {
-        S.async(() -> {
-            try {
-                data = pinger.fetchData();
-                online.set(true);
-            } catch (Exception e) {
-                online.set(false);
-            }
-        });
+        try {
+            data = pinger.fetchData();
+            online.set(true);
+        } catch (Exception e) {
+            online.set(false);
+        }
     }
 
     @Override
