@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.components.hologram;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.Page;
@@ -42,8 +43,25 @@ public class DefaultHologram implements Hologram {
      * @param persistent Whether the hologram is persistent.
      */
     public DefaultHologram(@NotNull String name, @NotNull Location location, boolean enabled, boolean persistent) {
+        this(name, location, null, enabled, persistent);
+    }
+
+    /**
+     * Creates a new instance of {@link DefaultHologram} with the given name.
+     *
+     * @param name       The name of the hologram.
+     * @param location   The location of the hologram.
+     * @param config     The config of the hologram.
+     * @param enabled    Whether the hologram is enabled or not.
+     * @param persistent Whether the hologram is persistent.
+     */
+    protected DefaultHologram(@NotNull String name, @NotNull Location location, YamlDocument config, boolean enabled, boolean persistent) {
         this.name = name;
-        this.file = new DefaultHologramConfig(this);
+        if (config != null) {
+            this.file = new DefaultHologramConfig(this, config);
+        } else {
+            this.file = new DefaultHologramConfig(this);
+        }
         this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
