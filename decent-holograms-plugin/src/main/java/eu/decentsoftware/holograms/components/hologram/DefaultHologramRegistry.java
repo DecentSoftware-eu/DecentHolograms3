@@ -50,7 +50,7 @@ public class DefaultHologramRegistry extends HologramRegistry {
                     // Set the hologram to be visible by default
                     hologram.getVisibilityManager().setVisibleByDefault(true);
                     // Add the hologram to the registry
-                    this.register(hologramName, hologram);
+                    this.register(hologram);
                 }
             } catch (InterruptedException | ExecutionException | IOException | LocationParseException e) {
                 PLUGIN.getLogger().severe("Failed to load hologram " + hologramName + ": " + e.getMessage());
