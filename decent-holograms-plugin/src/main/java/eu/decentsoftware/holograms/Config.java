@@ -52,6 +52,8 @@ public final class Config {
     public static String PINGER_STATUS_ONLINE = "&aOnline";
     @ConfigValue("pinger.status.offline")
     public static String PINGER_STATUS_OFFLINE = "&cOffline";
+    @ConfigValue("pinger.status.full")
+    public static String PINGER_STATUS_FULL = "&6Full";
     @ConfigValue("pinger.trim-motd")
     public static boolean PINGER_TRIM_MOTD = true;
 

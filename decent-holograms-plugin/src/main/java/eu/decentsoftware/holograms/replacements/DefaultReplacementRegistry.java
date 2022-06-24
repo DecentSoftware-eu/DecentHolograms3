@@ -175,6 +175,9 @@ public class DefaultReplacementRegistry extends ReplacementRegistry {
                         // -- Pinged server
                         Server server = PLUGIN.getServerRegistry().get(argument);
                         if (server != null && server.isOnline()) {
+                            if (server.isFull()) {
+                                return Config.PINGER_STATUS_FULL;
+                            }
                             return Config.PINGER_STATUS_ONLINE;
                         }
                     } else {
