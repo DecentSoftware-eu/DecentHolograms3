@@ -14,11 +14,10 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * This class represents a pinged server.
- */
 @Getter
 public class DefaultServer implements Server {
+
+    // TODO: motd lines, full status
 
     private final String name;
     private final Pinger pinger;
@@ -41,6 +40,15 @@ public class DefaultServer implements Server {
     }
 
     @Override
+    public void tick() {
+        long now = System.currentTimeMillis();
+        if (now - lastUpdate.get() > Config.PINGER_UPDATE_INTERVAL * 50L) {
+            update();
+            lastUpdate.set(now);
+        }
+    }
+
+    @Override
     public void update() {
         S.async(() -> {
             try {
@@ -53,39 +61,13 @@ public class DefaultServer implements Server {
     }
 
     @Override
-    public void tick() {
-        long now = System.currentTimeMillis();
-        if (now - lastUpdate.get() > Config.PINGER_UPDATE_INTERVAL * 50L) {
-            update();
-            lastUpdate.set(now);
-        }
-    }
-
-    /**
-     * Check if the server is online.
-     *
-     * @return true if the server is online, false otherwise
-     */
-    public boolean isOnline() {
-        return data != null && online.get();
-    }
-
-    /**
-     * Set the server online status.
-     *
-     * @param online the new online status
-     */
-    public void setOnline(boolean online) {
-        this.online.set(online);
-    }
-
-    /**
-     * Connects the player to the server.
-     *
-     * @param player the player to connect
-     */
     public void connect(@NotNull Player player) {
         BungeeUtils.connect(player, name);
+    }
+
+    @Override
+    public boolean isOnline() {
+        return data != null && online.get();
     }
 
 }

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents a registry of pinged servers.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public abstract class ServerRegistry extends Registry<String, Server> {
 

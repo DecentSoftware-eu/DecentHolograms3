@@ -2,11 +2,14 @@ package eu.decentsoftware.holograms.api.server;
 
 import eu.decentsoftware.holograms.api.utils.pinger.PingerResponse;
 import eu.decentsoftware.holograms.api.ticker.ITicked;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * This class represents a server.
+ * This class represents a server. It stores data about a pinged server.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface Server extends ITicked {
 
@@ -14,6 +17,13 @@ public interface Server extends ITicked {
      * Update the server data.
      */
     void update();
+
+    /**
+     * Connects the player to the server.
+     *
+     * @param player the player to connect
+     */
+    void connect(@NotNull Player player);
 
     /**
      * Get the name of the server.
@@ -35,5 +45,18 @@ public interface Server extends ITicked {
      * @return True if the server is online, false otherwise.
      */
     boolean isOnline();
+
+    /**
+     * Check if the server is full.
+     *
+     * @return True if the server is full, false otherwise.
+     */
+    default boolean isFull() {
+        if (isOnline()) {
+            PingerResponse.Players players = getData().getPlayers();
+            return players.getMax() >= players.getOnline();
+        }
+        return false;
+    }
 
 }
