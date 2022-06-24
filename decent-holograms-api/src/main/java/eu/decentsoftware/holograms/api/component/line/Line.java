@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.component.line;
 
-import eu.decentsoftware.holograms.api.component.common.IActionable;
-import eu.decentsoftware.holograms.api.component.common.IConditional;
+import eu.decentsoftware.holograms.api.component.common.IClickable;
+import eu.decentsoftware.holograms.api.component.common.IViewConditional;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import org.jetbrains.annotations.NotNull;
@@ -12,14 +12,12 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  */
-public interface Line extends IActionable, IConditional {
+public interface Line extends IClickable, IViewConditional {
 
     /*
      * TODO:
-     *  - Click actions, Hover actions
-     *  - Click conditions, View conditions
      *  - Hover content for text lines
-     *  -
+     *  - Click handling
      */
 
     /**

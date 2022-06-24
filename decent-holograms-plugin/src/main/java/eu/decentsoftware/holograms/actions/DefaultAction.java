@@ -2,9 +2,14 @@ package eu.decentsoftware.holograms.actions;
 
 import eu.decentsoftware.holograms.api.actions.Action;
 import lombok.Getter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents an action, that can be executed for a specific profile.
+ *
+ * @author d0by
+ * @since 3.0.0
  */
 @Getter
 public abstract class DefaultAction implements Action {
@@ -41,6 +46,17 @@ public abstract class DefaultAction implements Action {
             return true;
         }
         return (Math.random() * 100) < chance;
+    }
+
+    /**
+     * Load an action from a configuration section.
+     *
+     * @param config The configuration section.
+     * @return The action.
+     */
+    public static DefaultAction load(@NotNull ConfigurationSection config) {
+
+        return null;
     }
 
 }

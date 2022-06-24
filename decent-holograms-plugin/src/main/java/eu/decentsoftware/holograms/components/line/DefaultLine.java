@@ -1,9 +1,9 @@
 package eu.decentsoftware.holograms.components.line;
 
 import eu.decentsoftware.holograms.actions.DefaultActionHolder;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
-import eu.decent.holograms.api.component.line.*;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineRenderer;
 import eu.decentsoftware.holograms.api.component.line.LineSettings;
@@ -20,8 +20,9 @@ public class DefaultLine implements Line {
     private final Page parent;
     private final LineSettings settings;
     private final PositionManager positionManager;
-    private final ActionHolder actionHolder;
-    private final ConditionHolder conditionHolder;
+    private final ConditionHolder viewConditions;
+    private final ConditionHolder clickConditions;
+    private final ActionHolder clickActions;
     private LineRenderer renderer;
     private String content;
     private LineType type;
@@ -36,8 +37,9 @@ public class DefaultLine implements Line {
         this.parent = parent;
         this.settings = new DefaultLineSettings();
         this.positionManager = new DefaultPositionManager(location);
-        this.actionHolder = new DefaultActionHolder();
-        this.conditionHolder = new DefaultConditionHolder();
+        this.viewConditions = new DefaultConditionHolder();
+        this.clickConditions = new DefaultConditionHolder();
+        this.clickActions = new DefaultActionHolder();
     }
 
     @NotNull
@@ -77,14 +79,20 @@ public class DefaultLine implements Line {
 
     @NotNull
     @Override
-    public ActionHolder getActions() {
-        return actionHolder;
+    public ConditionHolder getViewConditions() {
+        return viewConditions;
     }
 
     @NotNull
     @Override
-    public ConditionHolder getConditions() {
-        return conditionHolder;
+    public ConditionHolder getClickConditions() {
+        return clickConditions;
+    }
+
+    @NotNull
+    @Override
+    public ActionHolder getClickActions() {
+        return clickActions;
     }
 
     @NotNull
@@ -96,7 +104,9 @@ public class DefaultLine implements Line {
     @Override
     public void setContent(@NotNull String content) {
         this.content = content;
-        // TODO: parse content
+
+        // Parse content and update line accordingly
+        DecentHologramsAPI.getInstance().getContentParser().parse(this);
     }
 
 }

@@ -3,6 +3,8 @@ package eu.decentsoftware.holograms.api.component.hologram;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.common.*;
 import eu.decentsoftware.holograms.api.ticker.ITicked;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  */
-public interface Hologram extends INameable, IActionable, IConditional, ITicked {
+public interface Hologram extends INameable, IViewConditional, ITicked {
 
     // TODO:
     //  animations
