@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * PlaceholderAPI.
+ * Utility class providing methods to interact with the PlaceholderAPI plugin.
  */
 public final class PAPI {
 

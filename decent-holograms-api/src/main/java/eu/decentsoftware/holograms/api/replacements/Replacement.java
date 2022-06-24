@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
  * This class represents a custom placeholder.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface Replacement {
 

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
  * This functional interface represents the supplier, that finds the replacements of placeholders.
  *
  * @author d0by
+ * @since 3.0.0
  */
 @FunctionalInterface
 public interface ReplacementSupplier {

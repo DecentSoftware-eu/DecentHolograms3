@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
  * This class represents a profile of a player.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface Profile {
 

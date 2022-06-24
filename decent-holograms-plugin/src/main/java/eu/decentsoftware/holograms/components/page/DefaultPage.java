@@ -29,30 +29,6 @@ public class DefaultPage implements Page {
         this.clickActions = new DefaultActionHolder();
     }
 
-    @NotNull
-    @Override
-    public Hologram getParent() {
-        return parent;
-    }
-
-    @NotNull
-    @Override
-    public PageLineHolder getLineHolder() {
-        return lineHolder;
-    }
-
-    @NotNull
-    @Override
-    public ConditionHolder getClickConditionHolder() {
-        return clickConditions;
-    }
-
-    @NotNull
-    @Override
-    public ActionHolder getClickActionHolder() {
-        return clickActions;
-    }
-
     @Override
     public void display(@NotNull Player player) {
         for (Line line : lineHolder.getLines()) {
@@ -106,6 +82,30 @@ public class DefaultPage implements Page {
         Location location = getParent().getPositionManager().getActualLocation();
         double yOffset = getParent().getSettings().isDownOrigin() ? -height : height;
         return location.add(0, yOffset, 0);
+    }
+
+    @NotNull
+    @Override
+    public Hologram getParent() {
+        return parent;
+    }
+
+    @NotNull
+    @Override
+    public PageLineHolder getLineHolder() {
+        return lineHolder;
+    }
+
+    @NotNull
+    @Override
+    public ConditionHolder getClickConditionHolder() {
+        return clickConditions;
+    }
+
+    @NotNull
+    @Override
+    public ActionHolder getClickActionHolder() {
+        return clickActions;
     }
 
 }

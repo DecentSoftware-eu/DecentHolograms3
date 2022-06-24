@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents a registry of placeholders.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public abstract class ReplacementRegistry extends Registry<String, Replacement> {
 

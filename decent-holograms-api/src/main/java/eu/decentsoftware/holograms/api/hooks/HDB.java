@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * HeadDatabase.
+ * Utility class providing methods to interact with the HeadDatabaseAPI plugin.
  */
 public final class HDB {
 

@@ -2,6 +2,12 @@ package eu.decentsoftware.holograms.api.pulsar;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class represents a pulsar. It is used to play some "pulse" animations.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
 public interface IPulsar {
 
     /**

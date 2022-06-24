@@ -72,7 +72,7 @@ public class DefaultHologram implements Hologram {
         // Start the ticking.
         this.startTicking();
 
-        // Loads the hologram from the file.
+        // Load the hologram from the file.
         this.getConfig().load()
                 .thenRun(() -> getSettings().setEnabled(enabled));
     }

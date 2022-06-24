@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents a registry of profiles.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public abstract class ProfileRegistry extends Registry<String, Profile> {
 

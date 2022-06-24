@@ -17,6 +17,7 @@ import java.util.UUID;
  * There is one adapter for each supported Minecraft version.
  *
  * @author d0by
+ * @since 3.0.0
  */
 @SuppressWarnings("unused")
 public interface NMSAdapter {

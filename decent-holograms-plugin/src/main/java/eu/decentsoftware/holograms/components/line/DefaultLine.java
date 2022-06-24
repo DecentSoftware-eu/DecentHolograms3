@@ -25,7 +25,6 @@ public class DefaultLine implements Line {
     private final ActionHolder clickActions;
     private LineRenderer renderer;
     private String content;
-    private LineType type;
 
     /**
      * Creates a new instance of {@link DefaultLine}.
@@ -51,7 +50,7 @@ public class DefaultLine implements Line {
     @NotNull
     @Override
     public LineType getType() {
-        return type;
+        return renderer.getType();
     }
 
     @NotNull
@@ -105,7 +104,7 @@ public class DefaultLine implements Line {
     public void setContent(@NotNull String content) {
         this.content = content;
 
-        // Parse content and update line accordingly
+        // -- Parse content and update line accordingly
         DecentHologramsAPI.getInstance().getContentParser().parse(this);
     }
 
