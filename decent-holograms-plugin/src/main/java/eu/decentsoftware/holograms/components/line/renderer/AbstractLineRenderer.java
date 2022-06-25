@@ -28,13 +28,14 @@ public abstract class AbstractLineRenderer implements LineRenderer {
         this.type = type;
     }
 
-    /**
-     * Get a new entity ID.
-     *
-     * @return The new entity ID.
-     */
-    protected int getFreeEntityId() {
-        return ENTITY_ID++;
+    @Override
+    public double getHeight() {
+        return getParent().getSettings().getHeight();
+    }
+
+    @Override
+    public double getWidth() {
+        return 0; // TODO
     }
 
     @NotNull
@@ -47,6 +48,15 @@ public abstract class AbstractLineRenderer implements LineRenderer {
     @Override
     public LineType getType() {
         return type;
+    }
+
+    /**
+     * Get a new entity ID.
+     *
+     * @return The new entity ID.
+     */
+    protected int getFreeEntityId() {
+        return ENTITY_ID++;
     }
 
 }

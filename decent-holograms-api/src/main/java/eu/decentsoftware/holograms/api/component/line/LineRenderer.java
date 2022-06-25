@@ -32,6 +32,20 @@ public interface LineRenderer {
     LineType getType();
 
     /**
+     * Get the height of the rendered line.
+     *
+     * @return The height of the rendered line.
+     */
+    double getHeight();
+
+    /**
+     * Get the width of the rendered line.
+     *
+     * @return The width of the rendered line.
+     */
+    double getWidth();
+
+    /**
      * Display the parent {@link Line} for a player.
      *
      * @param player The player to display the line for.
