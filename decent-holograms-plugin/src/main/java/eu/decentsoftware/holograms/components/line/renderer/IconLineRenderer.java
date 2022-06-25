@@ -30,9 +30,10 @@ public class IconLineRenderer extends AbstractDoubleEntityLineRenderer {
         // Create the item metadata objects
         Object metaEntityItem = NMS.getMetaEntityProperties(false, false, false, false, false, glowing, false);
         Object metaItem = NMS.getMetaItemStack(item);
+        Object metaGravity = NMS.getMetaEntityGravity(false);
 
         // Display
-        super.display(player, EntityType.DROPPED_ITEM, metaEntityItem, metaItem);
+        super.display(player, EntityType.DROPPED_ITEM, metaEntityItem, metaItem, metaGravity);
     }
 
     @Override

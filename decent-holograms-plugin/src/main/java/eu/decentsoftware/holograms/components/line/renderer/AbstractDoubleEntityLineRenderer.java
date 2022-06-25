@@ -34,7 +34,7 @@ public abstract class AbstractDoubleEntityLineRenderer extends AbstractLineRende
      *
      * @param player The player to display the line to.
      * @param typeOther The type of the passenger entity.
-     * @param metaOther The metadata of the passenger entity. (Gravity is set to false by default; no need to set it)
+     * @param metaOther The metadata of the passenger entity.
      */
     protected void display(@NotNull Player player, @NotNull EntityType typeOther, @NotNull Object... metaOther) {
         Location loc = getParent().getPositionManager().getActualLocation();
@@ -48,7 +48,7 @@ public abstract class AbstractDoubleEntityLineRenderer extends AbstractLineRende
         // Spawn the fake armor stand entity
         NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaGravity, metaArmorStand, metaNameVisible);
+        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible, metaGravity);
 
         // Spawn the passenger entity
         if (typeOther.isAlive()) {
@@ -57,7 +57,7 @@ public abstract class AbstractDoubleEntityLineRenderer extends AbstractLineRende
             NMS.spawnEntity(player, eidOther, UUID.randomUUID(), typeOther, loc);
         }
         // Send the metadata
-        NMS.sendEntityMetadata(player, eidOther, metaOther, metaGravity);
+        NMS.sendEntityMetadata(player, eidOther, metaOther);
 
         // Add the other entity to the armor stand
         NMS.updatePassengers(player, eid, eidOther);

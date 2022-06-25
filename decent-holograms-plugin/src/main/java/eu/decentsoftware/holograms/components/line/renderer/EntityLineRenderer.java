@@ -25,9 +25,10 @@ public class EntityLineRenderer extends AbstractDoubleEntityLineRenderer {
     public void display(@NotNull Player player) {
         // Create the entity metadata objects
         Object metaEntityOther = NMS.getMetaEntityProperties(false, false, false, false, false, glowing, false);
+        Object metaGravity = NMS.getMetaEntityGravity(false);
 
         // Display
-        super.display(player, entityType, metaEntityOther);
+        super.display(player, entityType, metaEntityOther, metaGravity);
     }
 
     @Override
