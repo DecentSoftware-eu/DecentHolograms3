@@ -1,8 +1,6 @@
 package eu.decentsoftware.holograms.api.utils.color;
 
 import com.google.common.collect.ImmutableMap;
-import eu.decent.holograms.api.utils.color.patterns.*;
-import eu.decentsoftware.holograms.api.color.patterns.*;
 import eu.decentsoftware.holograms.api.utils.color.patterns.*;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.experimental.UtilityClass;
@@ -270,6 +268,19 @@ public final class DecentColorAPI {
             colors[i] = getColor(Color.getHSBColor((float) (colorStep * i), saturation, saturation));
         }
         return colors;
+    }
+
+    /**
+     * Creates a hex string from the given RGB color.
+     *
+     * @param red The red value.
+     * @param green The green value.
+     * @param blue The blue value.
+     * @return The hex string.
+     */
+    @NotNull
+    public static String rgbToHex(int red, int green, int blue) {
+        return String.format("#%02X%02X%02X", red, green, blue);
     }
 
 }
