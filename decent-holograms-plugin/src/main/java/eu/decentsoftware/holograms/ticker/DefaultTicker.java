@@ -30,40 +30,77 @@ public class DefaultTicker implements Ticker {
     }
 
     @Override
+    public void shutdown() {
+        this.stop();
+        this.tickedObjects.clear();
+        this.tickedObjectsToAdd.clear();
+        this.tickedObjectsToRemove.clear();
+    }
+
+    @Override
     public void register(@NotNull ITicked ticked) {
-        tickedObjectsToAdd.add(ticked);
+        synchronized (tickedObjectsToAdd) {
+            if (!tickedObjects.contains(ticked)) {
+                tickedObjectsToAdd.add(ticked);
+            }
+        }
     }
 
     @Override
     public void unregister(@NotNull ITicked ticked) {
-        tickedObjectsToRemove.remove(ticked);
+        synchronized (tickedObjectsToRemove) {
+            if (tickedObjects.contains(ticked)) {
+                tickedObjectsToRemove.add(ticked);
+            }
+        }
     }
 
     @Override
     public void unregisterAll() {
-        tickedObjectsToAdd.clear();
-        tickedObjectsToRemove.addAll(tickedObjects);
+        synchronized (tickedObjectsToAdd) {
+            tickedObjectsToAdd.clear();
+        }
+        synchronized (tickedObjectsToRemove) {
+            tickedObjectsToRemove.addAll(tickedObjects);
+        }
     }
 
     @Override
     public void start() {
-        taskId = S.scheduleSync(() -> {
-            if (ticking.compareAndSet(false, true)) {
-                // Tick all ticked objects
-                for (ITicked ticked : tickedObjects) {
-                    ticked.tick();
-                }
-                // Add and remove ticked objects
-                tickedObjects.addAll(tickedObjectsToAdd);
-                tickedObjects.removeAll(tickedObjectsToRemove);
-            }
-            ticking.set(false);
-        }, 1L);
+        taskId = S.scheduleSync(this::tick, 1L);
     }
 
     @Override
     public void stop() {
         S.cancel(taskId);
+    }
+
+    private void tick() {
+        if (ticking.compareAndSet(false, true)) {
+            // Tick all ticked objects
+            synchronized (tickedObjects) {
+                for (ITicked ticked : tickedObjects) {
+                    try {
+                        ticked.tick();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            // Add ticked objects
+            synchronized (tickedObjectsToAdd) {
+                tickedObjects.addAll(tickedObjectsToAdd);
+                tickedObjectsToAdd.clear();
+            }
+
+            // Remove ticked objects
+            synchronized (tickedObjectsToRemove) {
+                tickedObjects.removeAll(tickedObjectsToRemove);
+                tickedObjectsToRemove.clear();
+            }
+        }
+        ticking.set(false);
     }
 
 }

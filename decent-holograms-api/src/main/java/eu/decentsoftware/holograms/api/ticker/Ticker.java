@@ -43,9 +43,6 @@ public interface Ticker {
     /**
      * Destroy the ticker unregistering all objects and stopping it.
      */
-    default void destroy() {
-        stop();
-        unregisterAll();
-    }
+    void shutdown();
 
 }
