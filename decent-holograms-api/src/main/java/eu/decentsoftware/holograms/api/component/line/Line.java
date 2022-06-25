@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * that can be moved in the world. A line can be added to a {@link Page}.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface Line extends IClickable, IViewConditional {
 

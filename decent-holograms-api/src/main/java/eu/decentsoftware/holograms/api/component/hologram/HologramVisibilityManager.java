@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * holograms view distance setting and view conditions.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface HologramVisibilityManager {
 

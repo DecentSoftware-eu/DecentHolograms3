@@ -4,6 +4,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Enum of supported NMS versions.
+ *
+ * @author d0by
  */
 public enum Version {
     v1_8_R1(8),
@@ -22,7 +24,10 @@ public enum Version {
     v1_16_R2(16),
     v1_16_R3(16),
     v1_17_R1(17),
-    v1_18_R1(18);
+    v1_18_R1(18),
+    v1_18_R2(18),
+    v1_19_R1(19),
+    ;
 
     /*
      *  Static

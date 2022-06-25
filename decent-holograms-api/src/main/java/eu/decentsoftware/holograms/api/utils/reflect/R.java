@@ -9,15 +9,31 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+/**
+ * Utility class for working with reflection.
+ *
+ * @author d0by
+ */
 public class R {
 
     private static String version;
     private final Object object;
 
-    public R(Object object) {
+    /**
+     * Creates a new instance of {@link R} with the given object.
+     *
+     * @param object The object to work with.
+     */
+    public R(@NotNull Object object) {
         this.object = object;
     }
 
+    /**
+     * Invokes a method with the given name and arguments.
+     *
+     * @param methodName The name of the method to invoke.
+     * @param args       The arguments to pass to the method.
+     */
     public void invoke(String methodName, Object... args) {
         try {
             Method method = object.getClass().getMethod(methodName, Arrays.stream(args).map(Object::getClass).toArray(Class[]::new));
@@ -28,6 +44,12 @@ public class R {
         }
     }
 
+    /**
+     * Gets the value of the field with the given name.
+     *
+     * @param fieldName The name of the field to get the value of.
+     * @return The value of the field.
+     */
     public Object get(String fieldName) {
         try {
             Field field = object.getClass().getField(fieldName);
@@ -39,6 +61,12 @@ public class R {
         return null;
     }
 
+    /**
+     * Sets the value of the field with the given name.
+     *
+     * @param fieldName The name of the field to set the value of.
+     * @param value     The value to set.
+     */
     public void set(String fieldName, Object value) {
         try {
             Field field = object.getClass().getField(fieldName);
@@ -53,13 +81,25 @@ public class R {
      *  ============== Static methods ==============
      */
 
+    /**
+     * Gets the version of the server.
+     *
+     * @return The version of the server.
+     */
     public static String getVersion() {
         if (version == null) {
-            version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];;
+            version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         }
         return version;
     }
 
+    /**
+     * Gets the class of the given name.
+     *
+     * @param name The name of the class.
+     * @return The class of the given name.
+     */
+    @Nullable
     public static Class<?> getClass(String name) {
         try {
             return Class.forName(name);
@@ -69,6 +109,13 @@ public class R {
         }
     }
 
+    /**
+     * Gets the class of the given name from the "net.minecraft" package.
+     *
+     * @param name The name of the class.
+     * @return The class of the given name.
+     */
+    @Nullable
     public static Class<?> getNMClass(String name) {
         try {
             return Class.forName("net.minecraft." + name);
@@ -78,6 +125,13 @@ public class R {
         }
     }
 
+    /**
+     * Gets the class of the given name from the "net.minecraft.server.VERSION" package.
+     *
+     * @param name The name of the class.
+     * @return The class of the given name.
+     */
+    @Nullable
     public static Class<?> getNMSClass(String name) {
         try {
             return Class.forName("net.minecraft.server." + getVersion() + "." + name);
@@ -87,15 +141,31 @@ public class R {
         }
     }
 
-    public static Class<?> getObcClass(String classname) {
+    /**
+     * Gets the class of the given name from the "org.bukkit.craftbukkit.VERSION" package.
+     *
+     * @param name The name of the class.
+     * @return The class of the given name.
+     */
+    @Nullable
+    public static Class<?> getObcClass(String name) {
         try {
-            return Class.forName("org.bukkit.craftbukkit." + getVersion() + "." + classname);
+            return Class.forName("org.bukkit.craftbukkit." + getVersion() + "." + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    /**
+     * Sets the value of the field with the given name in the given object.
+     *
+     * @param object    The object to set the value of the field in.
+     * @param fieldName The name of the field to set the value of.
+     * @param value     The value to set.
+     * @param <T>       The type of the value.
+     * @return Whether the field was successfully set.
+     */
     public static <T> boolean setFieldValue(@NotNull Object object, String fieldName, T value) {
         Class<?> clazz = object instanceof Class<?> ? (Class<?>) object : object.getClass();
         try {
@@ -108,6 +178,14 @@ public class R {
         }
     }
 
+    /**
+     * Gets the value of the field with the given name in the given object.
+     *
+     * @param object    The object to get the value of the field from.
+     * @param fieldName The name of the field to get the value of.
+     * @param <T>       The type of the value.
+     * @return The value of the field.
+     */
     @Nullable
     public static <T> T getFieldValue(@NotNull Object object, String fieldName) {
         Class<?> clazz = object instanceof Class<?> ? (Class<?>) object : object.getClass();

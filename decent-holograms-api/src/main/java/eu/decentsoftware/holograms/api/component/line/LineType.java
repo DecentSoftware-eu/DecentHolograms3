@@ -5,6 +5,7 @@ package eu.decentsoftware.holograms.api.component.line;
  * how the line will be displayed for the player.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public enum LineType {
     /**

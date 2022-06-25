@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * types of line renderers for different types of lines.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface LineRenderer {
 

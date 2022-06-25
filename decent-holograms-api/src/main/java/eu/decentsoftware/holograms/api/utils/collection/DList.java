@@ -288,7 +288,7 @@ public class DList<T> extends ArrayList<T> {
      * Get a sublist.
      *
      * @param start The start index. (Including)
-     * @param end The end index. (Excluding)
+     * @param end   The end index. (Excluding)
      * @return The sublist.
      */
     @Override

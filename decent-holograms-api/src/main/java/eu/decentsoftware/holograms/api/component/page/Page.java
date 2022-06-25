@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents a hologram page. A page is a collection of lines.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface Page extends IClickable {
 

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author d0by
  * @see LineRenderer
+ * @since 3.0.0
  */
 public interface ContentParser {
 

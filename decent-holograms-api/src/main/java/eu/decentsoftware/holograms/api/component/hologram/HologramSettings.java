@@ -4,6 +4,7 @@ package eu.decentsoftware.holograms.api.component.hologram;
  * This class represents the settings of a hologram.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface HologramSettings {
 

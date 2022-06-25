@@ -4,6 +4,7 @@ package eu.decentsoftware.holograms.api.component.line;
  * This class represents the settings of a line.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface LineSettings {
 

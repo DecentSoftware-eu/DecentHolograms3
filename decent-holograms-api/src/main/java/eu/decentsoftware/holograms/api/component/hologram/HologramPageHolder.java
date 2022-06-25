@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * and provides methods to manipulate them.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface HologramPageHolder {
 

@@ -1,10 +1,9 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
+import eu.decentsoftware.holograms.api.component.common.INameable;
+import eu.decentsoftware.holograms.api.component.common.IViewConditional;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
-import eu.decentsoftware.holograms.api.component.common.*;
 import eu.decentsoftware.holograms.api.ticker.ITicked;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * that's visible to specified players and has multiple pages.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface Hologram extends INameable, IViewConditional, ITicked {
 
@@ -62,9 +62,9 @@ public interface Hologram extends INameable, IViewConditional, ITicked {
     HologramPageHolder getPageHolder();
 
     /**
-     * Get the position manager of this hologram.
+     * Get the {@link PositionManager} of this hologram.
      *
-     * @return The position manager of this hologram.
+     * @return The {@link PositionManager} of this hologram.
      * @see PositionManager
      */
     @NotNull

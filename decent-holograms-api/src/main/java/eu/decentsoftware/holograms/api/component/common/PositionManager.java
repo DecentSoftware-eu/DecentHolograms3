@@ -12,6 +12,7 @@ import java.util.function.Supplier;
  * for storing absolute or relative location of the hologram.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface PositionManager {
 

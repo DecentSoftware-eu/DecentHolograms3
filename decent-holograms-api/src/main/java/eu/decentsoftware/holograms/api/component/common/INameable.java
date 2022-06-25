@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents a component that can be named.
  *
  * @author d0by
+ * @since 3.0.0
  */
 public interface INameable {
 

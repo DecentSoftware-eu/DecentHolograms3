@@ -26,13 +26,13 @@ public final class DecentHologramsAPI {
 
     /**
      * > INTERNAL METHOD
-     *
+     * <p>
      * Set the current running instance of {@link DecentHolograms}. This
      * can only be performed once - when the plugin starts.
      *
      * @param instance The instance.
-     * @deprecated This method is only used internally.
      * @throws RuntimeException If the instance is already set.
+     * @deprecated This method is only used internally.
      */
     @ApiStatus.Internal
     public static void setInstance(DecentHolograms instance) throws RuntimeException {

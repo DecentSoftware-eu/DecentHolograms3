@@ -46,7 +46,7 @@ public abstract class Registry<K, V> {
     /**
      * Register a new value into this registry.
      *
-     * @param key The key.
+     * @param key   The key.
      * @param value The value.
      */
     public void register(K key, V value) {

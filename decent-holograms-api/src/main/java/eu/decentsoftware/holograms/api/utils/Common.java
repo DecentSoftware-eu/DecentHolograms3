@@ -1,10 +1,10 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.color.DecentColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapFont;
 import org.bukkit.map.MinecraftFont;
@@ -14,6 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * Common utility methods.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
 @SuppressWarnings("unused")
 @UtilityClass
 public final class Common {
@@ -93,7 +99,7 @@ public final class Common {
      * @param message The message.
      */
     public static void log(Level level, String message) {
-        Bukkit.getServer().getLogger().log(level, String.format("[DecentHolograms] %s", message));
+        DecentHologramsAPI.getInstance().getLogger().log(level, message);
     }
 
     /**
