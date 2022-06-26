@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.utils.image;
+package eu.decentsoftware.holograms.components.line.content.objects;
 
 import eu.decentsoftware.holograms.api.utils.color.DecentColor;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;

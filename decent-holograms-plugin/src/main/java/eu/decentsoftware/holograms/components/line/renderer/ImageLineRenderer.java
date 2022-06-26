@@ -3,7 +3,7 @@ package eu.decentsoftware.holograms.components.line.renderer;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.api.utils.Common;
-import eu.decentsoftware.holograms.api.utils.image.DecentImage;
+import eu.decentsoftware.holograms.components.line.content.objects.DecentImage;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
