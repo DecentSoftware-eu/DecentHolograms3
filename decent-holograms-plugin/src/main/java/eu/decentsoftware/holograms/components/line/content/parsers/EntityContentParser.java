@@ -2,8 +2,8 @@ package eu.decentsoftware.holograms.components.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
+import eu.decentsoftware.holograms.components.line.content.objects.DecentEntity;
 import eu.decentsoftware.holograms.components.line.renderer.EntityLineRenderer;
-import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityContentParser implements ContentParser {
@@ -16,19 +16,10 @@ public class EntityContentParser implements ContentParser {
         }
         content = content.substring("#ENTITY:".length());
 
-        boolean glowing = content.matches(".*(?i)--glow(ing)?.*");
-        if (glowing) {
-            content = content.replaceAll("(?i)--glow(ing)?", "");
-        }
-        content = content.trim();
+        DecentEntity entity = DecentEntity.fromString(content);
 
-        EntityType entityType = EntityType.PIG;
-        for (EntityType value : EntityType.values()) {
-            if (value.name().equalsIgnoreCase(content)) {
-                entityType = value;
-            }
-        }
-        line.setRenderer(new EntityLineRenderer(line, entityType, glowing));
+        EntityLineRenderer renderer = new EntityLineRenderer(line, entity);
+        line.setRenderer(renderer);
         return true;
     }
 
