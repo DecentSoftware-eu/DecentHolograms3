@@ -157,16 +157,14 @@ public class DecentImage {
         if (string.contains("--file:")) {
             String fileName = getFlagValue(string, "--file:");
             File file = new File(fileName);
-            BufferedImage image;
             try {
-                image = ImageIO.read(file);
+                BufferedImage image = ImageIO.read(file);
                 return new DecentImage(image);
             } catch (IOException ignored) {}
         } else if (string.contains("--url:")) {
             String url = getFlagValue(string, "--url:");
-            BufferedImage image;
             try {
-                image = ImageIO.read(new URL(url));
+                BufferedImage image = ImageIO.read(new URL(url));
                 return new DecentImage(image);
             } catch (IOException ignored) {}
         } else if (string.contains("--player:")) {
