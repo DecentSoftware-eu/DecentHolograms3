@@ -2,7 +2,7 @@ package eu.decentsoftware.holograms.components.line.renderer;
 
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
-import eu.decentsoftware.holograms.components.line.content.objects.LineItemStack;
+import eu.decentsoftware.holograms.components.line.content.objects.DecentItemStack;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -13,15 +13,15 @@ import java.util.UUID;
 
 public class HeadLineRenderer extends AbstractLineRenderer {
 
-    private final LineItemStack itemStack;
+    private final DecentItemStack itemStack;
     private final boolean small;
     private final int eid;
 
-    public HeadLineRenderer(@NotNull Line parent, @NotNull LineItemStack itemStack) {
+    public HeadLineRenderer(@NotNull Line parent, @NotNull DecentItemStack itemStack) {
         this(parent, itemStack, LineType.HEAD, false);
     }
 
-    public HeadLineRenderer(@NotNull Line parent, @NotNull LineItemStack itemStack, @NotNull LineType type, boolean small) {
+    public HeadLineRenderer(@NotNull Line parent, @NotNull DecentItemStack itemStack, @NotNull LineType type, boolean small) {
         super(parent, type);
         this.itemStack = itemStack;
         this.small = small;
