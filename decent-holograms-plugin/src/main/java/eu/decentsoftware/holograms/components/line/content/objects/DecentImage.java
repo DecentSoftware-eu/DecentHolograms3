@@ -1,13 +1,20 @@
 package eu.decentsoftware.holograms.components.line.content.objects;
 
+import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.color.DecentColor;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * This class represents an image. It is used to scale and parse the image.
@@ -17,6 +24,8 @@ import java.awt.image.BufferedImage;
  */
 @Getter
 public class DecentImage {
+
+    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
 
     private BufferedImage bufferedImage;
     private DecentColor[][] colorField;
@@ -105,15 +114,104 @@ public class DecentImage {
      * @param scale Scale to scale the image to.
      */
     public void scale(float scale) {
+        scale(scale, scale);
+    }
+
+    /**
+     * Scales the image to the given width and height.
+     *
+     * @param width Width to scale the image to.
+     * @param height Height to scale the image to.
+     */
+    public void scale(int width, int height) {
+        this.scale((float) width / this.bufferedImage.getWidth(), (float) height / this.bufferedImage.getHeight());
+    }
+
+    /**
+     * Scales the image to the given scale.
+     *
+     * @param width Scale to scale the image to.
+     * @param height Scale to scale the image to.
+     */
+    public void scale(float width, float height) {
         BufferedImage before = this.bufferedImage;
-        int width = (int) (bufferedImage.getWidth() * scale);
-        int height = (int) (bufferedImage.getHeight() * scale);
-        BufferedImage after = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        int w = (int) (bufferedImage.getWidth() * width);
+        int h = (int) (bufferedImage.getHeight() * height);
+        BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         AffineTransform at = new AffineTransform();
-        at.scale(scale, scale);
+        at.scale(w, h);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         this.bufferedImage = scaleOp.filter(before, after);
         this.parseColorField();
+    }
+
+    /**
+     * Parse the given {@link String} to a {@link DecentImage}. The string
+     * must be in the format of an item line content.
+     *
+     * @param string String to parse.
+     * @return DecentImage parsed from the string.
+     */
+    @Nullable
+    public static DecentImage fromString(@NotNull String string) {
+        if (string.contains("--file:")) {
+            String fileName = getFlagValue(string, "--file:");
+            File file = new File(fileName);
+            BufferedImage image;
+            try {
+                image = ImageIO.read(file);
+                return new DecentImage(image);
+            } catch (IOException ignored) {}
+        } else if (string.contains("--url:")) {
+            String url = getFlagValue(string, "--url:");
+            BufferedImage image;
+            try {
+                image = ImageIO.read(new URL(url));
+                return new DecentImage(image);
+            } catch (IOException ignored) {}
+        } else if (string.contains("--player:")) {
+            String playerName = getFlagValue(string, "--player:");
+            String type = "avatar";
+            if (string.contains("--type:")) {
+                type = getFlagValue(string, "--type:");
+            }
+            try {
+                return fromMinotar(playerName, type);
+            } catch (IOException ignored) {}
+        }
+        PLUGIN.getLogger().warning("Could not parse image from string: " + string);
+        return null;
+    }
+
+    @NotNull
+    private static String getFlagValue(@NotNull String content, @NotNull String flag) {
+        int index = content.indexOf(flag) + flag.length();
+        int endIndex = content.indexOf(' ', index);
+        return content.substring(index, endIndex);
+    }
+
+    /**
+     * Get an image from the given URL.
+     *
+     * @param url URL to get the image from.
+     * @return DecentImage representing the image.
+     * @throws IOException If the image could not be loaded.
+     */
+    public static DecentImage fromURL(@NotNull URL url) throws IOException {
+        return new DecentImage(ImageIO.read(url));
+    }
+
+    /**
+     * Get the given players skin image of the given type. Image is grabbed from the
+     * <a href="https://mc-heads.net/">MCHeads</a> website.
+     *
+     * @param username Username of the image.
+     * @param type     Type of the image.
+     * @return DecentImage representing the image.
+     * @throws IOException If the image could not be loaded.
+     */
+    public static DecentImage fromMinotar(@NotNull String username, @NotNull String type) throws IOException {
+        return fromURL(new URL("https://minotar.net/" + type + "/" + username + "/8"));
     }
 
 }
