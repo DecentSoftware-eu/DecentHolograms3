@@ -12,7 +12,11 @@ public class TextContentParser implements ContentParser {
 
     @Override
     public boolean parse(@NotNull Line line) {
-        LineRenderer renderer = new TextLineRenderer(line, line.getContent());
+        String content = line.getContent();
+        if (content == null) {
+            content = "";
+        }
+        LineRenderer renderer = new TextLineRenderer(line, content);
         line.setRenderer(renderer);
         return true;
     }

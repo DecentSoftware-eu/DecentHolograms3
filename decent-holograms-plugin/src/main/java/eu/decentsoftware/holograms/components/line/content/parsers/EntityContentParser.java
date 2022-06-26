@@ -11,7 +11,7 @@ public class EntityContentParser implements ContentParser {
     @Override
     public boolean parse(@NotNull Line line) {
         String content = line.getContent();
-        if (!content.startsWith("#ENTITY:")) {
+        if (content == null || !content.startsWith("#ENTITY:")) {
             return false;
         }
         content = content.substring("#ENTITY:".length());

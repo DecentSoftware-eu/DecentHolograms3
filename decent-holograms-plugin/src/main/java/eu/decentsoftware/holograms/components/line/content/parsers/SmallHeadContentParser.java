@@ -12,13 +12,10 @@ public class SmallHeadContentParser implements ContentParser {
     @Override
     public boolean parse(@NotNull Line line) {
         String content = line.getContent();
-        if (!content.startsWith("#SMALLHEAD:")) {
+        if (content == null || !content.startsWith("#SMALLHEAD:")) {
             return false;
         }
         DecentItemStack itemStack = DecentItemStack.fromString(content);
-        if (itemStack == null) {
-            return false;
-        }
         LineRenderer renderer = new SmallHeadLineRenderer(line, itemStack);
         line.setRenderer(renderer);
         return true;

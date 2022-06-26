@@ -12,13 +12,10 @@ public class HeadContentParser implements ContentParser {
     @Override
     public boolean parse(@NotNull Line line) {
         String content = line.getContent();
-        if (!content.startsWith("#HEAD:")) {
+        if (content == null || !content.startsWith("#HEAD:")) {
             return false;
         }
         DecentItemStack itemStack = DecentItemStack.fromString(content);
-        if (itemStack == null) {
-            return false;
-        }
         LineRenderer renderer = new HeadLineRenderer(line, itemStack);
         line.setRenderer(renderer);
         return true;

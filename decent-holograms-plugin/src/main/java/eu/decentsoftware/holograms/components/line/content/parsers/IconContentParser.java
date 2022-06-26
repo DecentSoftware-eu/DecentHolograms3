@@ -12,7 +12,7 @@ public class IconContentParser implements ContentParser {
     @Override
     public boolean parse(@NotNull Line line) {
         String content = line.getContent();
-        if (!content.startsWith("#ICON:")) {
+        if (content == null || !content.startsWith("#ICON:")) {
             return false;
         }
         content = content.substring("#ICON:".length());
