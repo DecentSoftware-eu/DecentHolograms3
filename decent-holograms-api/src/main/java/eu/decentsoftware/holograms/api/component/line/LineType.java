@@ -35,5 +35,6 @@ public enum LineType {
     /**
      * A line, made of multiple lines, displaying an image.
      */
-    IMAGE
+    IMAGE,
+    UNKNOWN
 }

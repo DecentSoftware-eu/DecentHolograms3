@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.component.common.IViewConditional;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents a hologram line. A line is a collection of components
@@ -62,7 +63,7 @@ public interface Line extends IClickable, IViewConditional {
      * @return The line renderer of this line.
      * @see LineRenderer
      */
-    @NotNull
+    @Nullable
     LineRenderer getRenderer();
 
     /**
@@ -78,7 +79,7 @@ public interface Line extends IClickable, IViewConditional {
      *
      * @return The raw content of this line.
      */
-    @NotNull
+    @Nullable
     String getContent();
 
     /**

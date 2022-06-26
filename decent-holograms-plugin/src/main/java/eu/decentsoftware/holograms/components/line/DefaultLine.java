@@ -12,8 +12,10 @@ import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class DefaultLine implements Line {
 
@@ -50,7 +52,7 @@ public class DefaultLine implements Line {
     @NotNull
     @Override
     public LineType getType() {
-        return renderer.getType();
+        return renderer != null ? renderer.getType() : LineType.UNKNOWN;
     }
 
     @NotNull
@@ -65,7 +67,7 @@ public class DefaultLine implements Line {
         return positionManager;
     }
 
-    @NotNull
+    @Nullable
     @Override
     public LineRenderer getRenderer() {
         return renderer;
@@ -94,7 +96,7 @@ public class DefaultLine implements Line {
         return clickActions;
     }
 
-    @NotNull
+    @Nullable
     @Override
     public String getContent() {
         return content;
@@ -102,7 +104,7 @@ public class DefaultLine implements Line {
 
     @Override
     public void setContent(@NotNull String content) {
-        this.content = content;
+        this.content = StringUtils.left(content, 256); // Limit content to 256 characters.
 
         // -- Parse content and update line accordingly
         DecentHologramsAPI.getInstance().getContentParser().parse(this);
