@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This class represents a NMS adapter. It is responsible for adapting to different versions of Minecraft.
- * There is one adapter for each supported Minecraft version.
+ * This class represents a NMS adapter. It is responsible for adapting
+ * to different versions of Minecraft. There is one adapter for each
+ * supported Minecraft version.
  *
  * @author d0by
  * @since 3.0.0
@@ -58,16 +59,21 @@ public interface NMSAdapter {
     }
 
     /**
-     * Sends a packet to all players in a world within a certain radius around a location.
+     * Sends a packet to all players in a world within
+     * a certain radius around a location.
      *
      * @param radius The radius to send the packet to.
      * @param l      The location to send the packet to.
      * @param packet The packet to send.
      */
     default void sendRangedPacket(double radius, @NotNull Location l, Object packet) {
-        double radiusSquared = radius * radius;
-        for (Player player : l.getWorld().getPlayers()) {
-            if (player.getLocation().distanceSquared(l) < radiusSquared) {
+        World world = l.getWorld();
+        if (world == null) {
+            return;
+        }
+
+        for (Player player : world.getPlayers()) {
+            if (player.getLocation().distanceSquared(l) < radius * radius) {
                 sendPacket(player, packet);
             }
         }
