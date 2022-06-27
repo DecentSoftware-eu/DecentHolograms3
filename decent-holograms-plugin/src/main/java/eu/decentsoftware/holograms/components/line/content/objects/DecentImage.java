@@ -100,12 +100,12 @@ public class DecentImage {
     }
 
     /**
-     * Scales the image to the given width.
+     * Scales the image to the given height. Width is scaled to keep the aspect ratio.
      *
-     * @param width Width to scale the image to.
+     * @param height Height to scale the image to.
      */
-    public void scale(int width) {
-        this.scale((float) width / this.bufferedImage.getWidth());
+    public void scale(int height) {
+        this.scale((float) height / this.bufferedImage.getHeight());
     }
 
     /**
@@ -154,18 +154,19 @@ public class DecentImage {
      */
     @Nullable
     public static DecentImage fromString(@NotNull String string) {
+        DecentImage decentImage = null;
         if (string.contains("--file:")) {
             String fileName = getFlagValue(string, "--file:");
-            File file = new File(fileName);
+            File file = new File(PLUGIN.getDataFolder(), "images/" + fileName);
             try {
                 BufferedImage image = ImageIO.read(file);
-                return new DecentImage(image);
+                decentImage = new DecentImage(image);
             } catch (IOException ignored) {}
         } else if (string.contains("--url:")) {
             String url = getFlagValue(string, "--url:");
             try {
                 BufferedImage image = ImageIO.read(new URL(url));
-                return new DecentImage(image);
+                decentImage = new DecentImage(image);
             } catch (IOException ignored) {}
         } else if (string.contains("--player:")) {
             String playerName = getFlagValue(string, "--player:");
@@ -174,11 +175,24 @@ public class DecentImage {
                 type = getFlagValue(string, "--type:");
             }
             try {
-                return fromMinotar(playerName, type);
+                decentImage = fromMinotar(playerName, type);
             } catch (IOException ignored) {}
         }
-        PLUGIN.getLogger().warning("Could not parse image from string: " + string);
-        return null;
+
+        if (decentImage == null) {
+            PLUGIN.getLogger().warning("Could not parse image from string: " + string);
+            return null;
+        }
+
+        if (string.contains("--size:")) {
+            String scale = getFlagValue(string, "--size:");
+            try {
+                int size = Integer.parseInt(scale);
+                decentImage.scale(size);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        return decentImage;
     }
 
     @NotNull
@@ -209,7 +223,7 @@ public class DecentImage {
      * @throws IOException If the image could not be loaded.
      */
     public static DecentImage fromMinotar(@NotNull String username, @NotNull String type) throws IOException {
-        return fromURL(new URL("https://minotar.net/" + type + "/" + username + "/8"));
+        return fromURL(new URL("https://minotar.net/" + type + "/" + username));
     }
 
 }
