@@ -13,7 +13,7 @@ import java.util.UUID;
  * Utility class with methods for parsing config values.
  *
  * @author d0by
- * @version 3.0.0
+ * @since 3.0.0
  */
 @UtilityClass
 public final class ConfigUtils {

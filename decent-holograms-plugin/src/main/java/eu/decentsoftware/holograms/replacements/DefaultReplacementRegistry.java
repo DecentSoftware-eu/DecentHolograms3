@@ -34,7 +34,7 @@ public class DefaultReplacementRegistry extends ReplacementRegistry {
     public String replacePlaceholders(Player player, @NotNull String string) {
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(string);
         while (matcher.find()) {
-            String replacement = this.getReplacement(player, matcher.group(1).trim());
+            String replacement = getReplacement(player, matcher.group(1).trim());
             if (replacement != null) {
                 string = string.replace(matcher.group(), replacement);
             }
