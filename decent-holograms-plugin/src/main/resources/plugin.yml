@@ -4,6 +4,7 @@ description: 'A lightweight yet very powerful hologram plugin.'
 version: '${version}'
 softdepend:
   - PlaceholderAPI
+  - ProtocolLib
   - HeadDatabase
 api-version: 1.13
 prefix: DecentHolograms
