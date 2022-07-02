@@ -1,7 +1,10 @@
 package eu.decentsoftware.holograms.api.utils;
 
+import eu.decentsoftware.holograms.api.utils.particleeffect.ParticleEffect;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
+import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public final class M {
 
+    public static final Vector UP_VECTOR = new Vector(0, 1, 0);
+
     /**
      * Checks if the given location is inside the given radius from the given center.
      *
@@ -22,47 +27,69 @@ public final class M {
      * @return True if the location is inside the circle, false otherwise.
      */
     public static boolean inDistance(@NotNull Location center, @NotNull Location location, double distance) {
-        return center.distance(location) <= distance;
+        return center.distanceSquared(location) <= distance * distance;
     }
 
     /**
      * Calculates the location in front of the given location.
      *
      * @param location The location to calculate the location in front of.
-     * @param distance The distance of the location in front.
+     * @param x The distance of the location in front.
+     * @param y The Y offset of the location in front.
+     * @param z The perpendicular offset of the location in front.
      * @return The location in front of the given location.
      */
     @NotNull
-    public static Location getLocationInFront(@NotNull Location location, double distance) {
-        float yaw = location.getYaw();
-        float pitch = location.getPitch();
-        double x = location.getX();
-        double y = location.getY();
-        double z = location.getZ();
-        double x2 = x + distance * Math.sin(Math.toRadians(yaw));
-        double z2 = z + distance * Math.cos(Math.toRadians(yaw));
-        double y2 = y + distance * Math.sin(Math.toRadians(pitch));
-        return new Location(location.getWorld(), x2, y2, z2);
+    public static Location getLocationInFront(@NotNull Location location, double x, double y, double z) {
+        Vector direction = location.getDirection();
+        Vector perpendicular = direction.clone().crossProduct(UP_VECTOR).normalize().multiply(z);
+        Location actual = location.clone().add(direction.clone().multiply(x)).subtract(perpendicular);
+        actual.setY(actual.getY() + y);
+        return actual;
     }
 
     /**
-     * Add the given offset to the given location. This method considers the yaw and pitch of the location
-     * and adds the offset to the location in the direction of the yaw and pitch.
+     * Draws a line of particles from the given location representing the given vector.
      *
-     * @param location The location to add the offset to.
-     * @param x The x offset.
-     * @param y The y offset.
-     * @param z The z offset.
-     * @return The location with the offset added.
+     * @param particle The particle to draw.
+     * @param start The location to start the line from.
+     * @param dir The vector to draw the line.
+     * @param length The length of the line.
+     * @param step The step to draw the line.
+     */
+    public static void drawVectorParticles(@NotNull ParticleEffect particle, @NotNull Location start, @NotNull Vector dir, double length, double step) {
+        for (double i = 0; i < length; i += step) {
+            Vector vector = dir.clone().normalize().multiply(i);
+            start.add(vector);
+            particle.display(0, 0, 0, 0, 1, start, 0);
+            start.subtract(vector);
+        }
+    }
+
+    /**
+     * Makes the given location look at the given target location.
+     *
+     * @param location The location to make look at the target location.
+     * @param target The target location.
+     * @return The location, looking at the target location.
      */
     @NotNull
-    public static Location addOffsetsConsideringRotation(@NotNull Location location, double x, double y, double z) {
-        // TESTME
-        float yaw = location.getYaw();
-        double x2 = location.getX() + x * Math.cos(Math.toRadians(yaw)) + z * Math.sin(Math.toRadians(yaw));
-        double z2 = location.getZ() - x * Math.sin(Math.toRadians(yaw)) + z * Math.cos(Math.toRadians(yaw));
-        double y2 = location.getY() + y;
-        return new Location(location.getWorld(), x2, y2, z2);
+    public static Location makeLocationLookAtAnotherLocation(@NotNull Location location, @NotNull Location target) {
+        return target.clone().subtract(location.clone());
+    }
+
+    /**
+     * Convert the given location's pitch and yaw to an EulerAngle.
+     *
+     * @param loc The location to convert.
+     * @return The EulerAngle.
+     */
+    @NotNull
+    private EulerAngle directionToEuler(@NotNull Location loc) {
+        double xzLength = Math.sqrt(loc.getX() * loc.getX() + loc.getZ() * loc.getZ());
+        double pitch = Math.atan2(xzLength, loc.getY()) - Math.PI / 2;
+        double yaw = -Math.atan2(loc.getX(), loc.getZ()) + Math.PI / 4;
+        return new EulerAngle(pitch, yaw, 0);
     }
 
 }
