@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.nms;
 
+import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -77,6 +78,20 @@ public interface NMSAdapter {
                 sendPacket(player, packet);
             }
         }
+    }
+
+    /*
+     *  Player
+     */
+
+    /**
+     * Get the player's channel pipeline.
+     *
+     * @param player The player to get the pipeline of.
+     * @return The player's channel pipeline.
+     */
+    default ChannelPipeline getPipeline(@NotNull Player player) {
+        return NMSAdapterCommons.getPipeline(player);
     }
 
     /*

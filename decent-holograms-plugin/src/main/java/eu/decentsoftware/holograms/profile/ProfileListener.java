@@ -20,6 +20,7 @@ public class ProfileListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         PLUGIN.getProfileRegistry().register(player.getName());
+        PLUGIN.getNMSProvider().getPacketListener().hook(player);
 
         // -- Notify the player about a new version available
         if (player.hasPermission(Config.ADMIN_PERM)) {
@@ -31,6 +32,7 @@ public class ProfileListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         PLUGIN.getProfileRegistry().remove(player.getName());
+        PLUGIN.getNMSProvider().getPacketListener().unhook(player);
     }
 
 }

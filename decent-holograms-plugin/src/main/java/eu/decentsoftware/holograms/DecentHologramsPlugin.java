@@ -87,6 +87,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
     @Override
     public void onDisable() {
+        this.nmsProvider.shutdown();
         this.hologramRegistry.shutdown();
         this.replacementRegistry.shutdown();
         this.serverRegistry.shutdown();
