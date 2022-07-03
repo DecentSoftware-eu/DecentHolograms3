@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import org.bukkit.Location;
@@ -24,8 +25,8 @@ public abstract class AbstractDoubleEntityLineRenderer extends AbstractLineRende
 
     public AbstractDoubleEntityLineRenderer(@NotNull Line parent, @NotNull LineType type) {
         super(parent, type);
-        this.eid = getFreeEntityId();
-        this.eidOther = getFreeEntityId();
+        this.eid = DecentHolograms.getFreeEntityId();
+        this.eidOther = DecentHolograms.getFreeEntityId();
     }
 
     /**

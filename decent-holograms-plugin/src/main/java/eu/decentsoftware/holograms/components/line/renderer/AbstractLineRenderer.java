@@ -18,7 +18,6 @@ public abstract class AbstractLineRenderer implements LineRenderer {
 
     protected static final DecentHolograms API = DecentHologramsAPI.getInstance();
     protected static final NMSAdapter NMS = API.getNMSProvider().getAdapter();
-    private static int ENTITY_ID = 1_000_000;
 
     private final Line parent;
     private final LineType type;
@@ -48,15 +47,6 @@ public abstract class AbstractLineRenderer implements LineRenderer {
     @Override
     public LineType getType() {
         return type;
-    }
-
-    /**
-     * Get a new entity ID.
-     *
-     * @return The new entity ID.
-     */
-    protected int getFreeEntityId() {
-        return ENTITY_ID++;
     }
 
 }

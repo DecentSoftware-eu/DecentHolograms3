@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
@@ -27,7 +28,7 @@ public class TextLineRenderer extends AbstractLineRenderer {
         super(parent, LineType.TEXT);
         this.text = text;
         this.hoverText = hoverText;
-        this.eid = getFreeEntityId();
+        this.eid = DecentHolograms.getFreeEntityId();
     }
 
     /**

@@ -21,10 +21,24 @@ import java.io.File;
  */
 public abstract class DecentHolograms extends JavaPlugin {
 
+    /**
+     * This is used to get free entity IDs. It starts at a million
+     * so that it doesn't conflict with normal entities.
+     */
+    private static int ENTITY_ID = 1_000_000;
     // The 'config.yml' file
     private File configFile;
     // The '/holograms' file
     private File hologramsFolder;
+
+    /**
+     * Get a free entity ID.
+     *
+     * @return The new entity ID.
+     */
+    public static int getFreeEntityId() {
+        return ENTITY_ID++;
+    }
 
     /**
      * Get the "config.yml" file.

@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.components.line.content.objects.DecentItemStack;
@@ -25,7 +26,7 @@ public class HeadLineRenderer extends AbstractLineRenderer {
         super(parent, type);
         this.itemStack = itemStack;
         this.small = small;
-        this.eid = getFreeEntityId();
+        this.eid = DecentHolograms.getFreeEntityId();
     }
 
     @Override

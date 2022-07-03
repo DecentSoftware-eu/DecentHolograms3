@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.api.utils.Common;
@@ -21,7 +22,7 @@ public class ImageLineRenderer extends AbstractLineRenderer {
         this.image = image;
         this.entityIds = new int[image.getWidth() * image.getHeight()];
         for (int i = 0; i < image.getWidth() * image.getHeight(); i++) {
-            this.entityIds[i] = super.getFreeEntityId();
+            this.entityIds[i] = DecentHolograms.getFreeEntityId();
         }
     }
 
