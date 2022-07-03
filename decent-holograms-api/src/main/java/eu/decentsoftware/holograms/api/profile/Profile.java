@@ -2,6 +2,7 @@ package eu.decentsoftware.holograms.api.profile;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,7 +18,17 @@ public interface Profile {
      *
      * @return The nickname of the player owning this profile.
      */
+    @NotNull
     String getName();
+
+    /**
+     * Get the context of this profile.
+     *
+     * @return The context of this profile.
+     * @see ProfileContext
+     */
+    @NotNull
+    ProfileContext getContext();
 
     /**
      * Get the owner of the profile.
