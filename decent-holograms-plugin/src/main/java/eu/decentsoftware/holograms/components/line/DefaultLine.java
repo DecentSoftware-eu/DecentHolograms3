@@ -17,9 +17,12 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public class DefaultLine implements Line {
 
     private final Page parent;
+    private final UUID uid;
     private final LineSettings settings;
     private final PositionManager positionManager;
     private final ConditionHolder viewConditions;
@@ -36,11 +39,18 @@ public class DefaultLine implements Line {
      */
     public DefaultLine(@NotNull Page parent, @NotNull Location location) {
         this.parent = parent;
+        this.uid = UUID.randomUUID();
         this.settings = new DefaultLineSettings();
         this.positionManager = new DefaultPositionManager(location);
         this.viewConditions = new DefaultConditionHolder();
         this.clickConditions = new DefaultConditionHolder();
         this.clickActions = new DefaultActionHolder();
+    }
+
+    @NotNull
+    @Override
+    public UUID getUid() {
+        return uid;
     }
 
     @NotNull
@@ -110,4 +120,15 @@ public class DefaultLine implements Line {
         DecentHologramsAPI.getInstance().getContentParser().parse(this);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Line other = (Line) obj;
+        return this.uid.equals(other.getUid());
+    }
 }

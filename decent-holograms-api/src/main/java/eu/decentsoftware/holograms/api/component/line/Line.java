@@ -7,6 +7,8 @@ import eu.decentsoftware.holograms.api.component.page.Page;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 /**
  * This class represents a hologram line. A line is a collection of components
  * that can be moved in the world. A line can be added to a {@link Page}.
@@ -21,6 +23,14 @@ public interface Line extends IClickable, IViewConditional {
      *  - Hover content for text lines
      *  - Click handling
      */
+
+    /**
+     * Get the UUID of the line.
+     *
+     * @return The UUID of the line.
+     */
+    @NotNull
+    UUID getUid();
 
     /**
      * Get the parent {@link Page} of this line.
@@ -89,5 +99,8 @@ public interface Line extends IClickable, IViewConditional {
      * @param content The raw content of this line.
      */
     void setContent(@NotNull String content);
+
+    @Override
+    boolean equals(@Nullable Object o);
 
 }
