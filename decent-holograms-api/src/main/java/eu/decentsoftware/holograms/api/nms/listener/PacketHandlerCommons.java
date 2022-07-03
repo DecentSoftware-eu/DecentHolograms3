@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.utils.reflect.R;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -12,10 +13,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class PacketHandlerCommons {
+/**
+ * Utility class responsible for handling packets.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
+@UtilityClass
+public final class PacketHandlerCommons {
 
-    protected static Class<?> ENTITY_USE_PACKET_CLASS;
-    protected static Field ENTITY_USE_PACKET_ID_FIELD;
+    private static Class<?> ENTITY_USE_PACKET_CLASS;
+    private static Field ENTITY_USE_PACKET_ID_FIELD;
     private static Constructor<?> PACKET_DATA_SERIALIZER_CONSTRUCTOR;
     private static Method ENTITY_USE_PACKET_A_METHOD;
     private static Method PACKET_DATA_SERIALIZER_READ_INT_METHOD;

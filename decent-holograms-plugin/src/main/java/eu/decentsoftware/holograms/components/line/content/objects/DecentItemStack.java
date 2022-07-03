@@ -57,7 +57,7 @@ public class DecentItemStack {
         if (player != null) {
             string = PAPI.setPlaceholders(player, string);
         }
-        string = PLUGIN.getReplacementRegistry().replacePlaceholders(player, string);
+        string = PLUGIN.getReplacementRegistry().replace(player, string);
         return string;
     }
 

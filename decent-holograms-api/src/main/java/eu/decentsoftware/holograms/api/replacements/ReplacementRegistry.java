@@ -19,6 +19,6 @@ public abstract class ReplacementRegistry extends Registry<String, Replacement> 
      * @param string The string.
      * @return The resulting String.
      */
-    public abstract String replacePlaceholders(Player player, @NotNull String string);
+    public abstract String replace(Player player, @NotNull String string);
 
 }
