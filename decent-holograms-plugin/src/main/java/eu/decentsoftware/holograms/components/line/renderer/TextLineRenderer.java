@@ -1,8 +1,10 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.api.hooks.PAPI;
+import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.Common;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -37,8 +39,16 @@ public class TextLineRenderer extends AbstractLineRenderer {
     private String getFormattedText(@NotNull Player player) {
         String formattedText = text;
 
+        if (hoverText != null) {
+            // Check if the player in watching the line and if so, use the hover text.
+            Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
+            if (profile != null && getParent().equals(profile.getContext().getWatchedLine())) {
+                formattedText = hoverText;
+            }
+        }
+
         // Replace custom replacements
-        formattedText = API.getReplacementRegistry().replacePlaceholders(player, formattedText);
+        formattedText = API.getReplacementRegistry().replace(player, formattedText);
         // Replace PAPI placeholders
         formattedText = PAPI.setPlaceholders(player, formattedText);
         // Colorize
