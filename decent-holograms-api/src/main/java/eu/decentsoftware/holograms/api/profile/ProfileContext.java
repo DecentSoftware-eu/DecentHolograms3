@@ -15,6 +15,14 @@ import org.jetbrains.annotations.Nullable;
 public interface ProfileContext {
 
     /**
+     * Get the ID of the entity, that is used to detect interaction
+     * with holograms for this profile.
+     *
+     * @return The entity id.
+     */
+    int getClickableEntityId();
+
+    /**
      * Get the currently watched line. This is the line, that the player is
      * looking at and can interact with.
      *
