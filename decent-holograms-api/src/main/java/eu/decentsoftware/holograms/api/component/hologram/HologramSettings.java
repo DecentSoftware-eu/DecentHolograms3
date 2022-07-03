@@ -25,6 +25,22 @@ public interface HologramSettings {
     void setEnabled(boolean enabled);
 
     /**
+     * Check if the hologram is interactive. If this hologram is interactive, it will
+     * be clickable by players.
+     *
+     * @return True if the hologram is interactive.
+     */
+    boolean isInteractive();
+
+    /**
+     * Set if the hologram is interactive. If this hologram is interactive, it will
+     * be clickable by players.
+     *
+     * @param interactive True if the hologram is interactive.
+     */
+    void setInteractive(boolean interactive);
+
+    /**
      * Get if the hologram is persistent, meaning it will be saved and loaded
      * when the server is restarted.
      *
