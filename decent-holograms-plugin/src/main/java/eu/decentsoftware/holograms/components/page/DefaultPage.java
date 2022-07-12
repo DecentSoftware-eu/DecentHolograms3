@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.line.Line;
+import eu.decentsoftware.holograms.api.component.line.LineRenderer;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
@@ -32,28 +33,40 @@ public class DefaultPage implements Page {
     @Override
     public void display(@NotNull Player player) {
         for (Line line : lineHolder.getLines()) {
-            line.getRenderer().display(player);
+            LineRenderer renderer = line.getRenderer();
+            if (renderer != null) {
+                renderer.display(player);
+            }
         }
     }
 
     @Override
     public void hide(@NotNull Player player) {
         for (Line line : lineHolder.getLines()) {
-            line.getRenderer().hide(player);
+            LineRenderer renderer = line.getRenderer();
+            if (renderer != null) {
+                line.getRenderer().hide(player);
+            }
         }
     }
 
     @Override
     public void update(@NotNull Player player) {
         for (Line line : lineHolder.getLines()) {
-            line.getRenderer().update(player);
+            LineRenderer renderer = line.getRenderer();
+            if (renderer != null) {
+                line.getRenderer().update(player);
+            }
         }
     }
 
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
         for (Line line : lineHolder.getLines()) {
-            line.getRenderer().teleport(player, location);
+            LineRenderer renderer = line.getRenderer();
+            if (renderer != null) {
+                line.getRenderer().teleport(player, location);
+            }
         }
     }
 
@@ -67,7 +80,10 @@ public class DefaultPage implements Page {
             positionManager.setLocation(location);
             Location actualLocation = positionManager.getActualLocation();
             for (Player player : viewers) {
-                line.getRenderer().teleport(player, actualLocation);
+                LineRenderer renderer = line.getRenderer();
+                if (renderer != null) {
+                    line.getRenderer().teleport(player, actualLocation);
+                }
             }
             location = location.add(0, line.getSettings().getHeight(), 0);
         }
