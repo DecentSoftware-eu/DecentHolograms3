@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id "io.freefair.lombok" version "6.5.0.2"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -12,6 +13,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: "io.freefair.lombok"
     apply plugin: 'com.github.johnrengelman.shadow'
 
     sourceCompatibility = JavaVersion.VERSION_1_8.majorVersion
@@ -28,8 +30,6 @@ subprojects {
     }
 
     dependencies {
-        implementation 'org.projectlombok:lombok:1.18.24'
-        annotationProcessor 'org.projectlombok:lombok:1.18.24'
         compileOnly 'org.jetbrains:annotations:23.0.0'
         annotationProcessor 'org.jetbrains:annotations:23.0.0'
     }
