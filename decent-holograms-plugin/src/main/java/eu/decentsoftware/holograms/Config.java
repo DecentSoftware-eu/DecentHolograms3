@@ -16,7 +16,7 @@ import java.util.List;
 @UtilityClass
 public final class Config {
 
-    public static final String ADMIN_PERM = "ds.decentholograms.admin";
+    public static final String ADMIN_PERM = "dh.admin";
 
     private static boolean updateAvailable = false;
 
@@ -28,6 +28,8 @@ public final class Config {
 
     @ConfigValue("check-for-updates")
     public static boolean CHECK_FOR_UPDATES = true;
+    @ConfigValue("per-hologram-file")
+    public static boolean PER_HOLOGRAM_FILE = true;
 
     // -- Date & Time
 
@@ -58,6 +60,7 @@ public final class Config {
     public static boolean PINGER_TRIM_MOTD = true;
 
     // -- Messages
+    // TODO: Put all messages in a separate file.
 
     @ConfigValue("messages.prefix")
     public static String PREFIX = "&8[&3DecentHolograms&8] &7";

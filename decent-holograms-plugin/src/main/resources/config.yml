@@ -20,6 +20,9 @@
 # Check for updates on startup?
 check-for-updates: true
 
+# Save each hologram to a separate file?
+per-hologram-file: true
+
 # Some default values.
 defaults:
   # Default content of a hologram line

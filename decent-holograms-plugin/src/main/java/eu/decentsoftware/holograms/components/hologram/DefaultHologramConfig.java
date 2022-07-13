@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.components.hologram;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.common.IClickable;
@@ -34,7 +35,7 @@ public class DefaultHologramConfig implements HologramConfig {
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
 
     private final Hologram parent;
-    private YamlDocument config;
+    private Section config;
 
     public DefaultHologramConfig(@NotNull Hologram parent) {
         this(parent, new File(PLUGIN.getHologramFolder(), parent.getName() + ".yml"));
@@ -43,14 +44,14 @@ public class DefaultHologramConfig implements HologramConfig {
     public DefaultHologramConfig(@NotNull Hologram parent, @NotNull File file) {
         this.parent = parent;
         try {
-            this.config = YamlDocument.create(file, PLUGIN.getResource(file.getName()));
+            this.config = YamlDocument.create(file);
         } catch (IOException e) {
             PLUGIN.getLogger().severe("Failed to load hologram file " + file.getName() + ":");
             e.printStackTrace();
         }
     }
 
-    public DefaultHologramConfig(@NotNull Hologram parent, @NotNull YamlDocument config) {
+    public DefaultHologramConfig(@NotNull Hologram parent, @NotNull Section config) {
         this.parent = parent;
         this.config = config;
     }
@@ -62,11 +63,11 @@ public class DefaultHologramConfig implements HologramConfig {
 
     @Override
     public File getFile() {
-        return config.getFile();
+        return config.getRoot().getFile();
     }
 
     @Override
-    public YamlDocument getConfig() {
+    public Section getConfig() {
         return config;
     }
 
@@ -270,7 +271,7 @@ public class DefaultHologramConfig implements HologramConfig {
 
     private void reloadConfig() {
         try {
-            config.reload();
+            config.getRoot().reload();
         } catch (IOException e) {
             PLUGIN.getLogger().severe("Failed to load hologram file " + getFile().getName() + ":");
             e.printStackTrace();
@@ -279,7 +280,7 @@ public class DefaultHologramConfig implements HologramConfig {
 
     private void saveConfig() {
         try {
-            config.save();
+            config.getRoot().save();
         } catch (IOException e) {
             PLUGIN.getLogger().severe("Failed to save hologram file " + getFile().getName() + ":");
             e.printStackTrace();
