@@ -8,11 +8,13 @@ import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
+import eu.decentsoftware.holograms.utils.FileUtils;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DefaultHologramRegistry extends HologramRegistry {
@@ -57,12 +59,7 @@ public class DefaultHologramRegistry extends HologramRegistry {
         // -- Load holograms from individual files -- //
 
         // Get all files from the hologram folder
-        File[] files = PLUGIN.getHologramFolder()
-                .listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".yml"));
-        if (files == null || files.length == 0) {
-            return;
-        }
-
+        List<File> files = FileUtils.getFilesFromTree(PLUGIN.getHologramFolder(), (f) -> f.getName().endsWith(".yml"));
         for (File file : files) {
             // Get the hologram name from the file name
             String name = file.getName().substring(0, file.getName().length() - 4);
