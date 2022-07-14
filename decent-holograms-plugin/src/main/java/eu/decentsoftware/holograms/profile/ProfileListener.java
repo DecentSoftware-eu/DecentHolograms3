@@ -23,7 +23,7 @@ public class ProfileListener implements Listener {
         PLUGIN.getNMSProvider().getPacketListener().hook(player);
 
         // -- Notify the player about a new version available
-        if (player.hasPermission(Config.ADMIN_PERM)) {
+        if (Config.isUpdateAvailable() && player.hasPermission(Config.ADMIN_PERM)) {
             Config.sendUpdateMessage(player);
         }
     }

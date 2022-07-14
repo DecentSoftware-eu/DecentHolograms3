@@ -1,10 +1,10 @@
 package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
+import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
-import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
+import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
 import eu.decentsoftware.holograms.api.ticker.Ticker;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -110,12 +110,12 @@ public abstract class DecentHolograms extends JavaPlugin {
     public abstract ReplacementRegistry getReplacementRegistry();
 
     /**
-     * Get the content parser.
+     * Get the content parser manager.
      *
-     * @return The content parser.
-     * @see ContentParser
+     * @return The content parser manager.
+     * @see ContentParserManager
      */
-    public abstract ContentParser getContentParser();
+    public abstract ContentParserManager getContentParserManager();
 
     /**
      * Get the hologram registry.

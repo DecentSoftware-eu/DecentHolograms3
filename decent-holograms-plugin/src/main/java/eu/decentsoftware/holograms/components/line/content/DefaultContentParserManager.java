@@ -2,19 +2,20 @@ package eu.decentsoftware.holograms.components.line.content;
 
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
+import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.components.line.content.parsers.*;
 import org.jetbrains.annotations.NotNull;
 
-public class DefaultContentParser implements ContentParser {
+public class DefaultContentParserManager implements ContentParserManager {
 
-    private final DList<ContentParser> parsers;
+    private final @NotNull DList<ContentParser> parsers;
 
     /**
-     * Creates a new instance of {@link DefaultContentParser}. This constructor
+     * Creates a new instance of {@link DefaultContentParserManager}. This constructor
      * will also register the default parsers.
      */
-    public DefaultContentParser() {
+    public DefaultContentParserManager() {
         this.parsers = new DList<>();
 
         // - Register default parsers -
@@ -26,12 +27,24 @@ public class DefaultContentParser implements ContentParser {
         // generic one being able to parse any content. It's considered to be
         // the fallback parser.
 
-        this.parsers.add(new TextContentParser());
-        this.parsers.add(new IconContentParser());
-        this.parsers.add(new HeadContentParser());
-        this.parsers.add(new SmallHeadContentParser());
-        this.parsers.add(new EntityContentParser());
-        this.parsers.add(new ImageContentParser());
+        register(new TextContentParser());
+        register(new IconContentParser());
+        register(new HeadContentParser());
+        register(new SmallHeadContentParser());
+        register(new EntityContentParser());
+        register(new ImageContentParser());
+
+    }
+
+    /**
+     * Register a new content parser. This content parser will be used first.
+     *
+     * @param parser The content parser to register.
+     * @see ContentParser
+     */
+    @Override
+    public void register(@NotNull ContentParser parser) {
+        this.parsers.add(parser);
     }
 
     @Override
