@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.actions_new.impl;
+package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;

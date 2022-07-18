@@ -1,6 +1,6 @@
-package eu.decentsoftware.holograms.actions_new.impl;
+package eu.decentsoftware.holograms.actions.impl;
 
-import eu.decentsoftware.holograms.actions_new.DefaultAction;
+import eu.decentsoftware.holograms.actions.DefaultAction;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.actions_new.impl;
+package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.api.profile.Profile;
 import org.bukkit.World;

@@ -1,6 +1,5 @@
-package eu.decentsoftware.holograms.actions_new;
+package eu.decentsoftware.holograms.actions;
 
-import eu.decentsoftware.holograms.actions.ActionType;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +92,7 @@ public enum DefaultActionType {
     }
 
     /**
-     * Get an {@link ActionType} from string if possible.
+     * Get an {@link DefaultActionType} from string if possible.
      *
      * @param string The string.
      * @return The matching ActionType or null if the string doesn't match any type.

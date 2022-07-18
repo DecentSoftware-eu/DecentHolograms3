@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TeleportAction extends DefaultAction {
 
-    private final Location location;
+    protected final @NotNull Location location;
 
     public TeleportAction(@NotNull Location location) {
         this.location = location;
@@ -22,7 +22,9 @@ public class TeleportAction extends DefaultAction {
     @Override
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
-        player.teleport(location);
+        if (player != null) {
+            player.teleport(location);
+        }
     }
 
 }

@@ -1,6 +1,6 @@
-package eu.decentsoftware.holograms.actions_new.impl;
+package eu.decentsoftware.holograms.actions.impl;
 
-import eu.decentsoftware.holograms.actions_new.DefaultAction;
+import eu.decentsoftware.holograms.actions.DefaultAction;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import org.bukkit.entity.Player;
