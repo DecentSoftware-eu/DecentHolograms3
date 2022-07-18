@@ -14,7 +14,7 @@ import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.components.line.content.DefaultContentParserManager;
 import eu.decentsoftware.holograms.nms.NMSProviderImpl;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
-import eu.decentsoftware.holograms.profile.ProfileListener;
+import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
 import eu.decentsoftware.holograms.server.DefaultServerRegistry;
 import eu.decentsoftware.holograms.ticker.DefaultTicker;
@@ -79,7 +79,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         // -- Register listeners
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new ProfileListener(), this);
+        pm.registerEvents(new PlayerListener(), this);
 
         // -- Setup update checker if enabled
         setupUpdateChecker();
@@ -128,7 +128,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
                 );
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {
-                    Config.sendUpdateMessage(Bukkit.getConsoleSender());
+                    Lang.sendUpdateMessage(Bukkit.getConsoleSender());
                 }
             });
         }

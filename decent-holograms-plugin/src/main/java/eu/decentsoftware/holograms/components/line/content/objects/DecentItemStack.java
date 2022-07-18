@@ -1,9 +1,9 @@
 package eu.decentsoftware.holograms.components.line.content.objects;
 
+import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.hooks.HDB;
-import eu.decentsoftware.holograms.api.hooks.PAPI;
 import eu.decentsoftware.holograms.api.utils.item.ItemBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,11 +54,7 @@ public class DecentItemStack {
      * @return The formatted string.
      */
     private String formatString(@NotNull String string, @Nullable Player player) {
-        if (player != null) {
-            string = PAPI.setPlaceholders(player, string);
-        }
-        string = PLUGIN.getReplacementRegistry().replace(player, string);
-        return string;
+        return Lang.formatString(string, player);
     }
 
     /**

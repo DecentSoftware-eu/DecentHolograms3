@@ -1,6 +1,7 @@
-package eu.decentsoftware.holograms.profile;
+package eu.decentsoftware.holograms.listener;
 
 import eu.decentsoftware.holograms.Config;
+import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /**
  * This listener handles some events related to the player profiles.
  */
-public class ProfileListener implements Listener {
+public class PlayerListener implements Listener {
 
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
 
@@ -24,7 +25,7 @@ public class ProfileListener implements Listener {
 
         // -- Notify the player about a new version available
         if (Config.isUpdateAvailable() && player.hasPermission(Config.ADMIN_PERM)) {
-            Config.sendUpdateMessage(player);
+            Lang.sendUpdateMessage(player);
         }
     }
 

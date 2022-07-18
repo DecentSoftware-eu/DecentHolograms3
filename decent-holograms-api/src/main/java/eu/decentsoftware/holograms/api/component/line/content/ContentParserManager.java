@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.component.line.content;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This class is the main content parser, which is used to register
  * all the content parsers and parse the content of a line.
@@ -20,6 +22,6 @@ public interface ContentParserManager extends ContentParser {
      *
      * @param parser The content parser to register.
      */
-    void register(ContentParser parser);
+    void register(@NotNull ContentParser parser);
 
 }

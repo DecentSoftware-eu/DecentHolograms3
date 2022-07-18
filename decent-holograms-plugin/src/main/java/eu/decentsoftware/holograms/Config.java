@@ -1,12 +1,14 @@
 package eu.decentsoftware.holograms;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.CFG;
 import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
 import lombok.experimental.UtilityClass;
-import org.bukkit.command.CommandSender;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,22 +18,21 @@ import java.util.List;
 @UtilityClass
 public final class Config {
 
-    public static final String ADMIN_PERM = "dh.admin";
-
+    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
     private static boolean updateAvailable = false;
 
-    /*
-     *  Options
-     */
+    // ========== PERMISSIONS ========== //
 
-    // -- General
+    public static final String ADMIN_PERM = "dh.admin";
+
+    // ========== GENERAL ========== //
 
     @ConfigValue("check-for-updates")
     public static boolean CHECK_FOR_UPDATES = true;
     @ConfigValue("per-hologram-file")
     public static boolean PER_HOLOGRAM_FILE = true;
 
-    // -- Date & Time
+    // ========== DATETIME ========== //
 
     @ConfigValue("datetime.time-format")
     public static String DATETIME_TIME_FORMAT = "HH:mm:ss";
@@ -40,7 +41,7 @@ public final class Config {
     @ConfigValue("datetime.zone")
     public static String DATETIME_ZONE = "GMT+0";
 
-    // -- Pinger
+    // ========== PINGER ========== //
 
     @ConfigValue("pinger.enabled")
     public static boolean PINGER_ENABLED = false;
@@ -59,22 +60,61 @@ public final class Config {
     @ConfigValue("pinger.trim-motd")
     public static boolean PINGER_TRIM_MOTD = true;
 
-    // -- Messages
-    // TODO: Put all messages in a separate file.
+    /*
+     *  Reload methods
+     */
 
-    @ConfigValue("messages.prefix")
-    public static String PREFIX = "&8[&3DecentHolograms&8] &7";
+    /**
+     * The "config.yml" file.
+     */
+    private static File file;
+    private static YamlDocument config;
+
+    /**
+     * Get the "config.yml" file.
+     *
+     * @return The "config.yml" file.
+     * @since 1.0.0
+     */
+    public static File getFile() {
+        if (file == null) {
+            file = new File(PLUGIN.getDataFolder(), "config.yml");
+        }
+        return file;
+    }
+
+    /**
+     * Get the "config.yml" file as a {@link YamlDocument}.
+     *
+     * @return The "config.yml" file as a {@link YamlDocument}.
+     */
+    public static YamlDocument getConfig() {
+        return config;
+    }
+
+    /**
+     * Reload the "config.yml" file.
+     *
+     * @since 1.0.0
+     */
+    public static void reload() {
+        CFG.load(Config.class, getFile());
+
+        try {
+            if (config == null) {
+                config = YamlDocument.create(getFile());
+            } else {
+                config.reload();
+            }
+        } catch (IOException e) {
+            PLUGIN.getLogger().warning("Could not reload config.yml");
+            e.printStackTrace();
+        }
+    }
 
     /*
      *  General Methods
      */
-
-    /**
-     * Reload the configuration.
-     */
-    public static void reload() {
-        CFG.load(Config.class, DecentHologramsAPI.getInstance().getConfigFile());
-    }
 
     /**
      * Check if an update is available.
@@ -92,48 +132,6 @@ public final class Config {
      */
     public static void setUpdateAvailable(boolean updateAvailable) {
         Config.updateAvailable = updateAvailable;
-    }
-
-    /*
-     *  Utility Methods
-     */
-
-    /**
-     * Send a message to command sender. This method replaces '{prefix}' placeholder
-     * and translates all color codes including hex colors.
-     *
-     * @param sender The command sender.
-     * @param message The message.
-     * @param args Arguments for java string formatting.
-     */
-    public static void tell(CommandSender sender, String message, Object... args) {
-        message = message.replace("{prefix}", PREFIX);
-        Common.tell(sender, message, args);
-    }
-
-    /**
-     * Send the version message to a command sender.
-     *
-     * @param sender The command sender.
-     */
-    public static void sendVersionMessage(CommandSender sender) {
-        Common.tell(sender,
-                "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
-                DecentHologramsAPI.getInstance().getDescription().getVersion(),
-                "https://www.spigotmc.org/resources/96927/"
-        );
-    }
-
-    /**
-     * Notify the given command sender about an update.
-     *
-     * @param sender The command sender.
-     */
-    public static void sendUpdateMessage(CommandSender sender) {
-        Common.tell(sender,
-                "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7%s",
-                "https://www.spigotmc.org/resources/96927/"
-        );
     }
 
 }
