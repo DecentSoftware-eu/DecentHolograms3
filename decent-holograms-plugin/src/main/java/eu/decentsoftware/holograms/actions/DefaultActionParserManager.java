@@ -9,7 +9,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class DefaultActionParserManager implements ActionParserManager {
 
-    private final DList<ActionParser> parsers = new DList<>();
+    private final DList<ActionParser> parsers;
+
+    /**
+     * Create a new instance of {@link DefaultActionParserManager}. This constructor
+     * also registers the {@link DefaultActionParser} as the default parser.
+     */
+    public DefaultActionParserManager() {
+        this.parsers = new DList<>();
+
+        // Register default parser
+        this.parsers.add(new DefaultActionParser());
+    }
 
     @Override
     public void register(@NotNull ActionParser parser) {
