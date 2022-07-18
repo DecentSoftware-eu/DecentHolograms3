@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.animations;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This class represents a custom animation.
  *
@@ -12,6 +14,7 @@ public interface Animation {
      *
      * @return The name of the animation.
      */
+    @NotNull
     String getName();
 
     /**
@@ -20,6 +23,7 @@ public interface Animation {
      * @return The type of the animation.
      * @see AnimationType
      */
+    @NotNull
     AnimationType getType();
 
     /**

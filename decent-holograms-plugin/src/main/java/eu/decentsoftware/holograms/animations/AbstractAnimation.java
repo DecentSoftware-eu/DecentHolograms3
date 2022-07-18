@@ -34,8 +34,10 @@ public abstract class AbstractAnimation implements Animation {
         return step % totalSteps;
     }
 
+    @NotNull
     @Override
     public AnimationType getType() {
         return AnimationType.INTERNAL;
     }
+
 }
