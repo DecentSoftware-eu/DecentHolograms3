@@ -2,24 +2,25 @@ package eu.decentsoftware.holograms.api.actions;
 
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.S;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * This class represents a holder for actions.
  *
  * @author d0by
+ * @since 3.0.0
  */
-public abstract class ActionHolder extends DList<Action> {
+public interface ActionHolder {
 
     /**
      * Execute all Actions in this holder for the given {@link Profile}.
      *
      * @param profile The profile.
      */
-    public void execute(@NotNull Profile profile) {
-        for (Action action : this) {
+    default void execute(@NotNull Profile profile) {
+        for (Action action : getActions()) {
             // Check the chance
             if (!action.checkChance()) {
                 continue;
@@ -35,10 +36,36 @@ public abstract class ActionHolder extends DList<Action> {
     }
 
     /**
-     * Load all Actions from a configuration section.
+     * Add the given action to this holder.
      *
-     * @param config The configuration section.
+     * @param action The action.
      */
-    public abstract void load(@NotNull ConfigurationSection config);
+    void addAction(@NotNull Action action);
+
+    /**
+     * Remove the given action from this holder.
+     *
+     * @param action The action.
+     */
+    void removeAction(@NotNull Action action);
+
+    /**
+     * Remove the action at the given index from this holder.
+     *
+     * @param index The index.
+     */
+    void removeAction(int index);
+
+    /**
+     * Remove all actions from this holder.
+     */
+    void clearActions();
+
+    /**
+     * Get all actions in this holder.
+     *
+     * @return All actions.
+     */
+    List<Action> getActions();
 
 }
