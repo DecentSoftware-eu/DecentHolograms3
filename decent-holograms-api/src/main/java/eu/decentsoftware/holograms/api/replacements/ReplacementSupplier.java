@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api.replacements;
 
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.api.profile.Profile;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This functional interface represents the supplier, that finds the replacements of placeholders.
@@ -14,10 +15,10 @@ public interface ReplacementSupplier {
     /**
      * Get the replacement from this supplier.
      *
-     * @param player The player to get it for.
+     * @param profile  The profile to get the replacement for.
      * @param argument The argument to get it for.
      * @return The replacement.
      */
-    String getReplacement(Player player, String argument);
+    String getReplacement(@Nullable Profile profile, @Nullable String argument);
 
 }

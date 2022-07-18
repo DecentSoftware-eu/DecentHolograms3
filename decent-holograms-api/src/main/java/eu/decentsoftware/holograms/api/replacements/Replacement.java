@@ -1,6 +1,8 @@
 package eu.decentsoftware.holograms.api.replacements;
 
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.api.profile.Profile;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents a custom placeholder.
@@ -15,6 +17,7 @@ public interface Replacement {
      *
      * @return the replacement supplier.
      */
+    @NotNull
     ReplacementSupplier getReplacementSupplier();
 
     /**
@@ -27,11 +30,11 @@ public interface Replacement {
     /**
      * Get the replacement for this placeholder.
      *
-     * @param player The player to get the replacement for.
+     * @param profile   The profile to get the replacement for.
      * @param argument The argument to get the replacement for.
      * @return The replacement.
      */
-    String getReplacement(Player player, String argument);
+    String getReplacement(@Nullable Profile profile, @Nullable String argument);
 
 
 }

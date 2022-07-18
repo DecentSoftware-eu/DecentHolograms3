@@ -38,18 +38,18 @@ public class TextLineRenderer extends AbstractLineRenderer {
      * @return The formatted text of the line.
      */
     private String getFormattedText(@NotNull Player player) {
+        Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
         String formattedText = text;
 
         if (hoverText != null) {
             // Check if the player in watching the line and if so, use the hover text.
-            Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
             if (profile != null && getParent().equals(profile.getContext().getWatchedLine())) {
                 formattedText = hoverText;
             }
         }
 
         // Replace custom replacements
-        formattedText = API.getReplacementRegistry().replace(player, formattedText);
+        formattedText = API.getReplacementRegistry().replace(formattedText, profile);
         // Replace PAPI placeholders
         formattedText = PAPI.setPlaceholders(player, formattedText);
         // Colorize

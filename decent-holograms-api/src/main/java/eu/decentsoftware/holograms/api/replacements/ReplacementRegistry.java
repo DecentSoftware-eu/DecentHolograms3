@@ -1,24 +1,42 @@
 package eu.decentsoftware.holograms.api.replacements;
 
-import eu.decentsoftware.holograms.api.utils.collection.Registry;
-import org.bukkit.entity.Player;
+import eu.decentsoftware.holograms.api.profile.Profile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * This class represents a registry of placeholders.
+ * This class represents the replacement registry. It is responsible for managing
+ * all replacements of internal placeholders.
+ * <p>
+ * There are three types of replacements:
+ * <ul>
+ *     <li>Default Replacements: Replaced by the plugin.</li>
+ *     <li>Normal Replacements: Replaced with a configurable value.</li>
+ * </ul>
  *
  * @author d0by
- * @since 3.0.0
+ * @since 1.0.0
  */
-public abstract class ReplacementRegistry extends Registry<String, Replacement> {
+public interface ReplacementRegistry {
+
+    /**
+     * Reload all replacements from the config.
+     */
+    void reload();
+
+    /**
+     * Shutdown this manager, removing all registered replacements.
+     */
+    void shutdown();
 
     /**
      * Replace all registered placeholders, that the given String contains.
      *
-     * @param player The player to replace them for.
-     * @param string The string.
+     * @param string        The string.
+     * @param profile       The profile to replace the placeholders for.
      * @return The resulting String.
      */
-    public abstract String replace(Player player, @NotNull String string);
+    String replace(@NotNull String string, @Nullable Profile profile);
+
 
 }
