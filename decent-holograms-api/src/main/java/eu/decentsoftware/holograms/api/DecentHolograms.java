@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api;
 
+import eu.decentsoftware.holograms.api.actions.ActionParserManager;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
@@ -116,6 +117,14 @@ public abstract class DecentHolograms extends JavaPlugin {
      * @see ContentParserManager
      */
     public abstract ContentParserManager getContentParserManager();
+
+    /**
+     * Get the action parser manager.
+     *
+     * @return The action parser manager.
+     * @see ActionParserManager
+     */
+    public abstract ActionParserManager getActionParserManager();
 
     /**
      * Get the hologram registry.

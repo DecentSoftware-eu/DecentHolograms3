@@ -12,9 +12,9 @@ import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineSettings;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
-import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.S;
+import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
 import eu.decentsoftware.holograms.components.line.DefaultLine;
 import eu.decentsoftware.holograms.components.page.DefaultPage;
 import org.bukkit.Bukkit;
@@ -253,7 +253,14 @@ public class DefaultHologramConfig implements HologramConfig {
         }
         Object actions = map.get("click-actions");
         if (actions instanceof ConfigurationSection) {
-            clickable.getClickActionHolder().load((ConfigurationSection) actions);
+            // TODO: load actions
+//            ActionHolder actionHolder = clickable.getClickActionHolder();
+//            for (String key : ((ConfigurationSection) actions).getKeys(false)) {
+//                Action action = PLUGIN.getActionParserManager().parse(((Section) actions).getSection(key));
+//                if (action != null) {
+//                    actionHolder.addAction(action);
+//                }
+//            }
         }
     }
 
