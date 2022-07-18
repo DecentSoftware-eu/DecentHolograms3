@@ -10,10 +10,14 @@ import java.util.List;
 
 public class MultiMessageAction extends DefaultAction {
 
-    private final @NotNull List<String> messages;
+    protected final @NotNull List<String> messages;
 
     public MultiMessageAction(@NotNull List<String> messages) {
-        super(0, -1.0);
+        this.messages = messages;
+    }
+
+    public MultiMessageAction(long delay, double chance, @NotNull List<String> messages) {
+        super(delay, chance);
         this.messages = messages;
     }
 

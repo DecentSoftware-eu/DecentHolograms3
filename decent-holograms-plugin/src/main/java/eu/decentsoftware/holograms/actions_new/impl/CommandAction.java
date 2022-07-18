@@ -1,29 +1,29 @@
 package eu.decentsoftware.holograms.actions_new.impl;
 
-import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions_new.DefaultAction;
 import eu.decentsoftware.holograms.api.profile.Profile;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class MessageAction extends DefaultAction {
+public class CommandAction extends DefaultAction {
 
-    protected final @NotNull String message;
+    protected final @NotNull String command;
 
-    public MessageAction(@NotNull String message) {
-        this.message = message;
+    public CommandAction(@NotNull String command) {
+        this.command = command;
     }
 
-    public MessageAction(long delay, double chance, @NotNull String message) {
+    public CommandAction(long delay, double chance, @NotNull String command) {
         super(delay, chance);
-        this.message = message;
+        this.command = command;
     }
 
     @Override
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
         if (player != null) {
-            Lang.tell(player, message);
+            Bukkit.dispatchCommand(player, command);
         }
     }
 

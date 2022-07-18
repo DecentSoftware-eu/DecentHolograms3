@@ -1,6 +1,6 @@
-package eu.decentsoftware.holograms.actions.impl;
+package eu.decentsoftware.holograms.actions_new.impl;
 
-import eu.decentsoftware.holograms.actions.DefaultAction;
+import eu.decentsoftware.holograms.actions_new.DefaultAction;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.profile.Profile;
@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class TitleAction extends DefaultAction {
 
-    private final String title;
-    private final String subtitle;
-    private final int fadeIn;
-    private final int stay;
-    private final int fadeOut;
+    protected final String title;
+    protected final String subtitle;
+    protected final int fadeIn;
+    protected final int stay;
+    protected final int fadeOut;
 
     public TitleAction(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         this.title = title;
@@ -35,6 +35,9 @@ public class TitleAction extends DefaultAction {
     @Override
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
+        if (player == null) {
+            return;
+        }
         NMSAdapter nmsAdapter = DecentHologramsAPI.getInstance().getNMSProvider().getAdapter();
         nmsAdapter.sendPacket(player, nmsAdapter.packetClearTitle());
         if (title != null) {

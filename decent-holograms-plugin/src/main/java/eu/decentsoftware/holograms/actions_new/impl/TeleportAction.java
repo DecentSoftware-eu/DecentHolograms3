@@ -1,29 +1,29 @@
 package eu.decentsoftware.holograms.actions_new.impl;
 
-import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions_new.DefaultAction;
 import eu.decentsoftware.holograms.api.profile.Profile;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class MessageAction extends DefaultAction {
+public class TeleportAction extends DefaultAction {
 
-    protected final @NotNull String message;
+    protected final @NotNull Location location;
 
-    public MessageAction(@NotNull String message) {
-        this.message = message;
+    public TeleportAction(@NotNull Location location) {
+        this.location = location;
     }
 
-    public MessageAction(long delay, double chance, @NotNull String message) {
+    public TeleportAction(long delay, double chance, @NotNull Location location) {
         super(delay, chance);
-        this.message = message;
+        this.location = location;
     }
 
     @Override
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
         if (player != null) {
-            Lang.tell(player, message);
+            player.teleport(location);
         }
     }
 

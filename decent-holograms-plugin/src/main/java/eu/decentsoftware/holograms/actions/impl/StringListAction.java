@@ -34,7 +34,7 @@ public class StringListAction extends DefaultAction {
             case MESSAGE:
                 Player player = profile.getPlayer();
                 for (String line : stringList) {
-                    line = DecentHologramsAPI.getInstance().getReplacementRegistry().replace(player, line);
+                    line = DecentHologramsAPI.getInstance().getReplacementRegistry().replace(line, player, false);
                     line = PAPI.setPlaceholders(player, line);
                     Common.tell(player, line);
                 }
@@ -42,7 +42,7 @@ public class StringListAction extends DefaultAction {
             case BROADCAST:
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     for (String line : stringList) {
-                        line = DecentHologramsAPI.getInstance().getReplacementRegistry().replace(onlinePlayer, line);
+                        line = DecentHologramsAPI.getInstance().getReplacementRegistry().replace(line, onlinePlayer, false);
                         line = PAPI.setPlaceholders(onlinePlayer, line);
                         Common.tell(onlinePlayer, line);
                     }

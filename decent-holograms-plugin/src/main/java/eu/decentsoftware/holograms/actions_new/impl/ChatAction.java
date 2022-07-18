@@ -1,20 +1,19 @@
 package eu.decentsoftware.holograms.actions_new.impl;
 
-import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions_new.DefaultAction;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class MessageAction extends DefaultAction {
+public class ChatAction extends DefaultAction {
 
     protected final @NotNull String message;
 
-    public MessageAction(@NotNull String message) {
+    public ChatAction(@NotNull String message) {
         this.message = message;
     }
 
-    public MessageAction(long delay, double chance, @NotNull String message) {
+    public ChatAction(long delay, double chance, @NotNull String message) {
         super(delay, chance);
         this.message = message;
     }
@@ -23,7 +22,7 @@ public class MessageAction extends DefaultAction {
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
         if (player != null) {
-            Lang.tell(player, message);
+            player.chat(message);
         }
     }
 
