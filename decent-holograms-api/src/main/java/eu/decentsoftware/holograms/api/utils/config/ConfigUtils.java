@@ -1,11 +1,13 @@
 package eu.decentsoftware.holograms.api.utils.config;
 
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -59,6 +61,32 @@ public final class ConfigUtils {
             } catch (NumberFormatException ignored) {}
         }
         throw new LocationParseException(String.format("Wrong location format: %s", string));
+    }
+
+    /**
+     * Get a location from the given {@link Section}. If the world is missing
+     * or invalid, null will be returned. If any of the coordinates are missing or invalid,
+     * default value of 0 will be used, this also applies to the yaw and pitch.
+     *
+     * @param config The configuration section.
+     * @return The location or null if the section is not a valid location.
+     */
+    @Nullable
+    public static Location getLocation(@NotNull Section config) {
+        String worldName = config.getString("world");
+        if (worldName == null) {
+            return null;
+        }
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            return null;
+        }
+        double x = config.getDouble("x", 0D);
+        double y = config.getDouble("y", 0D);
+        double z = config.getDouble("z", 0D);
+        float yaw = config.getFloat("yaw", 0F);
+        float pitch = config.getFloat("pitch", 0F);
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     /**

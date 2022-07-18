@@ -24,7 +24,7 @@ public enum DefaultActionType {
     /**
      * Broadcast the given message across the server.
      */
-    BROADCAST("broadcast", "broadcast message"),
+    MESSAGE_BROADCAST("broadcast", "broadcast message"),
     /**
      * Send the given title and subtitle to the player.
      */
@@ -43,11 +43,11 @@ public enum DefaultActionType {
     /**
      * Broadcast the given sound across the server.
      */
-    BROADCAST_SOUND("broadcast sound"),
+    SOUND_BROADCAST("broadcast sound"),
     /**
      * Broadcast the given sound across the world.
      */
-    BROADCAST_SOUND_WORLD("broadcast sound world", "play sound world"),
+    SOUND_BROADCAST_WORLD("broadcast sound world", "play sound world"),
 
     // -- Command Actions
 
