@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.conditions;
 
-import eu.decentsoftware.holograms.actions.DefaultActionHolder;
 import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.impl.ComparingCondition;
@@ -99,20 +98,21 @@ public abstract class DefaultCondition implements Condition {
 
         // -- Load actions if possible
         if (condition != null) {
-            // Met actions
-            ConfigurationSection metActionsSection = config.getConfigurationSection("met_actions");
-            if (metActionsSection != null) {
-                ActionHolder actionHolder = new DefaultActionHolder();
-                actionHolder.load(metActionsSection);
-                condition.setMetActions(actionHolder);
-            }
-            // Not Met actions
-            ConfigurationSection notMetActionsSection = config.getConfigurationSection("not_met_actions");
-            if (notMetActionsSection != null) {
-                ActionHolder actionHolder = new DefaultActionHolder();
-                actionHolder.load(notMetActionsSection);
-                condition.setNotMetActions(actionHolder);
-            }
+            // TODO: met & not met actions
+//            // Met actions
+//            ConfigurationSection metActionsSection = config.getConfigurationSection("met_actions");
+//            if (metActionsSection != null) {
+//                ActionHolder actionHolder = new DefaultActionHolder();
+//                actionHolder.load(metActionsSection);
+//                condition.setMetActions(actionHolder);
+//            }
+//            // Not Met actions
+//            ConfigurationSection notMetActionsSection = config.getConfigurationSection("not_met_actions");
+//            if (notMetActionsSection != null) {
+//                ActionHolder actionHolder = new DefaultActionHolder();
+//                actionHolder.load(notMetActionsSection);
+//                condition.setNotMetActions(actionHolder);
+//            }
         }
         return condition;
     }

@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.actions_new;
+package eu.decentsoftware.holograms.api.actions;
 
 import org.jetbrains.annotations.NotNull;
 

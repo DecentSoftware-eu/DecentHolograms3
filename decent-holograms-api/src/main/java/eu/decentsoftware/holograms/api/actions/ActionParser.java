@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.api.actions_new;
+package eu.decentsoftware.holograms.api.actions;
 
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import org.jetbrains.annotations.NotNull;

@@ -1,8 +1,8 @@
 package eu.decentsoftware.holograms.actions;
 
 import dev.dejvokep.boostedyaml.block.implementation.Section;
-import eu.decentsoftware.holograms.api.actions_new.Action;
-import eu.decentsoftware.holograms.api.actions_new.ActionParser;
+import eu.decentsoftware.holograms.api.actions.Action;
+import eu.decentsoftware.holograms.api.actions.ActionParser;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultActionParser implements ActionParser {

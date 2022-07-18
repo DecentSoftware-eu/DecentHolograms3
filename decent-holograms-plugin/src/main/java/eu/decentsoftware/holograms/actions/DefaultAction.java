@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.actions;
 
-import eu.decentsoftware.holograms.api.actions_new.Action;
+import eu.decentsoftware.holograms.api.actions.Action;
 
 public abstract class DefaultAction implements Action {
 
