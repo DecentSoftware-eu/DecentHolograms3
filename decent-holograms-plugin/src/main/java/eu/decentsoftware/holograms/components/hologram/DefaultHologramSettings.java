@@ -10,10 +10,12 @@ public class DefaultHologramSettings implements HologramSettings {
 
     private boolean enabled;
     private boolean persistent;
-    private boolean downOrigin;
     private boolean editable;
-    private boolean fixedRotation;
-    private boolean fixedOffsets;
+    private boolean interactive;
+    private boolean downOrigin;
+    private boolean rotateHeads;
+    private boolean rotateVertical;
+    private boolean rotateHorizontal;
     private int viewDistance;
     private int updateDistance;
     private int updateInterval;
@@ -30,8 +32,10 @@ public class DefaultHologramSettings implements HologramSettings {
         this.persistent = persistent;
         this.downOrigin = false;
         this.editable = true;
-        this.fixedRotation = false;
-        this.fixedOffsets = false;
+        this.interactive = false;
+        this.rotateHeads = true;
+        this.rotateVertical = true;
+        this.rotateHorizontal = true;
         this.viewDistance = 48;
         this.updateDistance = 48;
         this.updateInterval = 20;

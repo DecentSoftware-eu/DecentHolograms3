@@ -89,36 +89,56 @@ public interface HologramSettings {
     void setEditable(boolean editable);
 
     /**
-     * Get if the hologram has fixed rotation, meaning the hologram will
-     * not be rotated to face the player.
+     * Get if the hologram should rotate horizontally. If true, the hologram will
+     * be rotated to face the player horizontally. Meaning player will be able to
+     * see the hologram equally from all sides even with line offsets.
+     *
+     * @return True if the hologram should rotate horizontally, false otherwise.
+     */
+    boolean isRotateHorizontal();
+
+    /**
+     * Set if the hologram should rotate horizontally. If true, the hologram will
+     * be rotated to face the player horizontally. Meaning player will be able to
+     * see the hologram equally from all sides even with line offsets.
+     *
+     * @param rotateHorizontal True if the hologram should rotate horizontally, false otherwise.
+     */
+    void setRotateHorizontal(boolean rotateHorizontal);
+
+    /**
+     * Get if the hologram should rotate vertically. If true, the hologram will
+     * be rotated to face the player vertically. Meaning player will be able to
+     * see the hologram even from above.
      *
      * @return True if the hologram has fixed rotation, false otherwise.
      */
-    boolean isFixedRotation();
+    boolean isRotateVertical();
 
     /**
-     * Set if the hologram has fixed rotation, meaning the hologram will
-     * not be rotated to face the player.
+     * Set if the hologram should rotate vertically. If true, the hologram will
+     * be rotated to face the player vertically. Meaning player will be able to
+     * see the hologram even from above.
      *
-     * @param fixedRotation True if the hologram has fixed rotation, false otherwise.
+     * @param rotateVertical True if the hologram should rotate vertically, false otherwise.
      */
-    void setFixedRotation(boolean fixedRotation);
+    void setRotateVertical(boolean rotateVertical);
 
     /**
-     * Get if the hologram has fixed offsets, meaning the hologram lines
-     * with offsets will not be aligned to always face the player.
+     * Get if the hologram should rotate the heads of entities in it. If true,
+     * the hologram will rotate all heads and entities to face the player.
      *
-     * @return True if the hologram has fixed offsets, false otherwise.
+     * @return True if the hologram should rotate the heads, false otherwise.
      */
-    boolean isFixedOffsets();
+    boolean isRotateHeads();
 
     /**
-     * Set if the hologram has fixed offsets, meaning the hologram lines
-     * with offsets will not be aligned to always face the player.
+     * Set if the hologram should rotate the heads of entities in it. If true,
+     * the hologram will rotate all heads and entities to face the player.
      *
-     * @param fixedOffsets True if the hologram has fixed offsets, false otherwise.
+     * @param rotateHeads True if the hologram should rotate the heads, false otherwise.
      */
-    void setFixedOffsets(boolean fixedOffsets);
+    void setRotateHeads(boolean rotateHeads);
 
     /**
      * Get the view distance of the hologram. This is the range in which the
