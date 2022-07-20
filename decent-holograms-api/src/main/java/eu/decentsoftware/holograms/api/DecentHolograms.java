@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.actions.ActionParserManager;
+import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
@@ -27,8 +27,6 @@ public abstract class DecentHolograms extends JavaPlugin {
      * so that it doesn't conflict with normal entities.
      */
     private static int ENTITY_ID = 1_000_000;
-    // The 'config.yml' file
-    private File configFile;
     // The '/holograms' file
     private File hologramsFolder;
 
@@ -39,18 +37,6 @@ public abstract class DecentHolograms extends JavaPlugin {
      */
     public static int getFreeEntityId() {
         return ENTITY_ID++;
-    }
-
-    /**
-     * Get the "config.yml" file.
-     *
-     * @return The file.
-     */
-    public File getConfigFile() {
-        if (configFile == null) {
-            configFile = new File(getDataFolder(), "config.yml");
-        }
-        return configFile;
     }
 
     /**
@@ -119,12 +105,12 @@ public abstract class DecentHolograms extends JavaPlugin {
     public abstract ContentParserManager getContentParserManager();
 
     /**
-     * Get the action parser manager.
+     * Get the action type registry.
      *
-     * @return The action parser manager.
-     * @see ActionParserManager
+     * @return The action type registry.
+     * @see ActionTypeRegistry
      */
-    public abstract ActionParserManager getActionParserManager();
+    public abstract ActionTypeRegistry getActionTypeRegistry();
 
     /**
      * Get the hologram registry.
