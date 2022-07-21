@@ -1,11 +1,15 @@
-main: eu.decent.holograms.DecentHologramsPlugin
+main: eu.decentsoftware.holograms.DecentHologramsPlugin
 name: DecentHolograms
 description: 'A lightweight yet very powerful hologram plugin.'
 version: '${version}'
 softdepend:
-  - PlaceholderAPI
   - ProtocolLib
+  - PlaceholderAPI
+  - LightAPI
+  - Vault
   - HeadDatabase
+  - ItemsAdder
+  - Oraxen
 api-version: 1.13
 prefix: DecentHolograms
 author: d0by
