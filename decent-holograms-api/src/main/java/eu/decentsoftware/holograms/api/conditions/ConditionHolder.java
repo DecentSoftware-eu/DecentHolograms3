@@ -28,7 +28,7 @@ public abstract class ConditionHolder extends DList<Condition> {
             ActionHolder actions;
             if (!fulfilled) {
                 // Not met
-                if ((actions = condition.getNotMetActions()) != null && actions.isNotEmpty()) {
+                if ((actions = condition.getNotMetActions()) != null && !actions.getActions().isEmpty()) {
                     // Execute 'not met' actions if any.
                     actions.execute(profile);
                 }
@@ -36,7 +36,7 @@ public abstract class ConditionHolder extends DList<Condition> {
                     // Not all required conditions are fulfilled.
                     success = false;
                 }
-            } else if ((actions = condition.getMetActions()) != null && actions.isNotEmpty()) {
+            } else if ((actions = condition.getMetActions()) != null && !actions.getActions().isEmpty()) {
                 // Execute 'met' actions if any.
                 actions.execute(profile);
             }

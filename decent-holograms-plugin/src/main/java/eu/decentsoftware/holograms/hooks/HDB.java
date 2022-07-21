@@ -1,5 +1,6 @@
-package eu.decentsoftware.holograms.api.hooks;
+package eu.decentsoftware.holograms.hooks;
 
+import lombok.experimental.UtilityClass;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Utility class providing methods to interact with the HeadDatabaseAPI plugin.
  */
+@UtilityClass
 public final class HDB {
 
     public static final HeadDatabaseAPI API;

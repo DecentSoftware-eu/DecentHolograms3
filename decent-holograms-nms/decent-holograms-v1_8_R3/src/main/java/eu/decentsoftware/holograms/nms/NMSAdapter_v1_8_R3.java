@@ -126,19 +126,6 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         return packet;
     }
 
-    @Override
-    public Object packetTeleportEntity(int eid, Location l, boolean onGround) {
-        return new PacketPlayOutEntityTeleport(
-                eid,
-                (int) l.getX(),
-                (int) l.getY(),
-                (int) l.getZ(),
-                (byte)((int) (l.getYaw() * 256.0F / 360.0F)),
-                (byte)((int) (l.getPitch() * 256.0F / 360.0F)),
-                onGround
-        );
-    }
-
     /*
      *  Entity Metadata
      */
@@ -261,6 +248,19 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     public void setHelmet(Player player, int eid, org.bukkit.inventory.ItemStack itemStack) {
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, 4, i(itemStack));
         sendPacket(player, packet);
+    }
+
+    @Override
+    public Object packetTeleportEntity(int eid, Location l, boolean onGround) {
+        return new PacketPlayOutEntityTeleport(
+                eid,
+                MathHelper.floor(l.getX() * 32.0),
+                MathHelper.floor(l.getY() * 32.0),
+                MathHelper.floor(l.getZ() * 32.0),
+                (byte)((int) (l.getYaw() * 256.0F / 360.0F)),
+                (byte)((int) (l.getPitch() * 256.0F / 360.0F)),
+                onGround
+        );
     }
 
     @Override

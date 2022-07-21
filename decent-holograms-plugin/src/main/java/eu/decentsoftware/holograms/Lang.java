@@ -2,11 +2,11 @@ package eu.decentsoftware.holograms;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.hooks.PAPI;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.CFG;
 import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
+import eu.decentsoftware.holograms.hooks.PAPI;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
