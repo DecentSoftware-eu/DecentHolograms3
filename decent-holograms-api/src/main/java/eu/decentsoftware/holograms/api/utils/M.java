@@ -31,24 +31,6 @@ public final class M {
     }
 
     /**
-     * Calculates the location in front of the given location.
-     *
-     * @param location The location to calculate the location in front of.
-     * @param x The distance of the location in front.
-     * @param y The Y offset of the location in front.
-     * @param z The perpendicular offset of the location in front.
-     * @return The location in front of the given location.
-     */
-    @NotNull
-    public static Location getLocationInFront(@NotNull Location location, double x, double y, double z) {
-        Vector direction = location.getDirection();
-        Vector perpendicular = direction.clone().crossProduct(UP_VECTOR).normalize().multiply(z);
-        Location actual = location.clone().add(direction.clone().multiply(x)).subtract(perpendicular);
-        actual.setY(actual.getY() + y);
-        return actual;
-    }
-
-    /**
      * Draws a line of particles from the given location representing the given vector.
      *
      * @param particle The particle to draw.
