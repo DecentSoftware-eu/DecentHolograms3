@@ -1,5 +1,6 @@
-package eu.decentsoftware.holograms.api.hooks;
+package eu.decentsoftware.holograms.hooks;
 
+import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Utility class providing methods to interact with the PlaceholderAPI plugin.
  */
+@UtilityClass
 public final class PAPI {
 
     /**

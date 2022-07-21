@@ -4,4 +4,6 @@ dependencies {
     implementation(project(':decent-holograms-nms:decent-holograms-v1_8_R1'))
     implementation(project(':decent-holograms-nms:decent-holograms-v1_8_R2'))
     implementation(project(':decent-holograms-nms:decent-holograms-v1_8_R3'))
+    implementation(project(':decent-holograms-nms:decent-holograms-v1_9_R1'))
+    implementation(project(':decent-holograms-nms:decent-holograms-v1_9_R2'))
 }
