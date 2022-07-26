@@ -9,6 +9,12 @@ import lombok.Data;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class is used to (de)serialize holograms from/to json.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
 @Data
 public class SerializableHologram {
 
@@ -18,6 +24,12 @@ public class SerializableHologram {
     private final @NotNull ConditionHolder viewConditions;
     private final @NotNull DList<SerializablePage> pages;
 
+    /**
+     * Create a new instance of {@link SerializableHologram} from the given {@link DefaultHologram}.
+     *
+     * @param hologram The hologram.
+     * @return The new {@link SerializableHologram}.
+     */
     @NotNull
     public static SerializableHologram fromHologram(@NotNull DefaultHologram hologram) {
         DList<SerializablePage> pages = new DList<>();
@@ -35,6 +47,11 @@ public class SerializableHologram {
         );
     }
 
+    /**
+     * Create a {@link DefaultHologram} from this {@link SerializableHologram}.
+     *
+     * @return The new {@link DefaultHologram}.
+     */
     @NotNull
     public DefaultHologram toHologram() {
         DefaultHologram hologram = new DefaultHologram(name, location, settings, viewConditions);

@@ -37,7 +37,7 @@ public interface HologramConfig {
     CompletableFuture<Void> save();
 
     /**
-     * Load the hologram file.
+     * Reload the hologram file.
      *
      * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
      */

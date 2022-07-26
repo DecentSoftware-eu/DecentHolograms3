@@ -10,6 +10,12 @@ import eu.decentsoftware.holograms.components.line.SerializableLine;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class is used to (de)serialize pages from/to json.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
 @Data
 public class SerializablePage {
 
@@ -17,6 +23,12 @@ public class SerializablePage {
     private final @NotNull ConditionHolder clickConditions;
     private final @NotNull DefaultActionHolder clickActions;
 
+    /**
+     * Create a new {@link SerializablePage} from the given {@link DefaultPage}.
+     *
+     * @param page The page.
+     * @return The new {@link SerializablePage}.
+     */
     @NotNull
     public static SerializablePage fromPage(@NotNull DefaultPage page) {
         DList<SerializableLine> lines = new DList<>();
@@ -32,6 +44,12 @@ public class SerializablePage {
         );
     }
 
+    /**
+     * Create a {@link DefaultPage} from this {@link SerializablePage}.
+     *
+     * @param hologram The parent {@link DefaultHologram} of this page.
+     * @return The new {@link DefaultPage}.
+     */
     @NotNull
     public DefaultPage toPage(@NotNull DefaultHologram hologram) {
         DefaultPage page = new DefaultPage(hologram, clickConditions, clickActions);

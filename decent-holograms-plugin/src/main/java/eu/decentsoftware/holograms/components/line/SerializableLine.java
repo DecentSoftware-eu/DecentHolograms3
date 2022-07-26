@@ -7,6 +7,12 @@ import lombok.Data;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class is used to (de)serialize lines from/to json.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
 @Data
 public class SerializableLine {
 
@@ -17,6 +23,12 @@ public class SerializableLine {
     private final @NotNull DefaultActionHolder clickActions;
     private final String content;
 
+    /**
+     * Create a new {@link SerializableLine} from the given {@link DefaultLine}.
+     *
+     * @param line The line.
+     * @return The new {@link SerializableLine}.
+     */
     @NotNull
     public static SerializableLine fromLine(@NotNull DefaultLine line) {
         return new SerializableLine(
@@ -29,6 +41,12 @@ public class SerializableLine {
         );
     }
 
+    /**
+     * Create a {@link DefaultLine} from this {@link SerializableLine}.
+     *
+     * @param page The parent {@link DefaultPage} of this line.
+     * @return The new {@link DefaultLine}.
+     */
     @NotNull
     public DefaultLine toLine(@NotNull DefaultPage page) {
         return new DefaultLine(page, settings, location, viewConditions, clickConditions, clickActions, content);
