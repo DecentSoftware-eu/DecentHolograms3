@@ -1,16 +1,10 @@
 package eu.decentsoftware.holograms.components.hologram;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import eu.decentsoftware.holograms.actions.DefaultActionDeserializer;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.utils.FileUtils;
-import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -23,15 +17,9 @@ public class DefaultHologramRegistry extends HologramRegistry {
     private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
 
     private final @NotNull File hologramsFile;
-    private final @NotNull Gson gson;
 
     public DefaultHologramRegistry() {
         this.hologramsFile = new File(PLUGIN.getDataFolder(), "holograms.yml");
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(Location.class, new LocationSerializer())
-                .registerTypeAdapter(Action.class, new DefaultActionDeserializer())
-                .setPrettyPrinting()
-                .create();
         this.reload();
     }
 
@@ -59,7 +47,7 @@ public class DefaultHologramRegistry extends HologramRegistry {
         for (File file : files) {
             try (FileInputStream fis = new FileInputStream(file)) {
                 String string = new String(fis.readAllBytes());
-                SerializableHologram hologram = gson.fromJson(string, SerializableHologram.class);
+                SerializableHologram hologram = PLUGIN.getGson().fromJson(string, SerializableHologram.class);
                 register(hologram.toHologram());
             } catch (IOException e) {
                 PLUGIN.getLogger().severe("Failed to load hologram from '" + file.getName() + "'! Skipping...");
@@ -74,12 +62,6 @@ public class DefaultHologramRegistry extends HologramRegistry {
             hologram.destroy();
         }
         this.clear();
-    }
-
-    @NotNull
-    @Override
-    public Gson getGson() {
-        return gson;
     }
 
 }

@@ -55,7 +55,7 @@ public class DefaultHologramConfig implements HologramConfig {
             ensureFileExists();
 
             try (FileWriter writer = new FileWriter(getFile().getPath())) {
-                PLUGIN.getHologramRegistry().getGson().toJson(SerializableHologram.fromHologram((DefaultHologram) parent), writer);
+                PLUGIN.getGson().toJson(SerializableHologram.fromHologram((DefaultHologram) parent), writer);
             } catch (IOException e) {
                 PLUGIN.getLogger().severe("Failed to save hologram " + parent.getName() + ":");
                 e.printStackTrace();
@@ -67,7 +67,7 @@ public class DefaultHologramConfig implements HologramConfig {
     public CompletableFuture<Void> reload() {
         return CompletableFuture.runAsync(() -> {
             try (FileReader reader = new FileReader(getFile().getPath())) {
-                SerializableHologram hologram = PLUGIN.getHologramRegistry().getGson().fromJson(reader, SerializableHologram.class);
+                SerializableHologram hologram = PLUGIN.getGson().fromJson(reader, SerializableHologram.class);
                 parent.getPositionManager().setLocation(hologram.getLocation());
                 parent.getSettings().set(hologram.getSettings());
                 DList<Page> pages = new DList<>();

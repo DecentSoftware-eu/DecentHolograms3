@@ -1,8 +1,12 @@
 package eu.decentsoftware.holograms;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import eu.decentsoftware.holograms.actions.DefaultActionDeserializer;
 import eu.decentsoftware.holograms.actions.DefaultActionTypeRegistry;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
@@ -14,6 +18,7 @@ import eu.decentsoftware.holograms.api.ticker.Ticker;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.components.line.content.DefaultContentParserManager;
+import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.nms.NMSProviderImpl;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
 import eu.decentsoftware.holograms.listener.PlayerListener;
@@ -25,6 +30,7 @@ import eu.decentsoftware.holograms.utils.UpdateChecker;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 
@@ -40,6 +46,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
     @Getter(AccessLevel.NONE)
     private NMSProvider nmsProvider;
+    private Gson gson;
     private Ticker ticker;
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
@@ -71,6 +78,11 @@ public final class DecentHologramsPlugin extends DecentHolograms {
             return;
         }
 
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(Location.class, new LocationSerializer())
+                .registerTypeAdapter(Action.class, new DefaultActionDeserializer())
+                .setPrettyPrinting()
+                .create();
         this.ticker = new DefaultTicker();
         this.profileRegistry = new DefaultProfileRegistry();
         this.serverRegistry = new DefaultServerRegistry();

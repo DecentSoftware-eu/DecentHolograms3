@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api;
 
+import com.google.gson.Gson;
 import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
@@ -63,6 +64,14 @@ public abstract class DecentHolograms extends JavaPlugin {
      * @see NMSProvider
      */
     public abstract NMSProvider getNMSProvider();
+
+    /**
+     * Get the Gson, that's being used by this plugin.
+     *
+     * @return The Gson.
+     * @see Gson
+     */
+    public abstract Gson getGson();
 
     /**
      * Get the ticker.
