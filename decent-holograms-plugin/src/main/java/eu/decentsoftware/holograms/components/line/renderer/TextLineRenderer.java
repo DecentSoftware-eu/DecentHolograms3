@@ -4,9 +4,9 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
-import eu.decentsoftware.holograms.api.hooks.PAPI;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.hooks.PAPI;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class TextLineRenderer extends AbstractLineRenderer {
 
-    private final String text;
+    private final @NotNull String text;
     private final String hoverText;
     private final int eid;
 

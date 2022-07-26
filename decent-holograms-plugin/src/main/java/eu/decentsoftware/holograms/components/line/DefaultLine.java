@@ -21,13 +21,13 @@ import java.util.UUID;
 
 public class DefaultLine implements Line {
 
-    private final Page parent;
-    private final UUID uid;
-    private final LineSettings settings;
-    private final PositionManager positionManager;
-    private final ConditionHolder viewConditions;
-    private final ConditionHolder clickConditions;
-    private final ActionHolder clickActions;
+    private final @NotNull Page parent;
+    private final @NotNull UUID uid;
+    private final @NotNull LineSettings settings;
+    private final @NotNull PositionManager positionManager;
+    private final @NotNull ConditionHolder viewConditions;
+    private final @NotNull ConditionHolder clickConditions;
+    private final @NotNull ActionHolder clickActions;
     private LineRenderer renderer;
     private String content;
 

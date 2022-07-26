@@ -21,10 +21,10 @@ import java.util.Set;
 
 public class DefaultPage implements Page {
 
-    private final Hologram parent;
-    private final PageLineHolder lineHolder;
-    private final ConditionHolder clickConditions;
-    private final ActionHolder clickActions;
+    private final @NotNull Hologram parent;
+    private final @NotNull PageLineHolder lineHolder;
+    private final @NotNull ConditionHolder clickConditions;
+    private final @NotNull ActionHolder clickActions;
 
     public DefaultPage(@NotNull Hologram parent) {
         this.parent = parent;

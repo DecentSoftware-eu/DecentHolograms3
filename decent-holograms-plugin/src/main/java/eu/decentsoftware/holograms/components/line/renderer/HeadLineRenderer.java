@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class HeadLineRenderer extends AbstractLineRenderer {
 
-    private final DecentItemStack itemStack;
+    private final @NotNull DecentItemStack itemStack;
     private final boolean small;
     private final int eid;
 

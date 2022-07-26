@@ -19,8 +19,8 @@ public abstract class AbstractLineRenderer implements LineRenderer {
     protected static final DecentHolograms API = DecentHologramsAPI.getInstance();
     protected static final NMSAdapter NMS = API.getNMSProvider().getAdapter();
 
-    private final Line parent;
-    private final LineType type;
+    private final @NotNull Line parent;
+    private final @NotNull LineType type;
 
     public AbstractLineRenderer(@NotNull Line parent, @NotNull LineType type) {
         this.parent = parent;

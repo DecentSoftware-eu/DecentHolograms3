@@ -42,7 +42,7 @@ public abstract class ActionType {
      * @param name The name.
      * @return True if the name is a valid alias of this type.
      */
-    public boolean isValid(@NotNull String name) {
+    public boolean isAlias(@NotNull String name) {
         for (String alias : getAliases()) {
             if (alias.trim().equalsIgnoreCase(name.trim())) {
                 return true;

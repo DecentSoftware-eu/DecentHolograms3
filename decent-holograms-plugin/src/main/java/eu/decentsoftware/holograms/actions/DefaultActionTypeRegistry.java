@@ -55,7 +55,7 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
     @Override
     public void remove(@NotNull String name) {
         for (ActionType type : this.types) {
-            if (type.isValid(name)) {
+            if (type.isAlias(name)) {
                 this.types.remove(type);
                 return;
             }
@@ -66,7 +66,7 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
     @Override
     public ActionType get(@NotNull String name) {
         for (ActionType type : this.types) {
-            if (type.isValid(name)) {
+            if (type.isAlias(name)) {
                 return type;
             }
         }

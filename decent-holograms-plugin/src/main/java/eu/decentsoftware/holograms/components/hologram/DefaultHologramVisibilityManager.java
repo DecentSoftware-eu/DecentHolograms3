@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 public class DefaultHologramVisibilityManager implements HologramVisibilityManager {
 
-    private final Hologram parent;
-    private final Set<String> players;
-    private final Set<String> viewers;
-    private final Map<String, Integer> playerPages;
+    private final @NotNull Hologram parent;
+    private final @NotNull Set<String> players;
+    private final @NotNull Set<String> viewers;
+    private final @NotNull Map<String, Integer> playerPages;
     private boolean visibleByDefault;
 
     /**

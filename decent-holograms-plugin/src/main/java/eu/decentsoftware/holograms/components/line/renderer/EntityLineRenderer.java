@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityLineRenderer extends AbstractDoubleEntityLineRenderer {
 
-    private final DecentEntity entity;
+    private final @NotNull DecentEntity entity;
 
     public EntityLineRenderer(@NotNull Line parent, @NotNull DecentEntity entity) {
         super(parent, LineType.ENTITY);

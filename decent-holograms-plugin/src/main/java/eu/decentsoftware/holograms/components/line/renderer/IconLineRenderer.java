@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class IconLineRenderer extends AbstractDoubleEntityLineRenderer {
 
-    private final DecentItemStack itemStack;
+    private final @NotNull DecentItemStack itemStack;
 
     public IconLineRenderer(@NotNull Line parent, @NotNull DecentItemStack itemStack) {
         super(parent, LineType.ICON);

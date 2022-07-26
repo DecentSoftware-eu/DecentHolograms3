@@ -15,14 +15,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class DefaultHologram implements Hologram {
 
-    private final String name;
-    private final HologramConfig file;
-    private final HologramSettings settings;
-    private final DefaultPositionManager positionManager;
-    private final HologramVisibilityManager visibilityManager;
-    private final HologramPageHolder pageHolder;
-    private final ConditionHolder conditionHolder;
-    private final AtomicLong lastTick;
+    private final @NotNull String name;
+    private final @NotNull HologramConfig file;
+    private final @NotNull HologramSettings settings;
+    private final @NotNull DefaultPositionManager positionManager;
+    private final @NotNull HologramVisibilityManager visibilityManager;
+    private final @NotNull HologramPageHolder pageHolder;
+    private final @NotNull ConditionHolder conditionHolder;
+    private final @NotNull AtomicLong lastTick;
 
     /**
      * Creates a new instance of {@link DefaultHologram} with the given name.

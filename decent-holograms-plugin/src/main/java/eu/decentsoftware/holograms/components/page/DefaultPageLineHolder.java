@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class DefaultPageLineHolder implements PageLineHolder {
 
-    private final Page parent;
-    private final DList<Line> lines;
+    private final @NotNull Page parent;
+    private final @NotNull DList<Line> lines;
 
     /**
      * Create a new instance of {@link DefaultPageLineHolder}.
@@ -18,7 +18,7 @@ public class DefaultPageLineHolder implements PageLineHolder {
      * @param parent The parent page of this page line holder.
      * @see Page
      */
-    public DefaultPageLineHolder(Page parent) {
+    public DefaultPageLineHolder(@NotNull Page parent) {
         this.parent = parent;
         this.lines = new DList<>();
     }
@@ -106,4 +106,5 @@ public class DefaultPageLineHolder implements PageLineHolder {
         // Clear the list
         PageLineHolder.super.clearLines();
     }
+
 }

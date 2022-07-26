@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class DefaultHologramPageHolder implements HologramPageHolder {
 
-    private final Hologram parent;
-    private final DList<Page> pages;
+    private final @NotNull Hologram parent;
+    private final @NotNull DList<Page> pages;
 
     /**
      * Creates a new instance of {@link DefaultHologramPageHolder} with the given parent.

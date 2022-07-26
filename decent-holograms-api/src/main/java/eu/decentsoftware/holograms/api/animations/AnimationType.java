@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.animations;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This enum represents the different types of animations that can be used. The
  * animation type determines how the hologram will be animated, e.g. in which
@@ -27,5 +29,21 @@ public enum AnimationType {
      */
     RANDOM,
 
-    INTERNAL
+    INTERNAL;
+
+    /**
+     * Get a {@link AnimationType} from a string.
+     *
+     * @param name The name of the animation type.
+     * @return The animation type or {@link #ASCEND} by default.
+     */
+    @NotNull
+    public static AnimationType getByName(@NotNull String name) {
+        for (AnimationType value : values()) {
+            if (value.name().equalsIgnoreCase(name)) {
+                return value;
+            }
+        }
+        return ASCEND;
+    }
 }

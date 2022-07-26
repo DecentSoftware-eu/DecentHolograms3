@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class ImageLineRenderer extends AbstractLineRenderer {
 
-    private final DecentImage image;
+    private final @NotNull DecentImage image;
     private final int[] entityIds;
 
     public ImageLineRenderer(@NotNull Line parent, @NotNull DecentImage image) {
