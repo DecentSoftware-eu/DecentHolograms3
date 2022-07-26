@@ -8,13 +8,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class MessageAction extends DefaultAction {
 
-    protected final @NotNull String[] message;
+    protected final @NotNull String message;
 
-    public MessageAction(@NotNull String... message) {
+    public MessageAction(@NotNull String message) {
         this.message = message;
     }
 
-    public MessageAction(long delay, double chance, @NotNull String... message) {
+    public MessageAction(long delay, double chance, @NotNull String message) {
         super(delay, chance);
         this.message = message;
     }
@@ -23,9 +23,7 @@ public class MessageAction extends DefaultAction {
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
         if (player != null) {
-            for (String line : message) {
-                Lang.tell(player, line);
-            }
+            Lang.tell(player, message);
         }
     }
 

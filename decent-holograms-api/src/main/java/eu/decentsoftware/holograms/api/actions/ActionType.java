@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.api.actions;
 
-import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,10 +30,10 @@ public abstract class ActionType {
     /**
      * Create a new instance of {@link Action} of this type.
      *
-     * @param json The JSON object.
+     * @param data The data of the action.
      * @return The action.
      */
-    public abstract Action createAction(@NotNull JsonObject json);
+    public abstract Action createAction(String... data);
 
     /**
      * Check if the given name is a valid alias of this type.

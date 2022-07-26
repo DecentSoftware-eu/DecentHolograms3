@@ -11,12 +11,23 @@ public class DefaultActionDeserializer implements JsonDeserializer<Action> {
 
     @Override
     public Action deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject parent = json.getAsJsonObject();
-        ActionType type = DecentHologramsAPI.getInstance().getActionTypeRegistry().get(parent.get("type").getAsString());
-        if (type == null) {
-            throw new JsonParseException("Unknown action type: " + parent.get("type").getAsString());
+        String action = json.getAsString();
+        ActionType type;
+        if (action.contains(":")) {
+            String[] spl = action.split(":");
+            if (spl.length != 0) {
+                type = DecentHologramsAPI.getInstance().getActionTypeRegistry().get(spl[0]);
+                if (type != null) {
+                    type.createAction(spl);
+                }
+            }
+        } else {
+            type = DecentHologramsAPI.getInstance().getActionTypeRegistry().get(action);
+            if (type != null) {
+                type.createAction();
+            }
         }
-        return type.createAction(parent);
+        return null;
     }
 
 }
