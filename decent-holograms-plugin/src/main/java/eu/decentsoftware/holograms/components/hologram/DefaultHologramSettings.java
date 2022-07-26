@@ -14,9 +14,9 @@ public class DefaultHologramSettings implements HologramSettings {
     private boolean editable;
     private boolean interactive;
     private boolean downOrigin;
-    private boolean rotateHeads;
-    private boolean rotateVertical;
     private boolean rotateHorizontal;
+    private boolean rotateVertical;
+    private boolean rotateHeads;
     private int viewDistance;
     private int updateDistance;
     private int updateInterval;
@@ -34,19 +34,29 @@ public class DefaultHologramSettings implements HologramSettings {
         this.downOrigin = false;
         this.editable = true;
         this.interactive = false;
-        this.rotateHeads = true;
-        this.rotateVertical = true;
         this.rotateHorizontal = true;
+        this.rotateVertical = true;
+        this.rotateHeads = true;
         this.viewDistance = 48;
         this.updateDistance = 48;
         this.updateInterval = 20;
         this.updating = true;
     }
 
+    @Override
     public void set(@NotNull HologramSettings settings) {
         this.enabled = settings.isEnabled();
         this.persistent = settings.isPersistent();
-        // TODO:
+        this.editable = settings.isEditable();
+        this.interactive = settings.isInteractive();
+        this.downOrigin = settings.isDownOrigin();
+        this.rotateHorizontal = settings.isRotateHorizontal();
+        this.rotateVertical = settings.isRotateVertical();
+        this.rotateHeads = settings.isRotateHeads();
+        this.viewDistance = settings.getViewDistance();
+        this.updateDistance = settings.getUpdateDistance();
+        this.updateInterval = settings.getUpdateInterval();
+        this.updating = settings.isUpdating();
     }
 
 }
