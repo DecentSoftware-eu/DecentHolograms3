@@ -96,4 +96,14 @@ public interface PageLineHolder {
         getLines().clear();
     }
 
+    /**
+     * Set the lines of this page.
+     *
+     * @param lines The lines to set.
+     */
+    default void setLines(@NotNull DList<Line> lines) {
+        clearLines();
+        getLines().addAll(lines);
+    }
+
 }

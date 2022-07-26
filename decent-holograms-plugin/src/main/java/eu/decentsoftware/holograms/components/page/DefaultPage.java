@@ -33,6 +33,14 @@ public class DefaultPage implements Page {
         this.clickActions = new DefaultActionHolder();
     }
 
+    protected DefaultPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions,
+                          @NotNull ActionHolder clickActions) {
+        this.parent = parent;
+        this.lineHolder = new DefaultPageLineHolder(this);
+        this.clickConditions = clickConditions;
+        this.clickActions = clickActions;
+    }
+
     @Override
     public void display(@NotNull Player player) {
         for (Line line : lineHolder.getLines()) {

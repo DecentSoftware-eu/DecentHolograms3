@@ -84,4 +84,14 @@ public interface HologramPageHolder {
         getPages().clear();
     }
 
+    /**
+     * Set the pages of this hologram.
+     *
+     * @param pages The pages to set.
+     */
+    default void setPages(@NotNull DList<Page> pages) {
+        clearPages();
+        getPages().addAll(pages);
+    }
+
 }

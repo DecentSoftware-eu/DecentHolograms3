@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
-import dev.dejvokep.boostedyaml.block.implementation.Section;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +18,7 @@ public interface HologramConfig {
      *
      * @return The parent hologram.
      */
+    @NotNull
     Hologram getParent();
 
     /**
@@ -25,28 +26,22 @@ public interface HologramConfig {
      *
      * @return The hologram file.
      */
+    @NotNull
     File getFile();
-
-    /**
-     * Get the hologram config as a {@link Section}.
-     *
-     * @return The hologram config as a {@link Section}.
-     */
-    Section getConfig();
 
     /**
      * Save the hologram file.
      *
      * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
      */
-    CompletableFuture<Boolean> save();
+    CompletableFuture<Void> save();
 
     /**
      * Load the hologram file.
      *
      * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
      */
-    CompletableFuture<Boolean> load();
+    CompletableFuture<Void> reload();
 
     /**
      * Delete the hologram file.

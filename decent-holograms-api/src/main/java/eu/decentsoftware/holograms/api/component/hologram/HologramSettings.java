@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This class represents the settings of a hologram.
  *
@@ -7,6 +9,13 @@ package eu.decentsoftware.holograms.api.component.hologram;
  * @since 3.0.0
  */
 public interface HologramSettings {
+
+    /**
+     * Copy settings from the given {@link HologramSettings}.
+     *
+     * @param settings The settings to copy from.
+     */
+    void set(@NotNull HologramSettings settings);
 
     /**
      * Check if this hologram is enabled. If this hologram is disabled, it will

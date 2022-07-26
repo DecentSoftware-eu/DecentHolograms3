@@ -47,6 +47,30 @@ public class DefaultLine implements Line {
         this.clickActions = new DefaultActionHolder();
     }
 
+    /**
+     * Creates a new instance of {@link DefaultLine}.
+     *
+     * @param parent The parent page of the line.
+     * @param settings The settings of the line.
+     * @param location The location of the line.
+     * @param viewConditions The conditions that must be met to view the line.
+     * @param clickConditions The conditions that must be met to click the line.
+     * @param clickActions The actions that will be executed when the line is clicked.
+     * @param content The content of the line.
+     */
+    public DefaultLine(@NotNull Page parent, @NotNull LineSettings settings, @NotNull Location location,
+                       @NotNull ConditionHolder viewConditions, @NotNull ConditionHolder clickConditions,
+                       @NotNull ActionHolder clickActions, @NotNull String content) {
+        this.parent = parent;
+        this.uid = UUID.randomUUID();
+        this.settings = settings;
+        this.positionManager = new DefaultPositionManager(location);
+        this.viewConditions = viewConditions;
+        this.clickConditions = clickConditions;
+        this.clickActions = clickActions;
+        this.setContent(content);
+    }
+
     @NotNull
     @Override
     public UUID getUid() {

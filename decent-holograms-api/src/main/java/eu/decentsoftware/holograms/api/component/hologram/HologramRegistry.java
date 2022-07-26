@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
+import com.google.gson.Gson;
 import eu.decentsoftware.holograms.api.utils.collection.Registry;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,5 +20,8 @@ public abstract class HologramRegistry extends Registry<String, Hologram> {
     public void register(@NotNull Hologram hologram) {
         register(hologram.getName(), hologram);
     }
+
+    @NotNull
+    public abstract Gson getGson();
 
 }

@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.components.common;
+package eu.decentsoftware.holograms.components.serialization;
 
 import com.google.gson.*;
 import org.bukkit.Bukkit;

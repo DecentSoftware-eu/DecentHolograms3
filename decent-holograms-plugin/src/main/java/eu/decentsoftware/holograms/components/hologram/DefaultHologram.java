@@ -1,6 +1,5 @@
 package eu.decentsoftware.holograms.components.hologram;
 
-import dev.dejvokep.boostedyaml.block.implementation.Section;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.Page;
@@ -43,25 +42,8 @@ public class DefaultHologram implements Hologram {
      * @param persistent Whether the hologram is persistent.
      */
     public DefaultHologram(@NotNull String name, @NotNull Location location, boolean enabled, boolean persistent) {
-        this(name, location, null, enabled, persistent);
-    }
-
-    /**
-     * Creates a new instance of {@link DefaultHologram} with the given name.
-     *
-     * @param name       The name of the hologram.
-     * @param location   The location of the hologram.
-     * @param config     The config of the hologram.
-     * @param enabled    Whether the hologram is enabled or not.
-     * @param persistent Whether the hologram is persistent.
-     */
-    protected DefaultHologram(@NotNull String name, @NotNull Location location, Section config, boolean enabled, boolean persistent) {
         this.name = name;
-        if (config != null) {
-            this.file = new DefaultHologramConfig(this, config);
-        } else {
-            this.file = new DefaultHologramConfig(this);
-        }
+        this.file = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
@@ -73,8 +55,22 @@ public class DefaultHologram implements Hologram {
         this.startTicking();
 
         // Load the hologram from the file.
-        this.getConfig().load()
-                .thenRun(() -> getSettings().setEnabled(enabled));
+        this.getConfig().reload().thenRun(() -> getSettings().setEnabled(enabled));
+    }
+
+    protected DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
+                              @NotNull ConditionHolder viewConditionHolder) {
+        this.name = name;
+        this.file = new DefaultHologramConfig(this);
+        this.positionManager = new DefaultPositionManager(location);
+        this.settings = settings;
+        this.visibilityManager = new DefaultHologramVisibilityManager(this);
+        this.pageHolder = new DefaultHologramPageHolder(this);
+        this.conditionHolder = viewConditionHolder;
+        this.lastTick = new AtomicLong(0);
+
+        // Start the ticking.
+        this.startTicking();
     }
 
     @NotNull
@@ -94,7 +90,8 @@ public class DefaultHologram implements Hologram {
         long timeDifference = currentTime - lastTick.get();
 
         // If the location is bound, update the location.
-        if (positionManager.isLocationBound()) {
+        if (positionManager.isLocationBound() || settings.isRotateHorizontal()
+                || settings.isRotateVertical() || settings.isRotateHeads()) {
             S.async(() -> pageHolder.getPages().forEach(Page::recalculate));
         }
 

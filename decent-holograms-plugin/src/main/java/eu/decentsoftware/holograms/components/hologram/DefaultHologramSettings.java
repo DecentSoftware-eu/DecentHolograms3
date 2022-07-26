@@ -3,13 +3,14 @@ package eu.decentsoftware.holograms.components.hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramSettings;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
 public class DefaultHologramSettings implements HologramSettings {
 
     private boolean enabled;
-    private boolean persistent;
+    private transient boolean persistent;
     private boolean editable;
     private boolean interactive;
     private boolean downOrigin;
@@ -40,6 +41,12 @@ public class DefaultHologramSettings implements HologramSettings {
         this.updateDistance = 48;
         this.updateInterval = 20;
         this.updating = true;
+    }
+
+    public void set(@NotNull HologramSettings settings) {
+        this.enabled = settings.isEnabled();
+        this.persistent = settings.isPersistent();
+        // TODO:
     }
 
 }
