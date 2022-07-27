@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 /**
  * Utility class providing methods to interact with the PlaceholderAPI plugin.
+ *
+ * @author d0by
  */
 @UtilityClass
 public final class PAPI {

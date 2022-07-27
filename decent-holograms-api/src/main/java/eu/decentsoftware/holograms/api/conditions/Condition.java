@@ -3,6 +3,7 @@ package eu.decentsoftware.holograms.api.conditions;
 import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This interface represents a condition.
@@ -52,6 +53,7 @@ public interface Condition {
      *
      * @return The actions.
      */
+    @Nullable
     ActionHolder getMetActions();
 
     /**
@@ -59,13 +61,14 @@ public interface Condition {
      *
      * @param actions The actions.
      */
-    void setMetActions(ActionHolder actions);
+    void setMetActions(@Nullable ActionHolder actions);
 
     /**
      * Get the actions that should be executed if this {@link Condition} is not met.
      *
      * @return The actions.
      */
+    @Nullable
     ActionHolder getNotMetActions();
 
     /**
@@ -73,6 +76,6 @@ public interface Condition {
      *
      * @param actions The actions.
      */
-    void setNotMetActions(ActionHolder actions);
+    void setNotMetActions(@Nullable ActionHolder actions);
 
 }

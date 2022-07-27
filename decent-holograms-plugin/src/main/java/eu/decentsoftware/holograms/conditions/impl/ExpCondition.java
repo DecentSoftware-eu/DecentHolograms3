@@ -21,7 +21,7 @@ public class ExpCondition extends DefaultCondition {
     @Override
     public boolean check(@NotNull Profile profile) {
         Player player = profile.getPlayer();
-        return player.getLevel() >= minLevel;
+        return player != null && player.getLevel() >= minLevel;
     }
 
 }

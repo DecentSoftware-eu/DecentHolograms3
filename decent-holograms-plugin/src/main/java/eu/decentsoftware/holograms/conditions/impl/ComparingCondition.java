@@ -1,9 +1,9 @@
 package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.api.profile.Profile;
-import eu.decentsoftware.holograms.conditions.DefaultCondition;
 import eu.decentsoftware.holograms.conditions.ConditionType;
-import eu.decentsoftware.holograms.api.hooks.PAPI;
+import eu.decentsoftware.holograms.conditions.DefaultCondition;
+import eu.decentsoftware.holograms.hooks.PAPI;
 import org.jetbrains.annotations.NotNull;
 
 public class ComparingCondition extends DefaultCondition {

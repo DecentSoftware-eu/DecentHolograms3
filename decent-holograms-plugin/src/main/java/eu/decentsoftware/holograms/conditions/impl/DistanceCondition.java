@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DistanceCondition extends DefaultCondition {
 
-    private final Location location;
+    private final @NotNull Location location;
     private final double maxDistanceSquared;
 
     public DistanceCondition(@NotNull Location location, double maxDistance) {
@@ -25,12 +25,13 @@ public class DistanceCondition extends DefaultCondition {
     @Override
     public boolean check(@NotNull Profile profile) {
         Player player = profile.getPlayer();
-        Location playerLocation = player.getLocation();
-        World playerWorld = playerLocation.getWorld();
+        if (player == null) {
+            return false;
+        }
+        Location pLocation = player.getLocation();
+        World pWorld = pLocation.getWorld();
         World world = location.getWorld();
-        return playerWorld != null && world != null &&
-                playerWorld.getName().equals(world.getName()) &&
-                playerLocation.distanceSquared(location) < maxDistanceSquared;
+        return pWorld != null && pWorld.equals(world) && pLocation.distanceSquared(location) < maxDistanceSquared;
     }
 
 }

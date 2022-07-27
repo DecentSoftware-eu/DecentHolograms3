@@ -2,17 +2,17 @@ package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.conditions.DefaultCondition;
-import eu.decentsoftware.holograms.api.hooks.PAPI;
+import eu.decentsoftware.holograms.hooks.PAPI;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a {@link DefaultCondition} that checks
- * whether the player has a specified permission.
+ * whether the player has a specific permission.
  */
 public class PermissionCondition extends DefaultCondition {
 
-    private final String permission;
+    private final @NotNull String permission;
 
     public PermissionCondition(@NotNull String permission) {
         this(false, permission);
@@ -26,7 +26,7 @@ public class PermissionCondition extends DefaultCondition {
     @Override
     public boolean check(@NotNull Profile profile) {
         Player player = profile.getPlayer();
-        return player.hasPermission(PAPI.setPlaceholders(player, this.permission));
+        return player != null && player.hasPermission(PAPI.setPlaceholders(player, this.permission));
     }
 
 }

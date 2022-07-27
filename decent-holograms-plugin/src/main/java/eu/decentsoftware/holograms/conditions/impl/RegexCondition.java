@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class RegexCondition extends DefaultCondition {
 
-    private final Pattern pattern;
-    private final String input;
+    private final @NotNull Pattern pattern;
+    private final @NotNull String input;
 
     public RegexCondition(@NotNull Pattern pattern, @NotNull String input) {
         this(false, pattern, input);
