@@ -2,16 +2,17 @@ package eu.decentsoftware.holograms.api.conditions;
 
 import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.profile.Profile;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * This class represents a holder for conditions.
  *
  * @author d0by
+ * @since 3.0.0
  */
-public abstract class ConditionHolder extends DList<Condition> {
+public interface ConditionHolder {
 
     /**
      * Checks all Conditions stored in this holder. This method also executes
@@ -20,15 +21,15 @@ public abstract class ConditionHolder extends DList<Condition> {
      * @param profile Profile of the player for whom we want to check the conditions.
      * @return true if all the conditions are fulfilled, false otherwise.
      */
-    public boolean check(@NotNull Profile profile) {
+    default boolean check(@NotNull Profile profile) {
         boolean success = true;
-        for (Condition condition : this) {
+        for (Condition condition : getConditions()) {
             // Check and flip if inverted.
             boolean fulfilled = condition.isInverted() != condition.check(profile);
             ActionHolder actions;
             if (!fulfilled) {
                 // Not met
-                if ((actions = condition.getNotMetActions()) != null && !actions.getActions().isEmpty()) {
+                if ((actions = condition.getNotMetActions()) != null) {
                     // Execute 'not met' actions if any.
                     actions.execute(profile);
                 }
@@ -36,7 +37,7 @@ public abstract class ConditionHolder extends DList<Condition> {
                     // Not all required conditions are fulfilled.
                     success = false;
                 }
-            } else if ((actions = condition.getMetActions()) != null && !actions.getActions().isEmpty()) {
+            } else if ((actions = condition.getMetActions()) != null) {
                 // Execute 'met' actions if any.
                 actions.execute(profile);
             }
@@ -46,10 +47,37 @@ public abstract class ConditionHolder extends DList<Condition> {
     }
 
     /**
-     * Load all conditions from a configuration section.
+     * Add the given condition to this holder.
      *
-     * @param config Configuration section.
+     * @param condition The condition.
      */
-    public abstract void load(@NotNull ConfigurationSection config);
+    void addCondition(@NotNull Condition condition);
+
+    /**
+     * Remove the given condition from this holder.
+     *
+     * @param condition The condition.
+     */
+    void removeCondition(@NotNull Condition condition);
+
+    /**
+     * Remove the condition at the given index from this holder.
+     *
+     * @param index The index.
+     */
+    void removeCondition(int index);
+
+    /**
+     * Remove all conditions from this holder.
+     */
+    void clearConditions();
+
+    /**
+     * Get all conditions in this holder.
+     *
+     * @return All conditions.
+     */
+    @NotNull
+    List<Condition> getConditions();
 
 }

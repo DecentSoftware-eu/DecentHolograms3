@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
+import eu.decentsoftware.holograms.api.conditions.ConditionTypeRegistry;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
@@ -120,6 +121,14 @@ public abstract class DecentHolograms extends JavaPlugin {
      * @see ActionTypeRegistry
      */
     public abstract ActionTypeRegistry getActionTypeRegistry();
+
+    /**
+     * Get the condition type registry.
+     *
+     * @return The condition type registry.
+     * @see ConditionTypeRegistry
+     */
+    public abstract ConditionTypeRegistry getConditionTypeRegistry();
 
     /**
      * Get the hologram registry.

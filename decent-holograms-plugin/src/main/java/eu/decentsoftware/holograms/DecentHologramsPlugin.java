@@ -2,7 +2,7 @@ package eu.decentsoftware.holograms;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eu.decentsoftware.holograms.actions.DefaultActionDeserializer;
+import eu.decentsoftware.holograms.actions.ActionSerializer;
 import eu.decentsoftware.holograms.actions.DefaultActionTypeRegistry;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
@@ -10,6 +10,8 @@ import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
+import eu.decentsoftware.holograms.api.conditions.Condition;
+import eu.decentsoftware.holograms.api.conditions.ConditionTypeRegistry;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
@@ -19,9 +21,11 @@ import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.components.line.content.DefaultContentParserManager;
 import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
+import eu.decentsoftware.holograms.conditions.ConditionSerializer;
+import eu.decentsoftware.holograms.conditions.DefaultConditionTypeRegistry;
+import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.NMSProviderImpl;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
-import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
 import eu.decentsoftware.holograms.server.DefaultServerRegistry;
 import eu.decentsoftware.holograms.ticker.DefaultTicker;
@@ -53,6 +57,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     private ReplacementRegistry replacementRegistry;
     private ContentParserManager contentParserManager;
     private ActionTypeRegistry actionTypeRegistry;
+    private ConditionTypeRegistry conditionTypeRegistry;
     private HologramRegistry hologramRegistry;
 
     /**
@@ -80,7 +85,8 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Location.class, new LocationSerializer())
-                .registerTypeAdapter(Action.class, new DefaultActionDeserializer())
+                .registerTypeAdapter(Action.class, new ActionSerializer())
+                .registerTypeAdapter(Condition.class, new ConditionSerializer())
                 .setPrettyPrinting()
                 .create();
         this.ticker = new DefaultTicker();
@@ -89,6 +95,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         this.replacementRegistry = new DefaultReplacementRegistry();
         this.contentParserManager = new DefaultContentParserManager();
         this.actionTypeRegistry = new DefaultActionTypeRegistry();
+        this.conditionTypeRegistry = new DefaultConditionTypeRegistry();
         this.hologramRegistry = new DefaultHologramRegistry();
 
         BungeeUtils.init();
@@ -137,10 +144,9 @@ public final class DecentHologramsPlugin extends DecentHolograms {
                 int[] latest = Arrays.stream(split).mapToInt(Integer::parseInt).toArray();
                 int[] current = Arrays.stream(getDescription().getVersion().split("\\.")).mapToInt(Integer::parseInt).toArray();
                 // Compare the versions
-                Config.setUpdateAvailable(
-                        (latest[0] > current[0]) ||
-                                (latest[0] == current[0] && latest[1] > current[1]) ||
-                                (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2])
+                Config.setUpdateAvailable((latest[0] > current[0]) ||
+                        (latest[0] == current[0] && latest[1] > current[1]) ||
+                        (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2])
                 );
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {

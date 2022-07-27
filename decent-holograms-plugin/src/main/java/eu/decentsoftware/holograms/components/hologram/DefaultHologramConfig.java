@@ -6,6 +6,7 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.conditions.Condition;
 import eu.decentsoftware.holograms.api.utils.S;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import eu.decentsoftware.holograms.components.page.SerializablePage;
@@ -75,8 +76,10 @@ public class DefaultHologramConfig implements HologramConfig {
                     pages.add(page.toPage((DefaultHologram) parent));
                 }
                 parent.getPageHolder().setPages(pages);
-                parent.getViewConditionHolder().clear();
-                parent.getViewConditionHolder().addAll(hologram.getViewConditions());
+                parent.getViewConditionHolder().clearConditions();
+                for (Condition condition : hologram.getViewConditions().getConditions()) {
+                    parent.getViewConditionHolder().addCondition(condition);
+                }
             } catch (JsonSyntaxException | IOException e) {
                 PLUGIN.getLogger().severe("Failed to load hologram " + parent.getName() + ":");
                 e.printStackTrace();
