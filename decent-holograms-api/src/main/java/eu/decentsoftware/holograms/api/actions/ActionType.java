@@ -1,6 +1,8 @@
 package eu.decentsoftware.holograms.api.actions;
 
+import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents a type of action. In order to create a new type of action,
@@ -28,12 +30,24 @@ public abstract class ActionType {
     }
 
     /**
-     * Create a new instance of {@link Action} of this type.
+     * Create a new instance of {@link Action} of this type from
+     * the given data.
      *
      * @param data The data of the action.
-     * @return The action.
+     * @return The action or null if the creation failed.
      */
-    public abstract Action createAction(String... data);
+    @Nullable
+    public abstract Action createAction(@NotNull String... data);
+
+    /**
+     * Create a new instance of {@link Action} of this type from
+     * the given data in JSON.
+     *
+     * @param json The data of the action in JSON.
+     * @return The action or null if the creation failed.
+     */
+    @Nullable
+    public abstract Action createAction(@NotNull JsonElement json);
 
     /**
      * Check if the given name is a valid alias of this type.

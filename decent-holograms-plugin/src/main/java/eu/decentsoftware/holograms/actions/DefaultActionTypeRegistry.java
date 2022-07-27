@@ -1,5 +1,7 @@
 package eu.decentsoftware.holograms.actions;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import eu.decentsoftware.holograms.actions.impl.*;
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ActionType;
@@ -7,7 +9,9 @@ import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.ConfigUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +57,7 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
 
     @Override
     public void remove(@NotNull String name) {
-        for (ActionType type : this.types) {
+        for (ActionType type : new HashSet<>(this.types)) {
             if (type.isAlias(name)) {
                 this.types.remove(type);
                 return;
@@ -86,12 +90,26 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
             String message = Common.implode(data, " ");
             return new ActionBarAction(message);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String message = object.get("message").getAsString();
+            return new ActionBarAction(message);
+        }
     };
 
     public static final ActionType CHAT = new ActionType("CHAT") {
         @Override
         public Action createAction(@NotNull String... data) {
             String message = Common.implode(data, " ");
+            return new ChatAction(message);
+        }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String message = object.get("message").getAsString();
             return new ChatAction(message);
         }
     };
@@ -102,6 +120,13 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
             String command = Common.implode(data, " ");
             return new CommandAction(command);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String command = object.get("command").getAsString();
+            return new CommandAction(command);
+        }
     };
 
     public static final ActionType CONNECT = new ActionType("CONNECT") {
@@ -109,12 +134,26 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
         public Action createAction(@NotNull String... data) {
             return new ConnectAction(data[0]);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String server = object.get("server").getAsString();
+            return new ConnectAction(server);
+        }
     };
 
     public static final ActionType CONSOLE = new ActionType("CONSOLE") {
         @Override
         public Action createAction(@NotNull String... data) {
             String command = Common.implode(data, " ");
+            return new ConsoleAction(command);
+        }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String command = object.get("command").getAsString();
             return new ConsoleAction(command);
         }
     };
@@ -125,6 +164,13 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
             String message = Common.implode(data, " ");
             return new MessageAction(message);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String message = object.get("message").getAsString();
+            return new MessageAction(message);
+        }
     };
 
     public static final ActionType MESSAGE_BROADCAST = new ActionType(
@@ -133,6 +179,13 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
         @Override
         public Action createAction(@NotNull String... data) {
             String message = Common.implode(data, " ");
+            return new MessageBroadcastAction(message);
+        }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String message = object.get("message").getAsString();
             return new MessageBroadcastAction(message);
         }
     };
@@ -151,6 +204,18 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
             }
             return new SoundAction(sound);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String sound = object.get("sound").getAsString();
+            if (sound == null) {
+                return null;
+            }
+            float volume = object.has("volume") ? object.get("volume").getAsFloat() : 1.0f;
+            float pitch = object.has("pitch") ? object.get("pitch").getAsFloat() : 1.0f;
+            return new SoundAction(sound, volume, pitch);
+        }
     };
 
     public static final ActionType SOUND_BROADCAST = new ActionType("SOUND_BROADCAST", "broadcast sound") {
@@ -166,6 +231,18 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
                 return new SoundBroadcastAction(sound, volume, pitch);
             }
             return new SoundBroadcastAction(sound);
+        }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String sound = object.get("sound").getAsString();
+            if (sound == null) {
+                return null;
+            }
+            float volume = object.has("volume") ? object.get("volume").getAsFloat() : 1.0f;
+            float pitch = object.has("pitch") ? object.get("pitch").getAsFloat() : 1.0f;
+            return new SoundBroadcastAction(sound, volume, pitch);
         }
     };
 
@@ -185,6 +262,18 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
             }
             return new SoundBroadcastWorldAction(sound);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String sound = object.get("sound").getAsString();
+            if (sound == null) {
+                return null;
+            }
+            float volume = object.has("volume") ? object.get("volume").getAsFloat() : 1.0f;
+            float pitch = object.has("pitch") ? object.get("pitch").getAsFloat() : 1.0f;
+            return new SoundBroadcastWorldAction(sound, volume, pitch);
+        }
     };
 
     public static final ActionType TELEPORT = new ActionType("TELEPORT", "tele", "tp") {
@@ -197,6 +286,23 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String worldName = object.get("world").getAsString();
+            World world = Bukkit.getWorld(worldName);
+            if (world == null) {
+                return null;
+            }
+            double x = object.get("x").getAsDouble();
+            double y = object.get("y").getAsDouble();
+            double z = object.get("z").getAsDouble();
+            float yaw = object.has("yaw") ? object.get("yaw").getAsFloat() : 0.0f;
+            float pitch = object.has("pitch") ? object.get("pitch").getAsFloat() : 0.0f;
+            Location location = new Location(world, x, y, z, yaw, pitch);
+            return new TeleportAction(location);
         }
     };
 
@@ -219,13 +325,31 @@ public class DefaultActionTypeRegistry implements ActionTypeRegistry {
             }
             return new TitleAction("", "", 20, 60, 20);
         }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            String title = object.has("title") ? object.get("title").getAsString() : "";
+            String subtitle = object.has("subtitle") ? object.get("subtitle").getAsString() : "";
+            int fadeIn = object.has("fadeIn") ? object.get("fadeIn").getAsInt() : 20;
+            int stay = object.has("stay") ? object.get("stay").getAsInt() : 60;
+            int fadeOut = object.has("fadeOut") ? object.get("fadeOut").getAsInt() : 20;
+            return new TitleAction(title, subtitle, fadeIn, stay, fadeOut);
+        }
     };
 
     public static final ActionType WAIT = new ActionType("WAIT", "pause") {
         @Override
         public Action createAction(@NotNull String... data) {
-            int seconds = Integer.parseInt(data[0]);
-            return new WaitAction(seconds);
+            int ticks = Integer.parseInt(data[0]);
+            return new WaitAction(ticks);
+        }
+
+        @Override
+        public Action createAction(@NotNull JsonElement json) {
+            JsonObject object = json.getAsJsonObject();
+            int ticks = object.get("ticks").getAsInt();
+            return new WaitAction(ticks);
         }
     };
 

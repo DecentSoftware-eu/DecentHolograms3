@@ -7,7 +7,7 @@ import eu.decentsoftware.holograms.api.actions.ActionType;
 
 import java.lang.reflect.Type;
 
-public class DefaultActionDeserializer implements JsonDeserializer<Action> {
+public class ActionSerializer implements JsonDeserializer<Action> {
 
     @Override
     public Action deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
