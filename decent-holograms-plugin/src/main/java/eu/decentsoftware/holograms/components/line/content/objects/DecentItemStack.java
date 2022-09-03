@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.components.line.content.objects;
 
+import com.cryptomorin.xseries.XMaterial;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.utils.ItemBuilder;
@@ -9,12 +10,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * This class represents a wrapper for an item, that can be used in a line.
@@ -33,7 +35,7 @@ public class DecentItemStack {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
-    private @NotNull Material material;
+    private @NotNull XMaterial material;
     private String owner;
     private String texture;
     private String nbt;
@@ -76,7 +78,7 @@ public class DecentItemStack {
         if (hdbId != null) {
             builder = new ItemBuilder(HDB.getHeadItemStackById(hdbId));
         } else {
-            builder = new ItemBuilder(material);
+            builder = new ItemBuilder(material.parseItem());
         }
 
         // Add NBT data
@@ -108,9 +110,8 @@ public class DecentItemStack {
     @NotNull
     public static DecentItemStack fromItemStack(@NotNull ItemStack itemStack) {
         ItemBuilder builder = new ItemBuilder(itemStack);
-        return new DecentItemStack(itemStack.getType())
+        return new DecentItemStack(XMaterial.matchXMaterial(itemStack.getType()))
                 .owner(builder.getSkullOwner())
-                .texture(builder.getSkullTexture())
                 .enchanted(!itemStack.getEnchantments().isEmpty());
     }
 
@@ -126,12 +127,8 @@ public class DecentItemStack {
         string = string.trim();
 
         String materialName = string.split(" ")[0];
-        Material material = Material.getMaterial(materialName);
-        if (material == null) {
-            material = Material.STONE;
-        }
-
-        return new DecentItemStack(material)
+        Optional<XMaterial> material = XMaterial.matchXMaterial(materialName);
+        return new DecentItemStack(material.orElse(XMaterial.STONE))
                 .owner(getFlagValue(string, "--owner:"))
                 .texture(getFlagValue(string, "--texture:"))
                 .nbt(getFlagValue(string, "--nbt:"))
@@ -142,11 +139,19 @@ public class DecentItemStack {
                 .glowing(string.contains("--glowing") || string.contains("--glow"));
     }
 
-    @NotNull
+    /**
+     * Get the value of the given flag.
+     *
+     * @param content The string to get the flag from.
+     * @param flag    The flag to get the value of.
+     * @return The value of the flag.
+     */
+    @Nullable
     private static String getFlagValue(@NotNull String content, @NotNull String flag) {
-        int index = content.indexOf(flag) + flag.length();
-        int endIndex = content.indexOf(' ', index);
-        return content.substring(index, endIndex);
+        if (content.contains(flag)) {
+            return content.split(flag)[1].split(" ")[0];
+        }
+        return null;
     }
 
 }
