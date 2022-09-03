@@ -13,6 +13,10 @@
     <packaging>pom</packaging>
     <modules>
         <module>decent-holograms-v1_8_R3</module>
+        <module>decent-holograms-v1_8_R2</module>
+        <module>decent-holograms-v1_8_R1</module>
+        <module>decent-holograms-v1_9_R1</module>
+        <module>decent-holograms-v1_9_R2</module>
     </modules>
 
     <dependencies>
