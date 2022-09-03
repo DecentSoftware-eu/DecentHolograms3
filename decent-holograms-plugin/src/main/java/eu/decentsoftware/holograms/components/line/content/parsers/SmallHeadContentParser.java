@@ -18,6 +18,7 @@ public class SmallHeadContentParser implements ContentParser {
         DecentItemStack itemStack = DecentItemStack.fromString(content);
         LineRenderer renderer = new SmallHeadLineRenderer(line, itemStack);
         line.setRenderer(renderer);
+        line.getPositionManager().getOffsets().setY(-1.1875d);
         return true;
     }
 

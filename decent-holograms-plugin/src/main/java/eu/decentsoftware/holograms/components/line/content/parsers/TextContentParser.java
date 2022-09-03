@@ -18,6 +18,7 @@ public class TextContentParser implements ContentParser {
         }
         LineRenderer renderer = new TextLineRenderer(line, content);
         line.setRenderer(renderer);
+        line.getPositionManager().getOffsets().setY(-0.5d);
         return true;
     }
 

@@ -18,6 +18,8 @@ public class HeadContentParser implements ContentParser {
         DecentItemStack itemStack = DecentItemStack.fromString(content);
         LineRenderer renderer = new HeadLineRenderer(line, itemStack);
         line.setRenderer(renderer);
+        line.getPositionManager().getOffsets().setY(-2.0d);
+        line.getSettings().setHeight(0.75d);
         return true;
     }
 

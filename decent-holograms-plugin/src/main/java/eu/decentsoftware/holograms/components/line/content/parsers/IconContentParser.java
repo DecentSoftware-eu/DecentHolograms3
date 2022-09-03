@@ -21,6 +21,7 @@ public class IconContentParser implements ContentParser {
 
         LineRenderer renderer = new IconLineRenderer(line, itemStack);
         line.setRenderer(renderer);
+        line.getPositionManager().getOffsets().setY(-0.55d);
         return true;
     }
 

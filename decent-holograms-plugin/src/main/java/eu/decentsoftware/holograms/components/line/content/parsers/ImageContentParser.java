@@ -23,6 +23,7 @@ public class ImageContentParser implements ContentParser {
 
         ImageLineRenderer renderer = new ImageLineRenderer(line, image);
         line.setRenderer(renderer);
+        line.getPositionManager().getOffsets().setY(-0.5d);
         return true;
     }
 
