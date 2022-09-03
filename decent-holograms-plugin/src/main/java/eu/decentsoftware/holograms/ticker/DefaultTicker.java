@@ -67,7 +67,7 @@ public class DefaultTicker implements Ticker {
 
     @Override
     public void start() {
-        taskId = S.scheduleSync(this::tick, 1L);
+        taskId = S.scheduleAsync(this::tick, 1L);
     }
 
     @Override
