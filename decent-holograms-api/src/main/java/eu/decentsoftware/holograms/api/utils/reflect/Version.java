@@ -67,6 +67,10 @@ public enum Version {
         return CURRENT.getMinor() >= minor;
     }
 
+    public static boolean is(int minor) {
+        return CURRENT.getMinor() == minor;
+    }
+
     public static boolean before(int minor) {
         return CURRENT.getMinor() < minor;
     }
