@@ -1,11 +1,11 @@
 package eu.decentsoftware.holograms.api.utils.config;
 
-import dev.dejvokep.boostedyaml.block.implementation.Section;
 import eu.decentsoftware.holograms.api.exception.LocationParseException;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +64,7 @@ public final class ConfigUtils {
     }
 
     /**
-     * Get a location from the given {@link Section}. If the world is missing
+     * Get a location from the given {@link ConfigurationSection}. If the world is missing
      * or invalid, null will be returned. If any of the coordinates are missing or invalid,
      * default value of 0 will be used, this also applies to the yaw and pitch.
      *
@@ -72,7 +72,7 @@ public final class ConfigUtils {
      * @return The location or null if the section is not a valid location.
      */
     @Nullable
-    public static Location getLocation(@NotNull Section config) {
+    public static Location getLocation(@NotNull ConfigurationSection config) {
         String worldName = config.getString("world");
         if (worldName == null) {
             return null;
@@ -84,8 +84,8 @@ public final class ConfigUtils {
         double x = config.getDouble("x", 0D);
         double y = config.getDouble("y", 0D);
         double z = config.getDouble("z", 0D);
-        float yaw = config.getFloat("yaw", 0F);
-        float pitch = config.getFloat("pitch", 0F);
+        float yaw = (float) config.getDouble("yaw", 0F);
+        float pitch = (float) config.getDouble("pitch", 0F);
         return new Location(world, x, y, z, yaw, pitch);
     }
 

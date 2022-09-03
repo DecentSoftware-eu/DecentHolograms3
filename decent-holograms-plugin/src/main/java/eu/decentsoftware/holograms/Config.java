@@ -1,10 +1,9 @@
 package eu.decentsoftware.holograms;
 
-import dev.dejvokep.boostedyaml.YamlDocument;
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.config.CFG;
 import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
+import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -18,7 +17,7 @@ import java.util.List;
 @UtilityClass
 public final class Config {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static boolean updateAvailable = false;
 
     // ========== PERMISSIONS ========== //
@@ -67,28 +66,14 @@ public final class Config {
     /**
      * The "config.yml" file.
      */
-    private static File file;
-    private static YamlDocument config;
+    private static FileConfig config;
 
     /**
-     * Get the "config.yml" file.
+     * Get the "config.yml" file as a {@link FileConfig}.
      *
-     * @return The "config.yml" file.
-     * @since 1.0.0
+     * @return The "config.yml" file as a {@link FileConfig}.
      */
-    public static File getFile() {
-        if (file == null) {
-            file = new File(PLUGIN.getDataFolder(), "config.yml");
-        }
-        return file;
-    }
-
-    /**
-     * Get the "config.yml" file as a {@link YamlDocument}.
-     *
-     * @return The "config.yml" file as a {@link YamlDocument}.
-     */
-    public static YamlDocument getConfig() {
+    public static FileConfig getConfig() {
         return config;
     }
 
@@ -98,18 +83,13 @@ public final class Config {
      * @since 1.0.0
      */
     public static void reload() {
-        CFG.load(Config.class, getFile());
-
-        try {
-            if (config == null) {
-                config = YamlDocument.create(getFile());
-            } else {
-                config.reload();
-            }
-        } catch (IOException e) {
-            PLUGIN.getLogger().warning("Could not reload config.yml");
-            e.printStackTrace();
+        if (config == null) {
+            config = new FileConfig(PLUGIN, "config.yml");
+        } else {
+            config.reload();
         }
+
+        CFG.load(Config.class, config.getFile());
     }
 
     /*
