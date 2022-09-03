@@ -2,20 +2,20 @@ package eu.decentsoftware.holograms.actions;
 
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ActionHolder;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class DefaultActionHolder implements ActionHolder {
 
-    private final @NotNull DList<Action> actions;
+    private final @NotNull List<Action> actions;
 
     public DefaultActionHolder() {
-        this(new DList<>());
+        this(new DecentList<>());
     }
 
-    public DefaultActionHolder(@NotNull DList<Action> actions) {
+    public DefaultActionHolder(@NotNull List<Action> actions) {
         this.actions = actions;
     }
 
@@ -39,6 +39,7 @@ public class DefaultActionHolder implements ActionHolder {
         this.actions.clear();
     }
 
+    @NotNull
     @Override
     public List<Action> getActions() {
         return this.actions;

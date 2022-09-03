@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.component.page;
 
 import eu.decentsoftware.holograms.api.component.line.Line;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,7 +27,7 @@ public interface PageLineHolder {
      * @return The lines of this page.
      */
     @NotNull
-    DList<Line> getLines();
+    DecentList<Line> getLines();
 
     /**
      * Get the line at the specified index.
@@ -101,7 +101,7 @@ public interface PageLineHolder {
      *
      * @param lines The lines to set.
      */
-    default void setLines(@NotNull DList<Line> lines) {
+    default void setLines(@NotNull DecentList<Line> lines) {
         clearLines();
         getLines().addAll(lines);
     }

@@ -2,20 +2,20 @@ package eu.decentsoftware.holograms.conditions;
 
 import eu.decentsoftware.holograms.api.conditions.Condition;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class DefaultConditionHolder implements ConditionHolder {
 
-    private final @NotNull DList<Condition> conditions;
+    private final @NotNull List<Condition> conditions;
 
     public DefaultConditionHolder() {
-        this(new DList<>());
+        this(new DecentList<>());
     }
 
-    public DefaultConditionHolder(@NotNull DList<Condition> conditions) {
+    public DefaultConditionHolder(@NotNull List<Condition> conditions) {
         this.conditions = conditions;
     }
 

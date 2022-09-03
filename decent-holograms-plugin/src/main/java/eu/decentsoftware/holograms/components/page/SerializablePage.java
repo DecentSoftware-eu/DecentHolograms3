@@ -3,12 +3,14 @@ package eu.decentsoftware.holograms.components.page;
 import eu.decentsoftware.holograms.actions.DefaultActionHolder;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.components.line.DefaultLine;
 import eu.decentsoftware.holograms.components.line.SerializableLine;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * This class is used to (de)serialize pages from/to json.
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Data
 public class SerializablePage {
 
-    private final @NotNull DList<SerializableLine> lines;
+    private final @NotNull List<SerializableLine> lines;
     private final @NotNull ConditionHolder clickConditions;
     private final @NotNull DefaultActionHolder clickActions;
 
@@ -31,7 +33,7 @@ public class SerializablePage {
      */
     @NotNull
     public static SerializablePage fromPage(@NotNull DefaultPage page) {
-        DList<SerializableLine> lines = new DList<>();
+        List<SerializableLine> lines = new DecentList<>();
         for (Line line : page.getLineHolder().getLines()) {
             DefaultLine defaultLine = (DefaultLine) line;
             SerializableLine serializableLine = SerializableLine.fromLine(defaultLine);
@@ -53,7 +55,7 @@ public class SerializablePage {
     @NotNull
     public DefaultPage toPage(@NotNull DefaultHologram hologram) {
         DefaultPage page = new DefaultPage(hologram, clickConditions, clickActions);
-        DList<Line> lines = new DList<>();
+        DecentList<Line> lines = new DecentList<>();
         for (SerializableLine line : this.lines) {
             DefaultLine defaultLine = line.toLine(page);
             lines.add(defaultLine);

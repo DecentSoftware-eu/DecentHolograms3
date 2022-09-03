@@ -3,20 +3,20 @@ package eu.decentsoftware.holograms.components.line.content;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import eu.decentsoftware.holograms.components.line.content.parsers.*;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultContentParserManager implements ContentParserManager {
 
-    private final @NotNull DList<ContentParser> parsers;
+    private final @NotNull DecentList<ContentParser> parsers;
 
     /**
      * Creates a new instance of {@link DefaultContentParserManager}. This constructor
      * will also register the default parsers.
      */
     public DefaultContentParserManager() {
-        this.parsers = new DList<>();
+        this.parsers = new DecentList<>();
 
         // - Register default parsers -
         //
@@ -50,7 +50,7 @@ public class DefaultContentParserManager implements ContentParserManager {
     @Override
     public boolean parse(@NotNull Line line) {
         // Parse content
-        for (int i = parsers.size() - 1; i > 0; i--) {
+        for (int i = parsers.size() - 1; i >= 0; i--) {
             ContentParser parser = parsers.get(i);
             if (parser.parse(line)) {
                 return true;

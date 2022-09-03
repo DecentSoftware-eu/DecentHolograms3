@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
 import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,7 +27,7 @@ public interface HologramPageHolder {
      * @return The list of pages in this hologram.
      */
     @NotNull
-    DList<Page> getPages();
+    DecentList<Page> getPages();
 
     /**
      * Get the page at the given index.
@@ -89,7 +89,7 @@ public interface HologramPageHolder {
      *
      * @param pages The pages to set.
      */
-    default void setPages(@NotNull DList<Page> pages) {
+    default void setPages(@NotNull DecentList<Page> pages) {
         clearPages();
         getPages().addAll(pages);
     }

@@ -4,7 +4,7 @@ import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramPageHolder;
 import eu.decentsoftware.holograms.api.component.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class DefaultHologramPageHolder implements HologramPageHolder {
 
     private final @NotNull Hologram parent;
-    private final @NotNull DList<Page> pages;
+    private final @NotNull DecentList<Page> pages;
 
     /**
      * Creates a new instance of {@link DefaultHologramPageHolder} with the given parent.
@@ -23,7 +23,7 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
      */
     public DefaultHologramPageHolder(@NotNull Hologram parent) {
         this.parent = parent;
-        this.pages = new DList<>();
+        this.pages = new DecentList<>();
     }
 
     @NotNull
@@ -34,7 +34,7 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
 
     @NotNull
     @Override
-    public DList<Page> getPages() {
+    public DecentList<Page> getPages() {
         return pages;
     }
 

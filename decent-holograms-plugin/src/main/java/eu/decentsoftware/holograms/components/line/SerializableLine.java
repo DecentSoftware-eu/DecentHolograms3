@@ -1,10 +1,10 @@
 package eu.decentsoftware.holograms.components.line;
 
 import eu.decentsoftware.holograms.actions.DefaultActionHolder;
-import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.components.page.DefaultPage;
-import lombok.Data;
-import org.bukkit.Location;
+import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,14 +13,14 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
-@Data
+@Getter
+@AllArgsConstructor
 public class SerializableLine {
 
-    private final @NotNull DefaultLineSettings settings;
-    private final @NotNull Location location;
-    private final @NotNull ConditionHolder viewConditions;
-    private final @NotNull ConditionHolder clickConditions;
-    private final @NotNull DefaultActionHolder clickActions;
+    private DefaultLineSettings settings;
+    private DefaultConditionHolder viewConditions;
+    private DefaultConditionHolder clickConditions;
+    private DefaultActionHolder clickActions;
     private final String content;
 
     /**
@@ -33,9 +33,8 @@ public class SerializableLine {
     public static SerializableLine fromLine(@NotNull DefaultLine line) {
         return new SerializableLine(
                 (DefaultLineSettings) line.getSettings(),
-                line.getPositionManager().getLocation(),
-                line.getViewConditionHolder(),
-                line.getClickConditionHolder(),
+                (DefaultConditionHolder) line.getViewConditionHolder(),
+                (DefaultConditionHolder) line.getClickConditionHolder(),
                 (DefaultActionHolder) line.getClickActionHolder(),
                 line.getContent()
         );
@@ -49,7 +48,19 @@ public class SerializableLine {
      */
     @NotNull
     public DefaultLine toLine(@NotNull DefaultPage page) {
-        return new DefaultLine(page, settings, location, viewConditions, clickConditions, clickActions, content);
+        if (settings == null) {
+            settings = new DefaultLineSettings();
+        }
+        if (viewConditions == null) {
+            viewConditions = new DefaultConditionHolder();
+        }
+        if (clickConditions == null) {
+            clickConditions = new DefaultConditionHolder();
+        }
+        if (clickActions == null) {
+            clickActions = new DefaultActionHolder();
+        }
+        return new DefaultLine(page, settings, page.getNextLineLocation(), viewConditions, clickConditions, clickActions, content);
     }
 
 }

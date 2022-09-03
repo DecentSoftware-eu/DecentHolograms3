@@ -12,35 +12,35 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author d0by
  */
 @SuppressWarnings("unused")
-public class DList<T> extends ArrayList<T> {
+public class DecentList<T> extends ArrayList<T> {
 
     /**
-     * Create a new {@link DList}.
+     * Create a new {@link DecentList}.
      *
      * @param initialCapacity Initial capacity of this list.
      * @see ArrayList#ArrayList(int)
      */
-    public DList(int initialCapacity) {
+    public DecentList(int initialCapacity) {
         super(initialCapacity);
     }
 
     /**
-     * Create a new {@link DList}.
+     * Create a new {@link DecentList}.
      *
      * @param collection Collection of items.
      */
-    public DList(Collection<T> collection) {
+    public DecentList(Collection<T> collection) {
         super();
         this.add(collection);
     }
 
     /**
-     * Create a new {@link DList}.
+     * Create a new {@link DecentList}.
      *
      * @param array Array of items.
      */
     @SafeVarargs
-    public DList(T... array) {
+    public DecentList(T... array) {
         super();
         this.add(array);
     }
@@ -204,8 +204,8 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return The copy.
      */
-    public DList<T> copy() {
-        return new DList<>(this);
+    public DecentList<T> copy() {
+        return new DecentList<>(this);
     }
 
     /**
@@ -213,7 +213,7 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return Instance of this.
      */
-    public DList<T> sort() {
+    public DecentList<T> sort() {
         sort(null);
         return this;
     }
@@ -223,8 +223,8 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return The copy.
      */
-    public DList<T> sortCopy() {
-        DList<T> list = copy();
+    public DecentList<T> sortCopy() {
+        DecentList<T> list = copy();
         list.sort(null);
         return list;
     }
@@ -234,7 +234,7 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return Instance of this.
      */
-    public DList<T> shuffle() {
+    public DecentList<T> shuffle() {
         Collections.shuffle(this);
         return this;
     }
@@ -244,8 +244,8 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return The copy.
      */
-    public DList<T> shuffleCopy() {
-        DList<T> list = copy();
+    public DecentList<T> shuffleCopy() {
+        DecentList<T> list = copy();
         Collections.shuffle(list);
         return list;
     }
@@ -255,7 +255,7 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return Instance of this.
      */
-    public DList<T> reverse() {
+    public DecentList<T> reverse() {
         Collections.reverse(this);
         return this;
     }
@@ -265,8 +265,8 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return The copy.
      */
-    public DList<T> reverseCopy() {
-        DList<T> list = copy();
+    public DecentList<T> reverseCopy() {
+        DecentList<T> list = copy();
         Collections.reverse(list);
         return list;
     }
@@ -276,8 +276,8 @@ public class DList<T> extends ArrayList<T> {
      *
      * @return The copy.
      */
-    public DList<String> toStringList() {
-        DList<String> list = new DList<>();
+    public DecentList<String> toStringList() {
+        DecentList<String> list = new DecentList<>();
         for (T t : this) {
             list.add(t.toString());
         }
@@ -292,8 +292,8 @@ public class DList<T> extends ArrayList<T> {
      * @return The sublist.
      */
     @Override
-    public DList<T> subList(int start, int end) {
-        DList<T> list = new DList<>();
+    public DecentList<T> subList(int start, int end) {
+        DecentList<T> list = new DecentList<>();
         for (int i = start; i < Math.min(size(), end); i++) {
             list.add(get(i));
         }

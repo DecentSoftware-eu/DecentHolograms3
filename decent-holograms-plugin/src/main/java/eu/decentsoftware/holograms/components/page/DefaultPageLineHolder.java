@@ -3,14 +3,14 @@ package eu.decentsoftware.holograms.components.page;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultPageLineHolder implements PageLineHolder {
 
     private final @NotNull Page parent;
-    private final @NotNull DList<Line> lines;
+    private final @NotNull DecentList<Line> lines;
 
     /**
      * Create a new instance of {@link DefaultPageLineHolder}.
@@ -20,7 +20,7 @@ public class DefaultPageLineHolder implements PageLineHolder {
      */
     public DefaultPageLineHolder(@NotNull Page parent) {
         this.parent = parent;
-        this.lines = new DList<>();
+        this.lines = new DecentList<>();
     }
 
     @NotNull
@@ -31,7 +31,7 @@ public class DefaultPageLineHolder implements PageLineHolder {
 
     @NotNull
     @Override
-    public DList<Line> getLines() {
+    public DecentList<Line> getLines() {
         return lines;
     }
 
