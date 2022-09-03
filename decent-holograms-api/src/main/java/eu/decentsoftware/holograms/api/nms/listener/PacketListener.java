@@ -7,7 +7,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.utils.Common;
 import io.netty.channel.ChannelDuplexHandler;
@@ -25,20 +25,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PacketListener {
 
-    private static final NMSAdapter NMS_ADAPTER = DecentHologramsAPI.getInstance().getNMSProvider().getAdapter();
+    private static final NMSAdapter NMS_ADAPTER = DecentHolograms.getInstance().getNMSProvider().getAdapter();
     private static final String IDENTIFIER = "DecentHolograms";
     private boolean usingProtocolLib = false;
 
     /**
-     * Create a new instance of {@link PacketListener}. This constructor will
-     * initialize the listener.
+     * (Re)initialize the packet listener.
      */
-    public PacketListener() {
+    public void reload() {
+        this.destroy();
+
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
             // If ProtocolLib is present, use it for packet listening.
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketAdapter packetAdapter = new PacketAdapter(
-                    DecentHologramsAPI.getInstance(),
+                    DecentHolograms.getInstance(),
                     ListenerPriority.HIGHEST,
                     PacketType.Play.Server.ENTITY_METADATA) {
 
@@ -69,7 +70,7 @@ public class PacketListener {
         if (usingProtocolLib) {
             if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
                 ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-                protocolManager.removePacketListeners(DecentHologramsAPI.getInstance());
+                protocolManager.removePacketListeners(DecentHolograms.getInstance());
                 usingProtocolLib = false;
             }
         } else {

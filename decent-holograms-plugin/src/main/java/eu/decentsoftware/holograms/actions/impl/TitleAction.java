@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.actions.DefaultAction;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import org.bukkit.entity.Player;
@@ -38,7 +38,7 @@ public class TitleAction extends DefaultAction {
         if (player == null) {
             return;
         }
-        NMSAdapter nmsAdapter = DecentHologramsAPI.getInstance().getNMSProvider().getAdapter();
+        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSProvider().getAdapter();
         nmsAdapter.sendPacket(player, nmsAdapter.packetClearTitle());
         if (title != null) {
             nmsAdapter.sendPacket(player, nmsAdapter.packetTitleMessage(title));

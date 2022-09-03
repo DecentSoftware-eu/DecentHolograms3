@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.api.utils.config.CFG;
@@ -18,7 +17,7 @@ import java.io.File;
 @UtilityClass
 public final class Lang {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     // ========== GENERAL ========== //
 
@@ -37,7 +36,7 @@ public final class Lang {
     public static String NO_PERM = "{prefix}&cYou don't have permission to use this.";
 
     @ConfigValue("RELOADED")
-    public static String RELOADED = "{prefix}&aSuccessfully reloaded. (Took {took} ms)";
+    public static String RELOADED = "{prefix}&aSuccessfully reloaded in {took} ms)";
 
     // ========== COMMAND ========== //
 
@@ -142,7 +141,7 @@ public final class Lang {
         if (player == null) {
             return formatString(string, (Profile) null);
         }
-        Profile profile = PLUGIN.getProfileRegistry().get(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
         return formatString(string, profile);
     }
 
@@ -195,7 +194,7 @@ public final class Lang {
     public static void sendVersionMessage(CommandSender sender) {
         Common.tell(sender,
                 "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
-                DecentHologramsAPI.getInstance().getDescription().getVersion(),
+                DecentHolograms.getInstance().getDescription().getVersion(),
                 "https://www.spigotmc.org/resources/96927/"
         );
     }

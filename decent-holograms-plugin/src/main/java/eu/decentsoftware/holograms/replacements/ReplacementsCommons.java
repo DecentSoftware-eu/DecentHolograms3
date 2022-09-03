@@ -2,7 +2,6 @@ package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.server.Server;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import lombok.experimental.UtilityClass;
@@ -17,15 +16,15 @@ import java.util.function.Function;
 @UtilityClass
 public final class ReplacementsCommons {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     public static int getFromServerOrServersInt(Player player, @NotNull String argument, @NotNull Function<Server, Integer> getValue) {
         // -- Get from multiple servers
         if (argument.contains(",")) {
             int total = 0;
             for (String s : argument.split(",")) {
-                if (Config.PINGER_ENABLED && PLUGIN.getServerRegistry().contains(s)) {
-                    Server server = PLUGIN.getServerRegistry().get(s);
+                if (Config.PINGER_ENABLED && PLUGIN.getServerRegistry().containsServer(s)) {
+                    Server server = PLUGIN.getServerRegistry().getServer(s);
                     if (server != null && server.isOnline()) {
                         total += getValue.apply(server);
                     }
@@ -39,8 +38,8 @@ public final class ReplacementsCommons {
             return total;
         }
         // -- Get from one server
-        if (Config.PINGER_ENABLED && PLUGIN.getServerRegistry().contains(argument)) {
-            Server server = PLUGIN.getServerRegistry().get(argument);
+        if (Config.PINGER_ENABLED && PLUGIN.getServerRegistry().containsServer(argument)) {
+            Server server = PLUGIN.getServerRegistry().getServer(argument);
             if (server != null && server.isOnline()) {
                 return getValue.apply(server);
             }

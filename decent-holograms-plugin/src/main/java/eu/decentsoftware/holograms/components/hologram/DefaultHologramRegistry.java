@@ -1,25 +1,29 @@
 package eu.decentsoftware.holograms.components.hologram;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
+import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultHologramRegistry extends HologramRegistry {
+public class DefaultHologramRegistry implements HologramRegistry {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
-
-    private final @NotNull File hologramsFile;
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private final @NotNull Map<String, Hologram> holograms;
 
     public DefaultHologramRegistry() {
-        this.hologramsFile = new File(PLUGIN.getDataFolder(), "holograms.yml");
+        this.holograms = new ConcurrentHashMap<>();
         this.reload();
     }
 
@@ -27,41 +31,63 @@ public class DefaultHologramRegistry extends HologramRegistry {
     public void reload() {
         this.shutdown();
 
-        // -- Load holograms from 'holograms.json' -- //
-        // TODO
-
-//        if (hologramsFile.exists()) {
-//            try (FileInputStream fis = new FileInputStream(hologramsFile)) {
-//                String string = new String(fis.readAllBytes());
-//                List<SerializableHologram> holograms = gson.fromJson(string, new TypeToken<List<SerializableHologram>>() {}.getType());
-//                holograms.forEach((hologram) -> register(hologram.toHologram()));
-//            } catch (IOException e) {
-//                PLUGIN.getLogger().severe("Failed to load holograms from the 'holograms.json' file! Skipping...");
-//                e.printStackTrace();
-//            }
-//        }
-
-        // -- Load holograms from individual files -- //
-
-        List<File> files = FileUtils.getFilesFromTree(PLUGIN.getHologramFolder(), (f) -> f.getName().endsWith(".yml"));
+        // Load holograms
+        Common.log("Loading hologram(s)...");
+        long startMillis = System.currentTimeMillis();
+        int counter = 0;
+        List<File> files = FileUtils.getFilesFromTree(PLUGIN.getHologramFolder(), (f) -> f.getName().endsWith(".json"));
         for (File file : files) {
-            try (FileInputStream fis = new FileInputStream(file)) {
-                String string = new String(fis.readAllBytes());
+            try {
+                String fileName = file.getName();;
+                String name = fileName.substring(0, fileName.length() - ".json".length());
+                String string = new String(Files.readAllBytes(file.toPath()));
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(string, SerializableHologram.class);
-                register(hologram.toHologram());
+                registerHologram(hologram.toHologram(name));
+                counter++;
             } catch (IOException e) {
                 PLUGIN.getLogger().severe("Failed to load hologram from '" + file.getName() + "'! Skipping...");
                 e.printStackTrace();
             }
         }
+        long took = System.currentTimeMillis() - startMillis;
+        Common.log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
     }
 
     @Override
     public void shutdown() {
-        for (Hologram hologram : this.getValues()) {
+        // Destroy all holograms
+        for (Hologram hologram : this.holograms.values()) {
             hologram.destroy();
         }
-        this.clear();
+        // Clear the cache
+        this.holograms.clear();
+    }
+
+    @Override
+    public void registerHologram(@NotNull Hologram hologram) {
+        this.holograms.put(hologram.getName(), hologram);
+    }
+
+    @Nullable
+    @Override
+    public Hologram getHologram(@NotNull String name) {
+        return this.holograms.get(name);
+    }
+
+    @Nullable
+    @Override
+    public Hologram removeHologram(@NotNull String name) {
+        return this.holograms.remove(name);
+    }
+
+    @Override
+    public Set<String> getHologramNames() {
+        return this.holograms.keySet();
+    }
+
+    @Override
+    public Collection<Hologram> getHolograms() {
+        return this.holograms.values();
     }
 
 }

@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.utils;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.utils.color.DecentColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
@@ -99,7 +99,7 @@ public final class Common {
      * @param message The message.
      */
     public static void log(Level level, String message) {
-        DecentHologramsAPI.getInstance().getLogger().log(level, message);
+        DecentHolograms.getInstance().getLogger().log(level, message);
     }
 
     /**
@@ -171,6 +171,7 @@ public final class Common {
      * @param separator The separator string.
      * @return The imploded string.
      */
+    @NotNull
     public static String implode(String[] array, String separator) {
         return implode(array, separator, 0);
     }
@@ -183,6 +184,7 @@ public final class Common {
      * @param start The start index.
      * @return The imploded string.
      */
+    @NotNull
     public static String implode(String[] array, String separator, int start) {
         return implode(array, separator, start, array.length);
     }
@@ -196,6 +198,7 @@ public final class Common {
      * @param end The end index.
      * @return The imploded string.
      */
+    @NotNull
     public static String implode(String[] array, String separator, int start, int end) {
         if (array == null || array.length == 0) {
             return "";

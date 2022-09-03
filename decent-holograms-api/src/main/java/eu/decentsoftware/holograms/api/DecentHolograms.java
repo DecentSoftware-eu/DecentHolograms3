@@ -25,12 +25,27 @@ import java.io.File;
 public abstract class DecentHolograms extends JavaPlugin {
 
     /**
+     * The current running instance of {@link DecentHolograms}.
+     */
+    protected static DecentHolograms instance;
+    /**
      * This is used to get free entity IDs. It starts at a million
      * so that it doesn't conflict with normal entities.
      */
     private static int ENTITY_ID = 1_000_000;
-    // The '/holograms' file
+    /**
+     * The '/holograms' directory
+     */
     private File hologramsFolder;
+
+    /**
+     * Get the current running instance of {@link DecentHolograms}.
+     *
+     * @return The instance.
+     */
+    public static DecentHolograms getInstance() {
+        return instance;
+    }
 
     /**
      * Get a free entity ID.
@@ -39,6 +54,10 @@ public abstract class DecentHolograms extends JavaPlugin {
      */
     public static int getFreeEntityId() {
         return ENTITY_ID++;
+    }
+
+    public DecentHolograms() {
+        instance = this;
     }
 
     /**

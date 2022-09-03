@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.nms.listener;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.reflect.*;
@@ -67,7 +67,7 @@ public final class PacketHandlerCommons {
         }
 
         // Get the players profile.
-        Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
         if (profile == null) {
             return false;
         }

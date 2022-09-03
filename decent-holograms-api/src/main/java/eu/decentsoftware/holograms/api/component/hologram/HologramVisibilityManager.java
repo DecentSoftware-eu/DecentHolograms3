@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.M;
 import org.bukkit.Bukkit;
@@ -123,7 +123,7 @@ public interface HologramVisibilityManager {
      */
     default Set<Player> getViewerPlayers(int page) {
         return getViewers().stream()
-                .filter(viewer -> getPlayerPages().get(viewer) == page)
+                .filter((viewer) -> getPage(viewer) == page)
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
@@ -198,17 +198,13 @@ public interface HologramVisibilityManager {
         }
 
         // Get the player's profile.
-        Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
         if (profile == null) return;
-
-        // Get the player.
-        Player playerObj = profile.getPlayer();
-        if (playerObj == null) return;
 
         // Check if the player is in the view distance.
         boolean inViewDistance = M.inDistance(
                 getParent().getPositionManager().getActualLocation(),
-                playerObj.getLocation(),
+                player.getLocation(),
                 getParent().getSettings().getViewDistance()
         );
 
@@ -285,8 +281,8 @@ public interface HologramVisibilityManager {
     void updateContents(@NotNull Player player);
 
     /**
-     * Update the hologram's contents for all players. This method does not
-     * update the hologram's visibility.
+     * Update the holograms contents for all players. This method does not
+     * update the holograms' visibility.
      */
     default void updateContents() {
         for (String player : getPlayers()) {
@@ -313,6 +309,16 @@ public interface HologramVisibilityManager {
      */
     default int getPage(@NotNull Player player) {
         return getPlayerPages().getOrDefault(player.getName(), 0);
+    }
+
+    /**
+     * Get the page that is currently selected by the given player.
+     *
+     * @param name Nickname of the player to get the page for.
+     * @return The page that is currently selected by the given player.
+     */
+    default int getPage(@NotNull String name) {
+        return getPlayerPages().getOrDefault(name, 0);
     }
 
     /**

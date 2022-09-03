@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.components.line.content.objects;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.utils.color.DecentColor;
 import eu.decentsoftware.holograms.api.utils.reflect.Version;
 import lombok.Getter;
@@ -25,7 +24,7 @@ import java.net.URL;
 @Getter
 public class DecentImage {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     private BufferedImage bufferedImage;
     private DecentColor[][] colorField;
@@ -120,7 +119,7 @@ public class DecentImage {
     /**
      * Scales the image to the given width and height.
      *
-     * @param width Width to scale the image to.
+     * @param width  Width to scale the image to.
      * @param height Height to scale the image to.
      */
     public void scale(int width, int height) {
@@ -130,7 +129,7 @@ public class DecentImage {
     /**
      * Scales the image to the given scale.
      *
-     * @param width Scale to scale the image to.
+     * @param width  Scale to scale the image to.
      * @param height Scale to scale the image to.
      */
     public void scale(float width, float height) {
@@ -161,13 +160,15 @@ public class DecentImage {
             try {
                 BufferedImage image = ImageIO.read(file);
                 decentImage = new DecentImage(image);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         } else if (string.contains("--url:")) {
             String url = getFlagValue(string, "--url:");
             try {
                 BufferedImage image = ImageIO.read(new URL(url));
                 decentImage = new DecentImage(image);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         } else if (string.contains("--player:")) {
             String playerName = getFlagValue(string, "--player:");
             String type = "avatar";
@@ -176,7 +177,8 @@ public class DecentImage {
             }
             try {
                 decentImage = fromMinotar(playerName, type);
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
 
         if (decentImage == null) {
@@ -189,7 +191,8 @@ public class DecentImage {
             try {
                 int size = Integer.parseInt(scale);
                 decentImage.scale(size);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         return decentImage;

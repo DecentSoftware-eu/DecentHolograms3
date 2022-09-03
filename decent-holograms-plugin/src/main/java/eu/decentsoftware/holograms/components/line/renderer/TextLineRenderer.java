@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.api.profile.Profile;
@@ -37,8 +36,9 @@ public class TextLineRenderer extends AbstractLineRenderer {
      * @param player The player to get the text for.
      * @return The formatted text of the line.
      */
+    @NotNull
     private String getFormattedText(@NotNull Player player) {
-        Profile profile = DecentHologramsAPI.getInstance().getProfileRegistry().get(player.getName());
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
         String formattedText = text;
 
         if (hoverText != null) {

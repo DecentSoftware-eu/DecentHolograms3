@@ -1,7 +1,6 @@
 package eu.decentsoftware.holograms.components.line.renderer;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineRenderer;
 import eu.decentsoftware.holograms.api.component.line.LineType;
@@ -16,7 +15,7 @@ public abstract class AbstractLineRenderer implements LineRenderer {
      *  - Add offsets to align the lines properly
      */
 
-    protected static final DecentHolograms API = DecentHologramsAPI.getInstance();
+    protected static final DecentHolograms API = DecentHolograms.getInstance();
     protected static final NMSAdapter NMS = API.getNMSProvider().getAdapter();
 
     private final @NotNull Line parent;

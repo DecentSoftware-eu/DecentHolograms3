@@ -2,13 +2,12 @@ package eu.decentsoftware.holograms.components.hologram;
 
 import com.google.gson.JsonSyntaxException;
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.conditions.Condition;
 import eu.decentsoftware.holograms.api.utils.S;
-import eu.decentsoftware.holograms.api.utils.collection.DList;
+import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import eu.decentsoftware.holograms.components.page.SerializablePage;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class DefaultHologramConfig implements HologramConfig {
 
-    private static final DecentHolograms PLUGIN = DecentHologramsAPI.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private final @NotNull Hologram parent;
     private final @NotNull File file;
 
@@ -71,7 +70,7 @@ public class DefaultHologramConfig implements HologramConfig {
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(reader, SerializableHologram.class);
                 parent.getPositionManager().setLocation(hologram.getLocation());
                 parent.getSettings().set(hologram.getSettings());
-                DList<Page> pages = new DList<>();
+                DecentList<Page> pages = new DecentList<>();
                 for (SerializablePage page : hologram.getPages()) {
                     pages.add(page.toPage((DefaultHologram) parent));
                 }

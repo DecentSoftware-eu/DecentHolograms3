@@ -2,7 +2,7 @@ package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions.DefaultAction;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class ActionBarAction extends DefaultAction {
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
         if (player != null) {
-            NMSAdapter nmsAdapter = DecentHologramsAPI.getInstance().getNMSProvider().getAdapter();
+            NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSProvider().getAdapter();
             nmsAdapter.sendPacket(player, nmsAdapter.packetActionbarMessage(Lang.formatString(message, profile)));
         }
     }
