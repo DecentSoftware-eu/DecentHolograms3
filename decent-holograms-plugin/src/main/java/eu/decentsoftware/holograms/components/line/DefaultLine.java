@@ -141,9 +141,10 @@ public class DefaultLine implements Line {
         this.content = StringUtils.left(content, 256); // Limit content to 256 characters.
 
         // -- Parse content and update line accordingly
-        DecentHologramsAPI.getInstance().getContentParserManager().parse(this);
+        DecentHolograms.getInstance().getContentParserManager().parse(this);
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

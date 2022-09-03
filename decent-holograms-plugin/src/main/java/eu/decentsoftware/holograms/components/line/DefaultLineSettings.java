@@ -10,6 +10,9 @@ public class DefaultLineSettings implements LineSettings {
 
     private boolean updating;
     private double height;
+    private double offsetX;
+    private double offsetY;
+    private double offsetZ;
 
     /**
      * Create a new instance of {@link DefaultLineSettings} with default values.
@@ -17,6 +20,9 @@ public class DefaultLineSettings implements LineSettings {
     public DefaultLineSettings() {
         this.updating = true;
         this.height = 0.3d;
+        this.offsetX = 0d;
+        this.offsetY = 0d;
+        this.offsetZ = 0d;
     }
 
 }

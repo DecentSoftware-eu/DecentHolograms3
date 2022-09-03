@@ -38,4 +38,46 @@ public interface LineSettings {
      */
     void setHeight(double height);
 
+    /**
+     * Get the offset X of the line.
+     *
+     * @return The offset X of the line.
+     */
+    double getOffsetX();
+
+    /**
+     * Set the offset X of the line.
+     *
+     * @param offsetX The offset X of the line.
+     */
+    void setOffsetX(double offsetX);
+
+    /**
+     * Get the offset Y of the line.
+     *
+     * @return The offset Y of the line.
+     */
+    double getOffsetY();
+
+    /**
+     * Set the offset Y of the line.
+     *
+     * @param offsetY The offset Y of the line.
+     */
+    void setOffsetY(double offsetY);
+
+    /**
+     * Get the offset Z of the line.
+     *
+     * @return The offset Z of the line.
+     */
+    double getOffsetZ();
+
+    /**
+     * Set the offset Z of the line.
+     *
+     * @param offsetZ The offset Z of the line.
+     */
+    void setOffsetZ(double offsetZ);
+
 }

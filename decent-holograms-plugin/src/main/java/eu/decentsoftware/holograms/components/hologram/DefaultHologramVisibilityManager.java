@@ -7,7 +7,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class DefaultHologramVisibilityManager implements HologramVisibilityManager {
@@ -27,7 +31,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         this.parent = parent;
         this.players = new HashSet<>();
         this.viewers = new HashSet<>();
-        this.playerPages = new HashMap<>();
+        this.playerPages = new ConcurrentHashMap<>();
         this.visibleByDefault = true;
     }
 

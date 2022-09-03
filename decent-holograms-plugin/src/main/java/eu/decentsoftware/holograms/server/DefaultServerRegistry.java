@@ -7,19 +7,24 @@ import eu.decentsoftware.holograms.api.utils.Common;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultServerRegistry extends ServerRegistry {
+public class DefaultServerRegistry implements ServerRegistry {
+
+    private final Map<String, Server> serverMap;
 
     /**
      * Creates a new server registry and loads all servers into it.
      */
     public DefaultServerRegistry() {
+        this.serverMap = new ConcurrentHashMap<>();
         this.reload();
     }
 
     @Override
     public void reload() {
-        this.clear();
+        this.shutdown();
 
         if (Config.PINGER_ENABLED && !Config.PINGER_SERVERS.isEmpty()) {
             long startMillis = System.currentTimeMillis();
@@ -37,26 +42,35 @@ public class DefaultServerRegistry extends ServerRegistry {
                 // -- Register the server
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(serverAddress, serverPort);
                 DefaultServer server = new DefaultServer(serverName, inetSocketAddress);
-                this.register(server);
+                this.registerServer(server);
                 counter++;
             }
             long took = System.currentTimeMillis() - startMillis;
-            Common.log("Successfully loaded %d server(s) in %d ms!", counter, took);
+            Common.log("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took);
         }
     }
 
     @Override
-    public void clear() {
+    public void shutdown() {
         // -- Stop the existing servers from ticking
-        for (Server server : getValues()) {
+        for (Server server : this.serverMap.values()) {
             server.stopTicking();
         }
-        super.clear();
+        this.serverMap.clear();
     }
 
     @Override
-    public void register(@NotNull Server server) {
-        register(server.getName(), server);
+    public void registerServer(@NotNull String name, @NotNull Server server) {
+        this.serverMap.put(name, server);
     }
 
+    @Override
+    public Server getServer(@NotNull String name) {
+        return this.serverMap.get(name);
+    }
+
+    @Override
+    public boolean containsServer(@NotNull String name) {
+        return this.serverMap.containsKey(name);
+    }
 }

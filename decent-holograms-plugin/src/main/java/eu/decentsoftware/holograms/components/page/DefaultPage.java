@@ -85,63 +85,62 @@ public class DefaultPage implements Page {
     public void recalculate() {
         int pageIndex = getParent().getPageHolder().getIndex(this);
         Set<Player> viewers = getParent().getVisibilityManager().getViewerPlayers(pageIndex);
-        Location location = getParent().getPositionManager().getActualLocation().clone();
+        Location location = getParent().getPositionManager().getActualLocation();
+        double totalHeight = getHeight();
 
         boolean horizontal = getParent().getSettings().isRotateHorizontal();
         boolean vertical = getParent().getSettings().isRotateVertical();
         boolean heads = getParent().getSettings().isRotateHeads();
         if (horizontal || vertical) {
             for (Player viewer : viewers) {
-                Location pLoc = viewer.getLocation();
-
-                // Get the pivot point of the hologram.
-                Vector cameraDirection = pLoc.getDirection().clone().normalize();
-                Location cameraLocation = pLoc.clone().subtract(cameraDirection);
+                Location pLoc = viewer.getEyeLocation();
+                Vector pDir = pLoc.getDirection().clone().normalize();
 
                 // Calculate the required vectors.
-                Vector horizontalPerpendicular = cameraLocation.getDirection().clone()
+                Vector horizontalPerpendicular = pLoc.getDirection().clone()
                         .crossProduct(M.UP_VECTOR)
                         .normalize();
                 Vector verticalPerpendicular = horizontalPerpendicular.clone()
-                        .crossProduct(cameraDirection)
-                        .multiply(-1)
+                        .crossProduct(pDir)
+                        .multiply(-1d)
                         .normalize();
 
                 // Calculate new location for each line.
-                double height = 0.0;
+                double height = 0.0d;
+                Location pivot = location.clone().subtract(0, totalHeight / 2, 0);
                 for (Line line : getLineHolder().getLines()) {
                     if (line.getRenderer() == null) {
                         // Line is not visible.
                         continue;
                     }
-
-                    height += line.getSettings().getHeight();
+                    PositionManager positionManager = line.getPositionManager();
+                    Vector offsets = positionManager.getOffsets();
+                    double offsetY = offsets.getY() + line.getSettings().getOffsetY();
 
                     // Calculate the new location.
                     Location loc;
                     if (vertical) {
                         // If we rotate vertically, we put the lines along the relative vertical vector.
-                        Vector vector = verticalPerpendicular.clone().normalize().multiply(height);
-                        loc = cameraLocation.clone().add(vector);
+                        Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
+                        loc = pivot.clone().add(vector);
                     } else {
                         // If we don't rotate vertically, we put the lines above each other.
-                        loc = cameraLocation.clone().add(0, height, 0);
+                        loc = location.clone().add(0, height + offsetY, 0);
                     }
+
+                    height += line.getSettings().getHeight();
 
                     // Adapt the lines offsets.
                     if (horizontal) {
-                        Vector offsets = line.getPositionManager().getOffsets();
-                        double offsetH = offsets.getX() - offsets.getZ();
-                        double offsetV = offsets.getY();
-                        if (offsetH != 0) {
-                            loc.add(horizontalPerpendicular.clone().multiply(offsetH));
+                        double offsetX = offsets.getX() + line.getSettings().getOffsetX();
+                        double offsetZ = offsets.getZ() + line.getSettings().getOffsetZ();
+                        if (offsetX != 0) {
+                            loc.add(horizontalPerpendicular.clone().multiply(offsetX));
                         }
-                        if (offsetV != 0) {
-                            loc.add(verticalPerpendicular.clone().normalize().multiply(offsetV));
+                        if (offsetZ != 0) {
+                            loc.add(pDir.clone().multiply(offsetZ));
                         }
                     }
-
-                    PositionManager positionManager = line.getPositionManager();
 
                     // Update head rotation.
                     if (heads) {
@@ -163,8 +162,6 @@ public class DefaultPage implements Page {
         } else {
             for (Line line : getLineHolder().getLines()) {
                 PositionManager positionManager = line.getPositionManager();
-                positionManager.setLocation(location);
-
                 Location actualLocation = positionManager.getActualLocation().clone();
                 for (Player player : viewers) {
                     LineRenderer renderer = line.getRenderer();
@@ -183,7 +180,6 @@ public class DefaultPage implements Page {
                         line.getRenderer().teleport(player, actualLocation);
                     }
                 }
-
                 location.add(0, line.getSettings().getHeight(), 0);
             }
         }
@@ -191,9 +187,7 @@ public class DefaultPage implements Page {
 
     @Override
     public Location getNextLineLocation() {
-        double height = lineHolder.getLines().stream()
-                .mapToDouble((l) -> l.getSettings().getHeight())
-                .sum();
+        double height = getHeight();
         Location location = getParent().getPositionManager().getActualLocation();
         double yOffset = getParent().getSettings().isDownOrigin() ? -height : height;
         return location.add(0, yOffset, 0);
@@ -221,6 +215,12 @@ public class DefaultPage implements Page {
     @Override
     public ActionHolder getClickActionHolder() {
         return clickActions;
+    }
+
+    public double getHeight() {
+        return lineHolder.getLines().stream()
+                .mapToDouble((l) -> l.getSettings().getHeight())
+                .sum();
     }
 
 }

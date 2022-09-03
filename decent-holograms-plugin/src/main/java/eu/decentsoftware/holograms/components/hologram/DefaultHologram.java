@@ -4,7 +4,6 @@ import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.api.utils.S;
 import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
 import org.bukkit.Location;
@@ -21,7 +20,8 @@ public class DefaultHologram implements Hologram {
     private final @NotNull HologramVisibilityManager visibilityManager;
     private final @NotNull HologramPageHolder pageHolder;
     private final @NotNull ConditionHolder conditionHolder;
-    private final @NotNull AtomicLong lastTick;
+    private final @NotNull AtomicLong lastVisibilityUpdate;
+    private final @NotNull AtomicLong lastContentUpdate;
 
     /**
      * Creates a new instance of {@link DefaultHologram} with the given name.
@@ -49,7 +49,8 @@ public class DefaultHologram implements Hologram {
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
         this.pageHolder = new DefaultHologramPageHolder(this);
         this.conditionHolder = new DefaultConditionHolder();
-        this.lastTick = new AtomicLong(0);
+        this.lastVisibilityUpdate = new AtomicLong(0);
+        this.lastContentUpdate = new AtomicLong(0);
 
         // Start the ticking.
         this.startTicking();
@@ -67,7 +68,8 @@ public class DefaultHologram implements Hologram {
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
         this.pageHolder = new DefaultHologramPageHolder(this);
         this.conditionHolder = viewConditionHolder;
-        this.lastTick = new AtomicLong(0);
+        this.lastVisibilityUpdate = new AtomicLong(0);
+        this.lastContentUpdate = new AtomicLong(0);
 
         // Start the ticking.
         this.startTicking();
@@ -87,26 +89,24 @@ public class DefaultHologram implements Hologram {
         }
 
         long currentTime = System.currentTimeMillis();
-        long timeDifference = currentTime - lastTick.get();
 
         // If the location is bound, update the location.
         if (positionManager.isLocationBound() || settings.isRotateHorizontal()
                 || settings.isRotateVertical() || settings.isRotateHeads()) {
-            S.async(() -> pageHolder.getPages().forEach(Page::recalculate));
+            pageHolder.getPages().forEach(Page::recalculate);
         }
 
         // Update the visibility of the hologram if the time difference is greater than 500ms.
-        if (500L < timeDifference) {
-            S.async(visibilityManager::updateVisibility);
+        if (500L < (currentTime - lastVisibilityUpdate.get())) {
+            visibilityManager.updateVisibility();
+            lastVisibilityUpdate.set(currentTime);
         }
 
         // Update the content of the hologram.
-        if (settings.getUpdateInterval() * 50L < timeDifference) {
-            S.async(visibilityManager::updateContents);
+        if (settings.getUpdateInterval() * 50L < (currentTime - lastContentUpdate.get())) {
+            visibilityManager.updateContents();
+            lastContentUpdate.set(currentTime);
         }
-
-        // Update the last tick.
-        lastTick.set(currentTime);
     }
 
     @Override

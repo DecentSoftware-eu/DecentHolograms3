@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 
 public class DefaultPositionManager implements PositionManager {
 
-    private Location location;
-    private Supplier<Location> locationSupplier;
-    private Vector offsets;
+    protected @NotNull Location location;
+    protected @NotNull Vector offsets;
+    protected Supplier<Location> locationSupplier;
 
     /**
      * Create a new instance of {@link DefaultPositionManager} with the given parent hologram.
@@ -34,19 +34,24 @@ public class DefaultPositionManager implements PositionManager {
         this.offsets = new Vector();
     }
 
+    @NotNull
     @Override
     public Location getLocation() {
         return location;
     }
 
     @Override
-    public void setLocation(Location location) {
+    public void setLocation(@NotNull Location location) {
         this.location = location;
     }
 
+    @NotNull
     @Override
     public Location getActualLocation() {
-        return locationSupplier != null ? locationSupplier.get() : location.add(offsets);
+        if (locationSupplier != null) {
+            return locationSupplier.get().clone().add(offsets);
+        }
+        return location.clone().add(offsets);
     }
 
     @Override
@@ -59,6 +64,7 @@ public class DefaultPositionManager implements PositionManager {
         return locationSupplier;
     }
 
+    @NotNull
     @Override
     public Vector getOffsets() {
         return offsets;

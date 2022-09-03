@@ -1,6 +1,6 @@
 package eu.decentsoftware.holograms.api.server;
 
-import eu.decentsoftware.holograms.api.utils.collection.Registry;
+import eu.decentsoftware.holograms.api.intent.Manager;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,15 +9,21 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
-public abstract class ServerRegistry extends Registry<String, Server> {
+public interface ServerRegistry extends Manager {
 
     /**
      * Register a new server.
      *
      * @param server The server.
      */
-    public void register(@NotNull Server server) {
-        register(server.getName(), server);
+    default void registerServer(@NotNull Server server) {
+        registerServer(server.getName(), server);
     }
+
+    void registerServer(@NotNull String name, @NotNull Server server);
+
+    Server getServer(@NotNull String name);
+
+    boolean containsServer(@NotNull String name);
 
 }
