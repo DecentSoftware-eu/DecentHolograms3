@@ -70,12 +70,6 @@
             <artifactId>XSeries</artifactId>
             <version>9.0.0</version>
         </dependency>
-        <!-- Particle -->
-        <dependency>
-            <groupId>xyz.xenondevs</groupId>
-            <artifactId>particle</artifactId>
-            <version>1.8.1</version>
-        </dependency>
         <!-- Skull Creator -->
         <dependency>
             <groupId>dev.dbassett</groupId>

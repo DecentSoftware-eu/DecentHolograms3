@@ -33,6 +33,12 @@
             <version>4.1.80.Final</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Particle -->
+        <dependency>
+            <groupId>xyz.xenondevs</groupId>
+            <artifactId>particle</artifactId>
+            <version>1.8.1</version>
+        </dependency>
     </dependencies>
 
 </project>
