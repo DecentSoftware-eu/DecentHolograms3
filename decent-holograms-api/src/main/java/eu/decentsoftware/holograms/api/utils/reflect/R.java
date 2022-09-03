@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class R {
 
     private static String version;
-    private final Object object;
+    private final @NotNull Object object;
 
     /**
      * Creates a new instance of {@link R} with the given object.
@@ -52,7 +52,7 @@ public class R {
      */
     public Object get(String fieldName) {
         try {
-            Field field = object.getClass().getField(fieldName);
+            Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(object);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -69,7 +69,7 @@ public class R {
      */
     public void set(String fieldName, Object value) {
         try {
-            Field field = object.getClass().getField(fieldName);
+            Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(object, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {

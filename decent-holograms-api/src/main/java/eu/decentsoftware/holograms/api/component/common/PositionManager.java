@@ -21,6 +21,7 @@ public interface PositionManager {
      *
      * @return The location of this hologram.
      */
+    @NotNull
     Location getLocation();
 
     /**
@@ -28,7 +29,7 @@ public interface PositionManager {
      *
      * @param location The location of this hologram.
      */
-    void setLocation(Location location);
+    void setLocation(@NotNull Location location);
 
     /**
      * Get the actual location of this hologram. This method returns the location of the hologram
@@ -36,6 +37,7 @@ public interface PositionManager {
      *
      * @return The actual location of this hologram.
      */
+    @NotNull
     Location getActualLocation();
 
     /**
@@ -75,6 +77,7 @@ public interface PositionManager {
      *
      * @return The offsets of this hologram in a {@link Vector}.
      */
+    @NotNull
     Vector getOffsets();
 
     /**

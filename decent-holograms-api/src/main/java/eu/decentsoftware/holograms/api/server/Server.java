@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.api.server;
 
-import eu.decentsoftware.holograms.api.utils.pinger.PingerResponse;
 import eu.decentsoftware.holograms.api.ticker.ITicked;
+import eu.decentsoftware.holograms.api.utils.pinger.PingerResponse;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

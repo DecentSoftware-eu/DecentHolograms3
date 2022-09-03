@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import eu.decentsoftware.holograms.actions.ActionSerializer;
 import eu.decentsoftware.holograms.actions.DefaultActionTypeRegistry;
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.actions.Action;
 import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
@@ -24,7 +23,7 @@ import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.conditions.ConditionSerializer;
 import eu.decentsoftware.holograms.conditions.DefaultConditionTypeRegistry;
 import eu.decentsoftware.holograms.listener.PlayerListener;
-import eu.decentsoftware.holograms.nms.NMSProviderImpl;
+import eu.decentsoftware.holograms.nms.DefaultNMSProvider;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
 import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
 import eu.decentsoftware.holograms.server.DefaultServerRegistry;
@@ -60,22 +59,14 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     private ConditionTypeRegistry conditionTypeRegistry;
     private HologramRegistry hologramRegistry;
 
-    /**
-     * Default constructor.
-     */
-    @SuppressWarnings("deprecation")
-    public DecentHologramsPlugin() {
-        // -- Register the API
-        DecentHologramsAPI.setInstance(this);
-    }
-
     @Override
     public void onEnable() {
         Config.reload();
+        Lang.reload();
 
         // -- Attempt to initialize the NMS adapter.
         try {
-            this.nmsProvider = new NMSProviderImpl();
+            this.nmsProvider = new DefaultNMSProvider();
         } catch (IllegalStateException e) {
             getLogger().severe("Your version (" + Version.CURRENT.name() + ") is not supported!");
             getLogger().severe("Disabling...");
@@ -123,6 +114,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     @Override
     public void reload() {
         Config.reload();
+        Lang.reload();
 
         this.serverRegistry.reload();
         this.profileRegistry.reload();
