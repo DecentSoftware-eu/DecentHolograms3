@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.components.line.content.DefaultContentParserM
 import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.conditions.ConditionSerializer;
 import eu.decentsoftware.holograms.conditions.DefaultConditionTypeRegistry;
+import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.DefaultNMSProvider;
 import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
@@ -97,6 +98,11 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         // -- Setup update checker if enabled
         setupUpdateChecker();
+
+        if (PAPI.isAvailable()) {
+            BootProcess.log("Using PlaceholderAPI for placeholder support!");
+        }
+        BootProcess.sendAndFinish();
     }
 
     @Override

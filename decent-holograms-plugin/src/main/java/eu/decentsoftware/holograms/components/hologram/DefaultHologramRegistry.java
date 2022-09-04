@@ -1,9 +1,9 @@
 package eu.decentsoftware.holograms.components.hologram;
 
+import eu.decentsoftware.holograms.BootProcess;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import eu.decentsoftware.holograms.api.utils.Common;
 import eu.decentsoftware.holograms.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,13 +32,13 @@ public class DefaultHologramRegistry implements HologramRegistry {
         this.shutdown();
 
         // Load holograms
-        Common.log("Loading hologram(s)...");
         long startMillis = System.currentTimeMillis();
         int counter = 0;
         List<File> files = FileUtils.getFilesFromTree(PLUGIN.getHologramFolder(), (f) -> f.getName().endsWith(".json"));
         for (File file : files) {
             try {
-                String fileName = file.getName();;
+                String fileName = file.getName();
+                ;
                 String name = fileName.substring(0, fileName.length() - ".json".length());
                 String string = new String(Files.readAllBytes(file.toPath()));
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(string, SerializableHologram.class);
@@ -50,7 +50,7 @@ public class DefaultHologramRegistry implements HologramRegistry {
             }
         }
         long took = System.currentTimeMillis() - startMillis;
-        Common.log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+        BootProcess.log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
     }
 
     @Override

@@ -1,9 +1,9 @@
 package eu.decentsoftware.holograms.server;
 
+import eu.decentsoftware.holograms.BootProcess;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.api.server.Server;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
-import eu.decentsoftware.holograms.api.utils.Common;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -28,7 +28,6 @@ public class DefaultServerRegistry implements ServerRegistry {
 
         if (Config.PINGER_ENABLED && !Config.PINGER_SERVERS.isEmpty()) {
             long startMillis = System.currentTimeMillis();
-            Common.log("Loading server(s)...");
             int counter = 0;
             for (String serverString : Config.PINGER_SERVERS) {
                 if (!serverString.matches("\\S+:(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3}):\\d{1,5}")) {
@@ -46,7 +45,7 @@ public class DefaultServerRegistry implements ServerRegistry {
                 counter++;
             }
             long took = System.currentTimeMillis() - startMillis;
-            Common.log("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took);
+            BootProcess.log(String.format("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took));
         }
     }
 

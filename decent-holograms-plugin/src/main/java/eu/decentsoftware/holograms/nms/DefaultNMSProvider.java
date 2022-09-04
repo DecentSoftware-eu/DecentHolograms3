@@ -1,5 +1,6 @@
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.BootProcess;
 import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.nms.NMSProvider;
 import eu.decentsoftware.holograms.api.nms.listener.PacketListener;
@@ -11,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 public class DefaultNMSProvider implements NMSProvider {
 
     private final NMSAdapter adapter;
-    private final PacketListener packetListener;
+//    private final PacketListener packetListener;
 
     /**
      * Initializes the NMS adapter. If the version is not supported, an exception is thrown.
@@ -22,7 +23,9 @@ public class DefaultNMSProvider implements NMSProvider {
         if ((adapter = initNMSAdapter()) == null) {
             throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
         }
-        packetListener = new PacketListener();
+//        packetListener = new PacketListener();
+
+        BootProcess.log("Using NMS adapter for your version: " + Version.CURRENT.name());
     }
 
     @Override
@@ -32,7 +35,7 @@ public class DefaultNMSProvider implements NMSProvider {
 
     @Override
     public PacketListener getPacketListener() {
-        return packetListener;
+        return null;
     }
 
     /**
