@@ -1,4 +1,4 @@
-# DecentHolograms [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+# DecentHolograms [![SpigotMC Downloads](https://img.shields.io/spiget/downloads/96927?label=SpigotMC)](https://www.spigotmc.org/resources/96927/) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 A lightweight yet very powerful hologram plugin with many features and configuration options.
 
 **Links:**
