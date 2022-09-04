@@ -5,8 +5,10 @@ import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.replacements.Replacement;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
+import eu.decentsoftware.holograms.api.server.Server;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import eu.decentsoftware.holograms.utils.DatetimeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -170,87 +172,86 @@ public class DefaultReplacementRegistry implements ReplacementRegistry {
 
         // -- Server & Pinger placeholders
 
-        // TODO: decide whether or not to add server pinger, finish this afterwards
-//        this.defaultReplacementMap.put("online", new DefaultReplacement(
-//                (profile, argument) -> {
-//                    if (argument != null) {
-//                        // -- Pinged server
-//                        int online;
-//                        Player player;
-//                        if (profile != null && (player = profile.getPlayer()) != null) {
-//                            online = ReplacementsCommons.getFromServerOrServersInt(
-//                                    player, argument, (server) -> server.getData().getPlayers().getOnline()
-//                            );
-//                        } else {
-//                            online = -1;
-//                        }
-//                        if (online >= 0) {
-//                            return String.valueOf(online);
-//                        }
-//                    } else {
-//                        // -- This server
-//                        return String.valueOf(Bukkit.getOnlinePlayers().size());
-//                    }
-//                    return null;
-//                }, "0")
-//        );
-//        this.defaultReplacementMap.put("max_players", new DefaultReplacement(
-//                (profile, argument) -> {
-//                    if (argument != null) {
-//                        // -- Pinged server
-//                        int online;
-//                        Player player;
-//                        if (profile != null && (player = profile.getPlayer()) != null) {
-//                            online = ReplacementsCommons.getFromServerOrServersInt(
-//                                    player, argument, (server) -> server.getData().getPlayers().getMax()
-//                            );
-//                        } else {
-//                            online = -1;
-//                        }
-//                        if (online >= 0) {
-//                            return String.valueOf(online);
-//                        }
-//                    } else {
-//                        // -- This server
-//                        return String.valueOf(Bukkit.getServer().getMaxPlayers());
-//                    }
-//                    return null;
-//                }, "0")
-//        );
-//        this.defaultReplacementMap.put("motd", new DefaultReplacement(
-//                (profile, argument) -> {
-//                    String motd = null;
-//                    if (argument != null) {
-//                        // -- Pinged server
-//                        Server server = PLUGIN.getServerRegistry().get(argument);
-//                        if (server != null && server.isOnline()) {
-//                            motd = server.getData().getDescription();
-//                        }
-//                    } else {
-//                        // -- This server
-//                        motd = Bukkit.getServer().getMotd();
-//                    }
-//                    return (Config.PINGER_TRIM_MOTD && motd != null) ? motd.trim() : motd;
-//                }, "")
-//        );
-//        this.defaultReplacementMap.put("status", new DefaultReplacement(
-//                (profile, argument) -> {
-//                    if (argument != null) {
-//                        // -- Pinged server
-//                        Server server = PLUGIN.getServerRegistry().get(argument);
-//                        if (server != null && server.isOnline()) {
-//                            if (server.isFull()) {
-//                                return Config.PINGER_STATUS_FULL;
-//                            }
-//                            return Config.PINGER_STATUS_ONLINE;
-//                        }
-//                    } else {
-//                        // -- This server
-//                        return Config.PINGER_STATUS_ONLINE;
-//                    }
-//                    return null;
-//                }, Config.PINGER_STATUS_OFFLINE)
-//        );
+        this.defaultReplacementMap.put("online", new DefaultReplacement(
+                (profile, argument) -> {
+                    if (argument != null) {
+                        // -- Pinged server
+                        int online;
+                        Player player;
+                        if (profile != null && (player = profile.getPlayer()) != null) {
+                            online = ReplacementsCommons.getFromServerOrServersInt(
+                                    player, argument, (server) -> server.getData().getPlayers().getOnline()
+                            );
+                        } else {
+                            online = -1;
+                        }
+                        if (online >= 0) {
+                            return String.valueOf(online);
+                        }
+                    } else {
+                        // -- This server
+                        return String.valueOf(Bukkit.getOnlinePlayers().size());
+                    }
+                    return null;
+                }, "0")
+        );
+        this.defaultReplacementMap.put("max_players", new DefaultReplacement(
+                (profile, argument) -> {
+                    if (argument != null) {
+                        // -- Pinged server
+                        int online;
+                        Player player;
+                        if (profile != null && (player = profile.getPlayer()) != null) {
+                            online = ReplacementsCommons.getFromServerOrServersInt(
+                                    player, argument, (server) -> server.getData().getPlayers().getMax()
+                            );
+                        } else {
+                            online = -1;
+                        }
+                        if (online >= 0) {
+                            return String.valueOf(online);
+                        }
+                    } else {
+                        // -- This server
+                        return String.valueOf(Bukkit.getServer().getMaxPlayers());
+                    }
+                    return null;
+                }, "0")
+        );
+        this.defaultReplacementMap.put("motd", new DefaultReplacement(
+                (profile, argument) -> {
+                    String motd = null;
+                    if (argument != null) {
+                        // -- Pinged server
+                        Server server = PLUGIN.getServerRegistry().getServer(argument);
+                        if (server != null && server.isOnline()) {
+                            motd = server.getData().getDescription();
+                        }
+                    } else {
+                        // -- This server
+                        motd = Bukkit.getServer().getMotd();
+                    }
+                    return (Config.PINGER_TRIM_MOTD && motd != null) ? motd.trim() : motd;
+                }, "")
+        );
+        this.defaultReplacementMap.put("status", new DefaultReplacement(
+                (profile, argument) -> {
+                    if (argument != null) {
+                        // -- Pinged server
+                        Server server = PLUGIN.getServerRegistry().getServer(argument);
+                        if (server != null && server.isOnline()) {
+                            if (server.isFull()) {
+                                return Config.PINGER_STATUS_FULL;
+                            }
+                            return Config.PINGER_STATUS_ONLINE;
+                        }
+                    } else {
+                        // -- This server
+                        return Config.PINGER_STATUS_ONLINE;
+                    }
+                    return null;
+                }, Config.PINGER_STATUS_OFFLINE)
+        );
     }
 
 }

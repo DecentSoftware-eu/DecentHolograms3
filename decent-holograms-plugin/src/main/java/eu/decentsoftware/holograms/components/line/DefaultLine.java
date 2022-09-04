@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.components.line;
 
 import eu.decentsoftware.holograms.actions.DefaultActionHolder;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.component.common.PositionManager;
 import eu.decentsoftware.holograms.api.component.line.Line;
@@ -14,6 +14,7 @@ import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +35,7 @@ public class DefaultLine implements Line {
     /**
      * Creates a new instance of {@link DefaultLine}.
      *
-     * @param parent The parent page of the line.
+     * @param parent   The parent page of the line.
      * @param location The location of the line.
      */
     public DefaultLine(@NotNull Page parent, @NotNull Location location) {
@@ -50,13 +51,13 @@ public class DefaultLine implements Line {
     /**
      * Creates a new instance of {@link DefaultLine}.
      *
-     * @param parent The parent page of the line.
-     * @param settings The settings of the line.
-     * @param location The location of the line.
-     * @param viewConditions The conditions that must be met to view the line.
+     * @param parent          The parent page of the line.
+     * @param settings        The settings of the line.
+     * @param location        The location of the line.
+     * @param viewConditions  The conditions that must be met to view the line.
      * @param clickConditions The conditions that must be met to click the line.
-     * @param clickActions The actions that will be executed when the line is clicked.
-     * @param content The content of the line.
+     * @param clickActions    The actions that will be executed when the line is clicked.
+     * @param content         The content of the line.
      */
     public DefaultLine(@NotNull Page parent, @NotNull LineSettings settings, @NotNull Location location,
                        @NotNull ConditionHolder viewConditions, @NotNull ConditionHolder clickConditions,
