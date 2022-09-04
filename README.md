@@ -1,5 +1,6 @@
-# DecentHolograms [![SpigotMC Downloads](https://img.shields.io/spiget/downloads/96927?label=SpigotMC)](https://www.spigotmc.org/resources/96927/) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-A lightweight yet very powerful hologram plugin with many features and configuration options.
+# DecentHolograms 
+[![SpigotMC Downloads](https://img.shields.io/spiget/downloads/96927?label=Downloads) ![SpigotMC Version](https://img.shields.io/spiget/version/96927?label=Release) ![Tested Versions](https://img.shields.io/spiget/tested-versions/96927?label=Supports)](https://www.spigotmc.org/resources/96927/) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+> A lightweight yet very powerful hologram plugin with many features and configuration options.
 
 **Links:**
 - [SpigotMC (Download)](https://www.spigotmc.org/resources/96927/)
