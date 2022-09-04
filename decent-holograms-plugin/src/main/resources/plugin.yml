@@ -1,9 +1,9 @@
 main: eu.decentsoftware.holograms.DecentHologramsPlugin
-version: ${project.version}
+version: ${project.parent.version}
 api-version: 1.13
-prefix: ${project.name}
-name: ${project.name}
-description: ${project.description}
+prefix: ${project.parent.name}
+name: ${project.parent.name}
+description: ${project.parent.description}
 author: d0by
 website: https://www.decentholograms.eu/
 softdepend:
