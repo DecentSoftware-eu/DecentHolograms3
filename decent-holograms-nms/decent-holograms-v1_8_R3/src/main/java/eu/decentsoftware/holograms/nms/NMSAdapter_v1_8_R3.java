@@ -9,7 +9,12 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import xyz.xenondevs.particle.ParticleEffect;
+import xyz.xenondevs.particle.data.ParticleData;
+import xyz.xenondevs.particle.data.color.DustData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,11 +26,17 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         return IChatBaseComponent.ChatSerializer.a(s);
     }
 
+	private String c(IChatBaseComponent c) {
+		return IChatBaseComponent.ChatSerializer.a(c);
+	}
+
+    @Contract("null -> null")
     private ItemStack i(org.bukkit.inventory.ItemStack itemStack) {
         return CraftItemStack.asNMSCopy(itemStack);
     }
 
-    private BlockPosition blockPos(@NotNull Location l) {
+    @Contract("_ -> new")
+    private @NotNull BlockPosition blockPos(@NotNull Location l) {
         return new BlockPosition(l.getBlockX(), l.getBlockY(), l.getBlockZ());
     }
 
@@ -46,7 +57,8 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public void sendRedstoneParticle(Player player, Color c, Location l, float size) {
-        // TODO: send redstone packet
+        ParticleData data = new DustData(c.getRed(), c.getGreen(), c.getBlue(), size);
+        ParticleEffect.REDSTONE.display(l, new Vector(0, 0, 0), 0, 1, data, player);
     }
 
     @Override
@@ -160,6 +172,14 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
+    public Object getMetaEntityCustomName(Object name) {
+		if (!(name instanceof IChatBaseComponent)) {
+			return null;
+		}
+        return new DataWatcher.WatchableObject(4, 2, c((IChatBaseComponent) name));
+    }
+
+    @Override
     public Object getMetaEntityCustomNameVisible(boolean visible) {
         return new DataWatcher.WatchableObject(0, 3, (byte) (visible ? 1 : 0));
     }
@@ -176,22 +196,22 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object getMetaEntityProperties(boolean onFire, boolean crouched, boolean sprinting, boolean swimming, boolean invisible, boolean glowing, boolean flyingElytra) {
-        byte data = 0;
-        data += onFire ? 1 : 0;
-        data += crouched ? 2 : 0;
-        data += sprinting ? 8 : 0;
-        data += swimming ? 10 : 0;
-        data += invisible ? 20 : 0;
+        byte data = 0x00;
+        data += onFire ? 0x01 : 0x00;
+        data += crouched ? 0x02 : 0x00;
+        data += sprinting ? 0x08 : 0x00;
+        data += swimming ? 0x10 : 0x00;
+        data += invisible ? 0x20 : 0x00;
         return new DataWatcher.WatchableObject(0, 0, data);
     }
 
     @Override
     public Object getMetaArmorStandProperties(boolean small, boolean arms, boolean noBasePlate, boolean marker) {
-        byte data = 0;
-        data += small ? 1 : 0;
-        data += arms ? 2 : 0;
-        data += noBasePlate ? 8 : 0;
-        data += marker ? 10 : 0;
+        byte data = 0x00;
+        data += small ? 0x01 : 0x00;
+        data += arms ? 0x02 : 0x00;
+        data += noBasePlate ? 0x08 : 0x00;
+        data += marker ? 0x10 : 0x00;
         return new DataWatcher.WatchableObject(0, 10, data);
     }
 
@@ -206,7 +226,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public int getEntityTypeId(EntityType type) {
-        return 0;
+        return 30;
     }
 
     @Override
@@ -237,10 +257,10 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         r.set("c", MathHelper.floor(l.getX() * 32.0D));
         r.set("d", MathHelper.floor(l.getY() * 32.0D));
         r.set("e", MathHelper.floor(l.getZ() * 32.0D));
-        r.set("i", (byte)((int)(l.getYaw() * 256.0F / 360.0F)));
-        r.set("j", (byte)((int)(l.getPitch() * 256.0F / 360.0F)));
-        r.set("k", (byte)((int)(l.getYaw() * 256.0F / 360.0F)));
-        r.set("g", MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        r.set("i", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
+        r.set("j", (byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
+        r.set("k", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
+        r.set("l", new DataWatcher(null));
         sendPacket(player, packet);
     }
 
@@ -257,8 +277,8 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
                 MathHelper.floor(l.getX() * 32.0),
                 MathHelper.floor(l.getY() * 32.0),
                 MathHelper.floor(l.getZ() * 32.0),
-                (byte)((int) (l.getYaw() * 256.0F / 360.0F)),
-                (byte)((int) (l.getPitch() * 256.0F / 360.0F)),
+                (byte) ((int) (l.getYaw() * 256.0F / 360.0F)),
+                (byte) ((int) (l.getPitch() * 256.0F / 360.0F)),
                 onGround
         );
     }

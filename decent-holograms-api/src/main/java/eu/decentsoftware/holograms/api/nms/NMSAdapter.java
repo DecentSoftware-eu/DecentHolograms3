@@ -148,7 +148,17 @@ public interface NMSAdapter {
 	 */
 	Object getMetaEntityCustomName(String name);
 
-    Object getMetaEntityCustomNameVisible(boolean visible);
+	/**
+	 * Create a new entity metadata object, that represents the entities custom name.
+	 * <p>
+	 * This method requires the name to be serialized to a IChatBaseComponent.
+	 *
+	 * @param name The name as IChatBaseComponent.
+	 * @return The entity metadata object.
+	 */
+	Object getMetaEntityCustomName(Object name);
+
+	Object getMetaEntityCustomNameVisible(boolean visible);
 
 	Object getMetaEntitySilenced(boolean silenced);
 

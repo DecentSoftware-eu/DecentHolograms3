@@ -44,6 +44,10 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
         return IChatBaseComponent.ChatSerializer.a(s);
     }
 
+    private String c(IChatBaseComponent c) {
+        return IChatBaseComponent.ChatSerializer.a(c);
+    }
+
     private ItemStack i(org.bukkit.inventory.ItemStack itemStack) {
         return CraftItemStack.asNMSCopy(itemStack);
     }
@@ -194,6 +198,14 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
     @Override
     public Object getMetaEntityCustomName(String name) {
         return new DataWatcher.Item<>(DWO_CUSTOM_NAME, name);
+    }
+
+    @Override
+    public Object getMetaEntityCustomName(Object name) {
+        if (!(name instanceof IChatBaseComponent)) {
+            return null;
+        }
+        return new DataWatcher.Item<>(DWO_CUSTOM_NAME, c((IChatBaseComponent) name));
     }
 
     @Override
