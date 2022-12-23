@@ -16,7 +16,7 @@ import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.api.server.ServerRegistry;
 import eu.decentsoftware.holograms.api.ticker.Ticker;
-import eu.decentsoftware.holograms.api.utils.reflect.Version;
+import eu.decentsoftware.holograms.api.utils.reflect.R;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.components.line.content.DefaultContentParserManager;
 import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
@@ -69,7 +69,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         try {
             this.nmsProvider = new DefaultNMSProvider();
         } catch (IllegalStateException e) {
-            getLogger().severe("Your version (" + Version.CURRENT.name() + ") is not supported!");
+            getLogger().severe("Your version (" + R.getVersion() + ") is not supported!");
             getLogger().severe("Disabling...");
             getPluginLoader().disablePlugin(this);
             return;
