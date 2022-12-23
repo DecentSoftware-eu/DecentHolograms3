@@ -5,6 +5,7 @@ import eu.decentsoftware.holograms.api.component.line.Line;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.api.profile.Profile;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -67,7 +68,7 @@ public class TextLineRenderer extends AbstractLineRenderer {
         Object metaEntity = NMS.getMetaEntityProperties(false, false, false, false, true, false, false);
         Object metaGravity = NMS.getMetaEntityGravity(false);
         Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true, true);
-        Object metaName = NMS.getMetaEntityCustomName(formattedText);
+        Object metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
         // Spawn the fake armor stand entity
