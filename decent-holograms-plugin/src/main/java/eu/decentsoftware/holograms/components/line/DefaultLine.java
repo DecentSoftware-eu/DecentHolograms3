@@ -10,7 +10,6 @@ import eu.decentsoftware.holograms.api.component.line.LineSettings;
 import eu.decentsoftware.holograms.api.component.line.LineType;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
@@ -42,7 +41,7 @@ public class DefaultLine implements Line {
         this.parent = parent;
         this.uid = UUID.randomUUID();
         this.settings = new DefaultLineSettings();
-        this.positionManager = new DefaultPositionManager(location);
+        this.positionManager = new DefaultLinePositionManager(this, location);
         this.viewConditions = new DefaultConditionHolder();
         this.clickConditions = new DefaultConditionHolder();
         this.clickActions = new DefaultActionHolder();
@@ -65,7 +64,7 @@ public class DefaultLine implements Line {
         this.parent = parent;
         this.uid = UUID.randomUUID();
         this.settings = settings;
-        this.positionManager = new DefaultPositionManager(location);
+        this.positionManager = new DefaultLinePositionManager(this, location);
         this.viewConditions = viewConditions;
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
