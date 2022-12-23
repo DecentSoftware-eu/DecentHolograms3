@@ -138,17 +138,24 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         if (Config.CHECK_FOR_UPDATES) {
             new UpdateChecker(96927).check((s) -> {
                 // Split the version string into 3 parts: major, minor, patch
-                String[] split = s.split("\\.");
-                int[] latest = Arrays.stream(split).mapToInt(Integer::parseInt).toArray();
-                int[] current = Arrays.stream(getDescription().getVersion().split("\\.")).mapToInt(Integer::parseInt).toArray();
+                String[] split = s.split("\\.", 3);
+                int[] latest = Arrays.stream(split)
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
+                int[] current = Arrays.stream(getDescription().getVersion().split("\\.", 3))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
+
                 // Compare the versions
-                Config.setUpdateAvailable((latest[0] > current[0]) ||
-                        (latest[0] == current[0] && latest[1] > current[1]) ||
-                        (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2])
+                Config.setUpdateAvailable(
+                        (latest[0] > current[0]) || // Major
+                        (latest[0] == current[0] && latest[1] > current[1]) || // Minor
+                        (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2]) // Patch
                 );
+
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {
-                    Lang.sendUpdateMessage(Bukkit.getConsoleSender());
+                    BootProcess.log(Lang.formatString(Lang.UPDATE_MESSAGE));
                 }
             });
         }
