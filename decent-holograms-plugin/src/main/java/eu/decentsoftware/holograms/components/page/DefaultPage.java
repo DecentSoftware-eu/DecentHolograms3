@@ -85,62 +85,92 @@ public class DefaultPage implements Page {
     public void recalculate() {
         int pageIndex = getParent().getPageHolder().getIndex(this);
         Set<Player> viewers = getParent().getVisibilityManager().getViewerPlayers(pageIndex);
-        Location location = getParent().getPositionManager().getActualLocation();
-        double totalHeight = getHeight();
 
         boolean horizontal = getParent().getSettings().isRotateHorizontal();
-        boolean vertical = getParent().getSettings().isRotateVertical();
+        boolean vertical = getParent().getSettings().isRotateVertical(); // && isTextOnly(); TODO
         boolean heads = getParent().getSettings().isRotateHeads();
+
+        for (Player viewer : viewers) {
+            recalculate(viewer, horizontal, vertical, heads);
+        }
+    }
+
+    public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
+        Location location = getParent().getPositionManager().getActualLocation();
+
         if (horizontal || vertical) {
-            for (Player viewer : viewers) {
-                Location pLoc = viewer.getEyeLocation();
-                Vector pDir = pLoc.getDirection().clone().normalize();
+            double totalHeight = getHeight();
+            Location pLoc = player.getEyeLocation();
+            Vector pDir = pLoc.getDirection().clone().normalize();
 
-                // Calculate the required vectors.
-                Vector horizontalPerpendicular = pLoc.getDirection().clone()
-                        .crossProduct(M.UP_VECTOR)
-                        .normalize();
-                Vector verticalPerpendicular = horizontalPerpendicular.clone()
-                        .crossProduct(pDir)
-                        .multiply(-1d)
-                        .normalize();
+            // Calculate the required vectors.
+            Vector horizontalPerpendicular = pLoc.getDirection().clone()
+                    .crossProduct(M.UP_VECTOR)
+                    .normalize();
+            Vector verticalPerpendicular = horizontalPerpendicular.clone()
+                    .crossProduct(pDir)
+                    .multiply(-1d)
+                    .normalize();
 
-                // Calculate new location for each line.
-                double height = 0.0d;
-                Location pivot = location.clone().subtract(0, totalHeight / 2, 0);
-                for (Line line : getLineHolder().getLines()) {
-                    if (line.getRenderer() == null) {
-                        // Line is not visible.
-                        continue;
+            // Calculate new location for each line.
+            double height = 0.0d;
+            Location pivot = location.clone().subtract(0, totalHeight / 2, 0);
+            for (Line line : getLineHolder().getLines()) {
+                if (line.getRenderer() == null) {
+                    // Line is not visible.
+                    continue;
+                }
+                PositionManager positionManager = line.getPositionManager();
+                Vector offsets = positionManager.getOffsets();
+                double offsetY = offsets.getY() + line.getSettings().getOffsetY();
+
+                // Calculate the new location.
+                Location loc;
+                if (vertical || line.getType() != LineType.TEXT) {
+                    // If we rotate vertically, we put the lines along the relative vertical vector.
+                    Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
+                    loc = pivot.clone().add(vector);
+                } else {
+                    // If we don't rotate vertically, we put the lines above each other.
+                    loc = location.clone().add(0, height + offsetY, 0);
+                }
+
+                height += line.getSettings().getHeight();
+
+                // Adapt the lines offsets.
+                if (horizontal) {
+                    double offsetX = offsets.getX() + line.getSettings().getOffsetX();
+                    double offsetZ = offsets.getZ() + line.getSettings().getOffsetZ();
+                    if (offsetX != 0) {
+                        loc.add(horizontalPerpendicular.clone().multiply(offsetX));
                     }
-                    PositionManager positionManager = line.getPositionManager();
-                    Vector offsets = positionManager.getOffsets();
-                    double offsetY = offsets.getY() + line.getSettings().getOffsetY();
-
-                    // Calculate the new location.
-                    Location loc;
-                    if (vertical) {
-                        // If we rotate vertically, we put the lines along the relative vertical vector.
-                        Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
-                        loc = pivot.clone().add(vector);
-                    } else {
-                        // If we don't rotate vertically, we put the lines above each other.
-                        loc = location.clone().add(0, height + offsetY, 0);
+                    if (offsetZ != 0) {
+                        loc.add(pDir.clone().multiply(offsetZ));
                     }
+                }
 
-                    height += line.getSettings().getHeight();
+                // Update head rotation.
+                if (heads) {
+                    // TODO: implement head rotation
+                    if (line.getType() == LineType.HEAD || line.getType() == LineType.SMALL_HEAD) {
 
-                    // Adapt the lines offsets.
-                    if (horizontal) {
-                        double offsetX = offsets.getX() + line.getSettings().getOffsetX();
-                        double offsetZ = offsets.getZ() + line.getSettings().getOffsetZ();
-                        if (offsetX != 0) {
-                            loc.add(horizontalPerpendicular.clone().multiply(offsetX));
-                        }
-                        if (offsetZ != 0) {
-                            loc.add(pDir.clone().multiply(offsetZ));
-                        }
+                    } else if (line.getType() == LineType.ENTITY) {
+
                     }
+                }
+
+                // Set the new location.
+                positionManager.setLocation(loc);
+
+                // Update the line location for the current viewer.
+                line.getRenderer().teleport(player, loc);
+            }
+        } else {
+            for (Line line : getLineHolder().getLines()) {
+                PositionManager positionManager = line.getPositionManager();
+                Location actualLocation = positionManager.getActualLocation().clone();
+                LineRenderer renderer = line.getRenderer();
+                if (renderer != null) {
 
                     // Update head rotation.
                     if (heads) {
@@ -152,33 +182,7 @@ public class DefaultPage implements Page {
                         }
                     }
 
-                    // Set the new location.
-                    positionManager.setLocation(loc);
-
-                    // Update the line location for the current viewer.
-                    line.getRenderer().teleport(viewer, loc);
-                }
-            }
-        } else {
-            for (Line line : getLineHolder().getLines()) {
-                PositionManager positionManager = line.getPositionManager();
-                Location actualLocation = positionManager.getActualLocation().clone();
-                for (Player player : viewers) {
-                    LineRenderer renderer = line.getRenderer();
-                    if (renderer != null) {
-
-                        // Update head rotation.
-                        if (heads) {
-                            // TODO: implement head rotation
-                            if (line.getType() == LineType.HEAD || line.getType() == LineType.SMALL_HEAD) {
-
-                            } else if (line.getType() == LineType.ENTITY) {
-
-                            }
-                        }
-
-                        line.getRenderer().teleport(player, actualLocation);
-                    }
+                    line.getRenderer().teleport(player, actualLocation);
                 }
                 location.add(0, line.getSettings().getHeight(), 0);
             }
