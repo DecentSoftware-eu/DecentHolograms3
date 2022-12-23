@@ -38,7 +38,6 @@ public final class BootProcess {
         CommandSender console = Bukkit.getConsoleSender();
         console.sendMessage("――――――――――――――――――――――――――――――――――――――――――――――――――");
         console.sendMessage(Lang.formatString(" &fThank you for using &3%s&f! &c❤", null, desc.getName()));
-        console.sendMessage("");
         console.sendMessage(Lang.formatString(" &f- Authors: &b[%s]", null, String.join(", ", desc.getAuthors())));
         console.sendMessage(Lang.formatString(" &f- Version: &b%s", null, desc.getVersion()));
         if (Config.isUpdateAvailable()) {

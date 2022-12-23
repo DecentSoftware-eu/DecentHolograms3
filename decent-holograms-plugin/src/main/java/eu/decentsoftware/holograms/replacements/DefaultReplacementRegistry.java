@@ -89,20 +89,10 @@ public class DefaultReplacementRegistry implements ReplacementRegistry {
      */
     @Nullable
     private String getDefaultReplacement(@Nullable Profile profile, @NotNull String placeholderString) {
-        String placeholderIdentifier;
-        String placeholderArgument;
-        if (placeholderString.contains(":")) {
-            String[] spl = placeholderString.split(":", 1);
-            placeholderIdentifier = spl[0];
-            placeholderArgument = spl[1];
-        } else {
-            placeholderIdentifier = placeholderString;
-            placeholderArgument = null;
-        }
-
-        Replacement replacement = defaultReplacementMap.get(placeholderIdentifier);
+        String[] spl = placeholderString.split(":", 2);
+        Replacement replacement = defaultReplacementMap.get(spl[0]);
         if (replacement != null) {
-            return replacement.getReplacement(profile, placeholderArgument);
+            return replacement.getReplacement(profile, spl.length > 1 ? spl[1] : null);
         }
         return null;
     }

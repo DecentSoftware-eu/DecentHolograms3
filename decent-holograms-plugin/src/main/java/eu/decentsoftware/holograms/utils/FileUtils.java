@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,23 +38,22 @@ public final class FileUtils {
      */
     @NotNull
     public static List<File> getFilesFromTree(@NotNull File root, @Nullable FileFilter fileFilter) {
+        if (!root.isDirectory()) {
+            return fileFilter != null && fileFilter.accept(root) ? Collections.singletonList(root) : Collections.emptyList();
+        }
         List<File> files = new ArrayList<>();
-        if (root.isDirectory()) {
-            File[] listFiles = root.listFiles();
-            if (listFiles != null) {
-                for (File file : listFiles) {
-                    if (fileFilter != null && !fileFilter.accept(file)) {
-                        continue;
-                    }
-                    if (file.isDirectory()) {
-                        files.addAll(getFilesFromTree(file));
-                    } else {
-                        files.add(file);
-                    }
+        File[] listFiles = root.listFiles();
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                if (fileFilter != null && !fileFilter.accept(file)) {
+                    continue;
+                }
+                if (file.isDirectory()) {
+                    files.addAll(getFilesFromTree(file));
+                } else {
+                    files.add(file);
                 }
             }
-        } else if (fileFilter != null && fileFilter.accept(root)) {
-            files.add(root);
         }
         return files;
     }

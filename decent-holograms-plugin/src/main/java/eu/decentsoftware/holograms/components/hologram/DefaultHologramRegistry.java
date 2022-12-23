@@ -38,7 +38,6 @@ public class DefaultHologramRegistry implements HologramRegistry {
         for (File file : files) {
             try {
                 String fileName = file.getName();
-                ;
                 String name = fileName.substring(0, fileName.length() - ".json".length());
                 String string = new String(Files.readAllBytes(file.toPath()));
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(string, SerializableHologram.class);

@@ -56,7 +56,7 @@ public class DefaultAnimationRegistry implements AnimationRegistry, ITicked {
 
     @Override
     public void registerAnimation(@NotNull Animation animation) {
-        this.animationMap.putIfAbsent(animation.getName(), animation);
+        this.animationMap.put(animation.getName(), animation);
     }
 
     @Override

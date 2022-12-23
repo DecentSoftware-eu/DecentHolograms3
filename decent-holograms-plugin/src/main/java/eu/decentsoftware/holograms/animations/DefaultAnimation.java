@@ -15,7 +15,7 @@ public abstract class DefaultAnimation implements Animation {
     /**
      * Creates a new animation.
      *
-     * @param name the name of the animation
+     * @param name       the name of the animation
      * @param totalSteps the total number of steps of the animation
      */
     public DefaultAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {

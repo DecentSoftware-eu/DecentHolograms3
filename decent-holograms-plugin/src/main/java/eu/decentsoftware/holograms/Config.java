@@ -6,8 +6,6 @@ import eu.decentsoftware.holograms.api.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.api.utils.config.FileConfig;
 import lombok.experimental.UtilityClass;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

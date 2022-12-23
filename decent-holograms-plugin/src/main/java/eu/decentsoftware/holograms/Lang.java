@@ -21,6 +21,8 @@ public final class Lang {
 
     // ========== GENERAL ========== //
 
+    public static String UPDATE_MESSAGE = "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7https://www.spigotmc.org/resources/96927/";
+
     /**
      * The prefix of the plugin. Use "{prefix}" in any other message to
      * display the prefix.
@@ -205,10 +207,7 @@ public final class Lang {
      * @param sender The command sender.
      */
     public static void sendUpdateMessage(CommandSender sender) {
-        Common.tell(sender,
-                "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7%s",
-                "https://www.spigotmc.org/resources/96927/"
-        );
+        Common.tell(sender, UPDATE_MESSAGE);
     }
 
 }
