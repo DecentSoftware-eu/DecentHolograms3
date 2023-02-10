@@ -18,27 +18,39 @@
 
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.api.component.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.*;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.ticker.Ticked;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+@Getter
 public class DefaultHologram implements Hologram, Ticked {
 
+    // TODO:
+    //  animations
+    //  lighting
+
     private final @NotNull String name;
-    private final @NotNull HologramConfig file;
+    private final @NotNull HologramConfig config;
     private final @NotNull HologramSettings settings;
     private final @NotNull DefaultPositionManager positionManager;
     private final @NotNull HologramVisibilityManager visibilityManager;
     private final @NotNull HologramPageHolder pageHolder;
-    private final @NotNull ConditionHolder conditionHolder;
+    /**
+     * The condition holder of the hologram, used for managing the view conditions of the hologram.
+     */
+    private final @NotNull ConditionHolder viewConditionHolder;
+
+    @Getter(AccessLevel.NONE)
     private final @NotNull AtomicLong lastVisibilityUpdate;
+    @Getter(AccessLevel.NONE)
     private final @NotNull AtomicLong lastContentUpdate;
 
     /**
@@ -61,12 +73,12 @@ public class DefaultHologram implements Hologram, Ticked {
      */
     public DefaultHologram(@NotNull String name, @NotNull Location location, boolean enabled, boolean persistent) {
         this.name = name;
-        this.file = new DefaultHologramConfig(this);
+        this.config = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
         this.pageHolder = new DefaultHologramPageHolder(this);
-        this.conditionHolder = new ConditionHolder();
+        this.viewConditionHolder = new ConditionHolder();
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
 
@@ -80,23 +92,17 @@ public class DefaultHologram implements Hologram, Ticked {
     protected DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
                               @NotNull ConditionHolder viewConditionHolder) {
         this.name = name;
-        this.file = new DefaultHologramConfig(this);
+        this.config = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);
         this.settings = settings;
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
         this.pageHolder = new DefaultHologramPageHolder(this);
-        this.conditionHolder = viewConditionHolder;
+        this.viewConditionHolder = viewConditionHolder;
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
 
         // Start the ticking.
         this.startTicking();
-    }
-
-    @NotNull
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -109,9 +115,12 @@ public class DefaultHologram implements Hologram, Ticked {
         long currentTime = System.currentTimeMillis();
 
         // If the location is bound, update the location.
-        if (positionManager.isLocationBound() || settings.isRotateHorizontal()
-                || settings.isRotateVertical() || settings.isRotateHeads()) {
-            pageHolder.getPages().forEach(Page::recalculate);
+        if (positionManager.isLocationBound()
+                || settings.isRotateHorizontal()
+                || settings.isRotateVertical()
+                || settings.isRotateHeads()
+        ) {
+            pageHolder.getPages().forEach(HologramPage::recalculate);
         }
 
         // Update the visibility of the hologram if the time difference is greater than 500ms.
@@ -131,41 +140,6 @@ public class DefaultHologram implements Hologram, Ticked {
     public void destroy() {
         this.stopTicking();
         visibilityManager.destroy();
-    }
-
-    @NotNull
-    @Override
-    public HologramConfig getConfig() {
-        return file;
-    }
-
-    @NotNull
-    @Override
-    public HologramSettings getSettings() {
-        return settings;
-    }
-
-    @NotNull
-    @Override
-    public PositionManager getPositionManager() {
-        return positionManager;
-    }
-
-    @NotNull
-    @Override
-    public HologramVisibilityManager getVisibilityManager() {
-        return visibilityManager;
-    }
-
-    @NotNull
-    @Override
-    public HologramPageHolder getPageHolder() {
-        return pageHolder;
-    }
-
-    @NotNull
-    public ConditionHolder getViewConditionHolder() {
-        return conditionHolder;
     }
 
 }

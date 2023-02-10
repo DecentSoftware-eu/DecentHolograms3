@@ -20,9 +20,9 @@ package eu.decentsoftware.holograms.components.hologram;
 
 import eu.decentsoftware.holograms.DecentHologramsPlugin;
 import eu.decentsoftware.holograms.api.component.hologram.HologramVisibilityManager;
-import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.utils.MathUtil;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.profile.Profile;
+import eu.decentsoftware.holograms.utils.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +53,21 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         this.viewers = new HashSet<>();
         this.playerPages = new ConcurrentHashMap<>();
         this.visibleByDefault = true;
+    }
+
+    @Override
+    public void destroy() {
+        // Hide the hologram for all players
+        players.clear();
+        for (String player : getViewers()) {
+            Player playerObj = Bukkit.getPlayer(player);
+            if (playerObj != null) {
+                updateVisibility(playerObj, false);
+            }
+        }
+        // Clear the visibility cache
+        viewers.clear();
+        playerPages.clear();
     }
 
     @Override
@@ -98,32 +113,51 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
 
     @Override
     public void updateVisibility(@NotNull Player player, boolean visible) {
-        Optional<Page> pageOpt = getPageObject(player);
+        Optional<HologramPage> pageOpt = getPageObject(player);
         pageOpt.ifPresent((page) -> {
-            // Update the visibility of the page.
             if (visible) {
                 page.display(player);
+                viewers.add(player.getName());
             } else {
                 page.hide(player);
+                viewers.remove(player.getName());
             }
-            // Update the viewers set.
-            HologramVisibilityManager.super.updateVisibility(player, visible);
         });
     }
 
     @Override
+    public void updateVisibility() {
+        for (String player : getPlayers()) {
+            Player playerObj = Bukkit.getPlayer(player);
+            if (playerObj != null) {
+                updateVisibility(playerObj);
+            }
+        }
+    }
+
+    @Override
     public void updateContents(@NotNull Player player) {
-        Optional<Page> pageOpt = getPageObject(player);
+        Optional<HologramPage> pageOpt = getPageObject(player);
         pageOpt.ifPresent((page) -> page.update(player));
+    }
+
+    @Override
+    public void updateContents() {
+        for (String player : getPlayers()) {
+            Player playerObj = Bukkit.getPlayer(player);
+            if (playerObj != null) {
+                updateContents(playerObj);
+            }
+        }
     }
 
     @Override
     public void setPage(@NotNull Player player, int page) {
         // Get the old page.
-        Optional<Page> oldPageOpt = getPageObject(player);
+        Optional<HologramPage> oldPageOpt = getPageObject(player);
 
         // Update the page index in the map.
-        HologramVisibilityManager.super.setPage(player, page);
+        playerPages.put(player.getName(), page);
 
         // Hide the old page.
         if (isViewing(player) && oldPageOpt.isPresent()) {
@@ -131,6 +165,20 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         }
 
         // Update the visibility for the player.
+        updateVisibility(player);
+    }
+
+    @Override
+    public void show(@NotNull Player player, int page) {
+        players.add(player.getName());
+        playerPages.put(player.getName(), page);
+        updateVisibility(player);
+    }
+
+    @Override
+    public void hide(@NotNull Player player) {
+        players.remove(player.getName());
+        playerPages.remove(player.getName());
         updateVisibility(player);
     }
 
@@ -181,9 +229,9 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
      * @param player The player.
      * @return The page as an optional.
      */
-    private Optional<Page> getPageObject(@NotNull Player player) {
+    private Optional<HologramPage> getPageObject(@NotNull Player player) {
         int pageIndex = getPage(player);
-        Page page = getParent().getPageHolder().getPage(pageIndex);
+        HologramPage page = getParent().getPageHolder().getPage(pageIndex);
         return Optional.ofNullable(page);
     }
 

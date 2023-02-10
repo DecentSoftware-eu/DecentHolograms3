@@ -18,10 +18,11 @@
 
 package eu.decentsoftware.holograms.components.hologram;
 
+import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramPageHolder;
 import eu.decentsoftware.holograms.api.component.hologram.HologramVisibilityManager;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class DefaultHologramPageHolder implements HologramPageHolder {
 
     private final @NotNull Hologram parent;
-    private final @NotNull List<Page> pages;
+    private final @NotNull List<HologramPage> pages;
 
     /**
      * Creates a new instance of {@link DefaultHologramPageHolder} with the given parent.
@@ -51,15 +52,24 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
         return parent;
     }
 
-    @NotNull
     @Override
-    public List<Page> getPages() {
-        return pages;
+    public HologramPage getPage(int index) {
+        return pages.get(index);
     }
 
     @Override
-    public void addPage(int index, @NotNull Page page) {
-        HologramPageHolder.super.addPage(index, page);
+    public int getIndex(@NotNull HologramPage page) {
+        return pages.contains(page) ? getPages().indexOf(page) : -1;
+    }
+
+    @Override
+    public void addPage(@NotNull HologramPage page) {
+        pages.add(page);
+    }
+
+    @Override
+    public void addPage(int index, @NotNull HologramPage page) {
+        pages.add(index, page);
 
         // Shift the player page indexes in visibility manager.
         shiftPlayerPages(index, 1);
@@ -67,7 +77,7 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
 
     @Override
     public void removePage(int index) {
-        HologramPageHolder.super.removePage(index);
+        pages.remove(index);
 
         // Shift the player page indexes in visibility manager.
         shiftPlayerPages(index, -1);
@@ -75,10 +85,22 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
 
     @Override
     public void clearPages() {
-        HologramPageHolder.super.clearPages();
+        pages.clear();
 
         // Reset the player page indexes in visibility manager to 0.
         getParent().getVisibilityManager().getPlayerPages().replaceAll((k, v) -> 0);
+    }
+
+    @Override
+    public void setPages(@NotNull List<HologramPage> pages) {
+        clearPages();
+        this.pages.addAll(pages);
+    }
+
+    @NotNull
+    @Override
+    public List<HologramPage> getPages() {
+        return ImmutableList.copyOf(pages);
     }
 
     /**

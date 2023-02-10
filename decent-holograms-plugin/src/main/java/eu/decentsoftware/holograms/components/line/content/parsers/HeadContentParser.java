@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.components.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
 import eu.decentsoftware.holograms.components.line.content.objects.DecentItemStack;
 import eu.decentsoftware.holograms.components.line.renderer.HeadLineRenderer;
 import org.jetbrains.annotations.NotNull;

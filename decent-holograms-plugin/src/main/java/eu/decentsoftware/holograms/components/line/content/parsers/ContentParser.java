@@ -16,30 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.component.line.content;
+package eu.decentsoftware.holograms.components.line.content.parsers;
 
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
+import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class is the main content parser, which is used to register
- * all the content parsers and parse the content of a line.
- * <p>
- * The registered content parsers are used in a reverse order, so the last registered
- * parser will be used first.
- * <p>
- * To register a content parser, use {@link #register(ContentParser)}. Your content parser
- * is going to the end of the list and will be used first.
+ * This class is used to parse string content into a {@link HologramLineRenderer}.
  *
  * @author d0by
+ * @see HologramLineRenderer
  * @since 3.0.0
  */
-public interface ContentParserManager extends ContentParser {
+public interface ContentParser {
 
     /**
-     * Register a content parser.
+     * Parse the content of the given line and update the line's renderer.
      *
-     * @param parser The content parser to register.
+     * @param line The line to parse the content for.
+     * @return True if the content was parsed successfully, false otherwise.
+     * @see HologramLineRenderer
      */
-    void register(@NotNull ContentParser parser);
+    boolean parse(@NotNull HologramLine line);
 
 }

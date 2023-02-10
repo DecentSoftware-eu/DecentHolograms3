@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.profile;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -82,10 +82,10 @@ public class ProfileContext {
      * looking at and can interact with.
      *
      * @return The currently watched page or null if no page is watched.
-     * @see Page
+     * @see HologramPage
      */
     @Nullable
-    public Page getWatchedPage() {
+    public HologramPage getWatchedPage() {
         HologramLine line = getWatchedLine();
         return line == null ? null : line.getParent();
     }
@@ -99,7 +99,7 @@ public class ProfileContext {
      */
     @Nullable
     public Hologram getWatchedHologram() {
-        Page page = getWatchedPage();
+        HologramPage page = getWatchedPage();
         return page == null ? null : page.getParent();
     }
 

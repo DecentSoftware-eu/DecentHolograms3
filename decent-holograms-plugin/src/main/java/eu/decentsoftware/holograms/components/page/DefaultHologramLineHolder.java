@@ -18,47 +18,52 @@
 
 package eu.decentsoftware.holograms.components.page;
 
+import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
+import eu.decentsoftware.holograms.api.component.page.HologramLineHolder;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultPageLineHolder implements PageLineHolder {
+public class DefaultHologramLineHolder implements HologramLineHolder {
 
-    private final @NotNull Page parent;
+    private final @NotNull HologramPage parent;
     private final @NotNull List<HologramLine> lines;
 
     /**
-     * Create a new instance of {@link DefaultPageLineHolder}.
+     * Create a new instance of {@link DefaultHologramLineHolder}.
      *
      * @param parent The parent page of this page line holder.
-     * @see Page
+     * @see HologramPage
      */
-    public DefaultPageLineHolder(@NotNull Page parent) {
+    public DefaultHologramLineHolder(@NotNull HologramPage parent) {
         this.parent = parent;
         this.lines = new ArrayList<>();
     }
 
     @NotNull
     @Override
-    public Page getParent() {
+    public HologramPage getParent() {
         return parent;
     }
 
-    @NotNull
     @Override
-    public List<HologramLine> getLines() {
-        return lines;
+    public HologramLine getLine(int index) {
+        return lines.get(index);
+    }
+
+    @Override
+    public int getIndex(@NotNull HologramLine line) {
+        return lines.contains(line) ? lines.indexOf(line) : -1;
     }
 
     @Override
     public HologramLine removeLine(int index) {
         // Remove the line from the list
-        HologramLine line = PageLineHolder.super.removeLine(index);
+        HologramLine line = lines.remove(index);
 
         // Hide the line to all viewers
         for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
@@ -73,7 +78,7 @@ public class DefaultPageLineHolder implements PageLineHolder {
     @Override
     public void addLine(@NotNull HologramLine line) {
         // Add the line to the list
-        PageLineHolder.super.addLine(line);
+        lines.add(line);
 
         // Show the line to all viewers
         for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
@@ -88,7 +93,7 @@ public class DefaultPageLineHolder implements PageLineHolder {
     @Override
     public void addLine(int index, @NotNull HologramLine line) {
         // Add the line to the list
-        PageLineHolder.super.addLine(index, line);
+        lines.add(index, line);
 
         // Show the line to all viewers
         for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
@@ -103,7 +108,7 @@ public class DefaultPageLineHolder implements PageLineHolder {
     @Override
     public void setLine(int index, @NotNull HologramLine line) {
         // Remove the previous line from the list
-        HologramLine previousLine = PageLineHolder.super.removeLine(index);
+        HologramLine previousLine = lines.remove(index);
 
         // Hide the previous line to all viewers
         for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
@@ -124,7 +129,36 @@ public class DefaultPageLineHolder implements PageLineHolder {
         }
 
         // Clear the list
-        PageLineHolder.super.clearLines();
+        lines.clear();
+    }
+
+    @Override
+    public void setLines(@NotNull List<HologramLine> lines) {
+        // Hide all lines from all viewers
+        for (HologramLine line : this.lines) {
+            for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+                line.getRenderer().hide(viewerPlayer);
+            }
+        }
+
+        // Clear the list
+        this.lines.clear();
+
+        // Add all lines
+        this.lines.addAll(lines);
+
+        // Show all lines to all viewers
+        for (HologramLine line : this.lines) {
+            for (Player viewerPlayer : parent.getParent().getVisibilityManager().getViewerPlayers()) {
+                line.getRenderer().display(viewerPlayer);
+            }
+        }
+    }
+
+    @NotNull
+    @Override
+    public List<HologramLine> getLines() {
+        return ImmutableList.copyOf(lines);
     }
 
 }

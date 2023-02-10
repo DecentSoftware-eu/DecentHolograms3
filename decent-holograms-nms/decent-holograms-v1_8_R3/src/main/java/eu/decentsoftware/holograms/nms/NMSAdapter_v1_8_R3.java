@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.utils.reflect.R;
+import eu.decentsoftware.holograms.nms.reflect.R;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_8_R3.*;

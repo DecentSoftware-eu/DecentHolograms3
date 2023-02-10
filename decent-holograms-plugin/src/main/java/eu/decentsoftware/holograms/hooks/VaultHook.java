@@ -51,20 +51,6 @@ public final class VaultHook {
     }
 
     /**
-     * Set the amount of money a player has.
-     *
-     * @param player The player to set the money for.
-     * @param amount The amount of money to set.
-     * @return True if the operation was successful, false otherwise.
-     */
-    public static boolean setMoney(@NotNull Player player, double amount) {
-        if (economy == null && !setupEconomy()) {
-            return false;
-        }
-        return economy.withdrawPlayer(player, amount).transactionSuccess();
-    }
-
-    /**
      * Add money to a player.
      *
      * @param player The player to add the money to.
@@ -106,7 +92,8 @@ public final class VaultHook {
         if (rsp == null) {
             return false;
         }
-        return (economy = rsp.getProvider()) != null;
+        economy = rsp.getProvider();
+        return true;
     }
 
 }

@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.api.component.line;
 
 import eu.decentsoftware.holograms.api.component.PositionManager;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,18 +27,12 @@ import java.util.UUID;
 
 /**
  * This class represents a hologram line. A line is a collection of components
- * that can be moved in the world. A line can be added to a {@link Page}.
+ * that can be moved in the world. A line can be added to a {@link HologramPage}.
  *
  * @author d0by
  * @since 3.0.0
  */
 public interface HologramLine {
-
-    /*
-     * TODO:
-     *  - Hover content for text lines
-     *  - Click handling
-     */
 
     /**
      * Get the UUID of the line.
@@ -49,12 +43,12 @@ public interface HologramLine {
     UUID getUid();
 
     /**
-     * Get the parent {@link Page} of this line.
+     * Get the parent {@link HologramPage} of this line.
      *
-     * @return The parent {@link Page} of this line.
+     * @return The parent {@link HologramPage} of this line.
      */
     @NotNull
-    Page getParent();
+    HologramPage getParent();
 
     /**
      * Get the type of this line.
@@ -115,8 +109,5 @@ public interface HologramLine {
      * @param content The raw content of this line.
      */
     void setContent(@NotNull String content);
-
-    @Override
-    boolean equals(@Nullable Object o);
 
 }

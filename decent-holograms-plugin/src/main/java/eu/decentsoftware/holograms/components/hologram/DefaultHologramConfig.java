@@ -20,9 +20,8 @@ package eu.decentsoftware.holograms.components.hologram;
 
 import com.google.gson.JsonSyntaxException;
 import eu.decentsoftware.holograms.DecentHologramsPlugin;
-import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.HologramConfig;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import eu.decentsoftware.holograms.components.page.SerializablePage;
@@ -89,7 +88,7 @@ public class DefaultHologramConfig implements HologramConfig {
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(reader, SerializableHologram.class);
                 parent.getPositionManager().setLocation(hologram.getLocation());
                 parent.getSettings().set(hologram.getSettings());
-                List<Page> pages = new ArrayList<>();
+                List<HologramPage> pages = new ArrayList<>();
                 for (SerializablePage page : hologram.getPages()) {
                     pages.add(page.toPage(parent));
                 }

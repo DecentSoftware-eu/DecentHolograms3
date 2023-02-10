@@ -18,36 +18,35 @@
 
 package eu.decentsoftware.holograms.api.event;
 
-import eu.decentsoftware.holograms.api.component.hologram.Hologram;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * Event, that is fired when something happens with hologram.
+ * Base event for DecentHolograms.
  *
  * @author d0by
  * @since 3.0.0
  */
-public abstract class HologramEvent extends DecentHologramsEvent {
+public abstract class DecentHologramsEvent extends Event {
 
-    private final Hologram hologram;
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    /**
-     * Create a new instance of {@link HologramEvent}.
-     *
-     * @param hologram The hologram that is being affected.
-     */
-    public HologramEvent(@NotNull Hologram hologram) {
-        this.hologram = hologram;
+    public DecentHologramsEvent() {
+        super();
     }
 
-    /**
-     * Get the hologram that is being affected.
-     *
-     * @return The hologram that is being affected.
-     */
-    @NotNull
-    public Hologram getHologram() {
-        return hologram;
+    public DecentHologramsEvent(boolean isAsync) {
+        super(isAsync);
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 
 }

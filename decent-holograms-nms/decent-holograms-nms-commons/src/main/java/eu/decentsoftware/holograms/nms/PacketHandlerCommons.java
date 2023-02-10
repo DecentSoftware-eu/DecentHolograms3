@@ -18,8 +18,11 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.utils.reflect.*;
 import eu.decentsoftware.holograms.nms.listener.PacketListener;
+import eu.decentsoftware.holograms.nms.reflect.R;
+import eu.decentsoftware.holograms.nms.reflect.ReflectConstructor;
+import eu.decentsoftware.holograms.nms.reflect.ReflectField;
+import eu.decentsoftware.holograms.nms.reflect.ReflectMethod;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.experimental.UtilityClass;

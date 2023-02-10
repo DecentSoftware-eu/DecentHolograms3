@@ -44,13 +44,13 @@ public class SerializablePage {
     private final @NotNull ActionHolder clickActions;
 
     /**
-     * Create a new {@link SerializablePage} from the given {@link DefaultPage}.
+     * Create a new {@link SerializablePage} from the given {@link DefaultHologramPage}.
      *
      * @param page The page.
      * @return The new {@link SerializablePage}.
      */
     @NotNull
-    public static SerializablePage fromPage(@NotNull DefaultPage page) {
+    public static SerializablePage fromPage(@NotNull DefaultHologramPage page) {
         List<SerializableLine> lines = new ArrayList<>();
         for (HologramLine line : page.getLineHolder().getLines()) {
             DefaultHologramLine defaultLine = (DefaultHologramLine) line;
@@ -65,14 +65,14 @@ public class SerializablePage {
     }
 
     /**
-     * Create a {@link DefaultPage} from this {@link SerializablePage}.
+     * Create a {@link DefaultHologramPage} from this {@link SerializablePage}.
      *
      * @param hologram The parent {@link DefaultHologram} of this page.
-     * @return The new {@link DefaultPage}.
+     * @return The new {@link DefaultHologramPage}.
      */
     @NotNull
-    public DefaultPage toPage(@NotNull DefaultHologram hologram) {
-        DefaultPage page = new DefaultPage(hologram, clickConditions, clickActions);
+    public DefaultHologramPage toPage(@NotNull DefaultHologram hologram) {
+        DefaultHologramPage page = new DefaultHologramPage(hologram, clickConditions, clickActions);
         List<HologramLine> lines = new ArrayList<>();
         for (SerializableLine line : this.lines) {
             DefaultHologramLine defaultLine = line.toLine(page);

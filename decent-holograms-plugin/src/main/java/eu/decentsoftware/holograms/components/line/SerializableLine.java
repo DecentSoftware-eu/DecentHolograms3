@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.components.line;
 
 import eu.decentsoftware.holograms.actions.ActionHolder;
-import eu.decentsoftware.holograms.components.page.DefaultPage;
+import eu.decentsoftware.holograms.components.page.DefaultHologramPage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,11 +61,11 @@ public class SerializableLine {
     /**
      * Create a {@link DefaultHologramLine} from this {@link SerializableLine}.
      *
-     * @param page The parent {@link DefaultPage} of this line.
+     * @param page The parent {@link DefaultHologramPage} of this line.
      * @return The new {@link DefaultHologramLine}.
      */
     @NotNull
-    public DefaultHologramLine toLine(@NotNull DefaultPage page) {
+    public DefaultHologramLine toLine(@NotNull DefaultHologramPage page) {
         if (settings == null) {
             settings = new DefaultHologramLineSettings();
         }

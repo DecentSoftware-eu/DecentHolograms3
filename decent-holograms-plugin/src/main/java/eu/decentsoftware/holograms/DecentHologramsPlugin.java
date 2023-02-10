@@ -29,10 +29,9 @@ import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionSerializer;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
-import eu.decentsoftware.holograms.components.line.content.DefaultContentParserManager;
+import eu.decentsoftware.holograms.components.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionSerializer;
@@ -104,7 +103,7 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         this.profileRegistry = new ProfileRegistry();
         this.serverRegistry = new ServerRegistry();
         this.replacementRegistry = new ReplacementRegistry();
-        this.contentParserManager = new DefaultContentParserManager();
+        this.contentParserManager = new ContentParserManager();
         this.hologramRegistry = new DefaultHologramRegistry();
 
         BungeeUtils.init();

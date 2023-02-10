@@ -24,8 +24,8 @@ import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.component.line.HologramLineType;
-import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
+import eu.decentsoftware.holograms.api.component.page.HologramLineHolder;
 import eu.decentsoftware.holograms.utils.MathUtil;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import org.bukkit.Location;
@@ -35,23 +35,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class DefaultPage implements Page {
+public class DefaultHologramPage implements HologramPage {
 
     private final @NotNull Hologram parent;
-    private final @NotNull PageLineHolder lineHolder;
+    private final @NotNull HologramLineHolder lineHolder;
     private final @NotNull ConditionHolder clickConditions;
     private final @NotNull ActionHolder clickActions;
 
-    public DefaultPage(@NotNull Hologram parent) {
+    public DefaultHologramPage(@NotNull Hologram parent) {
         this.parent = parent;
-        this.lineHolder = new DefaultPageLineHolder(this);
+        this.lineHolder = new DefaultHologramLineHolder(this);
         this.clickConditions = new ConditionHolder();
         this.clickActions = new ActionHolder();
     }
 
-    protected DefaultPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
+    protected DefaultHologramPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
         this.parent = parent;
-        this.lineHolder = new DefaultPageLineHolder(this);
+        this.lineHolder = new DefaultHologramLineHolder(this);
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
     }
@@ -220,7 +220,7 @@ public class DefaultPage implements Page {
 
     @NotNull
     @Override
-    public PageLineHolder getLineHolder() {
+    public HologramLineHolder getLineHolder() {
         return lineHolder;
     }
 

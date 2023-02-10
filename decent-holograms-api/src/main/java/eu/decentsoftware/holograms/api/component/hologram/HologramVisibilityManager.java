@@ -42,6 +42,7 @@ public interface HologramVisibilityManager {
      * Get the parent hologram of this visibility manager.
      *
      * @return The parent hologram of this visibility manager.
+     * @see Hologram
      */
     @NotNull
     Hologram getParent();
@@ -67,19 +68,7 @@ public interface HologramVisibilityManager {
     /**
      * Hides the hologram for all players and clears the visibility cache.
      */
-    default void destroy() {
-        // Hide the hologram for all players
-        getPlayers().clear();
-        for (String player : getViewers()) {
-            Player playerObj = Bukkit.getPlayer(player);
-            if (playerObj != null) {
-                updateVisibility(playerObj, false);
-            }
-        }
-        // Clear the visibility cache
-        getViewers().clear();
-        getPlayerPages().clear();
-    }
+    void destroy();
 
     /**
      * Get all the players that are currently allowed to see this hologram.
@@ -164,11 +153,7 @@ public interface HologramVisibilityManager {
      * @param page   The page index to set.
      * @see #getPlayers()
      */
-    default void show(@NotNull Player player, int page) {
-        getPlayers().add(player.getName());
-        getPlayerPages().put(player.getName(), page);
-        updateVisibility(player);
-    }
+    void show(@NotNull Player player, int page);
 
     /**
      * Add the specified player to the set of players that are allowed to see
@@ -188,11 +173,7 @@ public interface HologramVisibilityManager {
      * @param player The player to remove.
      * @see #getPlayers()
      */
-    default void hide(@NotNull Player player) {
-        getPlayers().remove(player.getName());
-        getPlayerPages().remove(player.getName());
-        updateVisibility(player);
-    }
+    void hide(@NotNull Player player);
 
     /**
      * Updates the visibility of the hologram for the specified player. This
@@ -228,13 +209,7 @@ public interface HologramVisibilityManager {
      * @see #getPlayers()
      * @see #getViewers()
      */
-    default void updateVisibility(@NotNull Player player, boolean visible) {
-        if (visible) {
-            getViewers().add(player.getName());
-        } else {
-            getViewers().remove(player.getName());
-        }
-    }
+    void updateVisibility(@NotNull Player player, boolean visible);
 
     /**
      * Updates the visibility of the hologram for all players from the view list.
@@ -242,14 +217,7 @@ public interface HologramVisibilityManager {
      * @see #updateVisibility(Player)
      * @see #getPlayers();
      */
-    default void updateVisibility() {
-        for (String player : getPlayers()) {
-            Player playerObj = Bukkit.getPlayer(player);
-            if (playerObj != null) {
-                updateVisibility(playerObj);
-            }
-        }
-    }
+    void updateVisibility();
 
     /**
      * Update the hologram's contents for the specified player. This method
@@ -263,14 +231,7 @@ public interface HologramVisibilityManager {
      * Update the holograms contents for all players. This method does not
      * update the holograms' visibility.
      */
-    default void updateContents() {
-        for (String player : getPlayers()) {
-            Player playerObj = Bukkit.getPlayer(player);
-            if (playerObj != null) {
-                updateContents(playerObj);
-            }
-        }
-    }
+    void updateContents();
 
     /**
      * Get the pages that are currently selected by each player.
@@ -306,8 +267,6 @@ public interface HologramVisibilityManager {
      * @param player The player to set the page for.
      * @param page   The page to set.
      */
-    default void setPage(@NotNull Player player, int page) {
-        getPlayerPages().put(player.getName(), page);
-    }
+    void setPage(@NotNull Player player, int page);
 
 }

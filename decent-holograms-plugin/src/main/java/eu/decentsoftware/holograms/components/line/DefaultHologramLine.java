@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.component.line.HologramLineSettings;
 import eu.decentsoftware.holograms.api.component.line.HologramLineType;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Contract;
@@ -36,7 +36,13 @@ import java.util.UUID;
 
 public class DefaultHologramLine implements HologramLine {
 
-    private final @NotNull Page parent;
+    /*
+     * TODO:
+     *  - Hover content for text lines
+     *  - Click handling
+     */
+
+    private final @NotNull HologramPage parent;
     private final @NotNull UUID uid;
     private final @NotNull HologramLineSettings settings;
     private final @NotNull PositionManager positionManager;
@@ -52,7 +58,7 @@ public class DefaultHologramLine implements HologramLine {
      * @param parent   The parent page of the line.
      * @param location The location of the line.
      */
-    public DefaultHologramLine(@NotNull Page parent, @NotNull Location location) {
+    public DefaultHologramLine(@NotNull HologramPage parent, @NotNull Location location) {
         this.parent = parent;
         this.uid = UUID.randomUUID();
         this.settings = new DefaultHologramLineSettings();
@@ -73,7 +79,7 @@ public class DefaultHologramLine implements HologramLine {
      * @param clickActions    The actions that will be executed when the line is clicked.
      * @param content         The content of the line.
      */
-    public DefaultHologramLine(@NotNull Page parent, @NotNull HologramLineSettings settings, @NotNull Location location,
+    public DefaultHologramLine(@NotNull HologramPage parent, @NotNull HologramLineSettings settings, @NotNull Location location,
                                @NotNull ConditionHolder viewConditions, @NotNull ConditionHolder clickConditions,
                                @NotNull ActionHolder clickActions, @NotNull String content) {
         this.parent = parent;
@@ -94,7 +100,7 @@ public class DefaultHologramLine implements HologramLine {
 
     @NotNull
     @Override
-    public Page getParent() {
+    public HologramPage getParent() {
         return parent;
     }
 

@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.components.hologram;
 
 import eu.decentsoftware.holograms.BootMessenger;
 import eu.decentsoftware.holograms.DecentHologramsPlugin;
-import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.utils.FileUtils;

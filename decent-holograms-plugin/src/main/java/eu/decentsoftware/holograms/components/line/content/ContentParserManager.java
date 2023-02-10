@@ -19,23 +19,34 @@
 package eu.decentsoftware.holograms.components.line.content;
 
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.components.line.content.parsers.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultContentParserManager implements ContentParserManager {
+/**
+ * This class is the main content parser, which is used to register
+ * all the content parsers and parse the content of a line.
+ * <p>
+ * The registered content parsers are used in a reverse order, so the last registered
+ * parser will be used first.
+ * <p>
+ * To register a content parser, use {@link #register(ContentParser)}. Your content parser
+ * is going to the end of the list and will be used first.
+ *
+ * @author d0by
+ * @since 3.0.0
+ */
+public class ContentParserManager {
 
     private final @NotNull List<ContentParser> parsers;
 
     /**
-     * Creates a new instance of {@link DefaultContentParserManager}. This constructor
+     * Creates a new instance of {@link ContentParserManager}. This constructor
      * will also register the default parsers.
      */
-    public DefaultContentParserManager() {
+    public ContentParserManager() {
         this.parsers = new ArrayList<>();
 
         // - Register default parsers -
@@ -61,12 +72,17 @@ public class DefaultContentParserManager implements ContentParserManager {
      * @param parser The content parser to register.
      * @see ContentParser
      */
-    @Override
     public void register(@NotNull ContentParser parser) {
         this.parsers.add(parser);
     }
 
-    @Override
+    /**
+     * Parse the content of the given line and update the line's renderer.
+     *
+     * @param line The line to parse the content for.
+     * @return True if the content was parsed successfully, false otherwise.
+     * @see HologramLine
+     */
     public boolean parse(@NotNull HologramLine line) {
         // Parse content
         for (int i = parsers.size() - 1; i >= 0; i--) {

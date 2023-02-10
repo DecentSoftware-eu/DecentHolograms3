@@ -31,66 +31,65 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Hologram {
 
-    // TODO:
-    //  animations
-    //  lighting
-
     /**
      * Destroy this hologram. This method hides the hologram and disables all components.
      */
     void destroy();
 
     /**
-     * Get the name of this hologram.
+     * Get the name of the hologram, used for identification.
      *
-     * @return The name of this hologram.
+     * @return The name of the hologram, used for identification.
      */
     @NotNull
     String getName();
 
     /**
-     * Get the {@link HologramConfig} of this hologram.
+     * The configuration manager of the hologram, used for storing
+     * and retrieving data to/from files.
      *
-     * @return The {@link HologramConfig} of this hologram.
+     * @return The configuration manager of the hologram.
      * @see HologramConfig
      */
     @NotNull
     HologramConfig getConfig();
 
     /**
-     * Get the {@link HologramSettings} of this hologram.
+     * The settings manager of the hologram, storing various settings.
      *
-     * @return The {@link HologramSettings} of this hologram.
+     * @return The settings manager of the hologram.
      * @see HologramSettings
      */
     @NotNull
     HologramSettings getSettings();
 
     /**
-     * Get the {@link HologramVisibilityManager} of this hologram.
+     * The position manager of the hologram, used for editing
+     * the location of the hologram.
      *
-     * @return The {@link HologramVisibilityManager} of this hologram.
+     * @return The position manager of the hologram.
+     * @see PositionManager
+     */
+    @NotNull
+    PositionManager getPositionManager();
+
+    /**
+     * The visibility manager of the hologram, used for managing
+     * the visibility of the hologram.
+     *
+     * @return The visibility manager of the hologram.
      * @see HologramVisibilityManager
      */
     @NotNull
     HologramVisibilityManager getVisibilityManager();
 
     /**
-     * Get the {@link HologramPageHolder} of this hologram.
+     * The page holder of the hologram, used for managing the pages of the hologram.
      *
-     * @return The {@link HologramPageHolder} of this hologram.
+     * @return The page holder of the hologram.
      * @see HologramPageHolder
      */
     @NotNull
     HologramPageHolder getPageHolder();
-
-    /**
-     * Get the {@link PositionManager} of this hologram.
-     *
-     * @return The {@link PositionManager} of this hologram.
-     * @see PositionManager
-     */
-    @NotNull
-    PositionManager getPositionManager();
 
 }

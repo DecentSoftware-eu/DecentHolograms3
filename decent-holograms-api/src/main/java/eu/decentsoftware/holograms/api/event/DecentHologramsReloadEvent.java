@@ -16,28 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.component.line.content;
-
-import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
-import org.jetbrains.annotations.NotNull;
+package eu.decentsoftware.holograms.api.event;
 
 /**
- * This class is used to parse string content into a {@link HologramLineRenderer}.
+ * Event, that is fired when DecentHolograms is reloaded.
  *
  * @author d0by
- * @see HologramLineRenderer
  * @since 3.0.0
  */
-public interface ContentParser {
+public class DecentHologramsReloadEvent extends DecentHologramsEvent {
 
-    /**
-     * Parse the content of the given line and update the line's renderer.
-     *
-     * @param line The line to parse the content for.
-     * @return True if the content was parsed successfully, false otherwise.
-     * @see HologramLineRenderer
-     */
-    boolean parse(@NotNull HologramLine line);
+    public DecentHologramsReloadEvent() {
+        super(true);
+    }
 
 }

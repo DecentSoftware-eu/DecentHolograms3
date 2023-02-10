@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.components.line.content.parsers;
 
 import eu.decentsoftware.holograms.DecentHologramsPlugin;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
 import eu.decentsoftware.holograms.components.line.content.objects.DecentEntity;
 import eu.decentsoftware.holograms.components.line.renderer.EntityLineRenderer;
 import eu.decentsoftware.holograms.nms.NMSAdapter;

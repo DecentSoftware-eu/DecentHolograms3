@@ -47,7 +47,9 @@ How to get DecentHolograms API into your project:
         <url>https://jitpack.io</url>
     </repository>
 </repositories>
+```
 
+```xml
 <dependencies>
     <dependency>
         <groupId>com.github.decentsoftware-eu</groupId>

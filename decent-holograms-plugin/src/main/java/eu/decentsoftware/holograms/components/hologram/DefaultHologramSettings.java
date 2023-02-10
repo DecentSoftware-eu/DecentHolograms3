@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.components.hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramSettings;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -46,6 +47,7 @@ public class DefaultHologramSettings implements HologramSettings {
      * @param enabled    Whether the hologram is enabled.
      * @param persistent Whether the hologram is persistent.
      */
+    @Contract(pure = true)
     public DefaultHologramSettings(boolean enabled, boolean persistent) {
         this.enabled = enabled;
         this.persistent = persistent;

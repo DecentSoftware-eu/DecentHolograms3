@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
-public interface Page {
+public interface HologramPage {
 
     /**
      * Get the parent {@link Hologram} of this page.
@@ -40,13 +40,13 @@ public interface Page {
     Hologram getParent();
 
     /**
-     * Get the {@link PageLineHolder} of this page.
+     * Get the {@link HologramLineHolder} of this page.
      *
-     * @return the {@link PageLineHolder} of this page.
-     * @see PageLineHolder
+     * @return the {@link HologramLineHolder} of this page.
+     * @see HologramLineHolder
      */
     @NotNull
-    PageLineHolder getLineHolder();
+    HologramLineHolder getLineHolder();
 
     /**
      * Show this page to the specified player. This method displays all the lines

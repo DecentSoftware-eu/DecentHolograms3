@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.components.line;
 
 import eu.decentsoftware.holograms.api.component.hologram.HologramSettings;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ public class DefaultLinePositionManager extends DefaultPositionManager {
     @Override
     public Location getActualLocation() {
         Location actualLocation = locationSupplier != null ? locationSupplier.get().clone() : location.clone();
-        Page page = parent.getParent();
+        HologramPage page = parent.getParent();
         HologramSettings settings = page.getParent().getSettings();
         if (!settings.isRotateVertical() && !settings.isRotateHorizontal()) {
             return actualLocation

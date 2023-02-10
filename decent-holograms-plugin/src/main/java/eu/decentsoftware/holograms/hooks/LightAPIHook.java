@@ -19,10 +19,14 @@
 package eu.decentsoftware.holograms.hooks;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 
 @UtilityClass
 public final class LightAPIHook {
 
+    public static boolean isAvailable() {
+        return Bukkit.getPluginManager().isPluginEnabled("LightAPI");
+    }
 
 
 }

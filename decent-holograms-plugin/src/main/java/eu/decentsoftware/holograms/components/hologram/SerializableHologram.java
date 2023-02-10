@@ -18,8 +18,8 @@
 
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.components.page.DefaultPage;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
+import eu.decentsoftware.holograms.components.page.DefaultHologramPage;
 import eu.decentsoftware.holograms.components.page.SerializablePage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import lombok.AllArgsConstructor;
@@ -56,8 +56,8 @@ public class SerializableHologram {
     @NotNull
     public static SerializableHologram fromHologram(@NotNull DefaultHologram hologram) {
         List<SerializablePage> pages = new ArrayList<>();
-        for (Page page : hologram.getPageHolder().getPages()) {
-            DefaultPage defaultPage = (DefaultPage) page;
+        for (HologramPage page : hologram.getPageHolder().getPages()) {
+            DefaultHologramPage defaultPage = (DefaultHologramPage) page;
             SerializablePage serializablePage = SerializablePage.fromPage(defaultPage);
             pages.add(serializablePage);
         }
@@ -86,9 +86,9 @@ public class SerializableHologram {
             viewConditions = new ConditionHolder();
         }
         DefaultHologram hologram = new DefaultHologram(name, location, settings, viewConditions);
-        List<Page> pages = new ArrayList<>();
+        List<HologramPage> pages = new ArrayList<>();
         for (SerializablePage page : this.pages) {
-            DefaultPage defaultPage = page.toPage(hologram);
+            DefaultHologramPage defaultPage = page.toPage(hologram);
             pages.add(defaultPage);
         }
         hologram.getPageHolder().setPages(pages);
