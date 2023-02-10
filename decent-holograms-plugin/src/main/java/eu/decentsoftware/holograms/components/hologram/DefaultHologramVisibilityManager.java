@@ -1,8 +1,28 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.api.component.hologram.Hologram;
+import eu.decentsoftware.holograms.DecentHologramsPlugin;
 import eu.decentsoftware.holograms.api.component.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.component.page.Page;
+import eu.decentsoftware.holograms.utils.MathUtil;
+import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class DefaultHologramVisibilityManager implements HologramVisibilityManager {
 
-    private final @NotNull Hologram parent;
+    private final @NotNull DefaultHologram parent;
     private final @NotNull Set<String> players;
     private final @NotNull Set<String> viewers;
     private final @NotNull Map<String, Integer> playerPages;
@@ -27,12 +47,53 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
      *
      * @param parent The parent hologram.
      */
-    public DefaultHologramVisibilityManager(@NotNull Hologram parent) {
+    public DefaultHologramVisibilityManager(@NotNull DefaultHologram parent) {
         this.parent = parent;
         this.players = new HashSet<>();
         this.viewers = new HashSet<>();
         this.playerPages = new ConcurrentHashMap<>();
         this.visibleByDefault = true;
+    }
+
+    @Override
+    public void updateVisibility(@NotNull Player player) {
+        // Check if the player is allowed to see this hologram.
+        if (!canSee(player)) {
+            // Hide the hologram for the player if they are not allowed
+            // to see it, and they are currently viewing it.
+            if (isViewing(player)) {
+                updateVisibility(player, false);
+            }
+            return;
+        }
+
+        // Get the player's profile.
+        Profile profile = DecentHologramsPlugin.getInstance().getProfileRegistry().getProfile(player.getName());
+        if (profile == null) {
+            return;
+        }
+
+        // Check if the player is in the view distance.
+        boolean inViewDistance = MathUtil.inDistance(
+                getParent().getPositionManager().getActualLocation(),
+                player.getLocation(),
+                getParent().getSettings().getViewDistance()
+        );
+
+        // Check if the player satisfies the view conditions.
+        boolean meetsConditions = !isVisibleByDefault() || getParent().getViewConditionHolder().check(profile);
+
+        if (isViewing(player) && (!inViewDistance || !meetsConditions)) {
+            // If the player is currently viewing the hologram but is no
+            // longer in the view distance or does not satisfy the view
+            // conditions, hide the hologram.
+            updateVisibility(player, false);
+        } else if (!isViewing(player) && inViewDistance && meetsConditions) {
+            // If the player is not currently viewing the hologram but is in
+            // the view distance and satisfies the view conditions, show the
+            // hologram.
+            updateVisibility(player, true);
+        }
     }
 
     @Override
@@ -75,7 +136,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
 
     @NotNull
     @Override
-    public Hologram getParent() {
+    public DefaultHologram getParent() {
         return parent;
     }
 

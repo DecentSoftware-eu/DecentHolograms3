@@ -1,22 +1,42 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.line.content;
 
-import eu.decentsoftware.holograms.api.component.line.Line;
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParser;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
-import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import eu.decentsoftware.holograms.components.line.content.parsers.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DefaultContentParserManager implements ContentParserManager {
 
-    private final @NotNull DecentList<ContentParser> parsers;
+    private final @NotNull List<ContentParser> parsers;
 
     /**
      * Creates a new instance of {@link DefaultContentParserManager}. This constructor
      * will also register the default parsers.
      */
     public DefaultContentParserManager() {
-        this.parsers = new DecentList<>();
+        this.parsers = new ArrayList<>();
 
         // - Register default parsers -
         //
@@ -32,7 +52,6 @@ public class DefaultContentParserManager implements ContentParserManager {
         register(new HeadContentParser());
         register(new SmallHeadContentParser());
         register(new EntityContentParser());
-        register(new ImageContentParser());
 
     }
 
@@ -48,7 +67,7 @@ public class DefaultContentParserManager implements ContentParserManager {
     }
 
     @Override
-    public boolean parse(@NotNull Line line) {
+    public boolean parse(@NotNull HologramLine line) {
         // Parse content
         for (int i = parsers.size() - 1; i >= 0; i--) {
             ContentParser parser = parsers.get(i);

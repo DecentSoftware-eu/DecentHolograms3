@@ -1,6 +1,25 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.BootProcess;
+import eu.decentsoftware.holograms.BootMessenger;
+import eu.decentsoftware.holograms.DecentHologramsPlugin;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
@@ -19,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultHologramRegistry implements HologramRegistry {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
     private final @NotNull Map<String, Hologram> holograms;
 
     public DefaultHologramRegistry() {
@@ -32,9 +51,15 @@ public class DefaultHologramRegistry implements HologramRegistry {
         this.shutdown();
 
         // Load holograms
-        long startMillis = System.currentTimeMillis();
+        final long startMillis = System.currentTimeMillis();
         int counter = 0;
-        List<File> files = FileUtils.getFilesFromTree(PLUGIN.getHologramFolder(), (f) -> f.getName().endsWith(".json"));
+
+        File folder = new File(PLUGIN.getDataFolder(), "holograms");
+        List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.json", true);
+        if (files.isEmpty()) {
+            return;
+        }
+
         for (File file : files) {
             try {
                 String fileName = file.getName();
@@ -49,7 +74,7 @@ public class DefaultHologramRegistry implements HologramRegistry {
             }
         }
         long took = System.currentTimeMillis() - startMillis;
-        BootProcess.log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+        BootMessenger.log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
     }
 
     @Override

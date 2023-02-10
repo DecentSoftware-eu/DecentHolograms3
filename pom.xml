@@ -16,6 +16,7 @@
         <module>decent-holograms-api</module>
         <module>decent-holograms-plugin</module>
         <module>decent-holograms-nms</module>
+        <module>decent-holograms-nms/decent-holograms-nms-commons</module>
     </modules>
 
     <properties>
@@ -58,6 +59,12 @@
                 <artifactId>spigot-api</artifactId>
                 <version>1.13-R0.1-SNAPSHOT</version>
                 <scope>provided</scope>
+            </dependency>
+            <!-- API -->
+            <dependency>
+                <groupId>eu.decentsoftware</groupId>
+                <artifactId>decent-holograms-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

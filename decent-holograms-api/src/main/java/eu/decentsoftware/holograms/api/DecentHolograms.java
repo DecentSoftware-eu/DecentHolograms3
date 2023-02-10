@@ -1,16 +1,28 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.api;
 
 import com.google.gson.Gson;
-import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
-import eu.decentsoftware.holograms.api.conditions.ConditionTypeRegistry;
-import eu.decentsoftware.holograms.api.nms.NMSProvider;
-import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
-import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
-import eu.decentsoftware.holograms.api.server.ServerRegistry;
-import eu.decentsoftware.holograms.api.ticker.Ticker;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 
@@ -43,6 +55,7 @@ public abstract class DecentHolograms extends JavaPlugin {
      *
      * @return The instance.
      */
+    @Contract(pure = true)
     public static DecentHolograms getInstance() {
         return instance;
     }
@@ -76,78 +89,6 @@ public abstract class DecentHolograms extends JavaPlugin {
      * Reloads the plugin.
      */
     public abstract void reload();
-
-    /**
-     * Gets the NMS adapter provider.
-     *
-     * @return The NMS adapter provider.
-     * @see NMSProvider
-     */
-    public abstract NMSProvider getNMSProvider();
-
-    /**
-     * Get the Gson, that's being used by this plugin.
-     *
-     * @return The Gson.
-     * @see Gson
-     */
-    public abstract Gson getGson();
-
-    /**
-     * Get the ticker.
-     *
-     * @return The ticker.
-     * @see Ticker
-     */
-    public abstract Ticker getTicker();
-
-    /**
-     * Get the profile registry.
-     *
-     * @return The profile registry.
-     * @see ProfileRegistry
-     */
-    public abstract ProfileRegistry getProfileRegistry();
-
-    /**
-     * Get the server registry.
-     *
-     * @return The server registry.
-     * @see ServerRegistry
-     */
-    public abstract ServerRegistry getServerRegistry();
-
-    /**
-     * Get the replacement registry.
-     *
-     * @return The replacement registry.
-     * @see ReplacementRegistry
-     */
-    public abstract ReplacementRegistry getReplacementRegistry();
-
-    /**
-     * Get the content parser manager.
-     *
-     * @return The content parser manager.
-     * @see ContentParserManager
-     */
-    public abstract ContentParserManager getContentParserManager();
-
-    /**
-     * Get the action type registry.
-     *
-     * @return The action type registry.
-     * @see ActionTypeRegistry
-     */
-    public abstract ActionTypeRegistry getActionTypeRegistry();
-
-    /**
-     * Get the condition type registry.
-     *
-     * @return The condition type registry.
-     * @see ConditionTypeRegistry
-     */
-    public abstract ConditionTypeRegistry getConditionTypeRegistry();
 
     /**
      * Get the hologram registry.

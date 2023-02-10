@@ -1,8 +1,26 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.nms;
 
 import com.google.common.base.Optional;
-import eu.decentsoftware.holograms.api.nms.NMSAdapter;
 import eu.decentsoftware.holograms.api.utils.reflect.R;
+import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -65,6 +83,15 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
         if (packet instanceof Packet) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet<?>) packet);
         }
+    }
+
+    /*
+     *  Player
+     */
+
+    @Override
+    public ChannelPipeline getPipeline(@NotNull Player player) {
+        return ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
     }
 
     /*
@@ -161,8 +188,8 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
         r.set("b", l.getX());
         r.set("c", l.getY());
         r.set("d", l.getZ());
-        r.set("e", (byte)((int) (l.getYaw() * 256.0F / 360.0F)));
-        r.set("f", (byte)((int) (l.getPitch() * 256.0F / 360.0F)));
+        r.set("e", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
+        r.set("f", (byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
         r.set("g", onGround);
         return packet;
     }
@@ -286,9 +313,9 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
         r.set("c", MathHelper.floor(l.getX() * 32.0D));
         r.set("d", MathHelper.floor(l.getY() * 32.0D));
         r.set("e", MathHelper.floor(l.getZ() * 32.0D));
-        r.set("i", (byte)((int)(l.getYaw() * 256.0F / 360.0F)));
-        r.set("j", (byte)((int)(l.getPitch() * 256.0F / 360.0F)));
-        r.set("k", (byte)((int)(l.getYaw() * 256.0F / 360.0F)));
+        r.set("i", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
+        r.set("j", (byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
+        r.set("k", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
         r.set("g", MathHelper.d(l.getYaw() * 256.0F / 360.0F));
         sendPacket(player, packet);
     }

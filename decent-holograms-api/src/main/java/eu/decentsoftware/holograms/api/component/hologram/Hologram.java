@@ -1,9 +1,24 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.api.component.hologram;
 
-import eu.decentsoftware.holograms.api.component.common.INameable;
-import eu.decentsoftware.holograms.api.component.common.IViewConditional;
-import eu.decentsoftware.holograms.api.component.common.PositionManager;
-import eu.decentsoftware.holograms.api.ticker.ITicked;
+import eu.decentsoftware.holograms.api.component.PositionManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
-public interface Hologram extends INameable, IViewConditional, ITicked {
+public interface Hologram {
 
     // TODO:
     //  animations
@@ -24,6 +39,14 @@ public interface Hologram extends INameable, IViewConditional, ITicked {
      * Destroy this hologram. This method hides the hologram and disables all components.
      */
     void destroy();
+
+    /**
+     * Get the name of this hologram.
+     *
+     * @return The name of this hologram.
+     */
+    @NotNull
+    String getName();
 
     /**
      * Get the {@link HologramConfig} of this hologram.

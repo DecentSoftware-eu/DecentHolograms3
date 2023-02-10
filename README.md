@@ -1,25 +1,30 @@
-# DecentHolograms 
-[![SpigotMC Downloads](https://img.shields.io/spiget/downloads/96927?label=Downloads) ![SpigotMC Version](https://img.shields.io/spiget/version/96927?label=Release) ![Tested Versions](https://img.shields.io/spiget/tested-versions/96927?label=Supports)](https://www.spigotmc.org/resources/96927/) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-> A lightweight yet very powerful hologram plugin with many features and configuration options.
+# DecentHolograms v3.0 (NOT RELEASED, WIP)
+[![SpigotMC Downloads](https://img.shields.io/spiget/downloads/96927?label=Downloads) 
+![SpigotMC Version](https://img.shields.io/spiget/version/96927?label=Release) 
+![Tested Versions](https://img.shields.io/spiget/tested-versions/96927?label=Supports)](https://www.spigotmc.org/resources/96927/) 
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+> Introducing a powerful hologram plugin that offers a wide range of features and customization options, 
+> all while maintaining a lightweight design for optimal performance.
 
-**Links:**
+### Links
 - [SpigotMC (Download)](https://www.spigotmc.org/resources/96927/)
-- [Discord (Support)](https://discord.decentsoftware.eu/)
 - [Wiki (Documentation)](https://wiki.decentholograms.eu/)
+- [Discord (Support)](https://discord.decentsoftware.eu/)
 
-## SUPPORT
-We are mostly active on Discord so the best way to get support is joining our [Discord Server](https://discord.decentsoftware.eu). Also, it is okay to report bugs here on GitHub or in the 'Discussion' page on the [Spigot Page](https://decentholograms.eu) of Decent Holograms.
+## Support
+We are mostly active on Discord so the best way to get support is joining our [Discord Server](https://discord.decentsoftware.eu). 
+Also, it is okay to report bugs here on GitHub or in the 'Discussion' page on the [Spigot Page](https://decentholograms.eu) of Decent Holograms.
 
-## MINECRAFT LIMITATIONS
+## Minecraft Limitations
 - Text is always facing the player.
 - Text size or font cannot be changed.
 - Some entities make sounds. It only applies to a few entities like the Warden which makes this heartbeat sound.
 - Icons (#ICON:) are always going to rotate and bob up and down.
 
-## CONTRIBUTING [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
+## Contributing [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 Pull requests are welcome. But for major changes, please create an issue to discuss the changes first.
 
-## BUILDING
+## Building
 Building DecentHolograms is very simple. All you need is JDK 8+, Maven, Git and an IDE or Command Line.
 
 1. Clone the project to your machine using Git.

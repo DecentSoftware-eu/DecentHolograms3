@@ -1,13 +1,30 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.hologram;
 
 import com.google.gson.JsonSyntaxException;
+import eu.decentsoftware.holograms.DecentHologramsPlugin;
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.conditions.Condition;
-import eu.decentsoftware.holograms.api.utils.S;
-import eu.decentsoftware.holograms.api.utils.collection.DecentList;
+import eu.decentsoftware.holograms.conditions.Condition;
+import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import eu.decentsoftware.holograms.components.page.SerializablePage;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -16,26 +33,28 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DefaultHologramConfig implements HologramConfig {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private final @NotNull Hologram parent;
+    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private final @NotNull DefaultHologram parent;
     private final @NotNull File file;
 
-    public DefaultHologramConfig(@NotNull Hologram parent) {
+    public DefaultHologramConfig(@NotNull DefaultHologram parent) {
         this(parent, new File(PLUGIN.getHologramFolder(), parent.getName() + ".yml"));
     }
 
-    public DefaultHologramConfig(@NotNull Hologram parent, @NotNull File file) {
+    public DefaultHologramConfig(@NotNull DefaultHologram parent, @NotNull File file) {
         this.parent = parent;
         this.file = file;
     }
 
     @NotNull
     @Override
-    public Hologram getParent() {
+    public DefaultHologram getParent() {
         return parent;
     }
 
@@ -55,7 +74,7 @@ public class DefaultHologramConfig implements HologramConfig {
             ensureFileExists();
 
             try (FileWriter writer = new FileWriter(getFile().getPath())) {
-                PLUGIN.getGson().toJson(SerializableHologram.fromHologram((DefaultHologram) parent), writer);
+                PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent), writer);
             } catch (IOException e) {
                 PLUGIN.getLogger().severe("Failed to save hologram " + parent.getName() + ":");
                 e.printStackTrace();
@@ -70,9 +89,9 @@ public class DefaultHologramConfig implements HologramConfig {
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(reader, SerializableHologram.class);
                 parent.getPositionManager().setLocation(hologram.getLocation());
                 parent.getSettings().set(hologram.getSettings());
-                DecentList<Page> pages = new DecentList<>();
+                List<Page> pages = new ArrayList<>();
                 for (SerializablePage page : hologram.getPages()) {
-                    pages.add(page.toPage((DefaultHologram) parent));
+                    pages.add(page.toPage(parent));
                 }
                 parent.getPageHolder().setPages(pages);
                 parent.getViewConditionHolder().clearConditions();
@@ -91,7 +110,7 @@ public class DefaultHologramConfig implements HologramConfig {
     public void delete() {
         // Run asynchronously to prevent blocking the main thread
         if (Bukkit.isPrimaryThread()) {
-            S.async(this::delete);
+            SchedulerUtil.async(this::delete);
         }
         getFile().delete();
     }

@@ -1,17 +1,33 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.page;
 
-import eu.decentsoftware.holograms.actions.DefaultActionHolder;
-import eu.decentsoftware.holograms.api.actions.ActionHolder;
-import eu.decentsoftware.holograms.api.component.common.PositionManager;
+import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.api.component.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
-import eu.decentsoftware.holograms.api.component.line.Line;
-import eu.decentsoftware.holograms.api.component.line.LineRenderer;
-import eu.decentsoftware.holograms.api.component.line.LineType;
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
+import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
+import eu.decentsoftware.holograms.api.component.line.HologramLineType;
 import eu.decentsoftware.holograms.api.component.page.Page;
 import eu.decentsoftware.holograms.api.component.page.PageLineHolder;
-import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.api.utils.M;
-import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
+import eu.decentsoftware.holograms.utils.MathUtil;
+import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -29,12 +45,11 @@ public class DefaultPage implements Page {
     public DefaultPage(@NotNull Hologram parent) {
         this.parent = parent;
         this.lineHolder = new DefaultPageLineHolder(this);
-        this.clickConditions = new DefaultConditionHolder();
-        this.clickActions = new DefaultActionHolder();
+        this.clickConditions = new ConditionHolder();
+        this.clickActions = new ActionHolder();
     }
 
-    protected DefaultPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions,
-                          @NotNull ActionHolder clickActions) {
+    protected DefaultPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
         this.parent = parent;
         this.lineHolder = new DefaultPageLineHolder(this);
         this.clickConditions = clickConditions;
@@ -43,8 +58,8 @@ public class DefaultPage implements Page {
 
     @Override
     public void display(@NotNull Player player) {
-        for (Line line : lineHolder.getLines()) {
-            LineRenderer renderer = line.getRenderer();
+        for (HologramLine line : lineHolder.getLines()) {
+            HologramLineRenderer renderer = line.getRenderer();
             if (renderer != null) {
                 renderer.display(player);
             }
@@ -53,8 +68,8 @@ public class DefaultPage implements Page {
 
     @Override
     public void hide(@NotNull Player player) {
-        for (Line line : lineHolder.getLines()) {
-            LineRenderer renderer = line.getRenderer();
+        for (HologramLine line : lineHolder.getLines()) {
+            HologramLineRenderer renderer = line.getRenderer();
             if (renderer != null) {
                 line.getRenderer().hide(player);
             }
@@ -63,8 +78,8 @@ public class DefaultPage implements Page {
 
     @Override
     public void update(@NotNull Player player) {
-        for (Line line : lineHolder.getLines()) {
-            LineRenderer renderer = line.getRenderer();
+        for (HologramLine line : lineHolder.getLines()) {
+            HologramLineRenderer renderer = line.getRenderer();
             if (renderer != null) {
                 line.getRenderer().update(player);
             }
@@ -73,8 +88,8 @@ public class DefaultPage implements Page {
 
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
-        for (Line line : lineHolder.getLines()) {
-            LineRenderer renderer = line.getRenderer();
+        for (HologramLine line : lineHolder.getLines()) {
+            HologramLineRenderer renderer = line.getRenderer();
             if (renderer != null) {
                 line.getRenderer().teleport(player, location);
             }
@@ -105,7 +120,7 @@ public class DefaultPage implements Page {
 
             // Calculate the required vectors.
             Vector horizontalPerpendicular = pLoc.getDirection().clone()
-                    .crossProduct(M.UP_VECTOR)
+                    .crossProduct(MathUtil.UP_VECTOR)
                     .normalize();
             Vector verticalPerpendicular = horizontalPerpendicular.clone()
                     .crossProduct(pDir)
@@ -115,7 +130,7 @@ public class DefaultPage implements Page {
             // Calculate new location for each line.
             double height = 0.0d;
             Location pivot = location.clone().subtract(0, totalHeight / 2, 0);
-            for (Line line : getLineHolder().getLines()) {
+            for (HologramLine line : getLineHolder().getLines()) {
                 if (line.getRenderer() == null) {
                     // Line is not visible.
                     continue;
@@ -126,7 +141,7 @@ public class DefaultPage implements Page {
 
                 // Calculate the new location.
                 Location loc;
-                if (vertical || line.getType() != LineType.TEXT) {
+                if (vertical || line.getType() != HologramLineType.TEXT) {
                     // If we rotate vertically, we put the lines along the relative vertical vector.
                     Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
                     loc = pivot.clone().add(vector);
@@ -152,9 +167,9 @@ public class DefaultPage implements Page {
                 // Update head rotation.
                 if (heads) {
                     // TODO: implement head rotation
-                    if (line.getType() == LineType.HEAD || line.getType() == LineType.SMALL_HEAD) {
+                    if (line.getType() == HologramLineType.HEAD || line.getType() == HologramLineType.SMALL_HEAD) {
 
-                    } else if (line.getType() == LineType.ENTITY) {
+                    } else if (line.getType() == HologramLineType.ENTITY) {
 
                     }
                 }
@@ -166,18 +181,18 @@ public class DefaultPage implements Page {
                 line.getRenderer().teleport(player, loc);
             }
         } else {
-            for (Line line : getLineHolder().getLines()) {
+            for (HologramLine line : getLineHolder().getLines()) {
                 PositionManager positionManager = line.getPositionManager();
                 Location actualLocation = positionManager.getActualLocation().clone();
-                LineRenderer renderer = line.getRenderer();
+                HologramLineRenderer renderer = line.getRenderer();
                 if (renderer != null) {
 
                     // Update head rotation.
                     if (heads) {
                         // TODO: implement head rotation
-                        if (line.getType() == LineType.HEAD || line.getType() == LineType.SMALL_HEAD) {
+                        if (line.getType() == HologramLineType.HEAD || line.getType() == HologramLineType.SMALL_HEAD) {
 
-                        } else if (line.getType() == LineType.ENTITY) {
+                        } else if (line.getType() == HologramLineType.ENTITY) {
 
                         }
                     }
@@ -210,13 +225,11 @@ public class DefaultPage implements Page {
     }
 
     @NotNull
-    @Override
     public ConditionHolder getClickConditionHolder() {
         return clickConditions;
     }
 
     @NotNull
-    @Override
     public ActionHolder getClickActionHolder() {
         return clickActions;
     }

@@ -1,17 +1,35 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.api.component.common.PositionManager;
+import eu.decentsoftware.holograms.api.component.PositionManager;
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
-import eu.decentsoftware.holograms.conditions.DefaultConditionHolder;
+import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.ticker.Ticked;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class DefaultHologram implements Hologram {
+public class DefaultHologram implements Hologram, Ticked {
 
     private final @NotNull String name;
     private final @NotNull HologramConfig file;
@@ -48,7 +66,7 @@ public class DefaultHologram implements Hologram {
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
         this.pageHolder = new DefaultHologramPageHolder(this);
-        this.conditionHolder = new DefaultConditionHolder();
+        this.conditionHolder = new ConditionHolder();
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
 
@@ -146,7 +164,6 @@ public class DefaultHologram implements Hologram {
     }
 
     @NotNull
-    @Override
     public ConditionHolder getViewConditionHolder() {
         return conditionHolder;
     }

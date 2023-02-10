@@ -12,6 +12,12 @@
     <artifactId>decent-holograms-v1_9_R2</artifactId>
 
     <dependencies>
+        <!-- NMS Commons -->
+        <dependency>
+            <groupId>eu.decentsoftware</groupId>
+            <artifactId>decent-holograms-nms-commons</artifactId>
+        </dependency>
+        <!-- Spigot -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>

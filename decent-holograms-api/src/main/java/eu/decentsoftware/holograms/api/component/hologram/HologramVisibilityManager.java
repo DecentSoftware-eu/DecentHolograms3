@@ -1,8 +1,23 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.api.component.hologram;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.profile.Profile;
-import eu.decentsoftware.holograms.api.utils.M;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -186,43 +201,7 @@ public interface HologramVisibilityManager {
      *
      * @param player The player to update the visibility for.
      */
-    default void updateVisibility(@NotNull Player player) {
-        // Check if the player is allowed to see this hologram.
-        if (!canSee(player)) {
-            // Hide the hologram for the player if they are not allowed
-            // to see it, and they are currently viewing it.
-            if (isViewing(player)) {
-                updateVisibility(player, false);
-            }
-            return;
-        }
-
-        // Get the player's profile.
-        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
-        if (profile == null) return;
-
-        // Check if the player is in the view distance.
-        boolean inViewDistance = M.inDistance(
-                getParent().getPositionManager().getActualLocation(),
-                player.getLocation(),
-                getParent().getSettings().getViewDistance()
-        );
-
-        // Check if the player satisfies the view conditions.
-        boolean meetsConditions = !isVisibleByDefault() || getParent().getViewConditionHolder().check(profile);
-
-        if (isViewing(player) && (!inViewDistance || !meetsConditions)) {
-            // If the player is currently viewing the hologram but is no
-            // longer in the view distance or does not satisfy the view
-            // conditions, hide the hologram.
-            updateVisibility(player, false);
-        } else if (!isViewing(player) && inViewDistance && meetsConditions) {
-            // If the player is not currently viewing the hologram but is in
-            // the view distance and satisfies the view conditions, show the
-            // hologram.
-            updateVisibility(player, true);
-        }
-    }
+    void updateVisibility(@NotNull Player player);
 
     /**
      * Updates the visibility of the hologram for the specified player. This

@@ -1,8 +1,26 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.line.renderer;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.component.line.Line;
-import eu.decentsoftware.holograms.api.component.line.LineType;
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
+import eu.decentsoftware.holograms.api.component.line.HologramLineType;
 import eu.decentsoftware.holograms.components.line.content.objects.DecentItemStack;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -18,11 +36,11 @@ public class HeadLineRenderer extends AbstractLineRenderer {
     private final boolean small;
     private final int eid;
 
-    public HeadLineRenderer(@NotNull Line parent, @NotNull DecentItemStack itemStack) {
-        this(parent, itemStack, LineType.HEAD, false);
+    public HeadLineRenderer(@NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
+        this(parent, itemStack, HologramLineType.HEAD, false);
     }
 
-    public HeadLineRenderer(@NotNull Line parent, @NotNull DecentItemStack itemStack, @NotNull LineType type, boolean small) {
+    public HeadLineRenderer(@NotNull HologramLine parent, @NotNull DecentItemStack itemStack, @NotNull HologramLineType type, boolean small) {
         super(parent, type);
         this.itemStack = itemStack;
         this.small = small;

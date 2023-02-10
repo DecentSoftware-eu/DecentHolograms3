@@ -1,20 +1,39 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.hologram;
 
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramPageHolder;
 import eu.decentsoftware.holograms.api.component.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.component.page.Page;
-import eu.decentsoftware.holograms.api.utils.collection.DecentList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultHologramPageHolder implements HologramPageHolder {
 
     private final @NotNull Hologram parent;
-    private final @NotNull DecentList<Page> pages;
+    private final @NotNull List<Page> pages;
 
     /**
      * Creates a new instance of {@link DefaultHologramPageHolder} with the given parent.
@@ -23,7 +42,7 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
      */
     public DefaultHologramPageHolder(@NotNull Hologram parent) {
         this.parent = parent;
-        this.pages = new DecentList<>();
+        this.pages = new ArrayList<>();
     }
 
     @NotNull
@@ -34,7 +53,7 @@ public class DefaultHologramPageHolder implements HologramPageHolder {
 
     @NotNull
     @Override
-    public DecentList<Page> getPages() {
+    public List<Page> getPages() {
         return pages;
     }
 

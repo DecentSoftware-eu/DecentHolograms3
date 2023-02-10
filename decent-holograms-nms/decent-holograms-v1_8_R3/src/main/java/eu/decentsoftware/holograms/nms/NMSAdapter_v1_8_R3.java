@@ -1,7 +1,27 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.nms.NMSAdapter;
+import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.utils.reflect.R;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -9,26 +29,27 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import xyz.xenondevs.particle.ParticleEffect;
-import xyz.xenondevs.particle.data.ParticleData;
-import xyz.xenondevs.particle.data.color.DustData;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class NMSAdapter_v1_8_R3 implements NMSAdapter {
+
+    private final PacketDataSerializer serializer = new PacketDataSerializer(Unpooled.buffer());
 
     private IChatBaseComponent s(String s) {
         return IChatBaseComponent.ChatSerializer.a(s);
     }
 
-	private String c(IChatBaseComponent c) {
-		return IChatBaseComponent.ChatSerializer.a(c);
-	}
+    private String c(IChatBaseComponent c) {
+        return IChatBaseComponent.ChatSerializer.a(c);
+    }
 
     @Contract("null -> null")
     private ItemStack i(org.bukkit.inventory.ItemStack itemStack) {
@@ -52,13 +73,21 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     /*
+     *  Player
+     */
+
+    @Override
+    public ChannelPipeline getPipeline(@NotNull Player player) {
+        return ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
+    }
+
+    /*
      *  Packets
      */
 
     @Override
     public void sendRedstoneParticle(Player player, Color c, Location l, float size) {
-        ParticleData data = new DustData(c.getRed(), c.getGreen(), c.getBlue(), size);
-        ParticleEffect.REDSTONE.display(l, new Vector(0, 0, 0), 0, 1, data, player);
+
     }
 
     @Override
@@ -149,10 +178,28 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public void sendEntityMetadata(Player player, int eid, List<Object> objects) {
+        List<DataWatcher.WatchableObject> watchableObjects = objects.stream()
+                .filter(o -> o instanceof DataWatcher.WatchableObject)
+                .map(o -> (DataWatcher.WatchableObject) o)
+                .collect(Collectors.toList());
+
+        serializer.clear();
+        serializer.b(eid);
+        try {
+            DataWatcher.a(watchableObjects, serializer);
+        } catch (IOException e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
+            return;
+        }
+
         PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", objects);
+        try {
+            packet.a(serializer);
+        } catch (IOException e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
+            return;
+        }
+
         sendPacket(player, packet);
     }
 
@@ -173,9 +220,9 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object getMetaEntityCustomName(Object name) {
-		if (!(name instanceof IChatBaseComponent)) {
-			return null;
-		}
+        if (!(name instanceof IChatBaseComponent)) {
+            return null;
+        }
         return new DataWatcher.WatchableObject(4, 2, c((IChatBaseComponent) name));
     }
 
@@ -236,31 +283,53 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public void spawnEntity(Player player, int eid, UUID id, EntityType type, Location l) {
+        serializer.clear();
+        serializer.b(eid);
+        serializer.writeByte(getEntityTypeId(type));
+        serializer.writeInt(MathHelper.floor(l.getX() * 32));
+        serializer.writeInt(MathHelper.floor(l.getY() * 32));
+        serializer.writeInt(MathHelper.floor(l.getZ() * 32));
+        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(l.getPitch() * 256.0F / 360.0F));
+        serializer.writeInt(1);
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+
         PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", MathHelper.floor(l.getX() * 32.0D));
-        r.set("c", MathHelper.floor(l.getY() * 32.0D));
-        r.set("d", MathHelper.floor(l.getZ() * 32.0D));
-        r.set("h", MathHelper.d(l.getPitch() * 256.0F / 360.0F));
-        r.set("i", MathHelper.d(l.getYaw() * 256.0F / 360.0F));
-        r.set("j", getEntityTypeId(type));
+        try {
+            packet.a(serializer);
+        } catch (IOException e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
+            return;
+        }
+
         sendPacket(player, packet);
     }
 
     @Override
     public void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l) {
+        serializer.clear();
+        serializer.b(eid);
+        serializer.writeByte(getEntityTypeId(type));
+        serializer.writeInt(MathHelper.floor(l.getX() * 32));
+        serializer.writeInt(MathHelper.floor(l.getY() * 32));
+        serializer.writeInt(MathHelper.floor(l.getZ() * 32));
+        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(l.getPitch() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", getEntityTypeId(type));
-        r.set("c", MathHelper.floor(l.getX() * 32.0D));
-        r.set("d", MathHelper.floor(l.getY() * 32.0D));
-        r.set("e", MathHelper.floor(l.getZ() * 32.0D));
-        r.set("i", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
-        r.set("j", (byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
-        r.set("k", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
-        r.set("l", new DataWatcher(null));
+        try {
+            packet.a(serializer);
+        } catch (IOException e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
+            return;
+        }
+
         sendPacket(player, packet);
     }
 
@@ -290,15 +359,19 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public void updatePassengers(Player player, int eid, int... passengers) {
+        serializer.clear();
+        serializer.writeInt(eid);
+        serializer.writeInt(passengers != null && passengers.length >= 1 ? passengers[0] : -1);
+        serializer.writeByte(0);
+
         PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
-        R r = new R(packet);
-        r.set("a", 0);
-        r.set("b", eid);
-        if (passengers != null && passengers.length > 0) {
-            r.set("c", passengers[0]);
-        } else {
-            r.set("c", -1);
+        try {
+            packet.a(serializer);
+        } catch (IOException e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to update passengers: " + e.getMessage());
+            return;
         }
+
         sendPacket(player, packet);
     }
 

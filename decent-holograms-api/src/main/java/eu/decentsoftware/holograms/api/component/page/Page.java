@@ -1,6 +1,23 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.api.component.page;
 
-import eu.decentsoftware.holograms.api.component.common.IClickable;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -12,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
-public interface Page extends IClickable {
+public interface Page {
 
     /**
      * Get the parent {@link Hologram} of this page.
@@ -70,6 +87,13 @@ public interface Page extends IClickable {
      * for each viewer.
      */
     void recalculate();
+
+    /**
+     * Recalculates the positions of all the lines of this page. Making sure they are
+     * aligned correctly. This method also teleports the lines to the correct location
+     * for the given player.
+     */
+    void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads);
 
     /**
      * Get the next {@link Location}, that's free to use for a line.

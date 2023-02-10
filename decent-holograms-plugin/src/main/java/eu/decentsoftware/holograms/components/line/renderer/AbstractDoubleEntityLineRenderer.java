@@ -1,8 +1,26 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.line.renderer;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.component.line.Line;
-import eu.decentsoftware.holograms.api.component.line.LineType;
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
+import eu.decentsoftware.holograms.api.component.line.HologramLineType;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -23,7 +41,7 @@ public abstract class AbstractDoubleEntityLineRenderer extends AbstractLineRende
     protected final int eid;
     protected final int eidOther;
 
-    public AbstractDoubleEntityLineRenderer(@NotNull Line parent, @NotNull LineType type) {
+    public AbstractDoubleEntityLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         super(parent, type);
         this.eid = DecentHolograms.getFreeEntityId();
         this.eidOther = DecentHolograms.getFreeEntityId();

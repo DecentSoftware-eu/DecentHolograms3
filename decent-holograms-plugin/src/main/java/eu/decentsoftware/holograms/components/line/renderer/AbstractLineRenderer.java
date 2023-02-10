@@ -1,13 +1,31 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms.components.line.renderer;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.component.line.Line;
-import eu.decentsoftware.holograms.api.component.line.LineRenderer;
-import eu.decentsoftware.holograms.api.component.line.LineType;
-import eu.decentsoftware.holograms.api.nms.NMSAdapter;
+import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
+import eu.decentsoftware.holograms.api.component.line.HologramLineRenderer;
+import eu.decentsoftware.holograms.api.component.line.HologramLineType;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractLineRenderer implements LineRenderer {
+public abstract class AbstractLineRenderer implements HologramLineRenderer {
 
     /*
      * TODO:
@@ -15,13 +33,13 @@ public abstract class AbstractLineRenderer implements LineRenderer {
      *  - Add offsets to align the lines properly
      */
 
-    protected static final DecentHolograms API = DecentHolograms.getInstance();
-    protected static final NMSAdapter NMS = API.getNMSProvider().getAdapter();
+    protected static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    protected static final NMSAdapter NMS = PLUGIN.getNMSManager().getAdapter();
 
-    private final @NotNull Line parent;
-    private final @NotNull LineType type;
+    private final @NotNull HologramLine parent;
+    private final @NotNull HologramLineType type;
 
-    public AbstractLineRenderer(@NotNull Line parent, @NotNull LineType type) {
+    public AbstractLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         this.parent = parent;
         this.type = type;
     }
@@ -38,13 +56,13 @@ public abstract class AbstractLineRenderer implements LineRenderer {
 
     @NotNull
     @Override
-    public Line getParent() {
+    public HologramLine getParent() {
         return parent;
     }
 
     @NotNull
     @Override
-    public LineType getType() {
+    public HologramLineType getType() {
         return type;
     }
 

@@ -29,12 +29,12 @@
         <dependency>
             <groupId>eu.decentsoftware</groupId>
             <artifactId>decent-holograms-api</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <!-- SpigotAPI -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- PlaceholderAPI -->
@@ -76,6 +76,12 @@
             <artifactId>skullcreator</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <!-- Particle -->
+        <dependency>
+            <groupId>xyz.xenondevs</groupId>
+            <artifactId>particle</artifactId>
+            <version>1.8.1</version>
+        </dependency>
         <!-- Adventure -->
         <dependency>
             <groupId>net.kyori</groupId>
@@ -98,15 +104,15 @@
             <artifactId>cloud-bukkit</artifactId>
             <version>1.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>cloud.commandframework</groupId>
+            <artifactId>cloud-annotations</artifactId>
+            <version>1.7.1</version>
+        </dependency>
         <!-- NMS Versions -->
         <dependency>
             <groupId>eu.decentsoftware</groupId>
-            <artifactId>decent-holograms-v1_8_R1</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.decentsoftware</groupId>
-            <artifactId>decent-holograms-v1_8_R2</artifactId>
+            <artifactId>decent-holograms-nms-commons</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -124,6 +130,16 @@
             <artifactId>decent-holograms-v1_9_R2</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>eu.decentsoftware</groupId>
+            <artifactId>decent-holograms-v1_19_R1</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.decentsoftware</groupId>
+            <artifactId>decent-holograms-v1_19_R2</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -137,6 +153,13 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>cloud.commandframework</groupId>
+                            <artifactId>cloud-annotations</artifactId>
+                            <version>1.7.1</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <!-- Shade plugin -->

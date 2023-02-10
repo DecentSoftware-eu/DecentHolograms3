@@ -1,47 +1,67 @@
+/*
+ * DecentHolograms
+ * Copyright (C) DecentSoftware.eu
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package eu.decentsoftware.holograms;
 
+import cloud.commandframework.annotations.AnnotationParser;
+import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.exceptions.NoPermissionException;
+import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionSerializer;
-import eu.decentsoftware.holograms.actions.DefaultActionTypeRegistry;
 import eu.decentsoftware.holograms.api.DecentHolograms;
-import eu.decentsoftware.holograms.api.actions.Action;
-import eu.decentsoftware.holograms.api.actions.ActionTypeRegistry;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
-import eu.decentsoftware.holograms.api.conditions.Condition;
-import eu.decentsoftware.holograms.api.conditions.ConditionTypeRegistry;
-import eu.decentsoftware.holograms.api.nms.NMSProvider;
-import eu.decentsoftware.holograms.api.profile.ProfileRegistry;
-import eu.decentsoftware.holograms.api.replacements.ReplacementRegistry;
-import eu.decentsoftware.holograms.api.server.ServerRegistry;
-import eu.decentsoftware.holograms.api.ticker.Ticker;
-import eu.decentsoftware.holograms.api.utils.reflect.R;
+import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.components.line.content.DefaultContentParserManager;
 import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
+import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionSerializer;
-import eu.decentsoftware.holograms.conditions.DefaultConditionTypeRegistry;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
-import eu.decentsoftware.holograms.nms.DefaultNMSProvider;
-import eu.decentsoftware.holograms.profile.DefaultProfileRegistry;
-import eu.decentsoftware.holograms.replacements.DefaultReplacementRegistry;
-import eu.decentsoftware.holograms.server.DefaultServerRegistry;
-import eu.decentsoftware.holograms.ticker.DefaultTicker;
+import eu.decentsoftware.holograms.nms.NMSManager;
+import eu.decentsoftware.holograms.nms.PacketListenerImpl;
+import eu.decentsoftware.holograms.nms.Version;
+import eu.decentsoftware.holograms.profile.ProfileRegistry;
+import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
+import eu.decentsoftware.holograms.server.ServerRegistry;
+import eu.decentsoftware.holograms.ticker.Ticker;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 /**
- * A lightweight yet very powerful hologram plugin.
+ * "Introducing a powerful hologram plugin that offers a wide range
+ * of features and customization options, all while maintaining
+ * a lightweight design for optimal performance."
  *
  * @author d0by
  */
@@ -49,15 +69,13 @@ import java.util.Arrays;
 public final class DecentHologramsPlugin extends DecentHolograms {
 
     @Getter(AccessLevel.NONE)
-    private NMSProvider nmsProvider;
+    private NMSManager nmsManager;
     private Gson gson;
     private Ticker ticker;
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
     private ReplacementRegistry replacementRegistry;
     private ContentParserManager contentParserManager;
-    private ActionTypeRegistry actionTypeRegistry;
-    private ConditionTypeRegistry conditionTypeRegistry;
     private HologramRegistry hologramRegistry;
 
     @Override
@@ -67,10 +85,11 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         // -- Attempt to initialize the NMS adapter.
         try {
-            this.nmsProvider = new DefaultNMSProvider();
+            this.nmsManager = new NMSManager();
+            this.nmsManager.setPacketListener(new PacketListenerImpl());
         } catch (IllegalStateException e) {
-            getLogger().severe("Your version (" + R.getVersion() + ") is not supported!");
-            getLogger().severe("Disabling...");
+            getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
+            getLogger().severe("*** Disabling...");
             getPluginLoader().disablePlugin(this);
             return;
         }
@@ -81,13 +100,11 @@ public final class DecentHologramsPlugin extends DecentHolograms {
                 .registerTypeAdapter(Condition.class, new ConditionSerializer())
                 .setPrettyPrinting()
                 .create();
-        this.ticker = new DefaultTicker();
-        this.profileRegistry = new DefaultProfileRegistry();
-        this.serverRegistry = new DefaultServerRegistry();
-        this.replacementRegistry = new DefaultReplacementRegistry();
+        this.ticker = new Ticker();
+        this.profileRegistry = new ProfileRegistry();
+        this.serverRegistry = new ServerRegistry();
+        this.replacementRegistry = new ReplacementRegistry();
         this.contentParserManager = new DefaultContentParserManager();
-        this.actionTypeRegistry = new DefaultActionTypeRegistry();
-        this.conditionTypeRegistry = new DefaultConditionTypeRegistry();
         this.hologramRegistry = new DefaultHologramRegistry();
 
         BungeeUtils.init();
@@ -96,18 +113,21 @@ public final class DecentHologramsPlugin extends DecentHolograms {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
 
+        // -- Commands
+        setupCommands();
+
         // -- Setup update checker if enabled
         setupUpdateChecker();
 
         if (PAPI.isAvailable()) {
-            BootProcess.log("Using PlaceholderAPI for placeholder support!");
+            BootMessenger.log("Using PlaceholderAPI for placeholder support!");
         }
-        BootProcess.sendAndFinish();
+        BootMessenger.sendAndFinish();
     }
 
     @Override
     public void onDisable() {
-        this.nmsProvider.shutdown();
+        this.nmsManager.shutdown();
         this.hologramRegistry.shutdown();
         this.replacementRegistry.shutdown();
         this.serverRegistry.shutdown();
@@ -124,11 +144,6 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         this.serverRegistry.reload();
         this.profileRegistry.reload();
-    }
-
-    @Override
-    public NMSProvider getNMSProvider() {
-        return nmsProvider;
     }
 
     /**
@@ -155,10 +170,48 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {
-                    BootProcess.log(Lang.formatString(Lang.UPDATE_MESSAGE));
+                    BootMessenger.log(Lang.formatString(Lang.UPDATE_MESSAGE));
                 }
             });
         }
+    }
+
+    private void setupCommands() {
+        try {
+            // -- Setup command manager
+            final BukkitCommandManager<CommandSender> manager = new BukkitCommandManager<>(
+                    this,
+                    CommandExecutionCoordinator.simpleCoordinator(),
+                    Function.identity(),
+                    Function.identity()
+            );
+
+            // -- Setup command parser
+            final AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
+                    manager,
+                    CommandSender.class,
+                    parameters -> SimpleCommandMeta.empty()
+            );
+
+            // -- Register exception handlers
+            manager.registerExceptionHandler(NoPermissionException.class, (sender, e) -> sender.sendMessage(Lang.NO_PERM));
+
+            // -- Register commands
+            annotationParser.parse(new TestCommand());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Contract(pure = true)
+    public NMSManager getNMSManager() {
+        return nmsManager;
+    }
+
+    @Contract(pure = true)
+    public static DecentHologramsPlugin getInstance() {
+        return (DecentHologramsPlugin) instance;
     }
 
 }
