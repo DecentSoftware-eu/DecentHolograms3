@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This enum represents all possible Condition types.
+ * This enum holds all possible Condition types.
  *
  * @author d0by
  * @since 3.0.0

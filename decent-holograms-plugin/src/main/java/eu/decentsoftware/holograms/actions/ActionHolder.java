@@ -19,12 +19,15 @@
 package eu.decentsoftware.holograms.actions;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import eu.decentsoftware.holograms.profile.Profile;
+import eu.decentsoftware.holograms.utils.Common;
+import eu.decentsoftware.holograms.utils.SchedulerUtil;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * This class represents a holder for actions.
@@ -40,6 +43,7 @@ public class ActionHolder {
         this(new ArrayList<>());
     }
 
+    @Contract(pure = true)
     public ActionHolder(@NotNull List<Action> actions) {
         this.actions = actions;
     }
@@ -112,6 +116,32 @@ public class ActionHolder {
     @NotNull
     public List<Action> getActions() {
         return ImmutableList.copyOf(actions);
+    }
+
+    /**
+     * Load an {@link ActionHolder} from a list of strings, returning the
+     * populated holder, with all actions that were successfully parsed.
+     *
+     * @param strings The list of strings.
+     * @return The populated holder.
+     * @see Action#fromString(String)
+     */
+    @NotNull
+    public static ActionHolder fromStrings(@NotNull List<String> strings) {
+        ActionHolder holder = new ActionHolder();
+        for (String string : strings) {
+            try {
+                Action action = Action.fromString(string);
+                if (action != null) {
+                    holder.addAction(action);
+                    continue;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Common.log(Level.WARNING, "Failed to parse action: " + string);
+        }
+        return holder;
     }
 
 }

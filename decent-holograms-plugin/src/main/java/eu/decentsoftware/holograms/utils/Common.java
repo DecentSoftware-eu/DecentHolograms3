@@ -44,6 +44,8 @@ import java.util.logging.Level;
 @UtilityClass
 public final class Common {
 
+	public static final String NON_ESCAPED_SEMICOLON_REGEX = "(?<!\\\\);";
+
 	/*
 	 * 	General
 	 */
