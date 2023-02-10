@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>eu.decentsoftware</groupId>
+    <groupId>eu.decentsoftware.holograms</groupId>
     <artifactId>DecentHolograms</artifactId>
     <packaging>pom</packaging>
     <version>3.0.0</version>
@@ -16,12 +16,16 @@
         <module>decent-holograms-api</module>
         <module>decent-holograms-plugin</module>
         <module>decent-holograms-nms</module>
-        <module>decent-holograms-nms/decent-holograms-nms-commons</module>
     </modules>
 
     <properties>
         <java.version>1.8</java.version>
+        <spigot.version>1.13-R0.1-SNAPSHOT</spigot.version>
+        <cloud.version>1.7.1</cloud.version>
+        <lombok.version>1.18.26</lombok.version>
+        <jetbrains.annotations.version>24.0.0</jetbrains.annotations.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <shadedPattern>eu.decentsoftware.holograms.libs</shadedPattern>
     </properties>
 
     <repositories>
@@ -37,18 +41,6 @@
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        <repository>
-            <id>nms-repo</id>
-            <url>https://repo.codemc.io/repository/nms/</url>
-        </repository>
-        <repository>
-            <id>placeholderapi-repo</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>ProtocolLib-repo</id>
-            <url>https://repo.dmulloy2.net/repository/public/</url>
-        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -57,34 +49,25 @@
             <dependency>
                 <groupId>org.spigotmc</groupId>
                 <artifactId>spigot-api</artifactId>
-                <version>1.13-R0.1-SNAPSHOT</version>
+                <version>${spigot.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- API -->
+            <!-- Lombok -->
             <dependency>
-                <groupId>eu.decentsoftware</groupId>
-                <artifactId>decent-holograms-api</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- JetBrains Annotations -->
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${jetbrains.annotations.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- JetBrains Annotations -->
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>23.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>

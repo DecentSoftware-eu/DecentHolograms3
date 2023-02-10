@@ -4,12 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<artifactId>decent-holograms-nms</artifactId>
-		<groupId>eu.decentsoftware</groupId>
+		<groupId>eu.decentsoftware.holograms</groupId>
 		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>decent-holograms-nms-commons</artifactId>
+
+	<repositories>
+		<repository>
+			<id>ProtocolLib-repo</id>
+			<url>https://repo.dmulloy2.net/repository/public/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<!-- SpigotAPI -->

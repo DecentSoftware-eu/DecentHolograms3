@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>DecentHolograms</artifactId>
-        <groupId>eu.decentsoftware</groupId>
+        <groupId>eu.decentsoftware.holograms</groupId>
         <version>3.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>decent-holograms-nms</artifactId>
     <packaging>pom</packaging>
+
     <modules>
         <module>decent-holograms-nms-commons</module>
         <module>decent-holograms-v1_8_R3</module>
@@ -20,21 +20,44 @@
         <module>decent-holograms-v1_19_R2</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>eu.decentsoftware</groupId>
-                <artifactId>decent-holograms-nms-commons</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>nms-repo</id>
+            <url>https://repo.codemc.io/repository/nms/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
+        <!-- API -->
         <dependency>
-            <groupId>eu.decentsoftware</groupId>
+            <groupId>eu.decentsoftware.holograms</groupId>
             <artifactId>decent-holograms-api</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- Annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
