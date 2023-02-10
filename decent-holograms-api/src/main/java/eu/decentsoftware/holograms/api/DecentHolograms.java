@@ -18,9 +18,7 @@
 
 package eu.decentsoftware.holograms.api;
 
-import com.google.gson.Gson;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import eu.decentsoftware.holograms.api.component.line.content.ContentParserManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 

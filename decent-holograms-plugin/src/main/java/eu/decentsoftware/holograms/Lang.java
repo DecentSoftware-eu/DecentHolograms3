@@ -114,7 +114,7 @@ public final class Lang {
      * @return The formatted string.
      */
     @NotNull
-    public String formatString(@NotNull String string, @Nullable Profile profile) {
+    public static String formatString(@NotNull String string, @Nullable Profile profile) {
         return formatString(string, profile, (Object) null);
     }
 
@@ -131,7 +131,7 @@ public final class Lang {
      * @return The formatted string.
      */
     @NotNull
-    public String formatString(@NotNull String string, @Nullable Profile profile, Object... args) {
+    public static String formatString(@NotNull String string, @Nullable Profile profile, Object... args) {
         if (args != null && args.length > 0) {
             string = String.format(string, args);
         }
@@ -157,7 +157,7 @@ public final class Lang {
      * @return The formatted string.
      */
     @NotNull
-    public String formatString(@NotNull String string, @Nullable Player player) {
+    public static String formatString(@NotNull String string, @Nullable Player player) {
         if (player == null) {
             return formatString(string, (Profile) null);
         }
@@ -177,7 +177,7 @@ public final class Lang {
      * @return The formatted string.
      */
     @NotNull
-    public String formatString(@NotNull String string, Object... args) {
+    public static String formatString(@NotNull String string, Object... args) {
         return formatString(string, null, args);
     }
 
@@ -188,7 +188,7 @@ public final class Lang {
      * @param message The message to send.
      * @see #formatString(String, Profile, Object...) for more information.
      */
-    public void tell(@NotNull CommandSender sender, @NotNull String message) {
+    public static void tell(@NotNull CommandSender sender, @NotNull String message) {
         if (sender instanceof Player) {
             message = formatString(message, (Player) sender);
         } else {
@@ -205,7 +205,7 @@ public final class Lang {
      * @param args    Java style arguments.
      * @see #formatString(String, Profile, Object...) for more information.
      */
-    public void tell(@NotNull CommandSender sender, @NotNull String message, @NotNull Object... args) {
+    public static void tell(@NotNull CommandSender sender, @NotNull String message, @NotNull Object... args) {
         tell(sender, String.format(message, args));
     }
 

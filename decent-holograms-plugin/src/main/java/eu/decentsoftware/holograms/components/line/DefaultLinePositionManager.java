@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.components.line;
 import eu.decentsoftware.holograms.api.component.hologram.HologramSettings;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.page.HologramPage;
-import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
+import eu.decentsoftware.holograms.components.DefaultPositionManager;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 

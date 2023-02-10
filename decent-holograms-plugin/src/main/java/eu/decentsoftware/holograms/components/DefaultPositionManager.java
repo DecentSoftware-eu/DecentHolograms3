@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.components.common;
+package eu.decentsoftware.holograms.components;
 
 import eu.decentsoftware.holograms.api.component.PositionManager;
 import org.bukkit.Location;

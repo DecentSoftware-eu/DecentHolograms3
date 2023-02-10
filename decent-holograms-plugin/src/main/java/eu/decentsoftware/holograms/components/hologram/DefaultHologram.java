@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.components.hologram;
 
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.HologramPage;
-import eu.decentsoftware.holograms.components.common.DefaultPositionManager;
+import eu.decentsoftware.holograms.components.DefaultPositionManager;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.AccessLevel;

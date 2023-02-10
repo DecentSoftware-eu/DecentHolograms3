@@ -29,7 +29,7 @@ import org.bukkit.command.CommandSender;
 @CommandContainer
 public class TestCommand {
 
-    @CommandMethod("test <message>")
+    @CommandMethod("test <price> <message>")
     @CommandDescription("Test command")
     @CommandPermission("decentholograms.test")
     public void test(
