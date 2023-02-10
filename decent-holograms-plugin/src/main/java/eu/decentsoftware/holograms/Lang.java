@@ -19,11 +19,11 @@
 package eu.decentsoftware.holograms;
 
 import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.hooks.PAPI;
+import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.config.CFG;
 import eu.decentsoftware.holograms.utils.config.ConfigValue;
-import eu.decentsoftware.holograms.hooks.PAPI;
-import eu.decentsoftware.holograms.profile.Profile;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -166,14 +166,19 @@ public final class Lang {
     }
 
     /**
-     * Format the given string replacing "{prefix}" with the plugin prefix and colorizing it.
+     * Format the given string for using all the features of this plugin
+     * and all the supported plugins as well.
+     * <p>
+     * This method will replace all the supported placeholders with the
+     * correct values and replace all the supported colors.
      *
      * @param string The string to format.
+     * @param args   Arguments to replace in the string.
      * @return The formatted string.
      */
     @NotNull
-    public static String formatString(@NotNull String string) {
-        return formatString(string, (Profile) null);
+    public String formatString(@NotNull String string, Object... args) {
+        return formatString(string, null, args);
     }
 
     /**
@@ -181,8 +186,7 @@ public final class Lang {
      *
      * @param sender  The command sender.
      * @param message The message to send.
-     * @see #formatString(String, Profile) for more information.
-     * @see #formatString(String) for more information.
+     * @see #formatString(String, Profile, Object...) for more information.
      */
     public void tell(@NotNull CommandSender sender, @NotNull String message) {
         if (sender instanceof Player) {
@@ -199,8 +203,7 @@ public final class Lang {
      * @param sender  The command sender.
      * @param message The message to send.
      * @param args    Java style arguments.
-     * @see #formatString(String, Profile) for more information.
-     * @see #formatString(String) for more information.
+     * @see #formatString(String, Profile, Object...) for more information.
      */
     public void tell(@NotNull CommandSender sender, @NotNull String message, @NotNull Object... args) {
         tell(sender, String.format(message, args));
