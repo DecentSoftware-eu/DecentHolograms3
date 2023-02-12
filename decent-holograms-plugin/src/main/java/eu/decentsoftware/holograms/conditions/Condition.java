@@ -30,6 +30,9 @@ import java.util.Optional;
 
 /**
  * This class represents a Condition. We can then check whether the Condition is met.
+ *
+ * @author d0by
+ * @since 3.0.0
  */
 @Getter
 @Setter

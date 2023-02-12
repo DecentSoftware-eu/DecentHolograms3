@@ -69,7 +69,7 @@ public class ConditionHolder {
                 continue;
             }
 
-            condition.getNotMetActions().ifPresent(actionHolder -> actionHolder.execute(profile));
+            condition.getNotMetActions().ifPresent(actions -> actions.execute(profile));
 
             if (condition.isRequired()) {
                 return false;

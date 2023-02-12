@@ -41,8 +41,6 @@ public enum ConditionType {
     REGEX(RegexCondition.class, "regex", "regex matches", "matches regex", "compare regex"),
     DISTANCE(DistanceCondition.class, "distance", "near", "is near"),
     EXP(ExpCondition.class, "exp", "has exp", "xp", "has xp"),
-//    ITEM(ItemCondition.class, "item", "has item"),
-//    JAVASCRIPT("javascript", "js"),
 
     // -- Comparing Numbers
     EQUAL(ComparingCondition.class, "==", "equals", "equal", "equal to", "is equal", "is equal to"),

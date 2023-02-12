@@ -78,7 +78,15 @@ public class SerializableLine {
         if (clickActions == null) {
             clickActions = new ActionHolder();
         }
-        return new DefaultHologramLine(page, settings, page.getNextLineLocation(), viewConditions, clickConditions, clickActions, content);
+        return new DefaultHologramLine(
+                page,
+                settings,
+                page.getNextLineLocation(),
+                viewConditions,
+                clickConditions,
+                clickActions,
+                content
+        );
     }
 
 }

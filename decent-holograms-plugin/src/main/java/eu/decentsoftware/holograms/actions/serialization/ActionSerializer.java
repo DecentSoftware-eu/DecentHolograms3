@@ -1,6 +1,8 @@
-package eu.decentsoftware.holograms.actions;
+package eu.decentsoftware.holograms.actions.serialization;
 
 import com.google.gson.*;
+import eu.decentsoftware.holograms.actions.Action;
+import eu.decentsoftware.holograms.actions.ActionType;
 
 import java.lang.reflect.Type;
 

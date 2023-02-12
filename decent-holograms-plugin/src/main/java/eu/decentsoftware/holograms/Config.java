@@ -44,8 +44,6 @@ public final class Config {
 
     @ConfigValue("check-for-updates")
     public static boolean CHECK_FOR_UPDATES = true;
-    @ConfigValue("per-hologram-file")
-    public static boolean PER_HOLOGRAM_FILE = true;
 
     // ========== DATETIME ========== //
 

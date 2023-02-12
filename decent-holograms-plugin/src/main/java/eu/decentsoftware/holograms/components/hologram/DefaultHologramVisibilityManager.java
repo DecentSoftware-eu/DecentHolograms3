@@ -90,13 +90,13 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
 
         // Check if the player is in the view distance.
         boolean inViewDistance = MathUtil.inDistance(
-                getParent().getPositionManager().getActualLocation(),
+                parent.getPositionManager().getActualLocation(),
                 player.getLocation(),
-                getParent().getSettings().getViewDistance()
+                parent.getSettings().getViewDistance()
         );
 
         // Check if the player satisfies the view conditions.
-        boolean meetsConditions = !isVisibleByDefault() || getParent().getViewConditionHolder().check(profile);
+        boolean meetsConditions = !isVisibleByDefault() || parent.getViewConditions().check(profile);
 
         if (isViewing(player) && (!inViewDistance || !meetsConditions)) {
             // If the player is currently viewing the hologram but is no
@@ -231,7 +231,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
      */
     private Optional<HologramPage> getPageObject(@NotNull Player player) {
         int pageIndex = getPage(player);
-        HologramPage page = getParent().getPageHolder().getPage(pageIndex);
+        HologramPage page = parent.getPage(pageIndex);
         return Optional.ofNullable(page);
     }
 

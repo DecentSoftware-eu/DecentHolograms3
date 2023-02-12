@@ -76,7 +76,7 @@ public final class BootMessenger {
         console.sendMessage(Lang.formatString(" &f- Spigot Page:&b https://www.spigotmc.org/resources/96927/"));
         console.sendMessage("――――――――――――――――――――――――――――――――――――――――――――――――――");
         for (String message : messages) {
-            console.sendMessage(Lang.formatString(" &a" + message));
+            console.sendMessage(Lang.formatString(" &b" + message));
         }
         console.sendMessage("――――――――――――――――――――――――――――――――――――――――――――――――――");
 

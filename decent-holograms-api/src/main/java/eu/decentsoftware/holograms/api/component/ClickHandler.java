@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.component.hologram;
+package eu.decentsoftware.holograms.api.component;
 
+import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 3.0.0
  */
 @FunctionalInterface
-public interface HologramClickHandler {
+public interface ClickHandler {
 
     /**
      * Handle a click on a hologram.

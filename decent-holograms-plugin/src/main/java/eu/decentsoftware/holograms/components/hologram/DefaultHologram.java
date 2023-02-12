@@ -33,10 +33,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 public class DefaultHologram implements Hologram, Ticked {
 
-    // TODO:
-    //  animations
-    //  lighting
-
     private final @NotNull String name;
     private final @NotNull HologramConfig config;
     private final @NotNull HologramSettings settings;

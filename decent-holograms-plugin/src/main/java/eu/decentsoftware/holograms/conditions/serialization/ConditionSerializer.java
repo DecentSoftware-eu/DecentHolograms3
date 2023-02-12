@@ -1,6 +1,8 @@
-package eu.decentsoftware.holograms.conditions;
+package eu.decentsoftware.holograms.conditions.serialization;
 
 import com.google.gson.*;
+import eu.decentsoftware.holograms.conditions.Condition;
+import eu.decentsoftware.holograms.conditions.ConditionType;
 
 import java.lang.reflect.Type;
 
