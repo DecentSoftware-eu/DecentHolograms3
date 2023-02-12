@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ComparingCondition extends Condition {
 
-    private final ConditionType type;
-    private final String compare;
-    private final String input;
+    private transient final @NotNull ConditionType type;
+    private final @NotNull String compare;
+    private final @NotNull String input;
 
     public ComparingCondition(@NotNull ConditionType type, @NotNull String compare, @NotNull String input) {
         this(false, type, compare, input);

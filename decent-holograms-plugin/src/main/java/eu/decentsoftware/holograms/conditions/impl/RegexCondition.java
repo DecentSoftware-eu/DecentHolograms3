@@ -22,19 +22,16 @@ import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.profile.Profile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class RegexCondition extends Condition {
 
-    private final @NotNull Pattern pattern;
+    private final @NotNull String pattern;
     private final @NotNull String input;
 
-    public RegexCondition(@NotNull Pattern pattern, @NotNull String input) {
+    public RegexCondition(@NotNull String pattern, @NotNull String input) {
         this(false, pattern, input);
     }
 
-    public RegexCondition(boolean inverted, @NotNull Pattern pattern, @NotNull String input) {
+    public RegexCondition(boolean inverted, @NotNull String pattern, @NotNull String input) {
         super(inverted);
         this.pattern = pattern;
         this.input = input;
@@ -42,8 +39,7 @@ public class RegexCondition extends Condition {
 
     @Override
     public boolean check(@NotNull Profile profile) {
-        Matcher matcher = pattern.matcher(input);
-        return matcher.matches();
+        return input.matches(pattern);
     }
 
 }

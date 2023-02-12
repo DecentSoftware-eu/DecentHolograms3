@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * This class represents a Condition. We can then check whether the Condition is met.
  */
@@ -35,7 +37,6 @@ public abstract class Condition {
 
     protected boolean inverted;
     protected boolean required;
-    protected @Nullable ActionHolder metActions;
     protected @Nullable ActionHolder notMetActions;
 
     /**
@@ -55,6 +56,15 @@ public abstract class Condition {
     public Condition(boolean inverted) {
         this.inverted = inverted;
         this.required = true;
+    }
+
+    /**
+     * Get the {@link ActionHolder} that should be executed if the condition is not met.
+     *
+     * @return Optional of the {@link ActionHolder}.
+     */
+    public Optional<ActionHolder> getNotMetActions() {
+        return Optional.ofNullable(notMetActions);
     }
 
     /**

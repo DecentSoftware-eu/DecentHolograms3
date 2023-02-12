@@ -19,15 +19,16 @@
 package eu.decentsoftware.holograms.conditions;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.profile.Profile;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a holder for conditions.
+ * This class represents a holder for conditions. It stores a list of conditions and
+ * provides methods to modify this list or to check all conditions.
  *
  * @author d0by
  * @since 3.0.0
@@ -36,10 +37,19 @@ public class ConditionHolder {
 
     private final @NotNull List<Condition> conditions;
 
+    /**
+     * Create a new {@link ConditionHolder} with no conditions. You can add conditions later.
+     */
     public ConditionHolder() {
         this(new ArrayList<>());
     }
 
+    /**
+     * Create a new {@link ConditionHolder} with the given conditions.
+     *
+     * @param conditions The list of conditions.
+     */
+    @Contract(pure = true)
     public ConditionHolder(@NotNull List<Condition> conditions) {
         this.conditions = conditions;
     }
@@ -52,28 +62,21 @@ public class ConditionHolder {
      * @return true if all the conditions are fulfilled, false otherwise.
      */
     public boolean check(@NotNull Profile profile) {
-        boolean success = true;
         for (Condition condition : getConditions()) {
             // Check and flip if inverted.
             boolean fulfilled = condition.isInverted() != condition.check(profile);
-            ActionHolder actions;
-            if (!fulfilled) {
-                // Not met
-                if ((actions = condition.getNotMetActions()) != null) {
-                    // Execute 'not met' actions if any.
-                    actions.execute(profile);
-                }
-                if (condition.isRequired()) {
-                    // Not all required conditions are fulfilled.
-                    success = false;
-                }
-            } else if ((actions = condition.getMetActions()) != null) {
-                // Execute 'met' actions if any.
-                actions.execute(profile);
+            if (fulfilled) {
+                continue;
+            }
+
+            condition.getNotMetActions().ifPresent(actionHolder -> actionHolder.execute(profile));
+
+            if (condition.isRequired()) {
+                return false;
             }
         }
         // All conditions are fulfilled.
-        return success;
+        return true;
     }
 
     /**

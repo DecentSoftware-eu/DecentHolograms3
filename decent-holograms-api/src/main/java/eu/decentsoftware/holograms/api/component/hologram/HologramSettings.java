@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.api.component.hologram;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class represents the settings of a hologram.
+ * This class holds all the settings for a hologram.
  *
  * @author d0by
  * @since 3.0.0
