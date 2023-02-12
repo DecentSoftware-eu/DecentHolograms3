@@ -24,7 +24,8 @@ import eu.decentsoftware.holograms.components.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.components.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.components.line.SerializableLine;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -36,12 +37,13 @@ import java.util.List;
  * @author d0by
  * @since 3.0.0
  */
-@Data
+@Getter
+@AllArgsConstructor
 public class SerializablePage {
 
     private final @NotNull List<SerializableLine> lines;
-    private final @NotNull ConditionHolder clickConditions;
-    private final @NotNull ActionHolder clickActions;
+    private ConditionHolder clickConditions;
+    private ActionHolder clickActions;
 
     /**
      * Create a new {@link SerializablePage} from the given {@link DefaultHologramPage}.
@@ -72,7 +74,17 @@ public class SerializablePage {
      */
     @NotNull
     public DefaultHologramPage toPage(@NotNull DefaultHologram hologram) {
-        DefaultHologramPage page = new DefaultHologramPage(hologram, clickConditions, clickActions);
+        if (clickConditions == null) {
+            clickConditions = new ConditionHolder();
+        }
+        if (clickActions == null) {
+            clickActions = new ActionHolder();
+        }
+        DefaultHologramPage page = new DefaultHologramPage(
+                hologram,
+                clickConditions,
+                clickActions
+        );
         List<HologramLine> lines = new ArrayList<>();
         for (SerializableLine line : this.lines) {
             DefaultHologramLine defaultLine = line.toLine(page);
