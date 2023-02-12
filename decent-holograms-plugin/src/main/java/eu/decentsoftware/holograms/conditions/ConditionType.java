@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.conditions;
 
+import eu.decentsoftware.holograms.conditions.impl.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,33 +33,35 @@ import java.util.Set;
  * @author d0by
  * @since 3.0.0
  */
+@Getter
 @SuppressWarnings("SpellCheckingInspection")
 public enum ConditionType {
-    MONEY("money", "has money"),
-    PERMISSION("permission", "has permission", "perm", "has perm"),
-    REGEX("regex", "regex matches", "matches regex", "compare regex"),
-    DISTANCE("distance", "near", "is near"),
-    EXP("exp", "has exp", "xp", "has xp"),
-    ITEM("item", "has item"),
-    JAVASCRIPT("javascript", "js"),
+    MONEY(MoneyCondition.class, "money", "has money"),
+    PERMISSION(PermissionCondition.class, "permission", "has permission", "perm", "has perm"),
+    REGEX(RegexCondition.class, "regex", "regex matches", "matches regex", "compare regex"),
+    DISTANCE(DistanceCondition.class, "distance", "near", "is near"),
+    EXP(ExpCondition.class, "exp", "has exp", "xp", "has xp"),
+//    ITEM(ItemCondition.class, "item", "has item"),
+//    JAVASCRIPT("javascript", "js"),
 
-    // -- Numbers
-    EQUAL("==", "equals", "equal", "equal to", "is equal", "is equal to"),
-    LESS("<", "less", "is less", "less than", "isless than"),
-    LESS_EQUAL("<=", "less or equal", "is less or equal", "less than or equal", "is less than or equal"),
-    GREATER(">", "greater", "is greater", "greater than", "is greater than"),
-    GREATER_EQUAL(">=", "greater or equal", "is greater or equal", "greater than or equal", "is greater than or equal"),
+    // -- Comparing Numbers
+    EQUAL(ComparingCondition.class, "==", "equals", "equal", "equal to", "is equal", "is equal to"),
+    LESS(ComparingCondition.class, "<", "less", "is less", "less than", "isless than"),
+    LESS_EQUAL(ComparingCondition.class, "<=", "less or equal", "is less or equal", "less than or equal", "is less than or equal"),
+    GREATER(ComparingCondition.class, ">", "greater", "is greater", "greater than", "is greater than"),
+    GREATER_EQUAL(ComparingCondition.class, ">=", "greater or equal", "is greater or equal", "greater than or equal", "is greater than or equal"),
 
-    // -- Strings
-    STRING_EQUAL("string equals"),
-    STRING_EQUAL_IGNORECASE("string equals ignore case"),
-    STRING_CONTAINS("string contains"),
+    // -- Comparing Strings
+    STRING_EQUAL(ComparingCondition.class, "string equals"),
+    STRING_EQUAL_IGNORECASE(ComparingCondition.class, "string equals ignore case"),
+    STRING_CONTAINS(ComparingCondition.class, "string contains"),
     ;
 
-    @Getter
-    private final Set<String> aliases;
+    private final @NotNull Class<? extends Condition> conditionClass;
+    private final @NotNull Set<String> aliases;
 
-    ConditionType(String... aliases) {
+    ConditionType(@NotNull Class<? extends Condition> conditionClass, String... aliases) {
+        this.conditionClass = conditionClass;
         this.aliases = new HashSet<>();
         if (aliases != null) {
             this.aliases.addAll(Arrays.asList(aliases));
@@ -78,6 +81,22 @@ public enum ConditionType {
                 if (alias.trim().equalsIgnoreCase(string.trim())) {
                     return conditionType;
                 }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find an {@link ConditionType} by the given class.
+     *
+     * @param clazz The class.
+     * @return The ConditionType or null if the class doesn't match any.
+     */
+    @Nullable
+    public static ConditionType fromClass(@NotNull Class<? extends Condition> clazz) {
+        for (ConditionType conditionType : values()) {
+            if (conditionType.getConditionClass().equals(clazz)) {
+                return conditionType;
             }
         }
         return null;

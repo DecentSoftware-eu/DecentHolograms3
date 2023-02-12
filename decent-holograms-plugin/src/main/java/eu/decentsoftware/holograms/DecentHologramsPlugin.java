@@ -25,12 +25,16 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import eu.decentsoftware.holograms.actions.Action;
+import eu.decentsoftware.holograms.actions.ActionSerializer;
 import eu.decentsoftware.holograms.api.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.components.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
+import eu.decentsoftware.holograms.conditions.Condition;
+import eu.decentsoftware.holograms.conditions.ConditionSerializer;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.NMSManager;
@@ -91,6 +95,8 @@ public final class DecentHologramsPlugin extends DecentHolograms {
 
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Location.class, new LocationSerializer())
+                .registerTypeAdapter(Action.class, new ActionSerializer())
+                .registerTypeAdapter(Condition.class, new ConditionSerializer())
                 .setPrettyPrinting()
                 .create();
         this.ticker = new Ticker();
