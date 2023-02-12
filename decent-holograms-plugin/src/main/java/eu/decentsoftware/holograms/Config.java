@@ -103,7 +103,7 @@ public final class Config {
             config.reload();
         }
 
-        CFG.load(Config.class, config.getFile());
+        CFG.load(PLUGIN, Config.class, config.getFile());
     }
 
     /*

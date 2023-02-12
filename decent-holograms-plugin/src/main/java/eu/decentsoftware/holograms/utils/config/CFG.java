@@ -18,10 +18,10 @@
 
 package eu.decentsoftware.holograms.utils.config;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
 import lombok.experimental.UtilityClass;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,31 +48,31 @@ public final class CFG {
      * @return The {@link YamlConfiguration} created from the file.
      */
     @Nullable
-    public static YamlConfiguration load(@NotNull Object object, @NotNull File file) {
+    public static YamlConfiguration load(@NotNull JavaPlugin plugin, @NotNull Object object, @NotNull File file) {
         try {
             // -- Prepare the dirs
             if (!file.getParentFile().isDirectory() && !file.getParentFile().mkdirs()) {
                 return null;
             }
             // -- Get the YamlConfiguration
-            YamlConfiguration config = (YamlConfiguration) CFG.saveIntoConfigurationFromObject(object);
+            YamlConfiguration config;
             if (!file.exists()) {
                 // -- If the missing file is a resource, use it
-                InputStream is = DecentHolograms.getInstance().getResource(file.getName());
+                InputStream is = plugin.getResource(file.getName());
                 if (is != null) {
                     InputStreamReader isr = new InputStreamReader(is);
                     config = YamlConfiguration.loadConfiguration(isr);
                     config.save(file);
                     CFG.loadFromConfigurationToObject(object, config);
                     return config;
+                } else {
+                    config = (YamlConfiguration) CFG.saveIntoConfigurationFromObject(object);
+                    config.save(file);
                 }
-                config.save(file);
             } else {
-                config.load(file);
+                config = YamlConfiguration.loadConfiguration(file);
+                CFG.loadFromConfigurationToObject(object, config);
             }
-            // -- Load & Save
-            CFG.loadFromConfigurationToObject(object, config);
-            ((YamlConfiguration) CFG.saveIntoConfigurationFromObject(object, config)).save(file);
             return config;
         } catch (Exception e) {
             e.printStackTrace();

@@ -95,7 +95,7 @@ public final class Lang {
      * @since 1.0.0
      */
     public static void reload() {
-        CFG.load(Lang.class, getFile());
+        CFG.load(PLUGIN, Lang.class, getFile());
     }
 
     /*
