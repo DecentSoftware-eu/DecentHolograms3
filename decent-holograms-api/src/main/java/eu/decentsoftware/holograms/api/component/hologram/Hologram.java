@@ -19,7 +19,10 @@
 package eu.decentsoftware.holograms.api.component.hologram;
 
 import eu.decentsoftware.holograms.api.component.PositionManager;
+import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * This class represents a hologram. A hologram is a collection of components
@@ -84,12 +87,61 @@ public interface Hologram {
     HologramVisibilityManager getVisibilityManager();
 
     /**
-     * The page holder of the hologram, used for managing the pages of the hologram.
+     * Get the page at the given index.
      *
-     * @return The page holder of the hologram.
-     * @see HologramPageHolder
+     * @param index The index of the page to get.
+     * @return The page at the given index.
+     */
+    HologramPage getPage(int index);
+
+    /**
+     * Get the index of the given page.
+     *
+     * @param page The page to get the index of.
+     * @return The index or -1 if the given page in not present in this page holder.
+     */
+    int getIndex(@NotNull HologramPage page);
+
+    /**
+     * Add a page to this hologram.
+     *
+     * @param page The page to add.
+     */
+    void addPage(@NotNull HologramPage page);
+
+    /**
+     * Insert a page to this hologram at the specified index.
+     *
+     * @param index The index to insert the page at.
+     * @param page The page to insert.
+     */
+    void addPage(int index, @NotNull HologramPage page);
+
+    /**
+     * Remove a page from this hologram by its index.
+     *
+     * @param index The index of the page to remove.
+     */
+    void removePage(int index);
+
+    /**
+     * Remove all pages from this hologram.
+     */
+    void clearPages();
+
+    /**
+     * Set the pages of this hologram.
+     *
+     * @param pages The pages to set.
+     */
+    void setPages(@NotNull List<HologramPage> pages);
+
+    /**
+     * Get the list of pages in this hologram. The returned list is immutable.
+     *
+     * @return Immutable list of pages in this hologram.
      */
     @NotNull
-    HologramPageHolder getPageHolder();
+    List<HologramPage> getPages();
 
 }

@@ -56,7 +56,7 @@ public class SerializableHologram {
     @NotNull
     public static SerializableHologram fromHologram(@NotNull DefaultHologram hologram) {
         List<SerializablePage> pages = new ArrayList<>();
-        for (HologramPage page : hologram.getPageHolder().getPages()) {
+        for (HologramPage page : hologram.getPages()) {
             DefaultHologramPage defaultPage = (DefaultHologramPage) page;
             SerializablePage serializablePage = SerializablePage.fromPage(defaultPage);
             pages.add(serializablePage);
@@ -64,7 +64,7 @@ public class SerializableHologram {
         return new SerializableHologram(
                 hologram.getPositionManager().getLocation(),
                 (DefaultHologramSettings) hologram.getSettings(),
-                hologram.getViewConditionHolder(),
+                hologram.getViewConditions(),
                 pages
         );
     }
@@ -91,7 +91,7 @@ public class SerializableHologram {
             DefaultHologramPage defaultPage = page.toPage(hologram);
             pages.add(defaultPage);
         }
-        hologram.getPageHolder().setPages(pages);
+        hologram.setPages(pages);
         return hologram;
     }
 

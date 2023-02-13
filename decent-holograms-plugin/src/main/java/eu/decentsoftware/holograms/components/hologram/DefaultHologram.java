@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.components.hologram;
 
+import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.component.hologram.*;
 import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.components.DefaultPositionManager;
@@ -25,9 +26,14 @@ import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
@@ -38,11 +44,11 @@ public class DefaultHologram implements Hologram, Ticked {
     private final @NotNull HologramSettings settings;
     private final @NotNull DefaultPositionManager positionManager;
     private final @NotNull HologramVisibilityManager visibilityManager;
-    private final @NotNull HologramPageHolder pageHolder;
+    private final @NotNull List<HologramPage> pages;
     /**
      * The condition holder of the hologram, used for managing the view conditions of the hologram.
      */
-    private final @NotNull ConditionHolder viewConditionHolder;
+    private final @NotNull ConditionHolder viewConditions;
 
     @Getter(AccessLevel.NONE)
     private final @NotNull AtomicLong lastVisibilityUpdate;
@@ -73,8 +79,8 @@ public class DefaultHologram implements Hologram, Ticked {
         this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
-        this.pageHolder = new DefaultHologramPageHolder(this);
-        this.viewConditionHolder = new ConditionHolder();
+        this.pages = new ArrayList<>();
+        this.viewConditions = new ConditionHolder();
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
 
@@ -86,14 +92,14 @@ public class DefaultHologram implements Hologram, Ticked {
     }
 
     protected DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
-                              @NotNull ConditionHolder viewConditionHolder) {
+                              @NotNull ConditionHolder viewConditions) {
         this.name = name;
         this.config = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);
         this.settings = settings;
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
-        this.pageHolder = new DefaultHologramPageHolder(this);
-        this.viewConditionHolder = viewConditionHolder;
+        this.pages = new ArrayList<>();
+        this.viewConditions = viewConditions;
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
 
@@ -116,7 +122,7 @@ public class DefaultHologram implements Hologram, Ticked {
                 || settings.isRotateVertical()
                 || settings.isRotateHeads()
         ) {
-            pageHolder.getPages().forEach(HologramPage::recalculate);
+            getPages().forEach(HologramPage::recalculate);
         }
 
         // Update the visibility of the hologram if the time difference is greater than 500ms.
@@ -136,6 +142,74 @@ public class DefaultHologram implements Hologram, Ticked {
     public void destroy() {
         this.stopTicking();
         visibilityManager.destroy();
+    }
+
+    @Override
+    public HologramPage getPage(int index) {
+        return pages.get(index);
+    }
+
+    @Override
+    public int getIndex(@NotNull HologramPage page) {
+        return pages.contains(page) ? getPages().indexOf(page) : -1;
+    }
+
+    @Override
+    public void addPage(@NotNull HologramPage page) {
+        pages.add(page);
+    }
+
+    @Override
+    public void addPage(int index, @NotNull HologramPage page) {
+        pages.add(index, page);
+
+        // Shift the player page indexes in visibility manager.
+        shiftPlayerPages(index, 1);
+    }
+
+    @Override
+    public void removePage(int index) {
+        pages.remove(index);
+
+        // Shift the player page indexes in visibility manager.
+        shiftPlayerPages(index, -1);
+    }
+
+    @Override
+    public void clearPages() {
+        pages.clear();
+
+        // Reset the player page indexes in visibility manager to 0.
+        visibilityManager.getPlayerPages().replaceAll((k, v) -> 0);
+    }
+
+    @Override
+    public void setPages(@NotNull List<HologramPage> pages) {
+        clearPages();
+        this.pages.addAll(pages);
+    }
+
+    @NotNull
+    @Override
+    public List<HologramPage> getPages() {
+        return ImmutableList.copyOf(pages);
+    }
+
+    /**
+     * Shift the player page indexes in visibility manager by the given amount at the given index.
+     *
+     * @param index The index to start shifting from.
+     * @param shift The amount to shift by.
+     */
+    private void shiftPlayerPages(int index, int shift) {
+        for (Map.Entry<String, Integer> entry : visibilityManager.getPlayerPages().entrySet()) {
+            if (entry.getValue() >= index) {
+                Player player = Bukkit.getPlayer(entry.getKey());
+                if (player != null) {
+                    visibilityManager.setPage(player, entry.getValue() + shift);
+                }
+            }
+        }
     }
 
 }
