@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class IconLineRenderer extends AbstractDoubleEntityLineRenderer {
+public class IconLineRenderer extends DoubleEntityLineRenderer {
 
     private final @NotNull DecentItemStack itemStack;
 

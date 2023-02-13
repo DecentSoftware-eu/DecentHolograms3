@@ -25,7 +25,7 @@ import eu.decentsoftware.holograms.api.component.line.HologramLineType;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractLineRenderer implements HologramLineRenderer {
+public abstract class LineRenderer implements HologramLineRenderer {
 
     /*
      * TODO:
@@ -39,7 +39,7 @@ public abstract class AbstractLineRenderer implements HologramLineRenderer {
     private final @NotNull HologramLine parent;
     private final @NotNull HologramLineType type;
 
-    public AbstractLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
+    public LineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         this.parent = parent;
         this.type = type;
     }

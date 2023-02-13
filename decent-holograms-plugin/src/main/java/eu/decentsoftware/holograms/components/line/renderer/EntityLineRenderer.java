@@ -24,7 +24,7 @@ import eu.decentsoftware.holograms.components.line.content.objects.DecentEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class EntityLineRenderer extends AbstractDoubleEntityLineRenderer {
+public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
     private final @NotNull DecentEntity entity;
 

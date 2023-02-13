@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class HeadLineRenderer extends AbstractLineRenderer {
+public class HeadLineRenderer extends LineRenderer {
 
     private final @NotNull DecentItemStack itemStack;
     private final boolean small;

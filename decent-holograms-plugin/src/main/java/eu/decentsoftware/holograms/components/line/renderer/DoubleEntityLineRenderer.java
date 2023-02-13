@@ -36,12 +36,12 @@ import java.util.UUID;
  * @author d0by
  * @since 3.0.0
  */
-public abstract class AbstractDoubleEntityLineRenderer extends AbstractLineRenderer {
+public abstract class DoubleEntityLineRenderer extends LineRenderer {
 
     protected final int eid;
     protected final int eidOther;
 
-    public AbstractDoubleEntityLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
+    public DoubleEntityLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         super(parent, type);
         this.eid = DecentHolograms.getFreeEntityId();
         this.eidOther = DecentHolograms.getFreeEntityId();

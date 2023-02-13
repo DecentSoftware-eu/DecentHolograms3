@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class TextLineRenderer extends AbstractLineRenderer {
+public class TextLineRenderer extends LineRenderer {
 
     private final @NotNull String text;
     private final String hoverText;
