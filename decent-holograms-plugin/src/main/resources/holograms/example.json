@@ -1,0 +1,98 @@
+{
+	"name": "Example",
+	"location": {
+		"world": "world",
+		"x": 0,
+		"y": 0,
+		"z": 0,
+		"yaw": 0,
+		"pitch": 0
+	},
+	"settings": {
+		"enabled": true,
+		"interactive": true,
+		"editable": true,
+		"rotateHorizontal": true,
+		"rotateVertical": true,
+		"rotateHeads": true,
+		"viewDistance": 48,
+		"updateDistance": 48,
+		"updateInterval": 20,
+		"updating": true
+	},
+	"viewConditions": [
+		{
+			"type": "PERMISSION",
+			"permission": "example.permission",
+			"notMetActions": [
+				{
+					"type": "MESSAGE",
+					"message": "You don't have the permission!"
+				}
+			]
+		}
+	],
+	"pages": [
+		{
+			"lines": [
+				{
+					"content": "Line 1",
+					"settings": {
+						"height": 0.5,
+						"offsetX": 0.0,
+						"offsetY": 0.0,
+						"offsetZ": 0.0
+					},
+					"viewConditions": [
+						{
+							"type": "PERMISSION",
+							"permission": "example.permission"
+						}
+					],
+					"clickActions": [
+						{
+							"type": "MESSAGE",
+							"message": "You clicked line 1!"
+						}
+					],
+					"clickConditions": [
+						{
+							"type": "PERMISSION",
+							"permission": "example.permission"
+						}
+					]
+				},
+				{
+					"content": "Line 2",
+					"settings": {
+						"height": 0.3,
+						"offsetX": 0.0,
+						"offsetY": 0.0,
+						"offsetZ": 0.0
+					},
+					"clickActions": [
+						{
+							"type": "MESSAGE",
+							"message": "You clicked line 2!"
+						}
+					]
+				},
+				{
+					"content": "Line 3"
+				},
+				{
+					"content": "Line 4"
+				},
+				{
+					"content": "Line 5"
+				}
+			],
+			"clickActions": [
+				{
+					"type": "MESSAGE",
+					"message": "You clicked page 1!"
+				}
+			]
+		}
+	]
+}
