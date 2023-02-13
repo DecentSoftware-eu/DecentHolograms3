@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.HologramLineType;
 import eu.decentsoftware.holograms.components.line.content.objects.DecentItemStack;
+import eu.decentsoftware.holograms.nms.EntityEquipmentSlot;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -63,7 +64,7 @@ public class HeadLineRenderer extends LineRenderer {
         // Send the metadata
         NMS.sendEntityMetadata(player, eid, metaEntity, metaGravity, metaArmorStand, metaNameVisible);
         // Set the helmet
-        NMS.setHelmet(player, eid, item);
+        NMS.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class HeadLineRenderer extends LineRenderer {
         ItemStack item = itemStack.toItemStack(player);
 
         // Set the helmet
-        NMS.setHelmet(player, eid, item);
+        NMS.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
     }
 
     @Override

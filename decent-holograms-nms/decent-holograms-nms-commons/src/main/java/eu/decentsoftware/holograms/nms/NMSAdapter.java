@@ -150,7 +150,7 @@ public interface NMSAdapter {
 
 	void sendEntityMetadata(Player player, int eid, Object... objects);
 
-	void sendEntityMetadata(Player player, int eid, List<Object> objects);
+	void sendEntityMetadata(Player player, int eid, List<?> objects);
 
 	Object getMetaCustom(int id, Class<?> type, Object value);
 
@@ -201,7 +201,7 @@ public interface NMSAdapter {
 
 	void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l);
 
-	void setHelmet(Player player, int eid, ItemStack itemStack);
+	void setEquipment(Player player, int eid, EntityEquipmentSlot slot, ItemStack itemStack);
 
 	void teleportEntity(Player player, int eid, Location l, boolean onGround);
 
