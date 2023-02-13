@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_9_R2.*;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
@@ -120,11 +119,6 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
     /*
      *  Packets
      */
-
-    @Override
-    public void sendRedstoneParticle(Player player, Color c, Location l, float size) {
-        // TODO: send redstone packet
-    }
 
     @Override
     public Object updateTimePacket(long worldAge, long day) {

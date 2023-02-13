@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.nms;
 
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -113,8 +112,6 @@ public interface NMSAdapter {
 	/*
 	 *  Packets
 	 */
-
-	void sendRedstoneParticle(Player player, Color c, Location l, float size);
 
 	Object updateTimePacket(long worldAge, long day);
 
