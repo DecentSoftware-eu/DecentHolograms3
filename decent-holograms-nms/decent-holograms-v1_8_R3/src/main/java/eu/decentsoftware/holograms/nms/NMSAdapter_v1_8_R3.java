@@ -33,15 +33,39 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
+    private static final Map<String, Integer> ENTITY_TYPE_NAME_ID_MAP;
+    private static final Field ENTITY_COUNT_FIELD;
+
+    static {
+        ENTITY_TYPE_NAME_ID_MAP = R.getFieldValue(EntityTypes.class, "g");
+        try {
+            ENTITY_COUNT_FIELD = Entity.class.getDeclaredField("entityCount");
+            ENTITY_COUNT_FIELD.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Serializer for packet data.
+     *
+     * @implNote We use this one instance for all packets, clearing it after each use. This is
+     * because we don't want to create a new instance every time we need to send a packet.
+     */
     private final PacketDataSerializer serializer = new PacketDataSerializer(Unpooled.buffer());
+
+    /*
+     *  Utils
+     */
 
     private IChatBaseComponent s(String s) {
         return IChatBaseComponent.ChatSerializer.a(s);
@@ -177,30 +201,18 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public void sendEntityMetadata(Player player, int eid, List<Object> objects) {
-        List<DataWatcher.WatchableObject> watchableObjects = objects.stream()
-                .filter(o -> o instanceof DataWatcher.WatchableObject)
-                .map(o -> (DataWatcher.WatchableObject) o)
-                .collect(Collectors.toList());
-
-        serializer.clear();
-        serializer.b(eid);
+    public void sendEntityMetadata(Player player, int eid, List<?> objects) {
         try {
-            DataWatcher.a(watchableObjects, serializer);
-        } catch (IOException e) {
-            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
-            return;
-        }
+            serializer.clear();
+            serializer.b(eid);
+            DataWatcher.a((List<DataWatcher.WatchableObject>) objects, serializer);
 
-        PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata();
-        try {
+            PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata();
             packet.a(serializer);
+            sendPacket(player, packet);
         } catch (IOException e) {
             DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
-            return;
         }
-
-        sendPacket(player, packet);
     }
 
     @Override
@@ -272,8 +284,24 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
      */
 
     @Override
+    public int getFreeEntityId() {
+        try {
+            /*
+             * We are getting the new entity ids the same way as the server does. This is to ensure
+             * that the ids are unique and don't conflict with any other entities.
+             */
+            int entityCount = ENTITY_COUNT_FIELD.getInt(null);
+            ENTITY_COUNT_FIELD.setInt(null, entityCount + 1);
+            return entityCount;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get new entity ID", e);
+        }
+    }
+
+    @Override
     public int getEntityTypeId(EntityType type) {
-        return 30;
+        // noinspection deprecation
+        return ENTITY_TYPE_NAME_ID_MAP == null ? type.getTypeId() : ENTITY_TYPE_NAME_ID_MAP.get(type.getName());
     }
 
     @Override
@@ -334,8 +362,8 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public void setHelmet(Player player, int eid, org.bukkit.inventory.ItemStack itemStack) {
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, 4, i(itemStack));
+    public void setEquipment(Player player, int eid, EntityEquipmentSlot slot, org.bukkit.inventory.ItemStack itemStack) {
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, slot.getLegacySlotId(), i(itemStack));
         sendPacket(player, packet);
     }
 
@@ -359,20 +387,26 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public void updatePassengers(Player player, int eid, int... passengers) {
+        /*
+         * This will only update the first passenger. This is because the packet only supports
+         * one passenger. If you want to update more than one passenger, you will have to send
+         * multiple packets.
+         *
+         * We don't care about multiple passengers in the context of DecentHolograms.
+         */
+
         serializer.clear();
         serializer.writeInt(eid);
         serializer.writeInt(passengers != null && passengers.length >= 1 ? passengers[0] : -1);
         serializer.writeByte(0);
 
-        PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
         try {
+            PacketPlayOutAttachEntity packet = new PacketPlayOutAttachEntity();
             packet.a(serializer);
-        } catch (IOException e) {
+            sendPacket(player, packet);
+        } catch (Exception e) {
             DecentHologramsAPI.getInstance().getLogger().warning("Failed to update passengers: " + e.getMessage());
-            return;
         }
-
-        sendPacket(player, packet);
     }
 
     @Override
