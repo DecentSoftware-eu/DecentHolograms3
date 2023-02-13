@@ -1,4 +1,4 @@
-main: eu.decentsoftware.holograms.DecentHologramsPlugin
+main: eu.decentsoftware.holograms.DecentHolograms
 version: ${project.parent.version}
 api-version: 1.13
 prefix: ${project.parent.name}
