@@ -19,7 +19,8 @@
 package eu.decentsoftware.holograms.nms;
 
 import com.google.common.base.Optional;
-import eu.decentsoftware.holograms.nms.reflect.R;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.Color;
@@ -30,29 +31,31 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
-    private static final DataWatcherObject<Byte> DWO_ENTITY_DATA;
-    private static final DataWatcherObject<String> DWO_CUSTOM_NAME;
-    private static final DataWatcherObject<Boolean> DWO_CUSTOM_NAME_VISIBLE;
-    private static final DataWatcherObject<Integer> DWO_REMAINING_AIR;
-    private static final DataWatcherObject<Boolean> DWO_IS_SILENT;
-    private static final DataWatcherObject<Byte> DWO_ARMOR_STAND_DATA;
-    private static final DataWatcherObject<Optional<ItemStack>> DWO_ITEM;
+    private static final Field ENTITY_COUNT_FIELD;
 
     static {
-        DWO_ENTITY_DATA = R.getFieldValue(Entity.class, "ay");
-        DWO_CUSTOM_NAME = R.getFieldValue(Entity.class, "aA");
-        DWO_CUSTOM_NAME_VISIBLE = R.getFieldValue(Entity.class, "aB");
-        DWO_REMAINING_AIR = R.getFieldValue(Entity.class, "az");
-        DWO_IS_SILENT = R.getFieldValue(Entity.class, "aC");
-        DWO_ARMOR_STAND_DATA = R.getFieldValue(EntityArmorStand.class, "a");
-        DWO_ITEM = R.getFieldValue(EntityItem.class, "c");
+        try {
+            ENTITY_COUNT_FIELD = Entity.class.getDeclaredField("entityCount");
+            ENTITY_COUNT_FIELD.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    /**
+     * Serializer for packet data.
+     *
+     * @implNote We use this one instance for all packets, clearing it after each use. This is
+     * because we don't want to create a new instance every time we need to send a packet.
+     */
+    private final PacketDataSerializer serializer = new PacketDataSerializer(Unpooled.buffer());
 
     /*
      *  Utils
@@ -72,6 +75,26 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     private BlockPosition blockPos(@NotNull Location l) {
         return new BlockPosition(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+    }
+
+    private EnumItemSlot slot(EntityEquipmentSlot slot) {
+        switch (slot) {
+            case MAINHAND:
+                return EnumItemSlot.MAINHAND;
+            case OFFHAND:
+                return EnumItemSlot.OFFHAND;
+            case FEET:
+                return EnumItemSlot.FEET;
+            case LEGS:
+                return EnumItemSlot.LEGS;
+            case CHEST:
+                return EnumItemSlot.CHEST;
+            case HEAD:
+                return EnumItemSlot.HEAD;
+            default:
+                break;
+        }
+        return null; // This should never happen...
     }
 
     /*
@@ -150,20 +173,34 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     @Override
     public Object packetHeaderFooter(String header, String footer) {
-        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-        R r = new R(packet);
-        r.set("a", s(header));
-        r.set("b", s(footer));
-        return packet;
+        serializer.clear();
+        serializer.a(s(header));
+        serializer.a(s(footer));
+
+        try {
+            PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
+            packet.b(serializer);
+            return packet;
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to create header/footer packet: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public Object packetEntityAnimation(int eid, int animation) {
-        PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", animation);
-        return packet;
+        serializer.clear();
+        serializer.b(eid);
+        serializer.writeByte(animation);
+
+        try {
+            PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
+            packet.a(serializer);
+            return packet;
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to create entity animation packet: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -173,25 +210,39 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     @Override
     public Object packetBlockChange(Location l, int blockId, byte blockData) {
-        PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange();
-        R r = new R(packet);
-        r.set("a", blockPos(l));
-        packet.block = Block.getByCombinedId(blockId << 4 | (blockData & 15));
-        return packet;
+        serializer.clear();
+        serializer.a(blockPos(l));
+        serializer.b(blockId << 4 | (blockData & 15));
+
+        try {
+            PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange();
+            packet.a(serializer);
+            return packet;
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to create block change packet: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public Object packetTeleportEntity(int eid, Location l, boolean onGround) {
-        PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", l.getX());
-        r.set("c", l.getY());
-        r.set("d", l.getZ());
-        r.set("e", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
-        r.set("f", (byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
-        r.set("g", onGround);
-        return packet;
+        serializer.clear();
+        serializer.b(eid);
+        serializer.writeDouble(l.getX());
+        serializer.writeDouble(l.getY());
+        serializer.writeDouble(l.getZ());
+        serializer.writeByte((byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
+        serializer.writeByte((byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
+        serializer.writeBoolean(onGround);
+
+        try {
+            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport();
+            packet.a(serializer);
+            return packet;
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to create teleport entity packet: " + e.getMessage());
+            return null;
+        }
     }
 
     /*
@@ -204,12 +255,18 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
     }
 
     @Override
-    public void sendEntityMetadata(Player player, int eid, List<Object> objects) {
-        PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", objects);
-        sendPacket(player, packet);
+    public void sendEntityMetadata(Player player, int eid, List<?> objects) {
+        try {
+            serializer.clear();
+            serializer.b(eid);
+            DataWatcher.a((List<DataWatcher.Item<?>>) objects, serializer);
+
+            PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata();
+            packet.a(serializer);
+            sendPacket(player, packet);
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
+        }
     }
 
     @Override
@@ -219,12 +276,12 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     @Override
     public Object getMetaEntityRemainingAir(int airTicksLeft) {
-        return new DataWatcher.Item<>(DWO_REMAINING_AIR, airTicksLeft);
+        return new DataWatcher.Item<>(new DataWatcherObject<>(1, DataWatcherRegistry.b), airTicksLeft);
     }
 
     @Override
     public Object getMetaEntityCustomName(String name) {
-        return new DataWatcher.Item<>(DWO_CUSTOM_NAME, name);
+        return new DataWatcher.Item<>(new DataWatcherObject<>(2, DataWatcherRegistry.e), s(name));
     }
 
     @Override
@@ -232,48 +289,50 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
         if (!(name instanceof IChatBaseComponent)) {
             return null;
         }
-        return new DataWatcher.Item<>(DWO_CUSTOM_NAME, c((IChatBaseComponent) name));
+        return new DataWatcher.Item<>(new DataWatcherObject<>(2, DataWatcherRegistry.e), (IChatBaseComponent) name);
     }
 
     @Override
     public Object getMetaEntityCustomNameVisible(boolean visible) {
-        return new DataWatcher.Item<>(DWO_CUSTOM_NAME_VISIBLE, visible);
+        return new DataWatcher.Item<>(new DataWatcherObject<>(3, DataWatcherRegistry.h), visible);
     }
 
     @Override
     public Object getMetaEntitySilenced(boolean silenced) {
-        return new DataWatcher.Item<>(DWO_IS_SILENT, silenced);
+        return new DataWatcher.Item<>(new DataWatcherObject<>(4, DataWatcherRegistry.h), silenced);
     }
 
     @Override
     public Object getMetaEntityGravity(boolean gravity) {
-        return null; // Not supported
+        return new DataWatcher.Item<>(new DataWatcherObject<>(5, DataWatcherRegistry.h), gravity);
     }
 
     @Override
     public Object getMetaEntityProperties(boolean onFire, boolean crouched, boolean sprinting, boolean swimming, boolean invisible, boolean glowing, boolean flyingElytra) {
-        byte data = 0;
-        data += onFire ? 1 : 0;
-        data += crouched ? 2 : 0;
-        data += sprinting ? 8 : 0;
-        data += swimming ? 10 : 0;
-        data += invisible ? 20 : 0;
-        return new DataWatcher.Item<>(DWO_ENTITY_DATA, data);
+        byte data = 0x00;
+        data += onFire ? 0x01 : 0x00;
+        data += crouched ? 0x02 : 0x00;
+        data += sprinting ? 0x08 : 0x00;
+        data += swimming ? 0x10 : 0x00;
+        data += invisible ? 0x20 : 0x00;
+        data += glowing ? 0x40 : 0x00;
+        data += flyingElytra ? 0x80 : 0x00;
+        return new DataWatcher.Item<>(new DataWatcherObject<>(0, DataWatcherRegistry.a), data);
     }
 
     @Override
     public Object getMetaArmorStandProperties(boolean small, boolean arms, boolean noBasePlate, boolean marker) {
-        byte data = 0;
-        data += small ? 1 : 0;
-        data += arms ? 2 : 0;
-        data += noBasePlate ? 8 : 0;
-        data += marker ? 10 : 0;
-        return new DataWatcher.Item<>(DWO_ARMOR_STAND_DATA, data);
+        byte data = 0x00;
+        data += small ? 0x01 : 0x00;
+        data += arms ? 0x02 : 0x00;
+        data += noBasePlate ? 0x08 : 0x00;
+        data += marker ? 0x10 : 0x00;
+        return new DataWatcher.Item<>(new DataWatcherObject<>(13, DataWatcherRegistry.a), data);
     }
 
     @Override
     public Object getMetaItemStack(org.bukkit.inventory.ItemStack itemStack) {
-        return new DataWatcher.Item<>(DWO_ITEM, Optional.of(i(itemStack)));
+        return new DataWatcher.Item<>(new DataWatcherObject<>(8, DataWatcherRegistry.f), Optional.fromNullable(i(itemStack)));
     }
 
     /*
@@ -281,8 +340,24 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
      */
 
     @Override
+    public int getFreeEntityId() {
+        try {
+            /*
+             * We are getting the new entity ids the same way as the server does. This is to ensure
+             * that the ids are unique and don't conflict with any other entities.
+             */
+            int entityCount = ENTITY_COUNT_FIELD.getInt(null);
+            ENTITY_COUNT_FIELD.setInt(null, entityCount + 1);
+            return entityCount;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get new entity ID", e);
+        }
+    }
+
+    @Override
     public int getEntityTypeId(EntityType type) {
-        return 0;
+        // noinspection deprecation
+        return EntityTypes.a(type.getName());
     }
 
     @Override
@@ -292,37 +367,57 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     @Override
     public void spawnEntity(Player player, int eid, UUID id, EntityType type, Location l) {
-        PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", MathHelper.floor(l.getX() * 32.0D));
-        r.set("c", MathHelper.floor(l.getY() * 32.0D));
-        r.set("d", MathHelper.floor(l.getZ() * 32.0D));
-        r.set("h", MathHelper.d(l.getPitch() * 256.0F / 360.0F));
-        r.set("i", MathHelper.d(l.getYaw() * 256.0F / 360.0F));
-        r.set("j", getEntityTypeId(type));
-        sendPacket(player, packet);
+        serializer.clear();
+        serializer.b(eid);
+        serializer.a(id);
+        serializer.writeByte(getEntityTypeId(type));
+        serializer.writeDouble(l.getX());
+        serializer.writeDouble(l.getY());
+        serializer.writeDouble(l.getZ());
+        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(l.getPitch() * 256.0F / 360.0F));
+        serializer.writeInt(1);
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+
+        try {
+            PacketPlayOutSpawnEntity packet = new PacketPlayOutSpawnEntity();
+            packet.a(serializer);
+            sendPacket(player, packet);
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity spawn packet: " + e.getMessage());
+        }
     }
 
     @Override
     public void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l) {
-        PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", getEntityTypeId(type));
-        r.set("c", MathHelper.floor(l.getX() * 32.0D));
-        r.set("d", MathHelper.floor(l.getY() * 32.0D));
-        r.set("e", MathHelper.floor(l.getZ() * 32.0D));
-        r.set("i", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
-        r.set("j", (byte) ((int) (l.getPitch() * 256.0F / 360.0F)));
-        r.set("k", (byte) ((int) (l.getYaw() * 256.0F / 360.0F)));
-        r.set("g", MathHelper.d(l.getYaw() * 256.0F / 360.0F));
-        sendPacket(player, packet);
+        serializer.clear();
+        serializer.b(eid);
+        serializer.a(id);
+        serializer.writeByte(getEntityTypeId(type));
+        serializer.writeDouble(l.getX());
+        serializer.writeDouble(l.getY());
+        serializer.writeDouble(l.getZ());
+        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(l.getPitch() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+        serializer.writeShort(0);
+
+        try {
+            PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
+            packet.a(serializer);
+            sendPacket(player, packet);
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity spawn packet: " + e.getMessage());
+        }
     }
 
     @Override
-    public void setHelmet(Player player, int eid, org.bukkit.inventory.ItemStack itemStack) {
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, EnumItemSlot.HEAD, i(itemStack));
+    public void setEquipment(Player player, int eid, EntityEquipmentSlot slot, org.bukkit.inventory.ItemStack itemStack) {
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, slot(slot), i(itemStack));
         sendPacket(player, packet);
     }
 
@@ -333,11 +428,17 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
 
     @Override
     public void updatePassengers(Player player, int eid, int... passengers) {
-        PacketPlayOutMount packet = new PacketPlayOutMount();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", passengers);
-        sendPacket(player, packet);
+        serializer.clear();
+        serializer.b(eid);
+        serializer.a(passengers);
+
+        try {
+            PacketPlayOutMount packet = new PacketPlayOutMount();
+            packet.a(serializer);
+            sendPacket(player, packet);
+        } catch (Exception e) {
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity mount packet: " + e.getMessage());
+        }
     }
 
     @Override
