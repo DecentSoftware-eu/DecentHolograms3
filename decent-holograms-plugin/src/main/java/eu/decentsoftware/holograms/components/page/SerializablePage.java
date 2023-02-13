@@ -54,7 +54,7 @@ public class SerializablePage {
     @NotNull
     public static SerializablePage fromPage(@NotNull DefaultHologramPage page) {
         List<SerializableLine> lines = new ArrayList<>();
-        for (HologramLine line : page.getLineHolder().getLines()) {
+        for (HologramLine line : page.getLines()) {
             DefaultHologramLine defaultLine = (DefaultHologramLine) line;
             SerializableLine serializableLine = SerializableLine.fromLine(defaultLine);
             lines.add(serializableLine);
@@ -90,7 +90,7 @@ public class SerializablePage {
             DefaultHologramLine defaultLine = line.toLine(page);
             lines.add(defaultLine);
         }
-        page.getLineHolder().setLines(lines);
+        page.setLines(lines);
         return page;
     }
 

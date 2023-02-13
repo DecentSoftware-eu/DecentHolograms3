@@ -19,9 +19,12 @@
 package eu.decentsoftware.holograms.api.component.page;
 
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
+import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * This class represents a hologram page. A page is a collection of lines.
@@ -38,15 +41,6 @@ public interface HologramPage {
      */
     @NotNull
     Hologram getParent();
-
-    /**
-     * Get the {@link HologramLineHolder} of this page.
-     *
-     * @return the {@link HologramLineHolder} of this page.
-     * @see HologramLineHolder
-     */
-    @NotNull
-    HologramLineHolder getLineHolder();
 
     /**
      * Show this page to the specified player. This method displays all the lines
@@ -101,5 +95,72 @@ public interface HologramPage {
      * @return The next {@link Location}, that's free to use for a line.
      */
     Location getNextLineLocation();
+
+    /**
+     * Get the line at the specified index.
+     *
+     * @param index The index of the line to get.
+     * @return The line at the specified index.
+     */
+    HologramLine getLine(int index);
+
+    /**
+     * Get the index of the given line.
+     *
+     * @param line The line to get the index of.
+     * @return The index or -1 if the given line in not present in this line holder.
+     */
+    int getIndex(@NotNull HologramLine line);
+
+    /**
+     * Remove the line at the specified index.
+     *
+     * @param index The index of the line to remove.
+     * @return The removed line.
+     */
+    HologramLine removeLine(int index);
+
+    /**
+     * Add a line to the end of this page.
+     *
+     * @param line The line to add.
+     */
+    void addLine(@NotNull HologramLine line);
+
+    /**
+     * Add a line at the specified index.
+     *
+     * @param index The index to add the line at.
+     * @param line The line to add.
+     */
+    void addLine(int index, @NotNull HologramLine line);
+
+    /**
+     * Set the line at the specified index.
+     *
+     * @param index The index of the line to set.
+     * @param line The line to set.
+     */
+    void setLine(int index, @NotNull HologramLine line);
+
+    /**
+     * Remove all lines from this page.
+     */
+    void clearLines();
+
+    /**
+     * Set the lines of this page.
+     *
+     * @param lines The lines to set.
+     */
+    void setLines(@NotNull List<HologramLine> lines);
+
+    /**
+     * Get the lines of this page. The returned list is immutable.
+     *
+     * @return Immutable list of lines.
+     */
+    @NotNull
+    List<HologramLine> getLines();
 
 }

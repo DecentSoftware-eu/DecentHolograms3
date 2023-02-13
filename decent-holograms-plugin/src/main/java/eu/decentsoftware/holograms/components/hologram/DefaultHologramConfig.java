@@ -92,10 +92,10 @@ public class DefaultHologramConfig implements HologramConfig {
                 for (SerializablePage page : hologram.getPages()) {
                     pages.add(page.toPage(parent));
                 }
-                parent.getPageHolder().setPages(pages);
-                parent.getViewConditionHolder().clearConditions();
+                parent.setPages(pages);
+                parent.getViewConditions().clearConditions();
                 for (Condition condition : hologram.getViewConditions().getConditions()) {
-                    parent.getViewConditionHolder().addCondition(condition);
+                    parent.getViewConditions().addCondition(condition);
                 }
             } catch (JsonSyntaxException | IOException e) {
                 PLUGIN.getLogger().severe("Failed to load hologram " + parent.getName() + ":");
