@@ -18,9 +18,10 @@
 
 package eu.decentsoftware.holograms.components.line.renderer;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.HologramLineType;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -43,8 +44,9 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
 
     public DoubleEntityLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         super(parent, type);
-        this.eid = DecentHolograms.getFreeEntityId();
-        this.eidOther = DecentHolograms.getFreeEntityId();
+        NMSAdapter nms = DecentHolograms.getInstance().getNMSManager().getAdapter();
+        this.eid = nms.getFreeEntityId();
+        this.eidOther = nms.getFreeEntityId();
     }
 
     /**

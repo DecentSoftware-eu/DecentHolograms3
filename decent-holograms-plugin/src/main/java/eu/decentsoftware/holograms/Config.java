@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.utils.config.CFG;
 import eu.decentsoftware.holograms.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
@@ -33,7 +33,7 @@ import java.util.List;
 @UtilityClass
 public final class Config {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final DecentHologramsAPI PLUGIN = DecentHologramsAPI.getInstance();
     private static boolean updateAvailable = false;
 
     // ========== PERMISSIONS ========== //

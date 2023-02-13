@@ -40,7 +40,7 @@ import java.util.List;
 @UtilityClass
 public final class BootMessenger {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static List<String> messages;
 
     /**

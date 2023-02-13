@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.components.line.content.objects;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.utils.color.DecentColor;
 import eu.decentsoftware.holograms.nms.Version;
 import lombok.Getter;
@@ -42,7 +42,7 @@ import java.net.URL;
 @Getter
 public class DecentImage {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final DecentHologramsAPI PLUGIN = DecentHologramsAPI.getInstance();
 
     private BufferedImage bufferedImage;
     private DecentColor[][] colorField;

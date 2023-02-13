@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.nms.reflect.R;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
@@ -188,7 +188,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             DataWatcher.a(watchableObjects, serializer);
         } catch (IOException e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
             return;
         }
 
@@ -196,7 +196,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             packet.a(serializer);
         } catch (IOException e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
             return;
         }
 
@@ -300,7 +300,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             packet.a(serializer);
         } catch (IOException e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
             return;
         }
 
@@ -326,7 +326,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             packet.a(serializer);
         } catch (IOException e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
             return;
         }
 
@@ -368,7 +368,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             packet.a(serializer);
         } catch (IOException e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to update passengers: " + e.getMessage());
+            DecentHologramsAPI.getInstance().getLogger().warning("Failed to update passengers: " + e.getMessage());
             return;
         }
 

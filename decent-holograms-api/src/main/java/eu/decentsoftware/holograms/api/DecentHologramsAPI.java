@@ -22,8 +22,6 @@ import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 
-import java.io.File;
-
 /**
  * This class represents the main class of the plugin. It is responsible for
  * enabling and disabling the plugin. It also contains getters for all the
@@ -32,55 +30,25 @@ import java.io.File;
  * @author d0by
  * @since 3.0.0
  */
-public abstract class DecentHolograms extends JavaPlugin {
+public abstract class DecentHologramsAPI extends JavaPlugin {
 
     /**
-     * The current running instance of {@link DecentHolograms}.
+     * The current running instance of {@link DecentHologramsAPI}.
      */
-    protected static DecentHolograms instance;
-    /**
-     * This is used to get free entity IDs. It starts at a million
-     * so that it doesn't conflict with normal entities.
-     */
-    private static int ENTITY_ID = 1_000_000;
-    /**
-     * The '/holograms' directory
-     */
-    private File hologramsFolder;
+    protected static DecentHologramsAPI instance;
 
     /**
-     * Get the current running instance of {@link DecentHolograms}.
+     * Get the current running instance of {@link DecentHologramsAPI}.
      *
      * @return The instance.
      */
     @Contract(pure = true)
-    public static DecentHolograms getInstance() {
+    public static DecentHologramsAPI getInstance() {
         return instance;
     }
 
-    /**
-     * Get a free entity ID.
-     *
-     * @return The new entity ID.
-     */
-    public static int getFreeEntityId() {
-        return ENTITY_ID++;
-    }
-
-    public DecentHolograms() {
+    public DecentHologramsAPI() {
         instance = this;
-    }
-
-    /**
-     * Get the "/holograms" folder.
-     *
-     * @return The folder.
-     */
-    public File getHologramFolder() {
-        if (hologramsFolder == null) {
-            hologramsFolder = new File(getDataFolder(), "holograms");
-        }
-        return hologramsFolder;
     }
 
     /**

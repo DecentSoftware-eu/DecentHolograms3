@@ -18,8 +18,7 @@
 
 package eu.decentsoftware.holograms.components.line.renderer;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.line.HologramLineType;
 import eu.decentsoftware.holograms.utils.Common;
@@ -47,7 +46,7 @@ public class TextLineRenderer extends LineRenderer {
         super(parent, HologramLineType.TEXT);
         this.text = text;
         this.hoverText = hoverText;
-        this.eid = DecentHolograms.getFreeEntityId();
+        this.eid = DecentHolograms.getInstance().getNMSManager().getAdapter().getFreeEntityId();
     }
 
     /**
@@ -58,7 +57,7 @@ public class TextLineRenderer extends LineRenderer {
      */
     @NotNull
     private String getFormattedText(@NotNull Player player) {
-        Profile profile = DecentHologramsPlugin.getInstance().getProfileRegistry().getProfile(player.getName());
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
         String formattedText = text;
 
         if (hoverText != null) {
@@ -69,7 +68,7 @@ public class TextLineRenderer extends LineRenderer {
         }
 
         // Replace custom replacements
-        formattedText = DecentHologramsPlugin.getInstance().getReplacementRegistry().replace(formattedText, profile);
+        formattedText = DecentHolograms.getInstance().getReplacementRegistry().replace(formattedText, profile);
         // Replace PAPI placeholders
         formattedText = PAPI.setPlaceholders(player, formattedText);
         // Colorize

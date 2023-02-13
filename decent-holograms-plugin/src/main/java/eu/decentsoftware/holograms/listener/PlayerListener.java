@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.listener;
 
 import eu.decentsoftware.holograms.Config;
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,7 +35,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerListener implements Listener {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {

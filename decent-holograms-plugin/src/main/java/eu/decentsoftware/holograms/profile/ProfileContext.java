@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.profile;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.api.component.page.HologramPage;
@@ -41,7 +41,7 @@ public class ProfileContext {
      */
     public ProfileContext() {
         this.watchedLine = null;
-        this.clickableEntityId = DecentHolograms.getFreeEntityId();
+        this.clickableEntityId = DecentHolograms.getInstance().getNMSManager().getAdapter().getFreeEntityId();
     }
 
     /**

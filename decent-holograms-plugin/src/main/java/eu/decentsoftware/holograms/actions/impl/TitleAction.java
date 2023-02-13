@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import eu.decentsoftware.holograms.profile.Profile;
@@ -56,7 +56,7 @@ public class TitleAction extends Action {
         if (player == null) {
             return;
         }
-        NMSAdapter nmsAdapter = DecentHologramsPlugin.getInstance().getNMSManager().getAdapter();
+        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
         nmsAdapter.sendPacket(player, nmsAdapter.packetClearTitle());
         if (title != null) {
             nmsAdapter.sendPacket(player, nmsAdapter.packetTitleMessage(title));

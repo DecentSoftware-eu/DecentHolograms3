@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.Common;
@@ -35,7 +35,7 @@ import java.io.File;
 @UtilityClass
 public final class Lang {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     // ========== GENERAL ========== //
 
@@ -217,7 +217,7 @@ public final class Lang {
     public static void sendVersionMessage(CommandSender sender) {
         Common.tell(sender,
                 "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
-                DecentHolograms.getInstance().getDescription().getVersion(),
+                DecentHologramsAPI.getInstance().getDescription().getVersion(),
                 "https://www.spigotmc.org/resources/96927/"
         );
     }

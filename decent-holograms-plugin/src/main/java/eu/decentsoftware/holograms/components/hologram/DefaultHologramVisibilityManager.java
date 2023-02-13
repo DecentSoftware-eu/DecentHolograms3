@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.components.hologram;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.profile.Profile;
@@ -83,7 +83,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         }
 
         // Get the player's profile.
-        Profile profile = DecentHologramsPlugin.getInstance().getProfileRegistry().getProfile(player.getName());
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
         if (profile == null) {
             return;
         }

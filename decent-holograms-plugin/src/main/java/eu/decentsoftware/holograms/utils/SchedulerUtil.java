@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.utils;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 
@@ -31,7 +31,7 @@ import org.bukkit.Bukkit;
 @SuppressWarnings({"unused", "deprecation"})
 public final class SchedulerUtil {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final DecentHologramsAPI PLUGIN = DecentHologramsAPI.getInstance();
 
     public static void cancel(int id) {
         Bukkit.getScheduler().cancelTask(id);

@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.Config;
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.server.Server;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import lombok.experimental.UtilityClass;
@@ -34,7 +34,7 @@ import java.util.function.Function;
 @UtilityClass
 final class ReplacementCommons {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     static int getFromServerOrServersInt(Player player, @NotNull String argument, @NotNull Function<Server, Integer> getValue) {
         // -- Get from multiple servers

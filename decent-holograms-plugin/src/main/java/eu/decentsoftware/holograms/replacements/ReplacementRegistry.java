@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.Config;
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.server.Server;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  */
 public class ReplacementRegistry {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{(\\S+(:\\S+)?)}");
     private final Map<String, Replacement> defaultReplacementMap;
     private final Map<String, Replacement> normalReplacementMap;

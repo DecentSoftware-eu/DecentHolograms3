@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.components.hologram;
 
 import eu.decentsoftware.holograms.BootMessenger;
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.Hologram;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.utils.FileUtils;
@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultHologramRegistry implements HologramRegistry {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private final @NotNull Map<String, Hologram> holograms;
 
     public DefaultHologramRegistry() {

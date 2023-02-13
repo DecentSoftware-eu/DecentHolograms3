@@ -191,6 +191,8 @@ public interface NMSAdapter {
 	 *  Entity
 	 */
 
+	int getFreeEntityId();
+
 	int getEntityTypeId(EntityType type);
 
 	double getEntityHeight(EntityType type);

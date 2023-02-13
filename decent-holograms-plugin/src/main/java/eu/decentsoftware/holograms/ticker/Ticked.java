@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.ticker;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 
 /**
  * This interface represents a ticked object.
@@ -37,14 +37,14 @@ public interface Ticked {
      * Register the object to the ticker.
      */
     default void startTicking() {
-        DecentHologramsPlugin.getInstance().getTicker().register(this);
+        DecentHolograms.getInstance().getTicker().register(this);
     }
 
     /**
      * Unregister the object from the ticker.
      */
     default void stopTicking() {
-        DecentHologramsPlugin.getInstance().getTicker().unregister(this);
+        DecentHolograms.getInstance().getTicker().unregister(this);
     }
 
 }

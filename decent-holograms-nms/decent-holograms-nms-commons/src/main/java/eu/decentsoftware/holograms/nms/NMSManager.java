@@ -25,7 +25,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.nms.listener.PacketListener;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -84,7 +84,7 @@ public class NMSManager {
 			// If ProtocolLib is present, use it for packet listening.
 			ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 			PacketAdapter packetAdapter = new PacketAdapter(
-					DecentHolograms.getInstance(),
+					DecentHologramsAPI.getInstance(),
 					ListenerPriority.HIGHEST,
 					PacketType.Play.Server.ENTITY_METADATA
 			) {
@@ -115,7 +115,7 @@ public class NMSManager {
 		if (usingProtocolLib) {
 			if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
 				ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-				protocolManager.removePacketListeners(DecentHolograms.getInstance());
+				protocolManager.removePacketListeners(DecentHologramsAPI.getInstance());
 				usingProtocolLib = false;
 			}
 		} else {

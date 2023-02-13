@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.components.hologram;
 
 import com.google.gson.JsonSyntaxException;
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.component.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.Condition;
@@ -38,12 +38,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class DefaultHologramConfig implements HologramConfig {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private final @NotNull DefaultHologram parent;
     private final @NotNull File file;
 
     public DefaultHologramConfig(@NotNull DefaultHologram parent) {
-        this(parent, new File(PLUGIN.getHologramFolder(), parent.getName() + ".yml"));
+        this(parent, new File(PLUGIN.getDataFolder(), "holograms/" + parent.getName() + ".yml"));
     }
 
     public DefaultHologramConfig(@NotNull DefaultHologram parent, @NotNull File file) {

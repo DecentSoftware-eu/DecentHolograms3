@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.components.line.content.parsers;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.components.line.content.objects.DecentEntity;
 import eu.decentsoftware.holograms.components.line.renderer.EntityLineRenderer;
@@ -39,7 +39,7 @@ public class EntityContentParser implements ContentParser {
 
         EntityLineRenderer renderer = new EntityLineRenderer(line, entity);
         line.setRenderer(renderer);
-        NMSAdapter nmsAdapter = DecentHologramsPlugin.getInstance().getNMSManager().getAdapter();
+        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
         line.getPositionManager().getOffsets().setY(nmsAdapter.getEntityHeight(entity.type()));
         return true;
     }

@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.utils;
 
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @UtilityClass
 public final class BungeeUtils {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final DecentHologramsAPI PLUGIN = DecentHologramsAPI.getInstance();
     private static final Map<String, CompletableFuture<Integer>> PLAYER_COUNT_REQUESTS = new ConcurrentHashMap<>();
 
     /**

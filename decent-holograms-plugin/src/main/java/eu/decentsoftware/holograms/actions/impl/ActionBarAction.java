@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
@@ -43,7 +43,7 @@ public class ActionBarAction extends Action {
     public void execute(@NotNull Profile profile) {
         Player player = profile.getPlayer();
         if (player != null) {
-            NMSAdapter nmsAdapter = DecentHologramsPlugin.getInstance().getNMSManager().getAdapter();
+            NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
             nmsAdapter.sendPacket(player, nmsAdapter.packetActionbarMessage(Lang.formatString(message, profile)));
         }
     }

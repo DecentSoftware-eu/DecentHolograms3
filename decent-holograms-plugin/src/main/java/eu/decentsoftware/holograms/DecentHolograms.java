@@ -29,7 +29,7 @@ import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
 import eu.decentsoftware.holograms.actions.serialization.ActionSerializer;
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
 import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
@@ -69,7 +69,7 @@ import java.util.function.Function;
  * @author d0by
  */
 @Getter
-public final class DecentHologramsPlugin extends DecentHolograms {
+public final class DecentHolograms extends DecentHologramsAPI {
 
     @Getter(AccessLevel.NONE)
     private NMSManager nmsManager;
@@ -215,8 +215,8 @@ public final class DecentHologramsPlugin extends DecentHolograms {
     }
 
     @Contract(pure = true)
-    public static DecentHologramsPlugin getInstance() {
-        return (DecentHologramsPlugin) instance;
+    public static DecentHolograms getInstance() {
+        return (DecentHolograms) instance;
     }
 
 }

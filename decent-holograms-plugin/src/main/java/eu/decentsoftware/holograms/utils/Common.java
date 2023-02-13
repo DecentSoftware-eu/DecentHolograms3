@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.utils;
 
 import com.google.common.collect.Lists;
-import eu.decentsoftware.holograms.api.DecentHolograms;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
@@ -121,7 +121,7 @@ public final class Common {
 	 * @param message The message.
 	 */
 	public static void log(Level level, String message) {
-		DecentHolograms.getInstance().getLogger().log(level, message);
+		DecentHologramsAPI.getInstance().getLogger().log(level, message);
 	}
 
 	/**

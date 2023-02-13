@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
 import eu.decentsoftware.holograms.components.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.nms.listener.PacketListener;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PacketListenerImpl implements PacketListener {
 
-    private static final DecentHologramsPlugin PLUGIN = DecentHologramsPlugin.getInstance();
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     @Override
     public void handlePacketPlayInUseEntity(@NotNull Player player, int entityId, @NotNull ClickType clickType) {

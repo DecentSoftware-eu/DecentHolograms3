@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.components.line;
 
-import eu.decentsoftware.holograms.DecentHologramsPlugin;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.component.PositionManager;
 import eu.decentsoftware.holograms.api.component.line.HologramLine;
@@ -159,7 +159,7 @@ public class DefaultHologramLine implements HologramLine {
         this.content = content;
 
         // -- Parse content and update line accordingly
-        DecentHologramsPlugin.getInstance().getContentParserManager().parse(this);
+        DecentHolograms.getInstance().getContentParserManager().parse(this);
     }
 
     @Contract(value = "null -> false", pure = true)
