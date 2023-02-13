@@ -62,7 +62,7 @@ public class DefaultHologramLine implements HologramLine {
         this.parent = parent;
         this.uid = UUID.randomUUID();
         this.settings = new DefaultHologramLineSettings();
-        this.positionManager = new DefaultLinePositionManager(this, location);
+        this.positionManager = new LinePositionManager(this, location);
         this.viewConditions = new ConditionHolder();
         this.clickConditions = new ConditionHolder();
         this.clickActions = new ActionHolder();
@@ -85,7 +85,7 @@ public class DefaultHologramLine implements HologramLine {
         this.parent = parent;
         this.uid = UUID.randomUUID();
         this.settings = settings;
-        this.positionManager = new DefaultLinePositionManager(this, location);
+        this.positionManager = new LinePositionManager(this, location);
         this.viewConditions = viewConditions;
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;

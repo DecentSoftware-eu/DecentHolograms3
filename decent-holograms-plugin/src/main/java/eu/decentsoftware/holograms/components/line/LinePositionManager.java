@@ -27,16 +27,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public class DefaultLinePositionManager extends DefaultPositionManager {
+public class LinePositionManager extends DefaultPositionManager {
 
     private final @NotNull HologramLine parent;
 
-    public DefaultLinePositionManager(@NotNull HologramLine parent, @NotNull Location location) {
+    public LinePositionManager(@NotNull HologramLine parent, @NotNull Location location) {
         super(location);
         this.parent = parent;
     }
 
-    public DefaultLinePositionManager(@NotNull HologramLine parent, @NotNull Location location, Supplier<Location> locationSupplier) {
+    public LinePositionManager(@NotNull HologramLine parent, @NotNull Location location, Supplier<Location> locationSupplier) {
         super(location, locationSupplier);
         this.parent = parent;
     }
