@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.components.line.DefaultHologramLine;
+import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
+import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.nms.listener.PacketListener;
 import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
@@ -48,6 +48,7 @@ public class PacketListenerImpl implements PacketListener {
             return;
         }
 
+        // TODO
         DefaultHologramLine line = (DefaultHologramLine) clickedLine;
         if (line.getClickConditionHolder().check(profile)) {
             line.getClickActionHolder().execute(profile);

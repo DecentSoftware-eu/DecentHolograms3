@@ -18,50 +18,54 @@
 
 package eu.decentsoftware.holograms.api;
 
-import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
-import org.bukkit.plugin.java.JavaPlugin;
+import eu.decentsoftware.holograms.api.hologram.Hologram;
+import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
+import org.bukkit.Location;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
- * This class represents the main class of the plugin. It is responsible for
- * enabling and disabling the plugin. It also contains getters for all the
- * managers.
+ * This is the main class of the API. It serves as the access point to the API.
  *
  * @author d0by
  * @since 3.0.0
  */
-public abstract class DecentHologramsAPI extends JavaPlugin {
+public interface DecentHologramsAPI {
 
     /**
-     * The current running instance of {@link DecentHologramsAPI}.
-     */
-    protected static DecentHologramsAPI instance;
-
-    /**
-     * Get the current running instance of {@link DecentHologramsAPI}.
+     * Get the instance of the API.
      *
-     * @return The instance.
+     * @return The instance of the API.
      */
     @Contract(pure = true)
-    public static DecentHologramsAPI getInstance() {
-        return instance;
-    }
-
-    public DecentHologramsAPI() {
-        instance = this;
+    static DecentHologramsAPI getInstance() {
+        return DecentHologramsAPIProvider.getInstance();
     }
 
     /**
-     * Reloads the plugin.
-     */
-    public abstract void reload();
-
-    /**
-     * Get the hologram registry.
+     * Create a new, empty hologram.
      *
-     * @return The hologram registry.
-     * @see HologramRegistry
+     * @param location The location of the hologram.
+     * @return The new hologram.
+     * @see Hologram
      */
-    public abstract HologramRegistry getHologramRegistry();
+    @NotNull
+    Hologram createHologram(@NotNull Location location);
+
+    /**
+     * Create a new hologram with the given lines at the first page.
+     * <p>
+     * You can use any kind of formatting in the lines. It will be automatically
+     * parsed just like if you were using the commands.
+     *
+     * @param location The location of the hologram.
+     * @param lines    The lines of the first page of the hologram.
+     * @return The new hologram.
+     * @see Hologram
+     */
+    @NotNull
+    Hologram createHologram(@NotNull Location location, @NotNull List<String> lines);
 
 }

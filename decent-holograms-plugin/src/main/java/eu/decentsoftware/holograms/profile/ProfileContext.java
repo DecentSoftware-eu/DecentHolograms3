@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.profile;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.component.hologram.Hologram;
-import eu.decentsoftware.holograms.api.component.line.HologramLine;
-import eu.decentsoftware.holograms.api.component.page.HologramPage;
+import eu.decentsoftware.holograms.api.hologram.Hologram;
+import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
+import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import org.jetbrains.annotations.Nullable;
 
 /**

@@ -29,19 +29,19 @@ import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
 import eu.decentsoftware.holograms.actions.serialization.ActionSerializer;
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.api.component.hologram.HologramRegistry;
+import eu.decentsoftware.holograms.api.DefaultDecentHologramsAPI;
+import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.commands.TestCommand;
-import eu.decentsoftware.holograms.components.hologram.DefaultHologramRegistry;
-import eu.decentsoftware.holograms.components.line.content.ContentParserManager;
-import eu.decentsoftware.holograms.components.serialization.LocationSerializer;
+import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.hologram.line.content.ContentParserManager;
+import eu.decentsoftware.holograms.hologram.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionSerializer;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
-import eu.decentsoftware.holograms.nms.NMSManager;
+import eu.decentsoftware.holograms.nms.NMSManagerImpl;
 import eu.decentsoftware.holograms.nms.PacketListenerImpl;
 import eu.decentsoftware.holograms.nms.Version;
 import eu.decentsoftware.holograms.profile.ProfileRegistry;
@@ -56,6 +56,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
@@ -69,17 +70,22 @@ import java.util.function.Function;
  * @author d0by
  */
 @Getter
-public final class DecentHolograms extends DecentHologramsAPI {
+public final class DecentHolograms extends JavaPlugin {
 
-    @Getter(AccessLevel.NONE)
-    private NMSManager nmsManager;
+    private static DecentHolograms instance;
     private Gson gson;
     private Ticker ticker;
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
     private ReplacementRegistry replacementRegistry;
     private ContentParserManager contentParserManager;
-    private HologramRegistry hologramRegistry;
+    private DefaultHologramRegistry hologramRegistry;
+    @Getter(AccessLevel.NONE)
+    private NMSManagerImpl nmsManager;
+
+    public DecentHolograms() {
+        instance = this;
+    }
 
     @Override
     public void onEnable() {
@@ -88,7 +94,7 @@ public final class DecentHolograms extends DecentHologramsAPI {
 
         // -- Attempt to initialize the NMS adapter.
         try {
-            this.nmsManager = new NMSManager();
+            this.nmsManager = new NMSManagerImpl();
             this.nmsManager.setPacketListener(new PacketListenerImpl());
         } catch (IllegalStateException e) {
             getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
@@ -112,6 +118,10 @@ public final class DecentHolograms extends DecentHologramsAPI {
         this.contentParserManager = new ContentParserManager();
         this.hologramRegistry = new DefaultHologramRegistry();
 
+        // -- Register DecentHologramsAPI
+        DecentHologramsAPIProvider.setInstance(new DefaultDecentHologramsAPI());
+
+        // -- Initialize Utils
         BungeeUtils.init();
 
         // -- Register listeners
@@ -142,7 +152,9 @@ public final class DecentHolograms extends DecentHologramsAPI {
         HandlerList.unregisterAll(this);
     }
 
-    @Override
+    /**
+     * Reload the plugins configuration and all holograms.
+     */
     public void reload() {
         Config.reload();
         Lang.reload();
@@ -210,7 +222,7 @@ public final class DecentHolograms extends DecentHologramsAPI {
     }
 
     @Contract(pure = true)
-    public NMSManager getNMSManager() {
+    public NMSManagerImpl getNMSManager() {
         return nmsManager;
     }
 

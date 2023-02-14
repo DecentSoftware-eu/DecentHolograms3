@@ -227,16 +227,6 @@ public interface NMSAdapter {
      */
     Object packetBlockChange(Location l, int blockId, byte blockData);
 
-    /**
-     * Create a packet to teleport an entity for a player.
-     *
-     * @param eid      The entity id.
-     * @param l        The location.
-     * @param onGround Whether the entity is on the ground.
-     * @return The packet.
-     */
-    Object packetTeleportEntity(int eid, Location l, boolean onGround);
-
     /*
      *  Entity Metadata
      */

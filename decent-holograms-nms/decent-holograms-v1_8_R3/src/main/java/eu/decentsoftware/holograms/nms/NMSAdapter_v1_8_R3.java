@@ -18,8 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
-import eu.decentsoftware.holograms.nms.reflect.R;
+import eu.decentsoftware.holograms.nms.reflect.ReflectUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_8_R3.*;
@@ -45,7 +44,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     private static final Field ENTITY_COUNT_FIELD;
 
     static {
-        ENTITY_TYPE_NAME_ID_MAP = R.getFieldValue(EntityTypes.class, "g");
+        ENTITY_TYPE_NAME_ID_MAP = ReflectUtil.getFieldValue(EntityTypes.class, "g");
         try {
             ENTITY_COUNT_FIELD = Entity.class.getDeclaredField("entityCount");
             ENTITY_COUNT_FIELD.setAccessible(true);
@@ -155,20 +154,34 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object packetHeaderFooter(String header, String footer) {
-        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-        R r = new R(packet);
-        r.set("a", s(header));
-        r.set("b", s(footer));
-        return packet;
+        serializer.clear();
+        serializer.a(header);
+        serializer.a(footer);
+
+        try {
+            PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
+            packet.b(serializer);
+            return packet;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public Object packetEntityAnimation(int eid, int animation) {
-        PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
-        R r = new R(packet);
-        r.set("a", eid);
-        r.set("b", animation);
-        return packet;
+        serializer.clear();
+        serializer.b(eid);
+        serializer.writeByte(animation);
+
+        try {
+            PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
+            packet.a(serializer);
+            return packet;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -178,11 +191,18 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object packetBlockChange(Location l, int blockId, byte blockData) {
-        PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange();
-        R r = new R(packet);
-        r.set("a", blockPos(l));
-        packet.block = Block.getByCombinedId(blockId << 4 | (blockData & 15));
-        return packet;
+        serializer.clear();
+        serializer.a(blockPos(l));
+        serializer.b(blockId << 4 | (blockData & 15));
+
+        try {
+            PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange();
+            packet.a(serializer);
+            return packet;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /*
@@ -205,7 +225,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
             packet.a(serializer);
             sendPacket(player, packet);
         } catch (IOException e) {
-            DecentHologramsAPI.getInstance().getLogger().warning("Failed to send entity metadata packet: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -322,7 +342,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             packet.a(serializer);
         } catch (IOException e) {
-            DecentHologramsAPI.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
 
@@ -348,7 +368,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             packet.a(serializer);
         } catch (IOException e) {
-            DecentHologramsAPI.getInstance().getLogger().warning("Failed to spawn entity: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
 
@@ -362,8 +382,8 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public Object packetTeleportEntity(int eid, Location l, boolean onGround) {
-        return new PacketPlayOutEntityTeleport(
+    public void teleportEntity(Player player, int eid, Location l, boolean onGround) {
+        sendPacket(player, new PacketPlayOutEntityTeleport(
                 eid,
                 MathHelper.floor(l.getX() * 32.0),
                 MathHelper.floor(l.getY() * 32.0),
@@ -371,12 +391,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
                 (byte) ((int) (l.getYaw() * 256.0F / 360.0F)),
                 (byte) ((int) (l.getPitch() * 256.0F / 360.0F)),
                 onGround
-        );
-    }
-
-    @Override
-    public void teleportEntity(Player player, int eid, Location l, boolean onGround) {
-        sendPacket(player, packetTeleportEntity(eid, l, onGround));
+        ));
     }
 
     @Override
@@ -399,7 +414,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
             packet.a(serializer);
             sendPacket(player, packet);
         } catch (Exception e) {
-            DecentHologramsAPI.getInstance().getLogger().warning("Failed to update passengers: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -18,8 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.nms.listener.PacketListener;
-import eu.decentsoftware.holograms.nms.reflect.R;
+import eu.decentsoftware.holograms.nms.reflect.ReflectUtil;
 import eu.decentsoftware.holograms.nms.reflect.ReflectConstructor;
 import eu.decentsoftware.holograms.nms.reflect.ReflectField;
 import eu.decentsoftware.holograms.nms.reflect.ReflectMethod;
@@ -48,11 +47,11 @@ final class PacketHandlerCommons {
 
     static {
         if (Version.afterOrEqual(17)) {
-            ENTITY_USE_PACKET_CLASS = R.getNMClass("network.protocol.game.PacketPlayInUseEntity");
-            PACKET_DATA_SERIALIZER_CLASS = R.getNMClass("network.PacketDataSerializer");
+            ENTITY_USE_PACKET_CLASS = ReflectUtil.getNMClass("network.protocol.game.PacketPlayInUseEntity");
+            PACKET_DATA_SERIALIZER_CLASS = ReflectUtil.getNMClass("network.PacketDataSerializer");
         } else {
-            ENTITY_USE_PACKET_CLASS = R.getNMSClass("PacketPlayInUseEntity");
-            PACKET_DATA_SERIALIZER_CLASS = R.getNMSClass("PacketDataSerializer");
+            ENTITY_USE_PACKET_CLASS = ReflectUtil.getNMSClass("PacketPlayInUseEntity");
+            PACKET_DATA_SERIALIZER_CLASS = ReflectUtil.getNMSClass("PacketDataSerializer");
         }
         ENTITY_USE_PACKET_ID_FIELD = new ReflectField<>(ENTITY_USE_PACKET_CLASS, "a");
         PACKET_DATA_SERIALIZER_CONSTRUCTOR = new ReflectConstructor(PACKET_DATA_SERIALIZER_CLASS, ByteBuf.class);
@@ -92,11 +91,12 @@ final class PacketHandlerCommons {
             return false;
         }
 
-        PacketListener listener = NMSManager.getInstance().getPacketListener();
-        if (listener != null) {
-            listener.handlePacketPlayInUseEntity(player, entityId, clickType);
-            return true;
-        }
+        // TODO: Fix this.
+//        PacketListener listener = NMSManager.getInstance().getPacketListener();
+//        if (listener != null) {
+//            listener.handlePacketPlayInUseEntity(player, entityId, clickType);
+//            return true;
+//        }
 
         // Shouldn't happen.
         return false;

@@ -23,25 +23,30 @@ import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import eu.decentsoftware.holograms.api.hologram.Hologram;
 import lombok.NonNull;
-import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
 
 @CommandContainer
 public class TestCommand {
 
-    @CommandMethod("test <price> <message>")
+    @CommandMethod("test <line>")
     @CommandDescription("Test command")
     @CommandPermission("decentholograms.test")
     public void test(
-            final @NonNull CommandSender sender,
-            final @NonNull @Argument("message") String message,
-            final @Argument("price") double price
+            final @NonNull Player player,
+            final @NonNull @Argument("line") String line
     ) {
-        if (price < 0) {
-            sender.sendMessage("Price cannot be negative.");
-            return;
-        }
-        sender.sendMessage("Test command: " + message + " " + price);
+        DecentHologramsAPI api = DecentHologramsAPI.getInstance();
+
+        Hologram hologram = api.createHologram(player.getLocation(), Collections.singletonList(line));
+        hologram.getVisibilityManager().setVisibleByDefault(false);
+        hologram.getVisibilityManager().show(player);
+
+        player.sendMessage("Created hologram with line '" + line + "'! Only you can see it.");
     }
 
 }

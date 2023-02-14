@@ -217,7 +217,7 @@ public final class Lang {
     public static void sendVersionMessage(CommandSender sender) {
         Common.tell(sender,
                 "\n&fThis server is running &3DecentHolograms v%s&f by &bd0by&f : &7%s",
-                DecentHologramsAPI.getInstance().getDescription().getVersion(),
+                PLUGIN.getDescription().getVersion(),
                 "https://www.spigotmc.org/resources/96927/"
         );
     }

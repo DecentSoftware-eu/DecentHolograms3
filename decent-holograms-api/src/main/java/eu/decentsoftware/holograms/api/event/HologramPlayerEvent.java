@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.event;
 
-import eu.decentsoftware.holograms.api.component.hologram.Hologram;
+import eu.decentsoftware.holograms.api.hologram.Hologram;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
