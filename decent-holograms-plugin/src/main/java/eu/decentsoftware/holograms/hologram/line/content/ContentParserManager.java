@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.hologram.line.content;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.components.line.content.parsers.*;
 import eu.decentsoftware.holograms.hologram.line.content.parsers.*;
 import org.jetbrains.annotations.NotNull;
 

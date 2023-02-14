@@ -52,7 +52,7 @@ public class DefaultHologramPage implements HologramPage {
         this(parent, new ConditionHolder(), new ActionHolder());
     }
 
-    protected DefaultHologramPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
+    public DefaultHologramPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
         this.parent = parent;
         this.lines = new ArrayList<>();
         this.clickConditions = clickConditions;
@@ -187,12 +187,12 @@ public class DefaultHologramPage implements HologramPage {
         }
     }
 
+    @NotNull
     @Override
-    public @NotNull Location getNextLineLocation() {
+    public Location getNextLineLocation() {
         double height = getHeight();
         Location location = getParent().getPositionManager().getActualLocation();
-        double yOffset = getParent().getSettings().isDownOrigin() ? -height : height;
-        return location.add(0, yOffset, 0);
+        return location.subtract(0, height, 0);
     }
 
     @NotNull

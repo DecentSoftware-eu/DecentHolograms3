@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultHologramRegistry {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private final @NotNull Map<String, Hologram> holograms;
+    private final @NotNull Map<String, DefaultHologram> holograms;
 
     public DefaultHologramRegistry() {
         this.holograms = new ConcurrentHashMap<>();
@@ -90,7 +90,7 @@ public class DefaultHologramRegistry {
      */
     public void shutdown() {
         // Destroy all holograms
-        for (Hologram hologram : this.holograms.values()) {
+        for (DefaultHologram hologram : this.holograms.values()) {
             hologram.destroy();
         }
         // Clear the cache
@@ -103,7 +103,7 @@ public class DefaultHologramRegistry {
      * @param hologram The hologram.
      * @see Hologram
      */
-    public void registerHologram(@NotNull Hologram hologram) {
+    public void registerHologram(@NotNull DefaultHologram hologram) {
         this.holograms.put(hologram.getName(), hologram);
     }
 
@@ -112,10 +112,10 @@ public class DefaultHologramRegistry {
      *
      * @param name The name of the hologram.
      * @return The hologram.
-     * @see Hologram
+     * @see DefaultHologram
      */
     @Nullable
-    public Hologram getHologram(@NotNull String name) {
+    public DefaultHologram getHologram(@NotNull String name) {
         return this.holograms.get(name);
     }
 
@@ -123,10 +123,10 @@ public class DefaultHologramRegistry {
      * Remove a hologram by its name.
      *
      * @param name The name of the hologram.
-     * @see Hologram
+     * @see DefaultHologram
      */
     @Nullable
-    public Hologram removeHologram(@NotNull String name) {
+    public DefaultHologram removeHologram(@NotNull String name) {
         return this.holograms.remove(name);
     }
 
@@ -134,7 +134,7 @@ public class DefaultHologramRegistry {
      * Get the names of all registered holograms.
      *
      * @return The set of all hologram names.
-     * @see Hologram
+     * @see DefaultHologram
      */
     @NotNull
     public Set<String> getHologramNames() {
@@ -145,10 +145,10 @@ public class DefaultHologramRegistry {
      * Get all registered holograms.
      *
      * @return The collection of all holograms.
-     * @see Hologram
+     * @see DefaultHologram
      */
     @NotNull
-    public Collection<Hologram> getHolograms() {
+    public Collection<DefaultHologram> getHolograms() {
         return this.holograms.values();
     }
 

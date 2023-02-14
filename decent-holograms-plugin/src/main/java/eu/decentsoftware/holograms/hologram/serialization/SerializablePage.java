@@ -85,12 +85,10 @@ public class SerializablePage {
                 clickConditions,
                 clickActions
         );
-        List<HologramLine> lines = new ArrayList<>();
         for (SerializableLine line : this.lines) {
             DefaultHologramLine defaultLine = line.toLine(page);
-            lines.add(defaultLine);
+            page.addLine(defaultLine);
         }
-        page.setLines(lines);
         return page;
     }
 

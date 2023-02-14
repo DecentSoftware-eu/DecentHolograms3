@@ -95,7 +95,7 @@ public class DefaultHologram implements Hologram, Ticked {
         this.getConfig().reload().thenRun(() -> getSettings().setEnabled(enabled));
     }
 
-    protected DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
+    public DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
                               @NotNull ConditionHolder viewConditions) {
         this.name = name;
         this.config = new DefaultHologramConfig(this);

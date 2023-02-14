@@ -103,6 +103,7 @@ public final class DecentHolograms extends JavaPlugin {
             return;
         }
 
+        // -- Initialize Custom Gson Instance
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Location.class, new LocationSerializer())
                 .registerTypeAdapter(Action.class, new ActionSerializer())
@@ -111,6 +112,8 @@ public final class DecentHolograms extends JavaPlugin {
                 .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
                 .setPrettyPrinting()
                 .create();
+
+        // -- Initialize Managers
         this.ticker = new Ticker();
         this.profileRegistry = new ProfileRegistry();
         this.serverRegistry = new ServerRegistry();
