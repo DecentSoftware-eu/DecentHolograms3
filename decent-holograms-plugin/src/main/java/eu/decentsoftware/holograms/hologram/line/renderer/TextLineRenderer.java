@@ -84,7 +84,6 @@ public class TextLineRenderer extends LineRenderer {
 
         // Create the metadata objects
         Object metaEntity = NMS.getMetaEntityProperties(false, false, false, false, true, false, false);
-        Object metaGravity = NMS.getMetaEntityGravity(false);
         Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true, true);
         Object metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
@@ -92,7 +91,7 @@ public class TextLineRenderer extends LineRenderer {
         // Spawn the fake armor stand entity
         NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaGravity, metaArmorStand, metaName, metaNameVisible);
+        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaName, metaNameVisible);
     }
 
     @Override

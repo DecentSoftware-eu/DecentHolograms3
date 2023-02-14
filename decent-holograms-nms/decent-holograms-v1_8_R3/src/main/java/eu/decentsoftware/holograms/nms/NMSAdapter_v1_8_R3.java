@@ -264,7 +264,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object getMetaEntityGravity(boolean gravity) {
-        return new DataWatcher.WatchableObject(0, 5, (byte) (gravity ? 1 : 0));
+        return null;
     }
 
     @Override
@@ -363,9 +363,11 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         serializer.writeShort(0);
         serializer.writeShort(0);
         serializer.writeShort(0);
+        serializer.writeByte(127);
 
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
         try {
+            ReflectUtil.setFieldValue(packet, "l", new DataWatcher(null));
             packet.a(serializer);
         } catch (IOException e) {
             e.printStackTrace();
