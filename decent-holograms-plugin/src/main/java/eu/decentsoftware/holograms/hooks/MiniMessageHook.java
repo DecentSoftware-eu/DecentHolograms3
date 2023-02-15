@@ -20,8 +20,11 @@ package eu.decentsoftware.holograms.hooks;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,16 +36,48 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public final class MiniMessageHook {
 
+    private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
+            .character('§')
+            .hexCharacter('#')
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
+
+    private static final TagResolver[] HOLOGRAM_RESOLVERS = {
+            StandardTags.color(),
+            StandardTags.decorations(),
+            StandardTags.reset(),
+            StandardTags.gradient(),
+            StandardTags.rainbow()
+    };
+
     /**
-     * Serialize the given string to a IChatBaseComponent using MiniMessage.
+     * Replace all legacy components in the given string with MiniMessage components
+     * and serialize them to IChatBaseComponent.
      *
      * @param string The string to serialize.
      * @return The serialized IChatBaseComponent.
      */
     @NotNull
     public static Object serializeMinecraft(@NotNull String string) {
-        Component component = MiniMessage.miniMessage().deserialize(string);
+        String serialized = MiniMessage.miniMessage().serialize(SERIALIZER.deserialize(string));
+        serialized = serialized.replace("\\<", "<");
+        TextComponent component = (TextComponent) MiniMessage.miniMessage().deserialize(serialized, HOLOGRAM_RESOLVERS);
         return MinecraftComponentSerializer.get().serialize(component);
+    }
+
+    /**
+     * Replace all MiniMessage components in the given string with legacy components.
+     *
+     * @param string The string to serialize.
+     * @return The serialized string.
+     */
+    @NotNull
+    public static String serializeMinecraftLegacy(@NotNull String string) {
+        String serialized = MiniMessage.miniMessage().serialize(SERIALIZER.deserialize(string));
+        serialized = serialized.replace("\\<", "<");
+        TextComponent component = (TextComponent) MiniMessage.miniMessage().deserialize(serialized, HOLOGRAM_RESOLVERS);
+        return SERIALIZER.serialize(component);
     }
 
 }

@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
+import eu.decentsoftware.holograms.nms.Version;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
@@ -85,7 +86,12 @@ public class TextLineRenderer extends LineRenderer {
         // Create the metadata objects
         Object metaEntity = NMS.getMetaEntityProperties(false, false, false, false, true, false, false);
         Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true, true);
-        Object metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
+        Object metaName;
+        if (Version.is(8)) {
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraftLegacy(formattedText));
+        } else {
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
+        }
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
         // Spawn the fake armor stand entity
@@ -99,7 +105,12 @@ public class TextLineRenderer extends LineRenderer {
         String formattedText = getFormattedText(player);
 
         // Create the metadata objects
-        Object metaName = NMS.getMetaEntityCustomName(formattedText);
+        Object metaName;
+        if (Version.is(8)) {
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraftLegacy(formattedText));
+        } else {
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
+        }
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
         // Send the metadata

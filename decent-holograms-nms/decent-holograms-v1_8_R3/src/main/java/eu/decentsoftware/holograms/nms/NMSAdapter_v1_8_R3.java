@@ -246,10 +246,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object getMetaEntityCustomName(Object name) {
-        if (!(name instanceof IChatBaseComponent)) {
-            return null;
-        }
-        return new DataWatcher.WatchableObject(4, 2, c((IChatBaseComponent) name));
+        return null; // Not supported
     }
 
     @Override
@@ -264,7 +261,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object getMetaEntityGravity(boolean gravity) {
-        return null;
+        return null; // Not supported
     }
 
     @Override
