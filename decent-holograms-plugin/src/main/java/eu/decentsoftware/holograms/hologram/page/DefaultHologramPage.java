@@ -202,12 +202,12 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     @NotNull
-    public ConditionHolder getClickConditionHolder() {
+    public ConditionHolder getClickConditions() {
         return clickConditions;
     }
 
     @NotNull
-    public ActionHolder getClickActionHolder() {
+    public ActionHolder getClickActions() {
         return clickActions;
     }
 

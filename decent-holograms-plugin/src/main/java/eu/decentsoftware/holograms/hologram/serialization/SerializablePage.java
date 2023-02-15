@@ -61,8 +61,8 @@ public class SerializablePage {
         }
         return new SerializablePage(
                 lines,
-                page.getClickConditionHolder(),
-                page.getClickActionHolder()
+                page.getClickConditions(),
+                page.getClickActions()
         );
     }
 
