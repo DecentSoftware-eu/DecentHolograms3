@@ -20,14 +20,15 @@ package eu.decentsoftware.holograms.hologram.page;
 
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.actions.ActionHolder;
-import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
+import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
+import eu.decentsoftware.holograms.api.hologram.line.HologramLineSettings;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.utils.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -81,12 +82,12 @@ public class DefaultHologramPage implements HologramPage {
 
     @Override
     public void recalculate() {
-        int pageIndex = getParent().getIndex(this);
-        Set<Player> viewers = getParent().getVisibilityManager().getViewerPlayers(pageIndex);
+        final int pageIndex = getParent().getIndex(this);
+        final Set<Player> viewers = getParent().getVisibilityManager().getViewerPlayers(pageIndex);
 
-        boolean horizontal = getParent().getSettings().isRotateHorizontal();
-        boolean vertical = getParent().getSettings().isRotateVertical(); // && isTextOnly(); TODO
-        boolean heads = getParent().getSettings().isRotateHeads();
+        final boolean horizontal = getParent().getSettings().isRotateHorizontal();
+        final boolean vertical = getParent().getSettings().isRotateVertical(); // && isTextOnly(); TODO
+        final boolean heads = getParent().getSettings().isRotateHeads();
 
         for (Player viewer : viewers) {
             recalculate(viewer, horizontal, vertical, heads);
@@ -94,104 +95,96 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
-        Location location = getParent().getPositionManager().getActualLocation();
+        final Location hologramLocation = getParent().getPositionManager().getActualLocation();
+        final boolean downOrigin = getParent().getSettings().isDownOrigin();
+        final double totalHeight = getHeight();
 
-        if (horizontal || vertical) {
-            double totalHeight = getHeight();
-            Location pLoc = player.getEyeLocation();
-            Vector pDir = pLoc.getDirection().clone().normalize();
+        // If the hologram location is originating from the bottom,
+        // we need to move the start location up by the total height
+        // of the hologram.
+        if (downOrigin) {
+            hologramLocation.add(0, totalHeight, 0);
+        }
 
-            // Calculate the required vectors.
-            Vector horizontalPerpendicular = pLoc.getDirection().clone()
-                    .crossProduct(MathUtil.UP_VECTOR)
-                    .normalize();
-            Vector verticalPerpendicular = horizontalPerpendicular.clone()
-                    .crossProduct(pDir)
-                    .multiply(-1d)
-                    .normalize();
-
-            // Calculate new location for each line.
-            double height = 0.0d;
-            Location pivot = location.clone().subtract(0, totalHeight / 2, 0);
+        // If we don't rotate, we just align the lines properly.
+        if (!horizontal && !vertical) {
             for (HologramLine line : lines) {
-                if (line.getRenderer() == null) {
-                    // Line is not visible.
-                    continue;
-                }
-                PositionManager positionManager = line.getPositionManager();
-                Vector offsets = positionManager.getOffsets();
-                double offsetY = offsets.getY() + line.getSettings().getOffsetY();
-
-                // Calculate the new location.
-                Location loc;
-                if (vertical || line.getType() != HologramLineType.TEXT) {
-                    // If we rotate vertically, we put the lines along the relative vertical vector.
-                    Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
-                    loc = pivot.clone().add(vector);
-                } else {
-                    // If we don't rotate vertically, we put the lines above each other.
-                    loc = location.clone().add(0, height + offsetY, 0);
-                }
-
-                height += line.getSettings().getHeight();
-
-                // Adapt the lines offsets.
-                if (horizontal) {
-                    double offsetX = offsets.getX() + line.getSettings().getOffsetX();
-                    double offsetZ = offsets.getZ() + line.getSettings().getOffsetZ();
-                    if (offsetX != 0) {
-                        loc.add(horizontalPerpendicular.clone().multiply(offsetX));
-                    }
-                    if (offsetZ != 0) {
-                        loc.add(pDir.clone().multiply(offsetZ));
-                    }
-                }
-
-                // Update head rotation.
-                if (heads) {
-                    // TODO: implement head rotation
-                    if (line.getType() == HologramLineType.HEAD || line.getType() == HologramLineType.SMALL_HEAD) {
-
-                    } else if (line.getType() == HologramLineType.ENTITY) {
-
-                    }
-                }
-
-                // Set the new location.
-                positionManager.setLocation(loc);
-
-                // Update the line location for the current viewer.
-                line.getRenderer().teleport(player, loc);
-            }
-        } else {
-            for (HologramLine line : lines) {
-                PositionManager positionManager = line.getPositionManager();
-                Location actualLocation = positionManager.getActualLocation().clone();
-                HologramLineRenderer renderer = line.getRenderer();
+                final HologramLineRenderer renderer = line.getRenderer();
+                final PositionManager positionManager = line.getPositionManager();
+                positionManager.setLocation(hologramLocation.clone());
                 if (renderer != null) {
-
-                    // Update head rotation.
-                    if (heads) {
-                        // TODO: implement head rotation
-                        if (line.getType() == HologramLineType.HEAD || line.getType() == HologramLineType.SMALL_HEAD) {
-
-                        } else if (line.getType() == HologramLineType.ENTITY) {
-
-                        }
-                    }
-
-                    line.getRenderer().teleport(player, actualLocation);
+                    renderer.teleport(player, positionManager.getActualLocation());
                 }
-                location.add(0, line.getSettings().getHeight(), 0);
+                hologramLocation.subtract(0, line.getSettings().getHeight(), 0);
             }
+            return;
+        }
+
+        final Location playerEyeLocation = player.getEyeLocation();
+        final Vector playerLookDirection = playerEyeLocation.getDirection().clone().normalize();
+
+        // Calculate the required vectors.
+        final Vector horizontalPerpendicular = playerLookDirection.clone()
+                .crossProduct(MathUtil.UP_VECTOR)
+                .normalize();
+        final Vector verticalPerpendicular = horizontalPerpendicular.clone()
+                .crossProduct(playerLookDirection)
+                .multiply(-1d)
+                .normalize();
+
+        // Calculate the pivot point. (The center of the hologram)
+        final Location pivot = hologramLocation.clone().subtract(0, totalHeight / 2, 0);
+
+        // Calculate new location for each line.
+        double height = 0.0d;
+        for (HologramLine line : lines) {
+            final HologramLineRenderer renderer = line.getRenderer();
+            if (renderer == null) {
+                // Line is not visible.
+                continue;
+            }
+
+            final PositionManager positionManager = line.getPositionManager();
+            final HologramLineSettings settings = line.getSettings();
+            final Vector offsets = positionManager.getOffsets();
+
+            // Calculate the new location.
+            // NOTE: Vertical alignment is only supported for text lines.
+            final Location location;
+            if (vertical && line.getType() == HologramLineType.TEXT) {
+                // If we rotate vertically, we put the lines along the relative vertical vector.
+                final Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
+                location = pivot.clone().add(vector);
+            } else {
+                // If we don't rotate vertically, we put the lines above each other.
+                final double totalOffsetY = offsets.getY() + settings.getOffsetY();
+                location = hologramLocation.clone().add(0, height + totalOffsetY, 0);
+            }
+
+            height += settings.getHeight();
+
+            // Add the line offsets.
+            if (horizontal) {
+                final double totalOffsetX = offsets.getX() + settings.getOffsetX();
+                final double totalOffsetZ = offsets.getZ() + settings.getOffsetZ();
+                if (totalOffsetX != 0) {
+                    location.add(horizontalPerpendicular.clone().multiply(totalOffsetX));
+                }
+                if (totalOffsetZ != 0) {
+                    location.add(playerLookDirection.clone().multiply(totalOffsetZ));
+                }
+            }
+
+            // Update the line location for the current viewer.
+            renderer.teleport(player, location);
         }
     }
 
     @NotNull
     @Override
     public Location getNextLineLocation() {
-        double height = getHeight();
-        Location location = getParent().getPositionManager().getActualLocation();
+        final double height = getHeight();
+        final Location location = getParent().getPositionManager().getActualLocation();
         return location.subtract(0, height, 0);
     }
 
