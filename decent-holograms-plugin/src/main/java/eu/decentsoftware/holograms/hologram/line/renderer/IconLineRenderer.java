@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,14 +39,15 @@ public class IconLineRenderer extends DoubleEntityLineRenderer {
     @Override
     public void display(@NotNull Player player) {
         ItemStack item = itemStack.toItemStack(player);
+        Location location = getParent().getPositionManager().getActualLocation();
 
         // Create the item metadata objects
-        Object metaEntityItem = NMS.getMetaEntityProperties(false, false, false, false, false, itemStack.glowing(), false);
+        Object metaEntityItem = NMS.getMetaEntityProperties(false, false, false,
+                false, false, itemStack.glowing(), false);
         Object metaItem = NMS.getMetaItemStack(item);
-        Object metaGravity = NMS.getMetaEntityGravity(false);
 
         // Display
-        super.display(player, EntityType.DROPPED_ITEM, metaEntityItem, metaItem, metaGravity);
+        super.display(player, location, EntityType.DROPPED_ITEM, metaEntityItem, metaItem);
     }
 
     @Override

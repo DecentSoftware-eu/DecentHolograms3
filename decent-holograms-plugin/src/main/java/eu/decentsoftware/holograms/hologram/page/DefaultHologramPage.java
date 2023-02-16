@@ -33,6 +33,7 @@ import eu.decentsoftware.holograms.utils.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class DefaultHologramPage implements HologramPage {
         this(parent, new ConditionHolder(), new ActionHolder());
     }
 
+    @Contract(pure = true)
     public DefaultHologramPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
         this.parent = parent;
         this.lines = new ArrayList<>();
@@ -94,6 +96,7 @@ public class DefaultHologramPage implements HologramPage {
         }
     }
 
+    @Override
     public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
         final Location hologramLocation = getParent().getPositionManager().getActualLocation();
         final boolean downOrigin = getParent().getSettings().isDownOrigin();

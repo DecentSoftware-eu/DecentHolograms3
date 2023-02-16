@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
@@ -45,7 +44,7 @@ public class HeadLineRenderer extends LineRenderer {
         super(parent, type);
         this.itemStack = itemStack;
         this.small = small;
-        this.eid = DecentHolograms.getInstance().getNMSManager().getAdapter().getFreeEntityId();
+        this.eid = NMS.getFreeEntityId();
     }
 
     @Override
@@ -54,15 +53,15 @@ public class HeadLineRenderer extends LineRenderer {
         ItemStack item = itemStack.toItemStack(player);
 
         // Create the metadata objects
-        Object metaEntity = NMS.getMetaEntityProperties(false, false, false, false, true, false, false);
+        Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
+                false, true, false, false);
         Object metaArmorStand = NMS.getMetaArmorStandProperties(small, false, true, true);
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(false);
-        Object metaGravity = NMS.getMetaEntityGravity(false);
 
         // Spawn the fake armor stand entity
         NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaGravity, metaArmorStand, metaNameVisible);
+        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
         // Set the helmet
         NMS.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
     }

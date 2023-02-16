@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.nms.Version;
@@ -47,7 +46,7 @@ public class TextLineRenderer extends LineRenderer {
         super(parent, HologramLineType.TEXT);
         this.text = text;
         this.hoverText = hoverText;
-        this.eid = DecentHolograms.getInstance().getNMSManager().getAdapter().getFreeEntityId();
+        this.eid = NMS.getFreeEntityId();
     }
 
     /**
@@ -58,7 +57,7 @@ public class TextLineRenderer extends LineRenderer {
      */
     @NotNull
     private String getFormattedText(@NotNull Player player) {
-        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
         String formattedText = text;
 
         if (hoverText != null) {
@@ -69,7 +68,7 @@ public class TextLineRenderer extends LineRenderer {
         }
 
         // Replace custom replacements
-        formattedText = DecentHolograms.getInstance().getReplacementRegistry().replace(formattedText, profile);
+        formattedText = PLUGIN.getReplacementRegistry().replace(formattedText, profile);
         // Replace PAPI placeholders
         formattedText = PAPI.setPlaceholders(player, formattedText);
         // Colorize
@@ -84,8 +83,10 @@ public class TextLineRenderer extends LineRenderer {
         String formattedText = getFormattedText(player);
 
         // Create the metadata objects
-        Object metaEntity = NMS.getMetaEntityProperties(false, false, false, false, true, false, false);
-        Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true, true);
+        Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
+                false, true, false, false);
+        Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true,
+                true);
         Object metaName;
         if (Version.is(8)) {
             metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraftLegacy(formattedText));

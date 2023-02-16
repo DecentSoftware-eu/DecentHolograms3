@@ -18,10 +18,8 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -44,9 +42,8 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
 
     public DoubleEntityLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         super(parent, type);
-        NMSAdapter nms = DecentHolograms.getInstance().getNMSManager().getAdapter();
-        this.eid = nms.getFreeEntityId();
-        this.eidOther = nms.getFreeEntityId();
+        this.eid = NMS.getFreeEntityId();
+        this.eidOther = NMS.getFreeEntityId();
     }
 
     /**
@@ -57,25 +54,24 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
      * @param typeOther The type of the passenger entity.
      * @param metaOther The metadata of the passenger entity.
      */
-    protected void display(@NotNull Player player, @NotNull EntityType typeOther, @NotNull Object... metaOther) {
-        Location loc = getParent().getPositionManager().getActualLocation();
-
+    protected void display(@NotNull Player player, @NotNull Location location, @NotNull EntityType typeOther, @NotNull Object... metaOther) {
         // Create the armor stand metadata objects
-        Object metaEntity = NMS.getMetaEntityProperties(false, false, false, false, true, false, false);
-        Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true, true);
+        Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
+                false, true, false, false);
+        Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true,
+                true);
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(false);
-        Object metaGravity = NMS.getMetaEntityGravity(false);
 
         // Spawn the fake armor stand entity
-        NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
+        NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, location);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible, metaGravity);
+        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
 
         // Spawn the passenger entity
         if (typeOther.isAlive()) {
-            NMS.spawnEntityLiving(player, eidOther, UUID.randomUUID(), typeOther, loc);
+            NMS.spawnEntityLiving(player, eidOther, UUID.randomUUID(), typeOther, location);
         } else {
-            NMS.spawnEntity(player, eidOther, UUID.randomUUID(), typeOther, loc);
+            NMS.spawnEntity(player, eidOther, UUID.randomUUID(), typeOther, location);
         }
         // Send the metadata
         NMS.sendEntityMetadata(player, eidOther, metaOther);

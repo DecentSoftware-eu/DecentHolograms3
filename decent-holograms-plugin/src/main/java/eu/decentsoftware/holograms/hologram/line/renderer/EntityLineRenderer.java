@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentEntity;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,13 +36,15 @@ public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
     @Override
     public void display(@NotNull Player player) {
+        Location location = getParent().getPositionManager().getActualLocation();
+
         // Create the entity metadata objects
-        Object metaEntityOther = NMS.getMetaEntityProperties(false, false, false, false, false, entity.glowing(), false);
-        Object metaGravity = NMS.getMetaEntityGravity(false);
+        Object metaEntityOther = NMS.getMetaEntityProperties(false, false, false,
+                false, false, entity.glowing(), false);
         Object metaSilenced = NMS.getMetaEntitySilenced(true);
 
         // Display
-        super.display(player, entity.type(), metaEntityOther, metaGravity, metaSilenced);
+        super.display(player, location, entity.type(), metaEntityOther, metaSilenced);
     }
 
     @Override
