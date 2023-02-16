@@ -404,8 +404,8 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
          */
 
         serializer.clear();
-        serializer.writeInt(eid);
         serializer.writeInt(passengers != null && passengers.length >= 1 ? passengers[0] : -1);
+        serializer.writeInt(eid);
         serializer.writeByte(0);
 
         try {
