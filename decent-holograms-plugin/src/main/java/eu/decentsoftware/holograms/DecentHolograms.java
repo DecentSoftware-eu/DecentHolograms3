@@ -42,7 +42,7 @@ import eu.decentsoftware.holograms.conditions.serialization.ConditionSerializer;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.NMSManagerImpl;
-import eu.decentsoftware.holograms.nms.PacketListenerImpl;
+import eu.decentsoftware.holograms.nms.PacketListener;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
@@ -95,7 +95,6 @@ public final class DecentHolograms extends JavaPlugin {
         // -- Attempt to initialize the NMS adapter.
         try {
             this.nmsManager = new NMSManagerImpl();
-            this.nmsManager.setPacketListener(new PacketListenerImpl());
         } catch (IllegalStateException e) {
             getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
             getLogger().severe("*** Disabling...");
@@ -130,6 +129,7 @@ public final class DecentHolograms extends JavaPlugin {
         // -- Register listeners
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
+        pm.registerEvents(new PacketListener(), this);
 
         // -- Commands
         setupCommands();
@@ -231,7 +231,7 @@ public final class DecentHolograms extends JavaPlugin {
 
     @Contract(pure = true)
     public static DecentHolograms getInstance() {
-        return (DecentHolograms) instance;
+        return instance;
     }
 
 }

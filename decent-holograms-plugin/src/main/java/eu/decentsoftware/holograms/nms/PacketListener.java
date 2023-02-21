@@ -21,25 +21,27 @@ package eu.decentsoftware.holograms.nms;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
-import eu.decentsoftware.holograms.nms.listener.PacketListener;
+import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-public class PacketListenerImpl implements PacketListener {
+public class PacketListener implements Listener {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
-    @Override
-    public void handlePacketPlayInUseEntity(@NotNull Player player, int entityId, @NotNull ClickType clickType) {
+    @EventHandler
+    public void onPacketPlayInUseEntity(@NotNull PacketPlayInUseEntityEvent event) {
+        Player player = event.getPlayer();
         Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
         if (profile == null) {
             return;
         }
 
         int clickableEntityId = profile.getContext().getClickableEntityId();
-        if (clickableEntityId != entityId) {
+        if (clickableEntityId != event.getEntityId()) {
             return;
         }
 

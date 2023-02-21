@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.reflect.ReflectUtil;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.buffer.Unpooled;
@@ -28,6 +29,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,12 +45,19 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     private static final Map<String, Integer> ENTITY_TYPE_NAME_ID_MAP;
     private static final Field ENTITY_COUNT_FIELD;
+    private static final Field USE_PACKET_ENTITY_ID_FIELD;
 
     static {
         ENTITY_TYPE_NAME_ID_MAP = ReflectUtil.getFieldValue(EntityTypes.class, "g");
         try {
             ENTITY_COUNT_FIELD = Entity.class.getDeclaredField("entityCount");
             ENTITY_COUNT_FIELD.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            USE_PACKET_ENTITY_ID_FIELD = PacketPlayInUseEntity.class.getDeclaredField("a");
+            USE_PACKET_ENTITY_ID_FIELD.setAccessible(true);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -107,6 +116,33 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     /*
      *  Packets
      */
+
+    @Override
+    public PacketPlayInUseEntityEvent extractEventFromPacketPlayInUseEntity(Player player, Object packet) {
+        if (!(packet instanceof PacketPlayInUseEntity)) {
+            return null;
+        }
+        PacketPlayInUseEntity useEntityPacket = (PacketPlayInUseEntity) packet;
+        int entityId;
+        try {
+            entityId = USE_PACKET_ENTITY_ID_FIELD.getInt(useEntityPacket);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+        ClickType clickType;
+        switch (useEntityPacket.a()) {
+            case ATTACK:
+                clickType = player.isSneaking() ? ClickType.SHIFT_LEFT : ClickType.LEFT;
+                break;
+            case INTERACT:
+            case INTERACT_AT:
+                clickType = player.isSneaking() ? ClickType.SHIFT_RIGHT : ClickType.RIGHT;
+                break;
+            default:
+                return null;
+        }
+        return new PacketPlayInUseEntityEvent(player, entityId, clickType);
+    }
 
     @Override
     public Object updateTimePacket(long worldAge, long day) {

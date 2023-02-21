@@ -23,17 +23,15 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.nms.listener.PacketListener;
+import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -46,18 +44,15 @@ import org.jetbrains.annotations.Nullable;
  * @author d0by
  * @since 3.0.0
  */
-@Getter
-@Setter
 public class NMSManagerImpl {
 
 	private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 	private static final String IDENTIFIER = "DecentHolograms";
 	@Getter
 	private static NMSManagerImpl instance;
-	private final NMSAdapter adapter;
-    private PacketListener packetListener;
-	@Getter(AccessLevel.NONE)
-	@Setter(AccessLevel.NONE)
+
+	@Getter
+	private final @NonNull NMSAdapter adapter;
 	private boolean usingProtocolLib = false;
 
 	/**
@@ -70,9 +65,11 @@ public class NMSManagerImpl {
 			throw new IllegalStateException("NMSManager is already initialized!");
 		}
 		instance = this;
+		NMSAdapter adapter;
 		if ((adapter = initNMSAdapter()) == null) {
 			throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
 		}
+		this.adapter = adapter;
 	}
 
 	/**
@@ -93,11 +90,20 @@ public class NMSManagerImpl {
 				@Override
 				public void onPacketSending(PacketEvent packetEvent) {
 					Player player = packetEvent.getPlayer();
-					if (player != null) {
-						PacketContainer packet = packetEvent.getPacket();
-						if (PacketHandlerCommons.handlePacket(packet, player)) {
-							packetEvent.setCancelled(true);
-						}
+					if (player == null) {
+						return;
+					}
+
+					Object packet = packetEvent.getPacket().getHandle();
+					PacketPlayInUseEntityEvent event = adapter.extractEventFromPacketPlayInUseEntity(player, packet);
+					if (event == null) {
+						return;
+					}
+
+					Bukkit.getPluginManager().callEvent(event);
+
+					if (event.isCancelled()) {
+						packetEvent.setCancelled(true);
 					}
 				}
 
@@ -142,7 +148,15 @@ public class NMSManagerImpl {
 				ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
 					@Override
 					public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-						if (!PacketHandlerCommons.handlePacket(packet, player)) {
+						PacketPlayInUseEntityEvent event = adapter.extractEventFromPacketPlayInUseEntity(player, packet);
+						if (event == null) {
+							super.channelRead(channelHandlerContext, packet);
+							return;
+						}
+
+						Bukkit.getPluginManager().callEvent(event);
+
+						if (!event.isCancelled()) {
 							super.channelRead(channelHandlerContext, packet);
 						}
 					}

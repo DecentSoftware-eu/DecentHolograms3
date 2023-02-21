@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
@@ -113,6 +114,16 @@ public interface NMSAdapter {
     /*
      *  Packets
      */
+
+    /**
+     * Extracts data from the PacketPlayInUseEntity packet and creates
+     * the PacketPlayInUseEntityEvent object.
+     *
+     * @param packet The packet to extract data from.
+     * @return The PacketPlayInUseEntityEvent object.
+     * @see PacketPlayInUseEntityEvent
+     */
+    PacketPlayInUseEntityEvent extractEventFromPacketPlayInUseEntity(Player player, Object packet);
 
     /**
      * Create a packet to update the world time for a player.
