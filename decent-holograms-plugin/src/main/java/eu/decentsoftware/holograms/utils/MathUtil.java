@@ -45,6 +45,9 @@ public final class MathUtil {
      * @return True if the location is inside the circle, false otherwise.
      */
     public static boolean inDistance(@NotNull Location center, @NotNull Location location, double distance) {
+        if (center.getWorld() != null && location.getWorld() != null && !center.getWorld().equals(location.getWorld())) {
+            return false;
+        }
         return center.distanceSquared(location) <= distance * distance;
     }
 
