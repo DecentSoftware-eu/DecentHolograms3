@@ -44,12 +44,12 @@ import org.jetbrains.annotations.Nullable;
  * @author d0by
  * @since 3.0.0
  */
-public class NMSManagerImpl {
+public class NMSManager {
 
 	private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 	private static final String IDENTIFIER = "DecentHolograms";
 	@Getter
-	private static NMSManagerImpl instance;
+	private static NMSManager instance;
 
 	@Getter
 	private final @NonNull NMSAdapter adapter;
@@ -60,7 +60,7 @@ public class NMSManagerImpl {
 	 *
 	 * @throws IllegalStateException If the current version is not supported.
 	 */
-	public NMSManagerImpl() throws IllegalStateException {
+	public NMSManager() throws IllegalStateException {
 		if (instance != null) {
 			throw new IllegalStateException("NMSManager is already initialized!");
 		}
