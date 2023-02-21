@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import com.google.common.base.Optional;
+import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
@@ -119,6 +120,11 @@ public class NMSAdapter_v1_9_R2 implements NMSAdapter {
     /*
      *  Packets
      */
+
+    @Override
+    public PacketPlayInUseEntityEvent extractEventFromPacketPlayInUseEntity(Player player, Object packet) {
+        return null;
+    }
 
     @Override
     public Object updateTimePacket(long worldAge, long day) {

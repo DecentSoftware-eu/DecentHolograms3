@@ -225,13 +225,11 @@ public class DefaultHologramPage implements HologramPage {
 
     @Override
     public HologramLine removeLine(int index) {
-        // Remove the line from the list
         HologramLine line = lines.remove(index);
 
         // Hide the line to all viewers
         forEachViewerUseLineRendererSafe(line, HologramLineRenderer::hide);
 
-        // Realign other lines
         recalculate();
         return line;
     }
@@ -245,16 +243,13 @@ public class DefaultHologramPage implements HologramPage {
     @NotNull
     @Override
     public HologramPage addLine(@NotNull HologramLine line) {
-        // Add the line to the list
         lines.add(line);
 
         // Show the line to all viewers
         // TODO: check view conditions
         forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
 
-        // Realign other lines
         recalculate();
-
         return this;
     }
 
@@ -267,31 +262,25 @@ public class DefaultHologramPage implements HologramPage {
     @NotNull
     @Override
     public HologramPage addLine(int index, @NotNull HologramLine line) {
-        // Add the line to the list
         lines.add(index, line);
 
         // Show the line to all viewers
         // TODO: check view conditions
         forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
 
-        // Realign other lines
         recalculate();
-
         return this;
     }
 
     @NotNull
     @Override
     public HologramPage setLine(int index, @NotNull HologramLine line) {
-        // Remove the previous line from the list
         HologramLine previousLine = lines.remove(index);
 
         // Hide the previous line to all viewers
         forEachViewerUseLineRendererSafe(previousLine, HologramLineRenderer::hide);
 
-        // Add the new line
         addLine(index, line);
-
         return this;
     }
 
@@ -301,9 +290,7 @@ public class DefaultHologramPage implements HologramPage {
         // Hide all lines from all viewers
         forEachLineRendererAndViewerSafe(HologramLineRenderer::hide);
 
-        // Clear the list
         lines.clear();
-
         return this;
     }
 
@@ -321,15 +308,11 @@ public class DefaultHologramPage implements HologramPage {
         // Hide all lines from all viewers
         forEachLineRendererAndViewerSafe(HologramLineRenderer::hide);
 
-        // Clear the list
         this.lines.clear();
-
-        // Add all lines
         this.lines.addAll(lines);
 
         // Show all lines to all viewers
         forEachLineRendererAndViewerSafe(HologramLineRenderer::display);
-
         return this;
     }
 
