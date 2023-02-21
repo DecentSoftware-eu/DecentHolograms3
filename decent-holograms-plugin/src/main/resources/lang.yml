@@ -1,2 +1,16 @@
 # Use '{prefix}' in other messages, and it will be replaced with this.
-PREFIX: '&8[&3DecentHolograms&8] &7'
+prefix: "&8[&3DecentHolograms&8] &7"
+no_permission: "{prefix}&cYou don't have permission to use this."
+plugin:
+  reloaded: "{prefix}&aSuccessfully reloaded in (%1$s ms)"
+editor:
+  move:
+    initiate:
+      - "{prefix}Moving hologram: &b%1$s"
+      - "{prefix}- &f&lLEFT CLICK &7to place it."
+      - "{prefix}- &f&lSCROLL &7to move closer/farther."
+      - "{prefix}- &f&lSNEAK &7to snap to block center."
+    finish: "{prefix}&aSuccessfully moved hologram."
+    error:
+      already_moving: "{prefix}&cYou are already moving a hologram."
+      no_hologram: "{prefix}&cYou are not looking at a hologram."

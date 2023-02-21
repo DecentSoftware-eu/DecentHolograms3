@@ -18,26 +18,20 @@
 
 package eu.decentsoftware.holograms;
 
-import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.Common;
-import eu.decentsoftware.holograms.utils.config.CFG;
-import eu.decentsoftware.holograms.utils.config.ConfigValue;
+import eu.decentsoftware.holograms.utils.config.FileConfig;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-
 @UtilityClass
 public final class Lang {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-
-    // ========== GENERAL ========== //
 
     public static String UPDATE_MESSAGE = "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7https://www.spigotmc.org/resources/96927/";
 
@@ -45,27 +39,7 @@ public final class Lang {
      * The prefix of the plugin. Use "{prefix}" in any other message to
      * display the prefix.
      */
-    @ConfigValue("PREFIX")
     public static String PREFIX = "&8[&3DecentHolograms&8] &7";
-
-    /**
-     * The message that is displayed when a player tries to use something,
-     * they don't have permission for.
-     */
-    @ConfigValue("NO_PERM")
-    public static String NO_PERM = "{prefix}&cYou don't have permission to use this.";
-
-    @ConfigValue("RELOADED")
-    public static String RELOADED = "{prefix}&aSuccessfully reloaded in {took} ms)";
-
-    // ========== COMMAND ========== //
-
-    @ConfigValue("COMMAND.ONLY_PLAYER")
-    public static String COMMAND_ONLY_PLAYER = "{prefix}&cYou must be a player to use this command.";
-    @ConfigValue("COMMAND.INVALID_PLAYER")
-    public static String COMMAND_INVALID_PLAYER = "{prefix}&cThat player doesn't exist.";
-    @ConfigValue("COMMAND.USAGE")
-    public static String COMMAND_USAGE = "{prefix}&7Usage: {secondary}%1$s";
 
     /*
      *  Reload methods
@@ -74,19 +48,15 @@ public final class Lang {
     /**
      * The "lang.yml" file.
      */
-    private static File file;
+    private static FileConfig config;
 
     /**
-     * Get the "lang.yml" file.
+     * Get the "lang.yml" file as a {@link FileConfig}.
      *
-     * @return The "lang.yml" file.
-     * @since 1.0.0
+     * @return The "lang.yml" file as a {@link FileConfig}.
      */
-    public static File getFile() {
-        if (file == null) {
-            file = new File(PLUGIN.getDataFolder(), "lang.yml");
-        }
-        return file;
+    public static FileConfig getConfig() {
+        return config;
     }
 
     /**
@@ -95,7 +65,14 @@ public final class Lang {
      * @since 1.0.0
      */
     public static void reload() {
-        CFG.load(PLUGIN, Lang.class, getFile());
+        if (config == null) {
+            config = new FileConfig(PLUGIN, "lang.yml");
+        } else {
+            config.reload();
+        }
+
+        // Reload prefix
+        PREFIX = config.getString("prefix", PREFIX);
     }
 
     /*
@@ -127,7 +104,7 @@ public final class Lang {
      *
      * @param string  The string to format.
      * @param profile The profile to format the string for. (Can be null)
-     * @param args    Arguments to replace in the string.
+     * @param args    Java style arguments.
      * @return The formatted string.
      */
     @NotNull
@@ -173,7 +150,7 @@ public final class Lang {
      * correct values and replace all the supported colors.
      *
      * @param string The string to format.
-     * @param args   Arguments to replace in the string.
+     * @param args   Java style arguments.
      * @return The formatted string.
      */
     @NotNull
@@ -184,7 +161,7 @@ public final class Lang {
     /**
      * Send the given string to the given command sender after formatting it.
      *
-     * @param sender  The command sender.
+     * @param sender  The recipient of the message.
      * @param message The message to send.
      * @see #formatString(String, Profile, Object...) for more information.
      */
@@ -198,9 +175,38 @@ public final class Lang {
     }
 
     /**
+     * Send a message to the player, after loading it from the config at the given path
+     * and formatting it.
+     *
+     * @param sender The recipient of the message.
+     * @param path   The path to the message in the config.
+     */
+    public static void confTell(@NotNull CommandSender sender, @NotNull String path) {
+        confTell(sender, path, (Object) null);
+    }
+
+    /**
+     * Send a message to the player, after loading it from the config at the given path
+     * and formatting it.
+     *
+     * @param sender The recipient of the message.
+     * @param path   The path to the message in the config.
+     * @param args   Java style arguments.
+     */
+    public static void confTell(@NotNull CommandSender sender, @NotNull String path, Object... args) {
+        if (config.isString(path)) {
+            tell(sender, config.getString(path, ""), args);
+        } else if (config.isList(path)) {
+            for (String line : config.getStringList(path)) {
+                tell(sender, line, args);
+            }
+        }
+    }
+
+    /**
      * Send the given string to the given command sender after formatting it.
      *
-     * @param sender  The command sender.
+     * @param sender  The recipient of the message.
      * @param message The message to send.
      * @param args    Java style arguments.
      * @see #formatString(String, Profile, Object...) for more information.
@@ -212,7 +218,7 @@ public final class Lang {
     /**
      * Send the version message to a command sender.
      *
-     * @param sender The command sender.
+     * @param sender The recipient of the message.
      */
     public static void sendVersionMessage(CommandSender sender) {
         Common.tell(sender,
@@ -225,7 +231,7 @@ public final class Lang {
     /**
      * Notify the given command sender about an update.
      *
-     * @param sender The command sender.
+     * @param sender The recipient of the message.
      */
     public static void sendUpdateMessage(CommandSender sender) {
         Common.tell(sender, UPDATE_MESSAGE);

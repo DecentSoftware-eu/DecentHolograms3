@@ -214,7 +214,7 @@ public final class DecentHolograms extends JavaPlugin {
             );
 
             // -- Register exception handlers
-            manager.registerExceptionHandler(NoPermissionException.class, (sender, e) -> sender.sendMessage(Lang.NO_PERM));
+            manager.registerExceptionHandler(NoPermissionException.class, (sender, e) -> Lang.confTell(sender, "no_permission"));
 
             // -- Register commands
             annotationParser.parse(new TestCommand());
