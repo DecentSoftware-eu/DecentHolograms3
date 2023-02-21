@@ -31,6 +31,7 @@ import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
 import eu.decentsoftware.holograms.actions.serialization.ActionSerializer;
 import eu.decentsoftware.holograms.api.DefaultDecentHologramsAPI;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
+import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
 import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.hologram.line.content.ContentParserManager;
@@ -217,6 +218,7 @@ public final class DecentHolograms extends JavaPlugin {
             manager.registerExceptionHandler(NoPermissionException.class, (sender, e) -> Lang.confTell(sender, "no_permission"));
 
             // -- Register commands
+            annotationParser.parse(new DecentHologramsCommand());
             annotationParser.parse(new TestCommand());
 
         } catch (Exception e) {

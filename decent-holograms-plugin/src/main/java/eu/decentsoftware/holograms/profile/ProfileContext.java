@@ -22,6 +22,9 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,10 +34,14 @@ import org.jetbrains.annotations.Nullable;
  * @author d0by
  * @since 3.0.0
  */
+@Getter
+@Setter
 public class ProfileContext {
 
     private final int clickableEntityId;
     private HologramLine watchedLine;
+    private DefaultHologram movingHologram;
+    private int movingHologramDistance;
 
     /**
      * Create a new instance of {@link ProfileContext}.
