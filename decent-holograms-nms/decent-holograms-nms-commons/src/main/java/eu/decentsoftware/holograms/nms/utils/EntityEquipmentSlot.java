@@ -1,4 +1,4 @@
-package eu.decentsoftware.holograms.nms;
+package eu.decentsoftware.holograms.nms.utils;
 
 /**
  * This enum holds all equipment slots of entities. It is used

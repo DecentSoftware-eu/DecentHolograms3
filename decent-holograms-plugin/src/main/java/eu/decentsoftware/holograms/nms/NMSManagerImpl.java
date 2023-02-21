@@ -27,6 +27,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.nms.listener.PacketListener;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;

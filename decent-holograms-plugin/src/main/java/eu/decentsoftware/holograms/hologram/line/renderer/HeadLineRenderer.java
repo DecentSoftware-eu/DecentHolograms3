@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
-import eu.decentsoftware.holograms.nms.EntityEquipmentSlot;
+import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

@@ -43,7 +43,7 @@ import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.NMSManagerImpl;
 import eu.decentsoftware.holograms.nms.PacketListenerImpl;
-import eu.decentsoftware.holograms.nms.Version;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.server.ServerRegistry;

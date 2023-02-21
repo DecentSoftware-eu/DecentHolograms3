@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.hologram.line.content.objects;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.utils.color.DecentColor;
-import eu.decentsoftware.holograms.nms.Version;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.utils;
 
 import com.google.common.collect.Lists;
 import dev.dbassett.skullcreator.SkullCreator;
-import eu.decentsoftware.holograms.nms.Version;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;

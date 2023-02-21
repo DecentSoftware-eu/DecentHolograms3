@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.utils.color.patterns;
 
-import eu.decentsoftware.holograms.nms.Version;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
 import net.md_5.bungee.api.ChatColor;
 

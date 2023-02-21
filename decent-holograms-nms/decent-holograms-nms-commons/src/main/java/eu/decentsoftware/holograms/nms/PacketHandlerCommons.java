@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.nms.reflect.ReflectUtil;
 import eu.decentsoftware.holograms.nms.reflect.ReflectConstructor;
 import eu.decentsoftware.holograms.nms.reflect.ReflectField;
 import eu.decentsoftware.holograms.nms.reflect.ReflectMethod;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.experimental.UtilityClass;

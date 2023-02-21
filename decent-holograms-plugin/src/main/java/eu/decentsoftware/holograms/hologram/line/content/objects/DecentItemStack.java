@@ -144,6 +144,8 @@ public class DecentItemStack {
     public static DecentItemStack fromString(@NotNull String string) {
         string = string.trim();
 
+        // TODO: rework this
+
         String materialName = string.split(" ")[0];
         Optional<XMaterial> material = XMaterial.matchXMaterial(materialName);
         return new DecentItemStack(material.orElse(XMaterial.STONE))
@@ -153,8 +155,8 @@ public class DecentItemStack {
                 .hdbId(getFlagValue(string, "--headDataBase:"))
                 .itemsAdder(getFlagValue(string, "--itemsAdder:"))
                 .oraxenId(getFlagValue(string, "--oraxen:"))
-                .enchanted(string.contains("--enchanted"))
-                .glowing(string.contains("--glowing") || string.contains("--glow"));
+                .enchanted(string.contains("-e") || string.contains("--enchanted"))
+                .glowing(string.contains("-g") || string.contains("--glow") || string.contains("--glowing"));
     }
 
     /**

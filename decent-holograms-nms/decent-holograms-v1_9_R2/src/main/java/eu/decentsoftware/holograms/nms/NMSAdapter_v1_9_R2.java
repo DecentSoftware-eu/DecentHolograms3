@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import com.google.common.base.Optional;
+import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_9_R2.*;

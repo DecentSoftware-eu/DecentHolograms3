@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

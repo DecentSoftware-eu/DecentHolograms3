@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.animations.custom;
+package eu.decentsoftware.holograms.animations.text;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.animations.Animation;
@@ -27,16 +27,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomAnimation extends Animation {
+public class CustomTextAnimation extends Animation {
 
     protected final @NotNull List<AnimationFrame<?>> frameList;
 
-    public CustomAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
+    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
         super(name, type, totalSteps, speed, pause);
         this.frameList = new ArrayList<>();
     }
 
-    public CustomAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause, @NotNull List<AnimationFrame<?>> frameList) {
+    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause, @NotNull List<AnimationFrame<?>> frameList) {
         super(name, type, totalSteps, speed, pause);
         this.frameList = frameList;
     }

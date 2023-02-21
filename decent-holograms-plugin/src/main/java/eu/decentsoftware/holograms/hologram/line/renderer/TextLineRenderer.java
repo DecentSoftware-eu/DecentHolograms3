@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
-import eu.decentsoftware.holograms.nms.Version;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
