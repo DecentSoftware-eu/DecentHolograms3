@@ -21,6 +21,8 @@ package eu.decentsoftware.holograms.actions.serialization;
 import com.google.gson.*;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.actions.ActionType;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
@@ -31,18 +33,43 @@ public class ActionHolderSerializer implements JsonSerializer<ActionHolder>, Jso
         JsonArray elements = json.getAsJsonArray();
         ActionHolder holder = new ActionHolder();
         for (JsonElement element : elements) {
-            holder.addAction(context.deserialize(element, Action.class));
+            JsonObject object = element.getAsJsonObject();
+            String typeName = object.get("type").getAsString();
+            ActionType type = ActionType.fromString(typeName);
+            if (type == null) {
+                throw new JsonParseException("Could not deserialize ActionHolder: " + typeName + " is not a valid ActionType");
+            }
+
+            holder.addAction(context.deserialize(element, type.getActionClass()));
         }
         return holder;
     }
 
     @Override
     public JsonElement serialize(ActionHolder src, Type typeOfSrc, JsonSerializationContext context) {
+        if (src.getActions().isEmpty()) {
+            return null;
+        }
         JsonArray array = new JsonArray();
         for (Action action : src.getActions()) {
-            array.add(context.serialize(action));
+            array.add(serializeAction(action, context));
         }
         return array;
+    }
+
+    @NotNull
+    private JsonObject serializeAction(@NotNull Action action, @NotNull JsonSerializationContext context) {
+        JsonObject object = context.serialize(action).getAsJsonObject();
+        if (object.has("type")) {
+            return object;
+        }
+
+        ActionType type = ActionType.fromClass(action.getClass());
+        if (type == null) {
+            throw new JsonParseException("Could not serialize ActionHolder: " + action.getClass().getName() + " is not a valid ActionType");
+        }
+        object.addProperty("type", type.name());
+        return object;
     }
 
 }

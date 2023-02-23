@@ -71,9 +71,7 @@ public class DefaultHologramConfig implements HologramConfig {
             ensureFileExists();
 
             try (FileWriter writer = new FileWriter(file.getPath())) {
-                writer.write("\uFEFF"); // BOM
-//                PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent), writer);
-                System.out.println(PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent)));
+                PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent), writer);
             } catch (IOException e) {
                 PLUGIN.getLogger().severe("Failed to save hologram " + parent.getName() + ":");
                 e.printStackTrace();

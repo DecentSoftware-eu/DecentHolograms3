@@ -25,21 +25,18 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
-import eu.decentsoftware.holograms.actions.serialization.ActionSerializer;
 import eu.decentsoftware.holograms.api.DefaultDecentHologramsAPI;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
 import eu.decentsoftware.holograms.commands.TestCommand;
+import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
+import eu.decentsoftware.holograms.editor.MoveListener;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.hologram.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.hologram.serialization.LocationSerializer;
-import eu.decentsoftware.holograms.conditions.Condition;
-import eu.decentsoftware.holograms.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
-import eu.decentsoftware.holograms.conditions.serialization.ConditionSerializer;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.NMSManager;
@@ -104,14 +101,7 @@ public final class DecentHolograms extends JavaPlugin {
         }
 
         // -- Initialize Custom Gson Instance
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(Location.class, new LocationSerializer())
-                .registerTypeAdapter(Action.class, new ActionSerializer())
-                .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())
-                .registerTypeAdapter(Condition.class, new ConditionSerializer())
-                .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
-                .setPrettyPrinting()
-                .create();
+        setupGson();
 
         // -- Initialize Managers
         this.ticker = new Ticker();
@@ -131,6 +121,7 @@ public final class DecentHolograms extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new PacketListener(), this);
+        pm.registerEvents(new MoveListener(), this);
 
         // -- Commands
         setupCommands();
@@ -146,6 +137,7 @@ public final class DecentHolograms extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.ticker.shutdown();
         this.nmsManager.shutdown();
         this.hologramRegistry.shutdown();
         this.replacementRegistry.shutdown();
@@ -224,6 +216,16 @@ public final class DecentHolograms extends JavaPlugin {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setupGson() {
+        this.gson = new GsonBuilder()
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Location.class, new LocationSerializer())
+                .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())
+                .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
+                .create();
     }
 
     @Contract(pure = true)

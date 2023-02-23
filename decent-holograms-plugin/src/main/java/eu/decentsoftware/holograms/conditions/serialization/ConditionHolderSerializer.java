@@ -21,6 +21,8 @@ package eu.decentsoftware.holograms.conditions.serialization;
 import com.google.gson.*;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.conditions.ConditionType;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
@@ -31,18 +33,44 @@ public class ConditionHolderSerializer implements JsonSerializer<ConditionHolder
         JsonArray elements = json.getAsJsonArray();
         ConditionHolder holder = new ConditionHolder();
         for (JsonElement element : elements) {
-            holder.addCondition(context.deserialize(element, Condition.class));
+            JsonObject object = element.getAsJsonObject();
+            String typeName = object.get("type").getAsString();
+            ConditionType type = ConditionType.fromString(typeName);
+            if (type == null) {
+                throw new JsonParseException("Could not deserialize ConditionHolder: " + typeName + " is not a valid ConditionType");
+            }
+
+            holder.addCondition(context.deserialize(element, type.getConditionClass()));
         }
         return holder;
     }
 
     @Override
     public JsonElement serialize(ConditionHolder src, Type typeOfSrc, JsonSerializationContext context) {
+        if (src.getConditions().isEmpty()) {
+            return null;
+        }
+
         JsonArray array = new JsonArray();
         for (Condition condition : src.getConditions()) {
-            array.add(context.serialize(condition));
+            array.add(serializeCondition(condition, context));
         }
         return array;
+    }
+
+    @NotNull
+    private JsonElement serializeCondition(Condition condition, JsonSerializationContext context) {
+        JsonObject object = context.serialize(condition).getAsJsonObject();
+        if (object.has("type")) {
+            return object;
+        }
+
+        ConditionType type = ConditionType.fromClass(condition.getClass());
+        if (type == null) {
+            throw new JsonParseException("Could not serialize ConditionHolder: " + condition.getClass().getName() + " is not a valid ConditionType");
+        }
+        object.addProperty("type", type.name());
+        return object;
     }
 
 }
