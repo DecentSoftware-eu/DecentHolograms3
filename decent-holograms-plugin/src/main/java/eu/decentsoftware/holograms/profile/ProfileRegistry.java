@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ProfileRegistry {
 
-    private final Map<String, Profile> profileMap;
+    private final Map<UUID, Profile> profileMap;
 
     /**
      * Creates a new profile registry.
@@ -51,7 +52,7 @@ public class ProfileRegistry {
 
         // -- Create profiles for all online players
         for (Player player : Bukkit.getOnlinePlayers()) {
-            registerProfile(player.getName());
+            registerProfile(player.getUniqueId());
         }
     }
 
@@ -65,29 +66,29 @@ public class ProfileRegistry {
     /**
      * Creates a new profile for the given player.
      *
-     * @param name The player's nickname.
+     * @param uuid The UUID of the player.
      */
-    public void registerProfile(@NotNull String name) {
-        this.profileMap.put(name, new Profile(name));
+    public void registerProfile(@NotNull UUID uuid) {
+        this.profileMap.put(uuid, new Profile(uuid));
     }
 
     /**
      * Get the profile of the given player.
      *
-     * @param name The name of the player.
+     * @param uuid The UUID of the player.
      * @return The profile or null if the given player doesn't have one.
      */
-    public Profile getProfile(@NotNull String name) {
-        return this.profileMap.get(name);
+    public Profile getProfile(@NotNull UUID uuid) {
+        return this.profileMap.get(uuid);
     }
 
     /**
      * Remove the profile of the given player.
      *
-     * @param name The name of the player.
+     * @param uuid The UUID of the player.
      */
-    public void removeProfile(@NotNull String name) {
-        this.profileMap.remove(name);
+    public void removeProfile(@NotNull UUID uuid) {
+        this.profileMap.remove(uuid);
     }
 
 }

@@ -57,7 +57,7 @@ public class TextLineRenderer extends LineRenderer {
      */
     @NotNull
     private String getFormattedText(@NotNull Player player) {
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
         String formattedText = text;
 
         if (hoverText != null) {

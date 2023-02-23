@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 /**
  * This class represents a profile of a player.
  *
@@ -31,16 +33,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Profile {
 
-    private final @NotNull String name;
+    private final @NotNull UUID uuid;
     private final @NotNull ProfileContext context;
 
     /**
      * Create a new profile for the given player.
      *
-     * @param name The player's nickname.
+     * @param uuid The player's UUID.
      */
-    public Profile(@NotNull String name) {
-        this.name = name;
+    public Profile(@NotNull UUID uuid) {
+        this.uuid = uuid;
         this.context = new ProfileContext();
     }
 
@@ -51,7 +53,7 @@ public class Profile {
      */
     @Nullable
     public Player getPlayer() {
-        return Bukkit.getPlayer(name);
+        return Bukkit.getPlayer(uuid);
     }
 
     /**
@@ -61,7 +63,8 @@ public class Profile {
      */
     @NotNull
     public String getName() {
-        return name;
+        Player player = getPlayer();
+        return player != null ? player.getName() : "Unknown";
     }
 
     /**

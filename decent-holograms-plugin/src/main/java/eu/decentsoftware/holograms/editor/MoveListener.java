@@ -47,7 +47,7 @@ public class MoveListener implements Listener {
         }
 
         Player player = e.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
         if (profile == null) {
             return;
         }
@@ -66,7 +66,7 @@ public class MoveListener implements Listener {
     @EventHandler
     public void onHotbarScroll(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
         if (profile == null) {
             return;
         }

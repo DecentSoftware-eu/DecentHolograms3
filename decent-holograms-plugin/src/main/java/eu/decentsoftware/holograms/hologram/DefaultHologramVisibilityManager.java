@@ -88,7 +88,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         }
 
         // Get the player's profile.
-        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getName());
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
         if (profile == null) {
             return;
         }

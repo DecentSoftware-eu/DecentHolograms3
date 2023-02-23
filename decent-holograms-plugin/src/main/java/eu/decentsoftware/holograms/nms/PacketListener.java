@@ -35,7 +35,7 @@ public class PacketListener implements Listener {
     @EventHandler
     public void onPacketPlayInUseEntity(@NotNull PacketPlayInUseEntityEvent event) {
         Player player = event.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
         if (profile == null) {
             return;
         }

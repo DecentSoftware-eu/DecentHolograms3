@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.listener;
+package eu.decentsoftware.holograms.profile;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
@@ -32,14 +32,14 @@ import org.bukkit.event.player.*;
  * @author d0by
  * @since 3.0.0
  */
-public class PlayerListener implements Listener {
+public class ProfileListener implements Listener {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        PLUGIN.getProfileRegistry().registerProfile(player.getName());
+        PLUGIN.getProfileRegistry().registerProfile(player.getUniqueId());
 //        PLUGIN.getNMSProvider().getPacketListener().hook(player);
 
         // -- Notify the player about a new version available
@@ -51,7 +51,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        PLUGIN.getProfileRegistry().removeProfile(player.getName());
+        PLUGIN.getProfileRegistry().removeProfile(player.getUniqueId());
 //        PLUGIN.getNMSProvider().getPacketListener().unhook(player);
     }
 

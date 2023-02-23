@@ -138,7 +138,7 @@ public final class Lang {
         if (player == null) {
             return formatString(string, (Profile) null);
         }
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
         return formatString(string, profile);
     }
 
