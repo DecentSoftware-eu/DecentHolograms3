@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
 import eu.decentsoftware.holograms.api.DefaultDecentHologramsAPI;
+import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
 import eu.decentsoftware.holograms.commands.TestCommand;
@@ -50,6 +51,7 @@ import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
@@ -164,6 +166,9 @@ public final class DecentHolograms extends JavaPlugin {
             BootMessenger.log("Using PlaceholderAPI for placeholder support!");
         }
         BootMessenger.sendAndFinish();
+
+        // Call the reload event
+        Bukkit.getPluginManager().callEvent(new DecentHologramsReloadEvent());
     }
 
     /**
