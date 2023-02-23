@@ -39,7 +39,7 @@ import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.hologram.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.hologram.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.hooks.PAPI;
-import eu.decentsoftware.holograms.profile.ProfileListener;
+import eu.decentsoftware.holograms.listener.PlayerListener;
 import eu.decentsoftware.holograms.nms.NMSManager;
 import eu.decentsoftware.holograms.nms.PacketListener;
 import eu.decentsoftware.holograms.nms.utils.Version;
@@ -121,7 +121,7 @@ public final class DecentHolograms extends JavaPlugin {
 
         // -- Register listeners
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new ProfileListener(), this);
+        pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new PacketListener(), this);
         pm.registerEvents(new MoveListener(), this);
 

@@ -23,6 +23,7 @@ import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
+import cloud.commandframework.annotations.suggestions.Suggestions;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
@@ -67,7 +68,8 @@ public class DecentHologramsCommand {
             @Argument("name") String name
     ) {
         Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
-        if (profile == null) {
+        if (profile.getContext().getMovingHologram() != null) {
+            Lang.confTell(player, "editor.move.error.already_moving");
             return;
         }
 
@@ -79,7 +81,7 @@ public class DecentHologramsCommand {
 
         HologramContext context = hologram.getContext();
         if (context.getMover() != null) {
-            Lang.confTell(player, "editor.move.error.already_moving");
+            Lang.confTell(player, "editor.move.error.already_being_moved");
             return;
         }
 
@@ -110,9 +112,6 @@ public class DecentHologramsCommand {
                 location.setY(location.getBlockY());
                 location.setZ(location.getBlockZ() + 0.5);
             }
-
-            System.out.println("World: " + location.getWorld().getName() + " X: " + location.getBlockX() + " Y: " + location.getBlockY() + " Z: " + location.getBlockZ());
-            System.out.println(hologram.getVisibilityManager().isViewing(player));
 
             return location;
         });
