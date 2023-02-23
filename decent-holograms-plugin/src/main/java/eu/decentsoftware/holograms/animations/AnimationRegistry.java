@@ -49,7 +49,7 @@ public class AnimationRegistry implements Ticked {
         this.startTicking();
     }
 
-    public void reload() {
+    public synchronized void reload() {
         this.animationMap.clear();
 
         // Load animations
@@ -59,7 +59,7 @@ public class AnimationRegistry implements Ticked {
         this.stepCounter.set(0);
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
         this.animationMap.clear();
     }
 

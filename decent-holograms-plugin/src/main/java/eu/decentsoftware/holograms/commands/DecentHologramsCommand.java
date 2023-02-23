@@ -21,13 +21,16 @@ package eu.decentsoftware.holograms.commands;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
+import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.profile.Profile;
+import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -46,15 +49,20 @@ public class DecentHologramsCommand {
 
     @CommandMethod("dh reload")
     @CommandDescription("Reload the plugin")
-    public void reload(final @NonNull CommandSender sender) {
-        PLUGIN.reload();
-        Lang.confTell(sender, "plugin.reloaded");
+    @CommandPermission(Config.ADMIN_PERM)
+    public void reload(@NonNull CommandSender sender) {
+        SchedulerUtil.async(() -> {
+            long start = System.currentTimeMillis();
+            PLUGIN.reload();
+            long end = System.currentTimeMillis();
+            Lang.confTell(sender, "plugin.reloaded", end - start);
+        });
     }
 
     @CommandMethod(value = "dh move [name]", requiredSender = Player.class)
     @CommandDescription("Move a hologram")
     public void move(
-            final @NonNull Player player,
+            @NonNull Player player,
             @Argument("name") String name
     ) {
         Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
@@ -92,7 +100,7 @@ public class DecentHologramsCommand {
             // Snap to block center if sneaking
             if (player.isSneaking()) {
                 location.setX(location.getBlockX() + 0.5);
-                location.setY(location.getBlockY() + 0.5);
+                location.setY(location.getBlockY());
                 location.setZ(location.getBlockZ() + 0.5);
             }
 

@@ -155,8 +155,15 @@ public final class DecentHolograms extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
+        this.hologramRegistry.reload();
+        this.replacementRegistry.reload();
         this.serverRegistry.reload();
         this.profileRegistry.reload();
+
+        if (PAPI.isAvailable()) {
+            BootMessenger.log("Using PlaceholderAPI for placeholder support!");
+        }
+        BootMessenger.sendAndFinish();
     }
 
     /**

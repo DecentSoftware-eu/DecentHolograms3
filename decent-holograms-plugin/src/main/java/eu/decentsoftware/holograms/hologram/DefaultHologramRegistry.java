@@ -55,7 +55,7 @@ public class DefaultHologramRegistry {
     /**
      * Reload the registry. This method is called when the plugin is reloaded.
      */
-    public void reload() {
+    public synchronized void reload() {
         this.shutdown();
 
         // Load holograms
@@ -88,7 +88,7 @@ public class DefaultHologramRegistry {
     /**
      * Shutdown the registry. This method is called when the plugin is disabled.
      */
-    public void shutdown() {
+    public synchronized void shutdown() {
         // Destroy all holograms
         for (DefaultHologram hologram : this.holograms.values()) {
             hologram.destroy();

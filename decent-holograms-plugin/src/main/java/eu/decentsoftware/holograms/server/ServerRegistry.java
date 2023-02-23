@@ -48,7 +48,7 @@ public class ServerRegistry {
      * Reload the registry, stop all servers from ticking and clear the cache, if any.
      * Then load all servers from the config.
      */
-    public void reload() {
+    public synchronized void reload() {
         this.shutdown();
 
         if (Config.PINGER_ENABLED && !Config.PINGER_SERVERS.isEmpty()) {
@@ -77,7 +77,7 @@ public class ServerRegistry {
     /**
      * Shutdown the registry, stop all servers from ticking and clear the cache.
      */
-    public void shutdown() {
+    public synchronized void shutdown() {
         // -- Stop the existing servers from ticking
         for (Server server : this.serverMap.values()) {
             server.stopTicking();

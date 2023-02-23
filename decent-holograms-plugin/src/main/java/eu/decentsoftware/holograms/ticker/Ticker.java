@@ -55,7 +55,7 @@ public class Ticker {
     /**
      * Destroy the ticker unregistering all objects and stopping it.
      */
-    public void shutdown() {
+    public synchronized void shutdown() {
         this.stop();
         this.tickedObjects.clear();
         this.tickedObjectsToAdd.clear();
@@ -103,14 +103,14 @@ public class Ticker {
     /**
      * Start the ticker.
      */
-    public void start() {
+    public synchronized void start() {
         taskId = SchedulerUtil.scheduleAsync(this::tick, 1L);
     }
 
     /**
      * Stop the ticker.
      */
-    public void stop() {
+    public synchronized void stop() {
         SchedulerUtil.cancel(taskId);
     }
 

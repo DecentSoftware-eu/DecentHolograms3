@@ -68,7 +68,7 @@ public class ReplacementRegistry {
     /**
      * Reload all replacements from the config.
      */
-    public void reload() {
+    public synchronized void reload() {
         this.defaultReplacementMap.clear();
         this.normalReplacementMap.clear();
         this.registerDefaultReplacements();
@@ -89,7 +89,7 @@ public class ReplacementRegistry {
     /**
      * Shutdown this manager, removing all registered replacements.
      */
-    public void shutdown() {
+    public synchronized void shutdown() {
         this.defaultReplacementMap.clear();
         this.normalReplacementMap.clear();
     }

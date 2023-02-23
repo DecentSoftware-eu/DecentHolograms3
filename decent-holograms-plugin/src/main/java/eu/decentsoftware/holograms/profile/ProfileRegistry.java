@@ -46,7 +46,7 @@ public class ProfileRegistry {
     /**
      * Reloads the registry. This will remove all profiles and create new ones for all online players.
      */
-    public void reload() {
+    public synchronized void reload() {
         this.shutdown();
 
         // -- Create profiles for all online players
@@ -58,7 +58,7 @@ public class ProfileRegistry {
     /**
      * Shuts down the registry. This will remove all profiles.
      */
-    public void shutdown() {
+    public synchronized void shutdown() {
         this.profileMap.clear();
     }
 
