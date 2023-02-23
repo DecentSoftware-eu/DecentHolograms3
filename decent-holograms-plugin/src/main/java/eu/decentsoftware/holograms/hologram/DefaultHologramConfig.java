@@ -29,10 +29,7 @@ import eu.decentsoftware.holograms.hologram.serialization.SerializablePage;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -44,7 +41,7 @@ public class DefaultHologramConfig implements HologramConfig {
     private final @NotNull File file;
 
     public DefaultHologramConfig(@NotNull DefaultHologram parent) {
-        this(parent, new File(PLUGIN.getDataFolder(), "holograms/" + parent.getName() + ".yml"));
+        this(parent, new File(PLUGIN.getDataFolder(), "holograms/" + parent.getName() + ".json"));
     }
 
     public DefaultHologramConfig(@NotNull DefaultHologram parent, @NotNull File file) {
@@ -73,8 +70,10 @@ public class DefaultHologramConfig implements HologramConfig {
 
             ensureFileExists();
 
-            try (FileWriter writer = new FileWriter(getFile().getPath())) {
-                PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent), writer);
+            try (FileWriter writer = new FileWriter(file.getPath())) {
+                writer.write("\uFEFF"); // BOM
+//                PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent), writer);
+                System.out.println(PLUGIN.getGson().toJson(SerializableHologram.fromHologram(parent)));
             } catch (IOException e) {
                 PLUGIN.getLogger().severe("Failed to save hologram " + parent.getName() + ":");
                 e.printStackTrace();
@@ -85,7 +84,7 @@ public class DefaultHologramConfig implements HologramConfig {
     @Override
     public CompletableFuture<Void> reload() {
         return CompletableFuture.runAsync(() -> {
-            try (FileReader reader = new FileReader(getFile().getPath())) {
+            try (FileReader reader = new FileReader(file.getPath())) {
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(reader, SerializableHologram.class);
                 parent.getPositionManager().setLocation(hologram.getLocation());
                 parent.getSettings().set(hologram.getSettings());

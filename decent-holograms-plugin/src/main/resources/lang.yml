@@ -6,7 +6,7 @@ plugin:
 editor:
   move:
     initiate:
-      - "{prefix}Moving hologram: &b%1$s"
+      - "{prefix}Moving hologram &b'%1$s'&7."
       - "{prefix}- &f&lLEFT CLICK &7to place it."
       - "{prefix}- &f&lSCROLL &7to move closer/farther."
       - "{prefix}- &f&lSNEAK &7to snap to block center."
