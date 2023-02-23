@@ -44,7 +44,7 @@ public class TestCommand {
 
         Hologram hologram = api.createHologram(player.getLocation(), Collections.singletonList(line));
         hologram.getVisibilityManager().setVisibleByDefault(false);
-        hologram.getVisibilityManager().show(player);
+        hologram.getVisibilityManager().setVisibility(player, true);
 
         player.sendMessage("Created hologram with line '" + line + "'! Only you can see it.");
     }

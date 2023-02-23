@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
@@ -231,7 +232,7 @@ public class DefaultHologram implements Hologram, Ticked {
      * @param shift The amount to shift by.
      */
     private void shiftPlayerPages(int index, int shift) {
-        for (Map.Entry<String, Integer> entry : visibilityManager.getPlayerPages().entrySet()) {
+        for (Map.Entry<UUID, Integer> entry : visibilityManager.getPlayerPages().entrySet()) {
             if (entry.getValue() >= index) {
                 Player player = Bukkit.getPlayer(entry.getKey());
                 if (player != null) {

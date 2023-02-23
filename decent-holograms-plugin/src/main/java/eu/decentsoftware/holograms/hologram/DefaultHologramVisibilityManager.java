@@ -18,28 +18,27 @@
 
 package eu.decentsoftware.holograms.hologram;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
+import eu.decentsoftware.holograms.api.hologram.Visibility;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.MathUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class DefaultHologramVisibilityManager implements HologramVisibilityManager {
 
     private final @NotNull DefaultHologram parent;
-    private final @NotNull Set<String> players;
-    private final @NotNull Set<String> viewers;
-    private final @NotNull Map<String, Integer> playerPages;
+    private final @NotNull Map<UUID, Visibility> playerVisibility;
+    private final @NotNull Map<UUID, Integer> playerPages;
+    private final @NotNull Set<UUID> currentViewers;
     private boolean visibleByDefault;
 
     /**
@@ -47,27 +46,33 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
      *
      * @param parent The parent hologram.
      */
+    @Contract(pure = true)
     public DefaultHologramVisibilityManager(@NotNull DefaultHologram parent) {
         this.parent = parent;
-        this.players = new HashSet<>();
-        this.viewers = new HashSet<>();
-        this.playerPages = new ConcurrentHashMap<>();
+        this.playerVisibility = new HashMap<>();
+        this.playerPages = new HashMap<>();
+        this.currentViewers = new HashSet<>();
         this.visibleByDefault = true;
     }
 
     @Override
     public void destroy() {
-        // Hide the hologram for all players
-        players.clear();
-        for (String player : getViewers()) {
-            Player playerObj = Bukkit.getPlayer(player);
-            if (playerObj != null) {
-                updateVisibility(playerObj, false);
-            }
-        }
-        // Clear the visibility cache
-        viewers.clear();
-        playerPages.clear();
+        // Reset the visibility so that it doesn't show up for any players
+        this.visibleByDefault = false;
+        this.playerVisibility.clear();
+
+        // Hide the hologram for all players that are currently viewing it
+        getViewerPlayers().forEach((player) -> updateVisibility(player, false));
+
+        // Clear the cache
+        this.playerPages.clear();
+        this.currentViewers.clear();
+    }
+
+    @Override
+    public void setVisibility(@NotNull Player player, @NotNull Visibility visibility) {
+        this.playerVisibility.put(player.getUniqueId(), visibility);
+        updateVisibility(player);
     }
 
     @Override
@@ -117,22 +122,17 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         pageOpt.ifPresent((page) -> {
             if (visible) {
                 page.display(player);
-                viewers.add(player.getName());
+                currentViewers.add(player.getUniqueId());
             } else {
                 page.hide(player);
-                viewers.remove(player.getName());
+                currentViewers.remove(player.getUniqueId());
             }
         });
     }
 
     @Override
     public void updateVisibility() {
-        for (String player : getPlayers()) {
-            Player playerObj = Bukkit.getPlayer(player);
-            if (playerObj != null) {
-                updateVisibility(playerObj);
-            }
-        }
+        getAllowedPlayers().forEach(this::updateVisibility);
     }
 
     @Override
@@ -143,12 +143,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
 
     @Override
     public void updateContents() {
-        for (String player : getPlayers()) {
-            Player playerObj = Bukkit.getPlayer(player);
-            if (playerObj != null) {
-                updateContents(playerObj);
-            }
-        }
+        getViewerPlayers().forEach(this::updateContents);
     }
 
     @Override
@@ -157,7 +152,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         Optional<HologramPage> oldPageOpt = getPageObject(player);
 
         // Update the page index in the map.
-        playerPages.put(player.getName(), page);
+        playerPages.put(player.getUniqueId(), page);
 
         // Hide the old page.
         if (isViewing(player) && oldPageOpt.isPresent()) {
@@ -168,23 +163,9 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         updateVisibility(player);
     }
 
-    @Override
-    public void show(@NotNull Player player, int page) {
-        players.add(player.getName());
-        playerPages.put(player.getName(), page);
-        updateVisibility(player);
-    }
-
-    @Override
-    public void hide(@NotNull Player player) {
-        players.remove(player.getName());
-        playerPages.remove(player.getName());
-        updateVisibility(player);
-    }
-
     @NotNull
     @Override
-    public DefaultHologram getParent() {
+    public Hologram getParent() {
         return parent;
     }
 
@@ -200,27 +181,20 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
 
     @NotNull
     @Override
-    public Set<String> getPlayers() {
-        // If the hologram is visible by default, return all online players.
-        if (isVisibleByDefault()) {
-            return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .collect(Collectors.toSet());
-        }
-        // Otherwise, return the manually added players.
-        return players;
+    public Set<UUID> getViewers() {
+        return ImmutableSet.copyOf(currentViewers);
     }
 
     @NotNull
     @Override
-    public Set<String> getViewers() {
-        return viewers;
+    public Map<UUID, Integer> getPlayerPages() {
+        return ImmutableMap.copyOf(playerPages);
     }
 
     @NotNull
     @Override
-    public Map<String, Integer> getPlayerPages() {
-        return playerPages;
+    public Map<UUID, Visibility> getPlayerVisibility() {
+        return ImmutableMap.copyOf(playerVisibility);
     }
 
     /**
@@ -229,6 +203,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
      * @param player The player.
      * @return The page as an optional.
      */
+    @NotNull
     private Optional<HologramPage> getPageObject(@NotNull Player player) {
         int pageIndex = getPage(player);
         HologramPage page = parent.getPage(pageIndex);
