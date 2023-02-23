@@ -21,13 +21,9 @@ package eu.decentsoftware.holograms.listener;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 
 /**
@@ -57,58 +53,6 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         PLUGIN.getProfileRegistry().removeProfile(player.getName());
 //        PLUGIN.getNMSProvider().getPacketListener().unhook(player);
-    }
-
-    @EventHandler
-    public void onLeftClickAir(PlayerInteractEvent e) {
-        if (e.getAction() != Action.LEFT_CLICK_AIR) {
-            return;
-        }
-
-        Player player = e.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
-        if (profile == null) {
-            return;
-        }
-
-        DefaultHologram hologram = profile.getContext().getMovingHologram();
-        if (hologram != null) {
-            PositionManager positionManager = hologram.getPositionManager();
-            positionManager.setLocation(positionManager.getActualLocation());
-            positionManager.bindLocation(null);
-            profile.getContext().setMovingHologram(null);
-            hologram.getConfig().save();
-            Lang.confTell(player, "editor.move.finish", hologram.getName());
-        }
-    }
-
-    @EventHandler
-    public void onHotbarScroll(PlayerItemHeldEvent e) {
-        Player player = e.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
-        if (profile == null) {
-            return;
-        }
-
-        DefaultHologram hologram = profile.getContext().getMovingHologram();
-        if (hologram != null) {
-            int newSlot = e.getNewSlot();
-            int previousSlot = e.getPreviousSlot();
-            int currentDistance = profile.getContext().getMovingHologramDistance();
-
-            boolean isScrollingUp = newSlot < previousSlot;
-            if (newSlot == 0 && previousSlot == 8) {
-                isScrollingUp = false;
-            } else if (previousSlot == 0 && newSlot == 8) {
-                isScrollingUp = true;
-            }
-
-            if (isScrollingUp && currentDistance < 13) {
-                profile.getContext().setMovingHologramDistance(currentDistance + 1);
-            } else if (!isScrollingUp && currentDistance > 3) {
-                profile.getContext().setMovingHologramDistance(currentDistance - 1);
-            }
-        }
     }
 
 }
