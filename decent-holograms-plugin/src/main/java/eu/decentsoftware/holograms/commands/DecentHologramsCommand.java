@@ -29,6 +29,7 @@ import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.hologram.HologramContext;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
@@ -65,9 +66,8 @@ public class DecentHologramsCommand {
             @NonNull Player player,
             @Argument("name") String name
     ) {
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getName());
-        if (profile.getContext().getMovingHologram() != null) {
-            Lang.confTell(player, "editor.move.error.already_moving");
+        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
+        if (profile == null) {
             return;
         }
 
@@ -77,14 +77,21 @@ public class DecentHologramsCommand {
             return;
         }
 
+        HologramContext context = hologram.getContext();
+        if (context.getMover() != null) {
+            Lang.confTell(player, "editor.move.error.already_moving");
+            return;
+        }
+
         profile.getContext().setMovingHologram(hologram);
-        profile.getContext().setMovingHologramDistance(5);
+        context.setMover(player.getUniqueId());
+        context.setMoverDistance(5);
 
         hologram.getPositionManager().bindLocation(() -> {
             final Location location = player.getEyeLocation();
             final Vector lookDirection = location.getDirection();
 
-            location.add(lookDirection.multiply(profile.getContext().getMovingHologramDistance()));
+            location.add(lookDirection.multiply(hologram.getContext().getMoverDistance()));
 
             final HologramPage page = hologram.getPage(hologram.getVisibilityManager().getPage(player));
             if (page == null) {

@@ -49,6 +49,7 @@ public class DefaultHologram implements Hologram, Ticked {
     private final @NotNull HologramSettings settings;
     private final @NotNull DefaultPositionManager positionManager;
     private final @NotNull HologramVisibilityManager visibilityManager;
+    private final @NotNull HologramContext context;
     private final @NotNull List<HologramPage> pages;
     /**
      * The condition holder of the hologram, used for managing the view conditions of the hologram.
@@ -84,6 +85,7 @@ public class DefaultHologram implements Hologram, Ticked {
         this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
+        this.context = new HologramContext();
         this.pages = new ArrayList<>();
         this.viewConditions = new ConditionHolder();
         this.lastVisibilityUpdate = new AtomicLong(0);
@@ -103,6 +105,7 @@ public class DefaultHologram implements Hologram, Ticked {
         this.positionManager = new DefaultPositionManager(location);
         this.settings = settings;
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
+        this.context = new HologramContext();
         this.pages = new ArrayList<>();
         this.viewConditions = viewConditions;
         this.lastVisibilityUpdate = new AtomicLong(0);

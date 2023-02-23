@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.hologram.HologramContext;
 import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,10 +55,19 @@ public class MoveListener implements Listener {
 
         DefaultHologram hologram = profile.getContext().getMovingHologram();
         if (hologram != null) {
+            HologramContext hologramContext = hologram.getContext();
+            if (hologramContext.getMover() != player.getUniqueId()) {
+                profile.getContext().setMovingHologram(null);
+                return;
+            }
+
             PositionManager positionManager = hologram.getPositionManager();
             positionManager.setLocation(positionManager.getActualLocation());
             positionManager.bindLocation(null);
+
             profile.getContext().setMovingHologram(null);
+            hologramContext.setMover(null);
+
             hologram.getConfig().save();
             Lang.confTell(player, "editor.move.finish", hologram.getName());
         }
@@ -73,9 +83,14 @@ public class MoveListener implements Listener {
 
         DefaultHologram hologram = profile.getContext().getMovingHologram();
         if (hologram != null) {
+            if (hologram.getContext().getMover() != player.getUniqueId()) {
+                profile.getContext().setMovingHologram(null);
+                return;
+            }
+
             int newSlot = e.getNewSlot();
             int previousSlot = e.getPreviousSlot();
-            int currentDistance = profile.getContext().getMovingHologramDistance();
+            int currentDistance = hologram.getContext().getMoverDistance();
 
             boolean isScrollingUp = newSlot < previousSlot;
             if (newSlot == 0 && previousSlot == 8) {
@@ -85,9 +100,9 @@ public class MoveListener implements Listener {
             }
 
             if (isScrollingUp && currentDistance < 13) {
-                profile.getContext().setMovingHologramDistance(currentDistance + 1);
+                hologram.getContext().setMoverDistance(currentDistance + 1);
             } else if (!isScrollingUp && currentDistance > 3) {
-                profile.getContext().setMovingHologramDistance(currentDistance - 1);
+                hologram.getContext().setMoverDistance(currentDistance - 1);
             }
         }
     }

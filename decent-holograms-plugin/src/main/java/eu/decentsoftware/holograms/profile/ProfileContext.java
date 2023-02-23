@@ -41,7 +41,6 @@ public class ProfileContext {
     private final int clickableEntityId;
     private HologramLine watchedLine;
     private DefaultHologram movingHologram;
-    private int movingHologramDistance;
 
     /**
      * Create a new instance of {@link ProfileContext}.
