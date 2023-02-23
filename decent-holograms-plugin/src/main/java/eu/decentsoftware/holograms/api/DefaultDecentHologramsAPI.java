@@ -18,8 +18,22 @@ public class DefaultDecentHologramsAPI implements DecentHologramsAPI {
 
     @NotNull
     @Override
+    public Hologram createHologram(@NotNull Location location, boolean persistent) {
+        return new DefaultHologram(UUID.randomUUID().toString(), location, true, persistent);
+    }
+
+    @NotNull
+    @Override
     public Hologram createHologram(@NotNull Location location, @NotNull List<String> lines) {
         Hologram hologram = new DefaultHologram(UUID.randomUUID().toString(), location);
+        hologram.addPage().getPage(0).setLinesFromStrings(lines);
+        return hologram;
+    }
+
+    @NotNull
+    @Override
+    public Hologram createHologram(@NotNull Location location, @NotNull List<String> lines, boolean persistent) {
+        Hologram hologram = new DefaultHologram(UUID.randomUUID().toString(), location, true, persistent);
         hologram.addPage().getPage(0).setLinesFromStrings(lines);
         return hologram;
     }

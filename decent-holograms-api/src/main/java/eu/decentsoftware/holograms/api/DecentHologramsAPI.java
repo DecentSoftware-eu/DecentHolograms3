@@ -55,6 +55,17 @@ public interface DecentHologramsAPI {
     Hologram createHologram(@NotNull Location location);
 
     /**
+     * Create a new, empty hologram.
+     *
+     * @param location   The location of the hologram.
+     * @param persistent Whether the hologram should be persistent. (Saved in a file)
+     * @return The new hologram.
+     * @see Hologram
+     */
+    @NotNull
+    Hologram createHologram(@NotNull Location location, boolean persistent);
+
+    /**
      * Create a new hologram with the given lines at the first page.
      * <p>
      * You can use any kind of formatting in the lines. It will be automatically
@@ -67,5 +78,20 @@ public interface DecentHologramsAPI {
      */
     @NotNull
     Hologram createHologram(@NotNull Location location, @NotNull List<String> lines);
+
+    /**
+     * Create a new hologram with the given lines at the first page.
+     * <p>
+     * You can use any kind of formatting in the lines. It will be automatically
+     * parsed just like if you were using the commands.
+     *
+     * @param location   The location of the hologram.
+     * @param lines      The lines of the first page of the hologram.
+     * @param persistent Whether the hologram should be persistent. (Saved in a file)
+     * @return The new hologram.
+     * @see Hologram
+     */
+    @NotNull
+    Hologram createHologram(@NotNull Location location, @NotNull List<String> lines, boolean persistent);
 
 }
