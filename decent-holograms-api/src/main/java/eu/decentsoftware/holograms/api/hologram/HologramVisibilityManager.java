@@ -72,6 +72,20 @@ public interface HologramVisibilityManager {
     void destroy();
 
     /**
+     * Completely remove the given player from the visibility cache. This means that the player
+     * will only be able to see the hologram again, if the hologram is visible by default and
+     * the player meets the view conditions.
+     * <p>
+     * But all custom visibility settings for the player will be removed and all holograms
+     * that the player is currently viewing will be hidden. (Not permanently, but until the
+     * next update of the hologram's visibility.)
+     *
+     * @param player The player to remove.
+     * @see #updateVisibility(Player, boolean)
+     */
+    void removePlayer(@NotNull Player player);
+
+    /**
      * Get the visibility settings of players. The key is the UUID of the player and the value
      * is the visibility setting of the player. If the player is not in the map, the default
      * visibility setting is used. (See {@link #isVisibleByDefault()})

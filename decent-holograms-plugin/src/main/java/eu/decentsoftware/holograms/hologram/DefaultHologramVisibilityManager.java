@@ -70,6 +70,20 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
     }
 
     @Override
+    public void removePlayer(@NotNull Player player) {
+        // Remove the player from the visibility map
+        this.playerVisibility.remove(player.getUniqueId());
+
+        // Hide the hologram for the player if they are currently viewing it
+        if (isViewing(player)) {
+            updateVisibility(player, false);
+        }
+
+        // Remove the player from the page map
+        this.playerPages.remove(player.getUniqueId());
+    }
+
+    @Override
     public void setVisibility(@NotNull Player player, @NotNull Visibility visibility) {
         this.playerVisibility.put(player.getUniqueId(), visibility);
         updateVisibility(player);
