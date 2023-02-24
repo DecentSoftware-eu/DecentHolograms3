@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
-import eu.decentsoftware.holograms.nms.reflect.ReflectUtil;
+import eu.decentsoftware.holograms.nms.utils.ReflectUtil;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
