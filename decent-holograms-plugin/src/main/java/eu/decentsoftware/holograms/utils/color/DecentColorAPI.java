@@ -72,9 +72,10 @@ public final class DecentColorAPI {
      */
     @NotNull
     public static String process(@NotNull String string) {
-        for (Pattern pattern : PATTERNS) {
-            string = pattern.process(string);
-        }
+        // TODO: translate to minimessage format
+//        for (Pattern pattern : PATTERNS) {
+//            string = pattern.process(string);
+//        }
         string = ChatColor.translateAlternateColorCodes('&', string);
         return string;
     }

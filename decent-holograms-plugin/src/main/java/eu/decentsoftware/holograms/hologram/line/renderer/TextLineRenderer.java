@@ -89,9 +89,9 @@ public class TextLineRenderer extends LineRenderer {
                 true);
         Object metaName;
         if (Version.is(8)) {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraftLegacy(formattedText));
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
         } else {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
         }
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
@@ -108,9 +108,9 @@ public class TextLineRenderer extends LineRenderer {
         // Create the metadata objects
         Object metaName;
         if (Version.is(8)) {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraftLegacy(formattedText));
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
         } else {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeMinecraft(formattedText));
+            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
         }
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 

@@ -20,7 +20,10 @@ package eu.decentsoftware.holograms.hooks;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
+import net.kyori.adventure.text.BuildableComponent;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
@@ -51,33 +54,39 @@ public final class MiniMessageHook {
             StandardTags.rainbow()
     };
 
-    /**
-     * Replace all legacy components in the given string with MiniMessage components
-     * and serialize them to IChatBaseComponent.
-     *
-     * @param string The string to serialize.
-     * @return The serialized IChatBaseComponent.
-     */
     @NotNull
-    public static Object serializeMinecraft(@NotNull String string) {
-        String serialized = MiniMessage.miniMessage().serialize(SERIALIZER.deserialize(string));
-        serialized = serialized.replace("\\<", "<");
-        TextComponent component = (TextComponent) MiniMessage.miniMessage().deserialize(serialized, HOLOGRAM_RESOLVERS);
+    public static Object serializeToIChatBaseComponent(@NotNull String string, boolean legacy) {
+        TextComponent component = serializeToComponent(string, legacy);
         return MinecraftComponentSerializer.get().serialize(component);
     }
 
-    /**
-     * Replace all MiniMessage components in the given string with legacy components.
-     *
-     * @param string The string to serialize.
-     * @return The serialized string.
-     */
     @NotNull
-    public static String serializeMinecraftLegacy(@NotNull String string) {
+    public static String serializeToString(@NotNull String string, boolean legacy) {
+        TextComponent component = serializeToComponent(string, legacy);
+        return SERIALIZER.serialize(component);
+    }
+
+    private static TextComponent serializeToComponent(@NotNull String string, boolean legacy) {
         String serialized = MiniMessage.miniMessage().serialize(SERIALIZER.deserialize(string));
         serialized = serialized.replace("\\<", "<");
         TextComponent component = (TextComponent) MiniMessage.miniMessage().deserialize(serialized, HOLOGRAM_RESOLVERS);
-        return SERIALIZER.serialize(component);
+        if (legacy) {
+            component = mapRGBColorsToLegacy(component);
+        }
+        return component;
+    }
+
+    @NotNull
+    public static TextComponent mapRGBColorsToLegacy(@NotNull TextComponent component) {
+        TextComponent.Builder builder = component.toBuilder().mapChildren((child) -> {
+            TextColor color = child.color();
+            if (color == null) {
+                return child;
+            }
+            NamedTextColor namedColor = NamedTextColor.nearestTo(color);
+            return (BuildableComponent<?, ?>) child.color(namedColor);
+        });
+        return builder.build();
     }
 
 }
