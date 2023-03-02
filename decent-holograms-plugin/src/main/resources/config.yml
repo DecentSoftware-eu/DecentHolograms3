@@ -76,7 +76,7 @@ pinger:
   defaults:
     motd: 'This server is offline.'
     max-players: 0
-  # Remove the leading and trailing spaced in MOTD?
+  # Remove the leading and trailing spaces in MOTD?
   trim-motd: true
 
 
