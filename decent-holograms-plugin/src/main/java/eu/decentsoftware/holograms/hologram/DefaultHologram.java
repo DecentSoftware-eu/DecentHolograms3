@@ -159,6 +159,11 @@ public class DefaultHologram implements Hologram, Ticked {
     }
 
     @Override
+    public void recalculate() {
+        getPages().forEach(HologramPage::recalculate);
+    }
+
+    @Override
     public HologramPage getPage(int index) {
         return pages.get(index);
     }

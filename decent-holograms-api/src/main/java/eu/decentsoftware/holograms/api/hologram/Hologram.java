@@ -47,6 +47,14 @@ public interface Hologram {
     void delete();
 
     /**
+     * Recalculate all pages of this hologram. This method should be called
+     * when the hologram is moved.
+     *
+     * @see HologramPage#recalculate()
+     */
+    void recalculate();
+
+    /**
      * The configuration manager of the hologram, used for storing
      * and retrieving data to/from files.
      *

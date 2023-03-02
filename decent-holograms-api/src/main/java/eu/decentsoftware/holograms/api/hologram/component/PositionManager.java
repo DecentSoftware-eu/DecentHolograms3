@@ -70,6 +70,15 @@ public interface PositionManager {
     void bindLocation(@Nullable Supplier<Location> locationSupplier);
 
     /**
+     * Unbind this hologram from a supplier of a location (if bound).
+     *
+     * @see #bindLocation(Supplier)
+     */
+    default void unbindLocation() {
+        bindLocation(null);
+    }
+
+    /**
      * Get the supplier of the location of this hologram.
      *
      * @return The supplier of the location of this hologram. (null if not bound)

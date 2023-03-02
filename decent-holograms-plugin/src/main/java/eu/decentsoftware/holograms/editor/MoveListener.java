@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.editor;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
+import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.HologramContext;
 import eu.decentsoftware.holograms.profile.Profile;
@@ -63,7 +64,8 @@ public class MoveListener implements Listener {
 
             PositionManager positionManager = hologram.getPositionManager();
             positionManager.setLocation(positionManager.getActualLocation());
-            positionManager.bindLocation(null);
+            positionManager.unbindLocation();
+            hologram.recalculate();
 
             profile.getContext().setMovingHologram(null);
             hologramContext.setMover(null);
