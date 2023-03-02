@@ -82,6 +82,9 @@ public class DefaultHologramConfig implements HologramConfig {
     @Override
     public CompletableFuture<Void> reload() {
         return CompletableFuture.runAsync(() -> {
+            if (!file.exists() || !file.isFile()) {
+                return;
+            }
             try (FileReader reader = new FileReader(file.getPath())) {
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(reader, SerializableHologram.class);
                 parent.getPositionManager().setLocation(hologram.getLocation());
