@@ -81,8 +81,9 @@ public class DecentHologramsCommand {
 
     // ==================== VERSION COMMAND ==================== //
 
-    @CommandMethod(ROOT_ALIASES + " version")
+    @CommandMethod(ROOT_ALIASES + " version|ver")
     @CommandDescription("Show the plugin version")
+    @CommandPermission(Config.ADMIN_PERM)
     public void version(@NonNull CommandSender sender) {
         Lang.sendVersionMessage(sender);
     }
@@ -98,7 +99,7 @@ public class DecentHologramsCommand {
     ) {
         DefaultHologramRegistry registry = PLUGIN.getHologramRegistry();
         DefaultHologram hologram = null;
-        if (name != null && sender instanceof Player) {
+        if (name == null && sender instanceof Player) {
             hologram = getHologramInView((Player) sender);
         } else if (name != null) {
             hologram = registry.getHologram(name);
@@ -146,6 +147,30 @@ public class DecentHologramsCommand {
         if (moveController.initiate(player, hologram)) {
             Lang.confTell(player, "editor.move.initiate", hologram.getName());
         }
+    }
+
+    @CommandMethod(value = ROOT_ALIASES + " movehere|mvhr <name>", requiredSender = Player.class)
+    @CommandDescription("Move a hologram to yourself")
+    @CommandPermission(Config.ADMIN_PERM)
+    public void movehere(
+            @NonNull Player player,
+            @Argument(value = "name", suggestions = "not_moving_holograms") String name
+    ) {
+        DefaultHologram hologram = PLUGIN.getHologramRegistry().getHologram(name);
+        if (hologram == null) {
+            Lang.confTell(player, "editor.invalid_hologram_name", name);
+            return;
+        }
+
+        if (hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder) {
+            Lang.confTell(player, "editor.move.error.already_being_moved");
+            return;
+        }
+
+        hologram.getPositionManager().setLocation(player.getLocation());
+        hologram.recalculate();
+        hologram.getConfig().save();
+        Lang.confTell(player, "editor.move.success", hologram.getName());
     }
 
     // ==================== TELEPORT COMMAND ==================== //

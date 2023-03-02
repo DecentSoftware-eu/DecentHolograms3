@@ -48,7 +48,7 @@ public class MoveListener implements Listener {
 
         Player player = e.getPlayer();
         if (PLUGIN.getEditor().getMoveController().place(player)) {
-            Lang.confTell(player, "editor.move.place");
+            Lang.confTell(player, "editor.move.success");
         }
     }
 

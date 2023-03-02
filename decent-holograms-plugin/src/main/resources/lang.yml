@@ -31,7 +31,7 @@ editor:
       - "{prefix}- &f&lSCROLL &7to push and pull."
       - "{prefix}- &f&lSNEAK &7to snap to block center."
       - "{prefix}Use &b/dh move &7to cancel."
-    place: "{prefix}&aSuccessfully moved hologram."
+    success: "{prefix}&aSuccessfully moved hologram."
     cancel: "{prefix}&cCancelled moving hologram."
     error:
       already_being_moved: "{prefix}&cThis hologram is already being moved."
