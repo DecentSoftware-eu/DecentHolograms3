@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -56,6 +57,24 @@ public final class Common {
      */
     public static int irand(int min, int max) {
         return min + (int) (Math.random() * ((max - min) + 1));
+    }
+
+    /**
+     * Format the given string with given arguments. This method is similar to
+     * {@link MessageFormat#format(String, Object...)} but it only looks for "{0}", "{1}", etc.
+     * <p>
+     * Example: format("{0} is {1} years old.", "John", 20) will return "John is 20 years old."
+     *
+     * @param string The string.
+     * @param args   The arguments.
+     * @return The formatted string.
+     */
+    @NotNull
+    public static String format(@NotNull String string, Object... args) {
+        for (int i = 0; i < args.length; i++) {
+            string = string.replace("{" + i + "}", args[i] == null ? "" : args[i].toString());
+        }
+        return string;
     }
 
     /*

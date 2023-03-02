@@ -110,7 +110,7 @@ public final class Lang {
     @NotNull
     public static String formatString(@NotNull String string, @Nullable Profile profile, Object... args) {
         if (args != null && args.length > 0) {
-            string = String.format(string, args);
+            string = Common.format(string, args);
         }
         string = string.replace("{prefix}", PREFIX);
         string = PLUGIN.getReplacementRegistry().replace(string, profile);
@@ -212,7 +212,7 @@ public final class Lang {
      * @see #formatString(String, Profile, Object...) for more information.
      */
     public static void tell(@NotNull CommandSender sender, @NotNull String message, @NotNull Object... args) {
-        tell(sender, String.format(message, args));
+        tell(sender, Common.format(message, args));
     }
 
     /**

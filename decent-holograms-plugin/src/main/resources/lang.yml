@@ -1,18 +1,37 @@
 # Use '{prefix}' in other messages, and it will be replaced with this.
-prefix: "&8[&3DecentHolograms&8] &7"
+prefix: "&8[&3DH&8] &7"
 no_permission: "{prefix}&cYou don't have permission to use this."
 plugin:
-  reloaded: "{prefix}&aSuccessfully reloaded in (%1$s ms)"
+  reloaded: "{prefix}&aSuccessfully reloaded in ({0} ms)"
+  help:
+    - ""
+    - " &3&lDECENT HOLOGRAMS"
+    - " &fThe most important commands."
+    - ""
+    - " &8• &b/dh reload &8- &7Reloads the plugin."
+    - " &8• &b/dh create &8- &7Create a hologram."
+    - " &8• &b/dh edit &8- &7Edit a hologram."
+    - " &8• &b/dh move &8- &7Move a hologram."
+    - " &8• &b/dh delete &8- &7Delete a hologram."
+    - " &8• &b/dh teleport &8- &7Teleport to a hologram."
+    - " &8• &b/dh list &8- &7List all holograms."
+    - ""
+    - " &7Aliases: &b/dh, /decentholograms, /holograms, /holo"
+    - ""
 editor:
+  invalid_hologram_name: "{prefix}&cHologram with name &b'{0}'&c doesn't exist."
+  invalid_hologram_name_or_view: "{prefix}&cNo hologram found, either look at a hologram or enter a valid name."
+  teleported: "{prefix}&aYou were teleported to hologram &b'{0}'&a."
+  delete:
+    success: "{prefix}&aSuccessfully deleted hologram &b'{0}'&a."
   move:
     initiate:
-      - "{prefix}Moving hologram &b'%1$s'&7."
+      - "{prefix}Moving hologram &b'{0}'&7."
       - "{prefix}- &f&lLEFT CLICK &7to place it."
-      - "{prefix}- &f&lSCROLL &7to move closer/farther."
+      - "{prefix}- &f&lSCROLL &7to push and pull."
       - "{prefix}- &f&lSNEAK &7to snap to block center."
       - "{prefix}Use &b/dh move &7to cancel."
     place: "{prefix}&aSuccessfully moved hologram."
     cancel: "{prefix}&cCancelled moving hologram."
     error:
       already_being_moved: "{prefix}&cThis hologram is already being moved."
-      no_hologram: "{prefix}&cYou are not looking at a hologram."
