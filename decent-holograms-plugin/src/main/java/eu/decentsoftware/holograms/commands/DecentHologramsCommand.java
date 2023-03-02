@@ -221,10 +221,10 @@ public class DecentHologramsCommand {
         Location location = player.getEyeLocation();
         Vector lookDirection = location.getDirection();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i += 2) {
             location.add(lookDirection);
 
-            List<DefaultHologram> holograms = getHologramsNearLocation(location, 3);
+            List<DefaultHologram> holograms = getHologramsNearLocation(location);
 
             if (!holograms.isEmpty()) {
                 return holograms.get(0);
@@ -235,13 +235,13 @@ public class DecentHologramsCommand {
     }
 
     @NotNull
-    private List<DefaultHologram> getHologramsNearLocation(@NonNull Location location, double maxDistance) {
+    private List<DefaultHologram> getHologramsNearLocation(@NonNull Location location) {
         DefaultHologramRegistry registry = PLUGIN.getHologramRegistry();
 
         List<DefaultHologram> holograms = new ArrayList<>();
 
         for (DefaultHologram hologram : registry.getHolograms()) {
-            if (hologram.getPositionManager().getActualLocation().distanceSquared(location) <= maxDistance * maxDistance) {
+            if (hologram.getPositionManager().getActualLocation().distanceSquared(location) <= 4 * 4) {
                 holograms.add(hologram);
             }
         }
