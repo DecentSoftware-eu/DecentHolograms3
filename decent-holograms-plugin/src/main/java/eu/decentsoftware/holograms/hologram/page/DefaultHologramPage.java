@@ -178,6 +178,8 @@ public class DefaultHologramPage implements HologramPage {
                 }
             }
 
+            positionManager.setLocation(location);
+
             // Update the line location for the current viewer.
             renderer.teleport(player, location);
         }
