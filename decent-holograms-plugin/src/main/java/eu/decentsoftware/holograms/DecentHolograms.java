@@ -34,7 +34,7 @@ import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
 import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
-import eu.decentsoftware.holograms.editor.MoveListener;
+import eu.decentsoftware.holograms.editor.Editor;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import eu.decentsoftware.holograms.hologram.line.content.ContentParserManager;
 import eu.decentsoftware.holograms.hologram.serialization.LocationSerializer;
@@ -82,6 +82,7 @@ public final class DecentHolograms extends JavaPlugin {
     private DefaultHologramRegistry hologramRegistry;
     @Getter(AccessLevel.NONE)
     private NMSManager nmsManager;
+    private Editor editor;
 
     public DecentHolograms() {
         instance = this;
@@ -112,6 +113,7 @@ public final class DecentHolograms extends JavaPlugin {
         this.replacementRegistry = new ReplacementRegistry();
         this.contentParserManager = new ContentParserManager();
         this.hologramRegistry = new DefaultHologramRegistry();
+        this.editor = new Editor();
 
         // -- Register DecentHologramsAPI
         DecentHologramsAPIProvider.setInstance(new DefaultDecentHologramsAPI());
@@ -123,7 +125,6 @@ public final class DecentHolograms extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new PacketListener(), this);
-        pm.registerEvents(new MoveListener(), this);
 
         // -- Commands
         setupCommands();
@@ -139,6 +140,7 @@ public final class DecentHolograms extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.editor.shutdown();
         this.ticker.shutdown();
         this.nmsManager.shutdown();
         this.hologramRegistry.shutdown();
@@ -161,6 +163,7 @@ public final class DecentHolograms extends JavaPlugin {
         this.replacementRegistry.reload();
         this.serverRegistry.reload();
         this.profileRegistry.reload();
+        this.editor.reload();
 
         if (PAPI.isAvailable()) {
             BootMessenger.log("Using PlaceholderAPI for placeholder support!");

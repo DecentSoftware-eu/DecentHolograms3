@@ -24,14 +24,15 @@ import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.editor.move.MoveController;
+import eu.decentsoftware.holograms.editor.move.MoveLocationBinder;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
-import eu.decentsoftware.holograms.hologram.HologramContext;
-import eu.decentsoftware.holograms.profile.Profile;
+import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -44,6 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @CommandContainer
 public class DecentHologramsCommand {
 
@@ -67,9 +69,11 @@ public class DecentHologramsCommand {
             @NonNull Player player,
             @Argument("name") String name
     ) {
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
-        if (profile.getContext().getMovingHologram() != null) {
-            Lang.confTell(player, "editor.move.error.already_moving");
+        MoveController moveController = PLUGIN.getEditor().getMoveController();
+
+        // Cancel move if already moving
+        if (moveController.cancel(player)) {
+            Lang.confTell(player, "editor.move.cancel");
             return;
         }
 
@@ -79,48 +83,18 @@ public class DecentHologramsCommand {
             return;
         }
 
-        HologramContext context = hologram.getContext();
-        if (context.getMover() != null) {
+        if (hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder) {
             Lang.confTell(player, "editor.move.error.already_being_moved");
             return;
         }
 
-        profile.getContext().setMovingHologram(hologram);
-        context.setMover(player.getUniqueId());
-        context.setMoverDistance(5);
-
-        hologram.getPositionManager().bindLocation(() -> {
-            final Location location = player.getEyeLocation();
-            final Vector lookDirection = location.getDirection();
-
-            location.add(lookDirection.multiply(hologram.getContext().getMoverDistance()));
-
-            final HologramPage page = hologram.getPage(hologram.getVisibilityManager().getPage(player));
-            if (page == null) {
-                return location;
-            }
-
-            final double height = page.getLines().stream()
-                    .mapToDouble((line) -> line.getSettings().getHeight())
-                    .sum();
-
-            location.add(0, height / 2, 0);
-
-            // Snap to block center if sneaking
-            if (player.isSneaking()) {
-                location.setX(location.getBlockX() + 0.5);
-                location.setY(location.getBlockY());
-                location.setZ(location.getBlockZ() + 0.5);
-            }
-
-            return location;
-        });
-
-        Lang.confTell(player, "editor.move.initiate", hologram.getName());
+        if (moveController.initiate(player, hologram)) {
+            Lang.confTell(player, "editor.move.initiate", hologram.getName());
+        }
     }
 
     @Nullable
-    private DefaultHologram getHologramInView(final @NonNull Player player) {
+    private DefaultHologram getHologramInView(@NonNull Player player) {
         // Ray trace
         Location location = player.getEyeLocation();
         Vector lookDirection = location.getDirection();
@@ -139,7 +113,7 @@ public class DecentHologramsCommand {
     }
 
     @NotNull
-    private List<DefaultHologram> getHologramsNearLocation(Location location, double maxDistance) {
+    private List<DefaultHologram> getHologramsNearLocation(@NonNull Location location, double maxDistance) {
         DefaultHologramRegistry registry = PLUGIN.getHologramRegistry();
 
         List<DefaultHologram> holograms = new ArrayList<>();

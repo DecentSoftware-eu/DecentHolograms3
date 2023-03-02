@@ -16,26 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.editor;
+package eu.decentsoftware.holograms.editor.move;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.hologram.HologramContext;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * This listener handles events related to moving of holograms. It is used in the editor.
  *
  * @author d0by
+ * @see MoveController
  * @since 3.0.0
  */
 public class MoveListener implements Listener {
@@ -49,50 +47,22 @@ public class MoveListener implements Listener {
         }
 
         Player player = e.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
-        if (profile == null) {
-            return;
-        }
-
-        DefaultHologram hologram = profile.getContext().getMovingHologram();
-        if (hologram != null) {
-            HologramContext hologramContext = hologram.getContext();
-            if (hologramContext.getMover() != player.getUniqueId()) {
-                profile.getContext().setMovingHologram(null);
-                return;
-            }
-
-            PositionManager positionManager = hologram.getPositionManager();
-            positionManager.setLocation(positionManager.getActualLocation());
-            positionManager.unbindLocation();
-            hologram.recalculate();
-
-            profile.getContext().setMovingHologram(null);
-            hologramContext.setMover(null);
-
-            hologram.getConfig().save();
-            Lang.confTell(player, "editor.move.finish", hologram.getName());
+        if (PLUGIN.getEditor().getMoveController().place(player)) {
+            Lang.confTell(player, "editor.move.place");
         }
     }
 
     @EventHandler
     public void onHotbarScroll(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
-        if (profile == null) {
-            return;
-        }
 
-        DefaultHologram hologram = profile.getContext().getMovingHologram();
-        if (hologram != null) {
-            if (hologram.getContext().getMover() != player.getUniqueId()) {
-                profile.getContext().setMovingHologram(null);
+        PLUGIN.getEditor().getMoveController().findMovedHologram(player).ifPresent((hologram) -> {
+            if (!(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder)) {
                 return;
             }
 
             int newSlot = e.getNewSlot();
             int previousSlot = e.getPreviousSlot();
-            int currentDistance = hologram.getContext().getMoverDistance();
 
             boolean isScrollingUp = newSlot < previousSlot;
             if (newSlot == 0 && previousSlot == 8) {
@@ -101,11 +71,20 @@ public class MoveListener implements Listener {
                 isScrollingUp = true;
             }
 
-            if (isScrollingUp && currentDistance < 13) {
-                hologram.getContext().setMoverDistance(currentDistance + 1);
-            } else if (!isScrollingUp && currentDistance > 3) {
-                hologram.getContext().setMoverDistance(currentDistance - 1);
+            MoveLocationBinder binder = (MoveLocationBinder) hologram.getPositionManager().getLocationBinder();
+            if (isScrollingUp) {
+                binder.increaseDistance();
+            } else {
+                binder.decreaseDistance();
             }
+        });
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onQuit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        if (PLUGIN.getEditor().getMoveController().cancel(player)) {
+            Lang.confTell(player, "editor.move.cancel");
         }
     }
 

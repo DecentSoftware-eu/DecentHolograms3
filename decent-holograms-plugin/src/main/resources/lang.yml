@@ -10,8 +10,9 @@ editor:
       - "{prefix}- &f&lLEFT CLICK &7to place it."
       - "{prefix}- &f&lSCROLL &7to move closer/farther."
       - "{prefix}- &f&lSNEAK &7to snap to block center."
-    finish: "{prefix}&aSuccessfully moved hologram."
+      - "{prefix}Use &b/dh move &7to cancel."
+    place: "{prefix}&aSuccessfully moved hologram."
+    cancel: "{prefix}&cCancelled moving hologram."
     error:
-      already_moving: "{prefix}&cYou are already moving a hologram."
       already_being_moved: "{prefix}&cThis hologram is already being moved."
       no_hologram: "{prefix}&cYou are not looking at a hologram."
