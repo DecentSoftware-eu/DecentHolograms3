@@ -133,7 +133,7 @@ public class ReplacementRegistry {
         String[] spl = placeholderString.split(":", 2);
         Replacement replacement = defaultReplacementMap.get(spl[0]);
         if (replacement != null) {
-            return replacement.getReplacement(profile, spl.length > 1 ? spl[1] : null);
+            return replacement.getReplacement(profile, spl.length > 1 ? spl[1].trim() : null);
         }
         return Optional.empty();
     }
@@ -155,7 +155,7 @@ public class ReplacementRegistry {
             if (profile == null || (player = profile.getPlayer()) == null) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(player.getDisplayName());
+            return Optional.of(player.getDisplayName());
         }));
         this.defaultReplacementMap.put("uuid", new Replacement((profile, argument) -> {
             Player player;
