@@ -88,6 +88,7 @@ public class DefaultHologram implements Hologram, Ticked {
         this.viewConditions = new ConditionHolder();
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
+        this.addPage(); // We always need at least one page.
 
         // Start the ticking.
         this.startTicking();
@@ -107,6 +108,7 @@ public class DefaultHologram implements Hologram, Ticked {
         this.viewConditions = viewConditions;
         this.lastVisibilityUpdate = new AtomicLong(0);
         this.lastContentUpdate = new AtomicLong(0);
+        this.addPage(); // We always need at least one page.
 
         // Start the ticking.
         this.startTicking();
@@ -127,7 +129,7 @@ public class DefaultHologram implements Hologram, Ticked {
                 || settings.isRotateVertical()
                 || settings.isRotateHeads()
         ) {
-            getPages().forEach(HologramPage::recalculate);
+            recalculate();
         }
 
         // Update the visibility of the hologram if the time difference is greater than 500ms.
