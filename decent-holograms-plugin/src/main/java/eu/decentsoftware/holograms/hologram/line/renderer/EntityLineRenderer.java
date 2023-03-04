@@ -21,13 +21,17 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentEntity;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
+@Setter
 public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
-    private final @NotNull DecentEntity entity;
+    private @NotNull DecentEntity entity;
 
     public EntityLineRenderer(@NotNull HologramLine parent, @NotNull DecentEntity entity) {
         super(parent, HologramLineType.ENTITY);

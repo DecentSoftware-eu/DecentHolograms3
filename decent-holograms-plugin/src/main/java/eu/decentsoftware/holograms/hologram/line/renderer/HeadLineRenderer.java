@@ -22,6 +22,9 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -30,10 +33,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class HeadLineRenderer extends LineRenderer {
 
-    private final @NotNull DecentItemStack itemStack;
-    private final boolean small;
+    private @NotNull DecentItemStack itemStack;
+    private boolean small;
+    
+    @Getter(AccessLevel.NONE)
     private final int eid;
 
     public HeadLineRenderer(@NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
@@ -54,7 +61,7 @@ public class HeadLineRenderer extends LineRenderer {
 
         // Create the metadata objects
         Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
-                false, true, false, false);
+                false, true, itemStack.glowing(), false);
         Object metaArmorStand = NMS.getMetaArmorStandProperties(small, false, true, true);
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(false);
 

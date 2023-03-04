@@ -23,14 +23,16 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public abstract class LineRenderer implements HologramLineRenderer {
 
     /*
      * TODO:
      *  - Add support for animations
-     *  - Add offsets to align the lines properly
      */
 
     protected static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
@@ -42,6 +44,45 @@ public abstract class LineRenderer implements HologramLineRenderer {
     public LineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
         this.parent = parent;
         this.type = type;
+    }
+
+    /**
+     * Get a set of players, that are currently viewing the hologram.
+     *
+     * @return The set of players.
+     */
+    public Set<Player> getViewerPlayers() {
+        return parent.getParent().getParent().getVisibilityManager().getViewerPlayers();
+    }
+
+    /**
+     * Display the line to all players, that are currently viewing the hologram.
+     *
+     * @see #display(Player)
+     * @see #getViewerPlayers()
+     */
+    public void displayAll() {
+        getViewerPlayers().forEach(this::display);
+    }
+
+    /**
+     * Update the line for all players, that are currently viewing the hologram.
+     *
+     * @see #update(Player)
+     * @see #getViewerPlayers()
+     */
+    public void updateAll() {
+        getViewerPlayers().forEach(this::update);
+    }
+
+    /**
+     * Hide the line from all players, that are currently viewing the hologram.
+     *
+     * @see #hide(Player)
+     * @see #getViewerPlayers()
+     */
+    public void hideAll() {
+        getViewerPlayers().forEach(this::hide);
     }
 
     @Override

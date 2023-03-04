@@ -19,8 +19,9 @@
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
+import eu.decentsoftware.holograms.hologram.line.renderer.HeadLineRenderer;
+import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.SmallHeadLineRenderer;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,10 +33,23 @@ public class SmallHeadContentParser implements ContentParser {
         if (content == null || !content.startsWith("#SMALLHEAD:")) {
             return false;
         }
-        DecentItemStack itemStack = DecentItemStack.fromString(content);
-        HologramLineRenderer renderer = new SmallHeadLineRenderer(line, itemStack);
+
+        DecentItemStack itemStack = DecentItemStack.fromString(content.substring("#SMALLHEAD:".length()));
+        LineRenderer renderer = (LineRenderer) line.getRenderer();
+        if (renderer instanceof HeadLineRenderer) {
+            ((HeadLineRenderer) line.getRenderer()).setItemStack(itemStack);
+            ((HeadLineRenderer) line.getRenderer()).setSmall(true);
+            renderer.updateAll();
+            return true;
+        } else if (renderer != null) {
+            renderer.hideAll();
+        }
+
+        renderer = new SmallHeadLineRenderer(line, itemStack);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-1.1875d);
+        line.getSettings().setHeight(0.6d);
+        renderer.displayAll();
         return true;
     }
 

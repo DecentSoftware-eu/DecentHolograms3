@@ -21,15 +21,19 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
+@Setter
 public class IconLineRenderer extends DoubleEntityLineRenderer {
 
-    private final @NotNull DecentItemStack itemStack;
+    private @NotNull DecentItemStack itemStack;
 
     public IconLineRenderer(@NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
         super(parent, HologramLineType.ICON);

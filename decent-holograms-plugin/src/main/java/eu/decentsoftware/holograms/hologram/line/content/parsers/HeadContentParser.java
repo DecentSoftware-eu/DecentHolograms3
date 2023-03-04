@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
 import eu.decentsoftware.holograms.hologram.line.renderer.HeadLineRenderer;
+import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
 import org.jetbrains.annotations.NotNull;
 
 public class HeadContentParser implements ContentParser {
@@ -32,11 +32,23 @@ public class HeadContentParser implements ContentParser {
         if (content == null || !content.startsWith("#HEAD:")) {
             return false;
         }
-        DecentItemStack itemStack = DecentItemStack.fromString(content);
-        HologramLineRenderer renderer = new HeadLineRenderer(line, itemStack);
+
+        DecentItemStack itemStack = DecentItemStack.fromString(content.substring("#HEAD:".length()));
+        LineRenderer renderer = (LineRenderer) line.getRenderer();
+        if (renderer instanceof HeadLineRenderer) {
+            ((HeadLineRenderer) line.getRenderer()).setItemStack(itemStack);
+            ((HeadLineRenderer) line.getRenderer()).setSmall(false);
+            renderer.updateAll();
+            return true;
+        } else if (renderer != null) {
+            renderer.hideAll();
+        }
+
+        renderer = new HeadLineRenderer(line, itemStack);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-2.0d);
         line.getSettings().setHeight(0.75d);
+        renderer.displayAll();
         return true;
     }
 

@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentEntity;
 import eu.decentsoftware.holograms.hologram.line.renderer.EntityLineRenderer;
+import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,12 +36,23 @@ public class EntityContentParser implements ContentParser {
         }
         content = content.substring("#ENTITY:".length());
 
-        DecentEntity entity = DecentEntity.fromString(content);
+        DecentEntity entity = DecentEntity.fromString(content.substring("#ENTITY:".length()));
+        LineRenderer renderer = (LineRenderer) line.getRenderer();
+        if (renderer instanceof EntityLineRenderer) {
+            ((EntityLineRenderer) line.getRenderer()).setEntity(entity);
+            renderer.updateAll();
+            return true;
+        } else if (renderer != null) {
+            renderer.hideAll();
+        }
 
-        EntityLineRenderer renderer = new EntityLineRenderer(line, entity);
+        renderer = new EntityLineRenderer(line, entity);
         line.setRenderer(renderer);
         NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
-        line.getPositionManager().getOffsets().setY(nmsAdapter.getEntityHeight(entity.type()));
+        double entityHeight = nmsAdapter.getEntityHeight(entity.type());
+        line.getPositionManager().getOffsets().setY(entityHeight);
+        line.getSettings().setHeight(entityHeight);
+        renderer.displayAll();
         return true;
     }
 

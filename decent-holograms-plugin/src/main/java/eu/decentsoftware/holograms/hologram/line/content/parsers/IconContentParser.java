@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
 import eu.decentsoftware.holograms.hologram.line.renderer.IconLineRenderer;
+import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
 import org.jetbrains.annotations.NotNull;
 
 public class IconContentParser implements ContentParser {
@@ -35,10 +35,20 @@ public class IconContentParser implements ContentParser {
         content = content.substring("#ICON:".length());
 
         DecentItemStack itemStack = DecentItemStack.fromString(content);
+        LineRenderer renderer = (LineRenderer) line.getRenderer();
+        if (renderer instanceof IconLineRenderer) {
+            ((IconLineRenderer) line.getRenderer()).setItemStack(itemStack);
+            renderer.updateAll();
+            return true;
+        } else if (renderer != null) {
+            renderer.hideAll();
+        }
 
-        HologramLineRenderer renderer = new IconLineRenderer(line, itemStack);
+        renderer = new IconLineRenderer(line, itemStack);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-0.55d);
+        line.getSettings().setHeight(0.6d);
+        renderer.displayAll();
         return true;
     }
 
