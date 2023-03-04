@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.nms;
 import com.google.common.base.Optional;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
+import eu.decentsoftware.holograms.nms.utils.ReflectUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_9_R1.*;
@@ -32,7 +33,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -229,11 +229,6 @@ public class NMSAdapter_v1_9_R1 implements NMSAdapter {
      */
 
     @Override
-    public void sendEntityMetadata(Player player, int eid, Object... objects) {
-        sendEntityMetadata(player, eid, Arrays.asList(objects));
-    }
-
-    @Override
     public void sendEntityMetadata(Player player, int eid, List<?> objects) {
         try {
             serializer.clear();
@@ -387,6 +382,7 @@ public class NMSAdapter_v1_9_R1 implements NMSAdapter {
 
         try {
             PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
+            ReflectUtil.setFieldValue(packet, "l", new DataWatcher(null));
             packet.a(serializer);
             sendPacket(player, packet);
         } catch (Exception e) {

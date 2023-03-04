@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -253,7 +254,9 @@ public interface NMSAdapter {
      * @param eid     The entity id.
      * @param objects The entity metadata objects.
      */
-    void sendEntityMetadata(Player player, int eid, Object... objects);
+    default void sendEntityMetadata(Player player, int eid, Object... objects) {
+        sendEntityMetadata(player, eid, Arrays.asList(objects));
+    }
 
     /**
      * Send the packet to update the entity metadata to the player.

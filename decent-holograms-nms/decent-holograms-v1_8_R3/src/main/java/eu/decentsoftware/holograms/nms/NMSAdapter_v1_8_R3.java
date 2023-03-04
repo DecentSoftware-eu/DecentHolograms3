@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
-import eu.decentsoftware.holograms.nms.utils.ReflectUtil;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
+import eu.decentsoftware.holograms.nms.utils.ReflectUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_8_R3.*;
@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -247,11 +246,6 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
      */
 
     @Override
-    public void sendEntityMetadata(Player player, int eid, Object... objects) {
-        sendEntityMetadata(player, eid, Arrays.asList(objects));
-    }
-
-    @Override
     public void sendEntityMetadata(Player player, int eid, List<?> objects) {
         try {
             serializer.clear();
@@ -397,18 +391,15 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         serializer.writeShort(0);
         serializer.writeShort(0);
         serializer.writeShort(0);
-        serializer.writeByte(127);
 
-        PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
         try {
+            PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
             ReflectUtil.setFieldValue(packet, "l", new DataWatcher(null));
             packet.a(serializer);
+            sendPacket(player, packet);
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
-
-        sendPacket(player, packet);
     }
 
     @Override
