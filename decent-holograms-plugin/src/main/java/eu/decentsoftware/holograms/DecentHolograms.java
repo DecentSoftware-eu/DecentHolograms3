@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms;
 
 import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.exceptions.InvalidSyntaxException;
 import cloud.commandframework.exceptions.NoPermissionException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
@@ -222,7 +223,14 @@ public final class DecentHolograms extends JavaPlugin {
             );
 
             // -- Register exception handlers
-            manager.registerExceptionHandler(NoPermissionException.class, (sender, e) -> Lang.confTell(sender, "no_permission"));
+            manager.registerExceptionHandler(
+                    NoPermissionException.class,
+                    (sender, e) -> Lang.confTell(sender, "no_permission")
+            );
+            manager.registerExceptionHandler(
+                    InvalidSyntaxException.class,
+                    (sender, e) -> Lang.confTell(sender, "plugin.help")
+            );
 
             // -- Register commands
             annotationParser.parse(new DecentHologramsCommand());
