@@ -113,8 +113,8 @@ public class DefaultHologramPage implements HologramPage {
         // If we don't rotate, we just align the lines properly.
         if (!horizontal && !vertical) {
             for (HologramLine line : lines) {
-                final HologramLineRenderer renderer = line.getRenderer();
-                final PositionManager positionManager = line.getPositionManager();
+                HologramLineRenderer renderer = line.getRenderer();
+                PositionManager positionManager = line.getPositionManager();
                 positionManager.setLocation(hologramLocation.clone());
                 if (renderer != null) {
                     renderer.teleport(player, positionManager.getActualLocation());
@@ -124,42 +124,37 @@ public class DefaultHologramPage implements HologramPage {
             return;
         }
 
-        final Location playerEyeLocation = player.getEyeLocation();
-        final Vector playerLookDirection = playerEyeLocation.getDirection().clone().normalize();
+        Location playerEyeLocation = player.getEyeLocation();
+        Vector playerLookDirection = playerEyeLocation.getDirection().clone().normalize();
 
         // Calculate the required vectors.
-        final Vector horizontalPerpendicular = playerLookDirection.clone()
+        Vector horizontalPerpendicular = playerLookDirection.clone()
                 .crossProduct(MathUtil.UP_VECTOR)
                 .normalize();
-        final Vector verticalPerpendicular = horizontalPerpendicular.clone()
+        Vector verticalPerpendicular = horizontalPerpendicular.clone()
                 .crossProduct(playerLookDirection)
                 .multiply(-1d)
                 .normalize();
 
         // Calculate the pivot point. (The center of the hologram)
-        final Location pivot = hologramLocation.clone().subtract(0, totalHeight / 2, 0);
+        Location pivot = hologramLocation.clone().subtract(0, totalHeight / 2, 0);
 
         // Calculate new location for each line.
         double height = 0.0d;
         for (HologramLine line : lines) {
-            final HologramLineRenderer renderer = line.getRenderer();
-            if (renderer == null) {
-                // Line is not visible.
-                continue;
-            }
-
-            final PositionManager positionManager = line.getPositionManager();
-            final HologramLineSettings settings = line.getSettings();
-            final Vector offsets = positionManager.getOffsets();
-            final double totalOffsetY = offsets.getY() + settings.getOffsetY();
+            HologramLineRenderer renderer = line.getRenderer();
+            PositionManager positionManager = line.getPositionManager();
+            HologramLineSettings settings = line.getSettings();
+            Vector offsets = positionManager.getOffsets();
+            double totalOffsetY = offsets.getY() + settings.getOffsetY();
 
             // Calculate the new location.
-            final Location location;
+            Location location;
             if (vertical && isTextOnly) {
                 // If we rotate vertically, we put the lines along the relative vertical vector.
-                final double angle = Math.toRadians(playerEyeLocation.getPitch());
-                final double totalOffsetYAdjusted = totalOffsetY * Math.cos(angle);
-                final Vector vector = verticalPerpendicular.clone().multiply((height - totalOffsetYAdjusted) - totalHeight / 2);
+                double angle = Math.toRadians(playerEyeLocation.getPitch());
+                double totalOffsetYAdjusted = totalOffsetY * Math.cos(angle);
+                Vector vector = verticalPerpendicular.clone().multiply((height - totalOffsetYAdjusted) - totalHeight / 2);
                 location = pivot.clone().add(vector);
             } else {
                 // If we don't rotate vertically, we put the lines above each other.
@@ -169,21 +164,25 @@ public class DefaultHologramPage implements HologramPage {
             height += settings.getHeight();
 
             // Add the line offsets.
+            double totalOffsetX = offsets.getX() + settings.getOffsetX();
+            double totalOffsetZ = offsets.getZ() + settings.getOffsetZ();
             if (horizontal) {
-                final double totalOffsetX = offsets.getX() + settings.getOffsetX();
-                final double totalOffsetZ = offsets.getZ() + settings.getOffsetZ();
                 if (totalOffsetX != 0) {
                     location.add(horizontalPerpendicular.clone().multiply(totalOffsetX));
                 }
                 if (totalOffsetZ != 0) {
                     location.add(playerLookDirection.clone().multiply(totalOffsetZ));
                 }
+            } else {
+                location.add(totalOffsetX, 0, totalOffsetZ);
             }
 
             positionManager.setLocation(location);
 
             // Update the line location for the current viewer.
-            renderer.teleport(player, location);
+            if (renderer != null) {
+                renderer.teleport(player, location);
+            }
         }
     }
 
