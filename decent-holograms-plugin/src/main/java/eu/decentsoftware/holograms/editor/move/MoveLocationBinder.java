@@ -75,6 +75,9 @@ public class MoveLocationBinder implements Supplier<Location> {
                 .sum();
 
         location.add(0, height / 2, 0);
+        if (hologram.getSettings().isDownOrigin()) {
+            location.subtract(0, height, 0);
+        }
 
         // Snap to block center if sneaking
         if (player.isSneaking()) {
