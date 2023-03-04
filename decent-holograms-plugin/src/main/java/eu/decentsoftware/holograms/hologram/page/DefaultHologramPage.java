@@ -98,6 +98,7 @@ public class DefaultHologramPage implements HologramPage {
 
     @Override
     public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
+        final boolean isTextOnly = lines.stream().noneMatch(line -> line.getType() != HologramLineType.TEXT);
         final Location hologramLocation = getParent().getPositionManager().getActualLocation();
         final boolean downOrigin = getParent().getSettings().isDownOrigin();
         final double totalHeight = getHeight();
@@ -150,18 +151,19 @@ public class DefaultHologramPage implements HologramPage {
             final PositionManager positionManager = line.getPositionManager();
             final HologramLineSettings settings = line.getSettings();
             final Vector offsets = positionManager.getOffsets();
+            final double totalOffsetY = offsets.getY() + settings.getOffsetY();
 
             // Calculate the new location.
-            // NOTE: Vertical alignment is only supported for text lines.
             final Location location;
-            if (vertical && line.getType() == HologramLineType.TEXT) {
+            if (vertical && isTextOnly) {
                 // If we rotate vertically, we put the lines along the relative vertical vector.
-                final Vector vector = verticalPerpendicular.clone().multiply(height - totalHeight / 2);
+                final double angle = Math.toRadians(playerEyeLocation.getPitch());
+                final double totalOffsetYAdjusted = totalOffsetY * Math.cos(angle);
+                final Vector vector = verticalPerpendicular.clone().multiply((height - totalOffsetYAdjusted) - totalHeight / 2);
                 location = pivot.clone().add(vector);
             } else {
                 // If we don't rotate vertically, we put the lines above each other.
-                final double totalOffsetY = offsets.getY() + settings.getOffsetY();
-                location = hologramLocation.clone().add(0, height + totalOffsetY, 0);
+                location = hologramLocation.clone().subtract(0, height - totalOffsetY, 0);
             }
 
             height += settings.getHeight();
