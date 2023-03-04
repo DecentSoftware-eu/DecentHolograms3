@@ -1,8 +1,9 @@
 # Use '{prefix}' in other messages, and it will be replaced with this.
 prefix: "&8[&3DH&8] &7"
 no_permission: "{prefix}&cYou don't have permission to use this."
+only_players: "{prefix}&cOnly players can use this command."
 plugin:
-  reloaded: "{prefix}&aSuccessfully reloaded in ({0} ms)"
+  reloaded: "{prefix}&aSuccessfully reloaded in {0} ms."
   help:
     - ""
     - " &3&lDECENT HOLOGRAMS"
@@ -21,17 +22,27 @@ plugin:
 editor:
   invalid_hologram_name: "{prefix}&cHologram with name &b'{0}'&c doesn't exist."
   invalid_hologram_name_or_view: "{prefix}&cNo hologram found, either look at a hologram or enter a valid name."
-  teleported: "{prefix}&aYou were teleported to hologram &b'{0}'&a."
+  invalid_page: "{prefix}&cInvalid page number."
+  invalid_line: "{prefix}&cInvalid line number."
+  teleported: "{prefix}&aYou were teleported to &b'{0}'&a."
+  create:
+    success: "{prefix}&aSuccessfully created &b'{0}'&a."
+    already_exists: "{prefix}&cHologram with name &b'{0}'&c already exists."
+    invalid_name: "{prefix}&cInvalid hologram name."
   delete:
-    success: "{prefix}&aSuccessfully deleted hologram &b'{0}'&a."
+    success: "{prefix}&aSuccessfully deleted &b'{0}'&a."
   move:
     initiate:
-      - "{prefix}Moving hologram &b'{0}'&7."
-      - "{prefix}- &f&lLEFT CLICK &7to place it."
-      - "{prefix}- &f&lSCROLL &7to push and pull."
-      - "{prefix}- &f&lSNEAK &7to snap to block center."
-      - "{prefix}Use &b/dh move &7to cancel."
-    success: "{prefix}&aSuccessfully moved hologram."
-    cancel: "{prefix}&cCancelled moving hologram."
-    error:
-      already_being_moved: "{prefix}&cThis hologram is already being moved."
+      - "{prefix}You are now moving &b'{0}'&7."
+      - "{prefix}- &bLEFT CLICK &7to &fPlace It&7."
+      - "{prefix}- &bSCROLL &7to &fPush and Pull&7."
+      - "{prefix}- &bSNEAK &7to &fSnap to Grid&7."
+      - "{prefix}Type &b/dh move &7to cancel."
+    success: "{prefix}&aPosition has been updated!"
+    cancel: "{prefix}You are no longer moving a hologram."
+    already_being_moved: "{prefix}&cThis hologram is already being moved."
+  setline:
+    success: "{prefix}&aLine has been updated in &b'{0}'&a."
+  waila:
+    found: "{prefix}You are looking at &b'{0}'&7."
+    not_found: "{prefix}You are not looking at any hologram. At least not one created by Decent Holograms."
