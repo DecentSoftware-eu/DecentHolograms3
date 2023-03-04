@@ -391,6 +391,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         serializer.writeShort(0);
         serializer.writeShort(0);
         serializer.writeShort(0);
+        serializer.writeByte(127);
 
         try {
             PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving();
