@@ -324,7 +324,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public Object getMetaItemStack(org.bukkit.inventory.ItemStack itemStack) {
-        return new DataWatcher.WatchableObject(5, 8, i(itemStack));
+        return new DataWatcher.WatchableObject(5, 10, i(itemStack));
     }
 
     /*
