@@ -106,7 +106,7 @@ public class DecentItemStack {
 
         // Make it enchanted
         if (enchanted) {
-            builder.withEnchantment(Enchantment.DURABILITY, 0);
+            builder.withUnsafeEnchantment(Enchantment.DURABILITY, 1);
         }
 
         // Add texture
