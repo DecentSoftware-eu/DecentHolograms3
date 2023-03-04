@@ -26,7 +26,7 @@ import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.hologram.Visibility;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.profile.Profile;
-import eu.decentsoftware.holograms.utils.MathUtil;
+import eu.decentsoftware.holograms.utils.math.MathUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

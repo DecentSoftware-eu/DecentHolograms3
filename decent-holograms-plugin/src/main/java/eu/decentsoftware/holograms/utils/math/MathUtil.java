@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.utils;
+package eu.decentsoftware.holograms.utils.math;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;

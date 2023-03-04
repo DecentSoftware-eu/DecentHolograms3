@@ -25,6 +25,9 @@ import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.profile.Profile;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -32,10 +35,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class TextLineRenderer extends LineRenderer {
 
-    private final @NotNull String text;
-    private final String hoverText;
+    private @NotNull String text;
+    private String hoverText;
+
+    @Getter(AccessLevel.NONE)
     private final int eid;
 
     public TextLineRenderer(@NotNull HologramLine parent, @NotNull String text) {

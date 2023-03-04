@@ -79,7 +79,7 @@ public class MoveLocationBinder implements Supplier<Location> {
         // Snap to block center if sneaking
         if (player.isSneaking()) {
             location.setX(location.getBlockX() + 0.5);
-            location.setY(location.getBlockY());
+            location.setY(location.getBlockY() + 0.5);
             location.setZ(location.getBlockZ() + 0.5);
         }
 

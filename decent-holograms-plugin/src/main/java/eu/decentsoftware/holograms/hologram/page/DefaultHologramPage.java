@@ -29,7 +29,7 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
-import eu.decentsoftware.holograms.utils.MathUtil;
+import eu.decentsoftware.holograms.utils.math.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
