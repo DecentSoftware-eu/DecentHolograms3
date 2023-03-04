@@ -110,6 +110,12 @@ public class DecentHologramsCommand {
             return;
         }
 
+        if (hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder) {
+            MoveLocationBinder binder = (MoveLocationBinder) hologram.getPositionManager().getLocationBinder();
+            PLUGIN.getEditor().getMoveController().cancel(binder.getPlayer());
+            Lang.confTell(binder.getPlayer(), "editor.move.cancel");
+        }
+
         registry.removeHologram(hologram.getName());
         hologram.delete();
 
