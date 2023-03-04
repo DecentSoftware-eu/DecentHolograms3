@@ -88,17 +88,17 @@ public class DefaultHologramPage implements HologramPage {
         final Set<Player> viewers = getParent().getVisibilityManager().getViewerPlayers(pageIndex);
 
         final boolean horizontal = getParent().getSettings().isRotateHorizontal();
-        final boolean vertical = getParent().getSettings().isRotateVertical(); // && isTextOnly(); TODO
+        final boolean vertical = getParent().getSettings().isRotateVertical();
         final boolean heads = getParent().getSettings().isRotateHeads();
+        final boolean isTextOnly = lines.stream().noneMatch(line -> line.getType() != HologramLineType.TEXT);
 
         for (Player viewer : viewers) {
-            recalculate(viewer, horizontal, vertical, heads);
+            recalculate(viewer, horizontal && isTextOnly, vertical, heads);
         }
     }
 
     @Override
     public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
-        final boolean isTextOnly = lines.stream().noneMatch(line -> line.getType() != HologramLineType.TEXT);
         final Location hologramLocation = getParent().getPositionManager().getActualLocation();
         final boolean downOrigin = getParent().getSettings().isDownOrigin();
         final double totalHeight = getHeight();
@@ -150,7 +150,7 @@ public class DefaultHologramPage implements HologramPage {
 
             // Calculate the new location.
             Location location;
-            if (vertical && isTextOnly) {
+            if (vertical) {
                 // If we rotate vertically, we put the lines along the relative vertical vector.
                 double angle = Math.toRadians(playerEyeLocation.getPitch());
                 double totalOffsetYAdjusted = totalOffsetY * Math.cos(angle);
