@@ -84,12 +84,12 @@ public class DefaultHologramPage implements HologramPage {
 
     @Override
     public void recalculate() {
-        final int pageIndex = getParent().getIndex(this);
-        final Set<Player> viewers = getParent().getVisibilityManager().getViewerPlayers(pageIndex);
+        int pageIndex = parent.getIndex(this);
+        Set<Player> viewers = parent.getVisibilityManager().getViewerPlayers(pageIndex);
 
-        final boolean horizontal = getParent().getSettings().isRotateHorizontal();
-        final boolean vertical = getParent().getSettings().isRotateVertical();
-        final boolean heads = getParent().getSettings().isRotateHeads();
+        final boolean horizontal = parent.getSettings().isRotateHorizontal();
+        final boolean vertical = parent.getSettings().isRotateVertical();
+        final boolean heads = parent.getSettings().isRotateHeads();
         final boolean isTextOnly = lines.stream().noneMatch(line -> line.getType() != HologramLineType.TEXT);
 
         for (Player viewer : viewers) {
@@ -99,8 +99,8 @@ public class DefaultHologramPage implements HologramPage {
 
     @Override
     public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
-        final Location hologramLocation = getParent().getPositionManager().getActualLocation();
-        final boolean downOrigin = getParent().getSettings().isDownOrigin();
+        final Location hologramLocation = parent.getPositionManager().getActualLocation();
+        final boolean downOrigin = parent.getSettings().isDownOrigin();
         final double totalHeight = getHeight();
 
         // If the hologram location is originating from the bottom,
@@ -189,9 +189,7 @@ public class DefaultHologramPage implements HologramPage {
     @NotNull
     @Override
     public Location getNextLineLocation() {
-        final double height = getHeight();
-        final Location location = getParent().getPositionManager().getActualLocation();
-        return location.subtract(0, height, 0);
+        return parent.getPositionManager().getActualLocation().subtract(0, getHeight(), 0);
     }
 
     @NotNull

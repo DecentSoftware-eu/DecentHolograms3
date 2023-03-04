@@ -18,8 +18,8 @@
 
 package eu.decentsoftware.holograms.editor.move;
 
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -60,19 +60,17 @@ public class MoveLocationBinder implements Supplier<Location> {
 
     @Override
     public Location get() {
-        final Location location = player.getEyeLocation();
-        final Vector lookDirection = location.getDirection();
+        Location location = player.getEyeLocation();
+        Vector lookDirection = location.getDirection();
 
         location.add(lookDirection.multiply(distance));
 
-        final HologramPage page = hologram.getPage(hologram.getVisibilityManager().getPage(player));
+        DefaultHologramPage page = (DefaultHologramPage) hologram.getPage(hologram.getVisibilityManager().getPage(player));
         if (page == null) {
             return location;
         }
 
-        final double height = page.getLines().stream()
-                .mapToDouble((line) -> line.getSettings().getHeight())
-                .sum();
+        double height = page.getHeight();
 
         location.add(0, height / 2, 0);
         if (hologram.getSettings().isDownOrigin()) {
