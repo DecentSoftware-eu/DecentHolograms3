@@ -35,6 +35,8 @@ public final class Config {
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static boolean updateAvailable = false;
 
+    public static final String HOLOGRAM_NAME_REGEX = "[a-zA-Z0-9_]{1,64}";
+
     // ========== PERMISSIONS ========== //
 
     public static final String ADMIN_PERM = "dh.admin";
