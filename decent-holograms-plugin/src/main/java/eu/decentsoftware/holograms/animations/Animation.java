@@ -55,12 +55,12 @@ public abstract class Animation {
     /**
      * Animates the given string.
      *
-     * @param step   Step of the animation.
+     * @param tick   The current tick of animations. (1 tick = 1/20 second)
      * @param string The string.
      * @return The animated string.
      */
     @NotNull
-    public abstract String animate(int step, @Nullable String string);
+    public abstract String animate(int tick, @Nullable String string);
 
     /**
      * Get the current step of this animation.

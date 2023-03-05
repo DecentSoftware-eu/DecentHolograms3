@@ -32,7 +32,7 @@ public class ShineAnimation extends Animation {
 
     @NotNull
     @Override
-    public String animate(int step, @Nullable String string) {
+    public String animate(int tick, @Nullable String string) {
         if (string == null) {
             return "";
         }
@@ -40,7 +40,7 @@ public class ShineAnimation extends Animation {
         // TODO
 
         int length = string.length();
-        int index = step % length;
+        int index = tick % length;
 
         String start = string.substring(0, index);
         String shine = string.substring(index, index + 1);

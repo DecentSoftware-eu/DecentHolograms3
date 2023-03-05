@@ -36,12 +36,12 @@ public class RainbowAnimation extends Animation {
     };
 
     public RainbowAnimation() {
-        super("rainbow", AnimationType.ASCEND, DEFAULT_COLORS.length, 60, 0);
+        super("rainbow", AnimationType.ASCEND, DEFAULT_COLORS.length, 2, 0);
     }
 
     @NotNull
-    public String animate(int step, @Nullable String string) {
-        return DEFAULT_COLORS[step % 12 / 2] + (string == null ? "" : string);
+    public String animate(int tick, @Nullable String string) {
+        return DEFAULT_COLORS[tick % (DEFAULT_COLORS.length * speed) / speed] + (string == null ? "" : string);
     }
 
 }

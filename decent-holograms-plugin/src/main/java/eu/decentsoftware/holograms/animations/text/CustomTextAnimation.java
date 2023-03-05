@@ -36,12 +36,12 @@ public class CustomTextAnimation extends Animation {
     }
 
     @NotNull
-    public String animate(int step, @Nullable String string) {
+    public String animate(int tick, @Nullable String string) {
         if (type == AnimationType.RANDOM) {
             return frameList.get(Common.irand(0, totalSteps - 1));
         }
 
-        int actualStep = getActualStep(step);
+        int actualStep = getActualStep(tick);
         switch (type) {
             case INTERNAL:
             case ASCEND:
