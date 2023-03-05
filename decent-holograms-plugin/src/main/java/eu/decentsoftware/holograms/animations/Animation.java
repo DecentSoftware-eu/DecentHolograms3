@@ -47,7 +47,7 @@ public abstract class Animation {
     public Animation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
         this.name = name;
         this.type = type;
-        this.totalSteps = totalSteps;
+        this.totalSteps = type == AnimationType.ASCEND_DESCEND ? totalSteps * 2 : totalSteps;
         this.speed = speed;
         this.pause = pause;
     }

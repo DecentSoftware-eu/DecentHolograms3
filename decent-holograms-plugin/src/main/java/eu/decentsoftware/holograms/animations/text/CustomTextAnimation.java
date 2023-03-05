@@ -45,14 +45,15 @@ public class CustomTextAnimation extends Animation {
         switch (type) {
             case INTERNAL:
             case ASCEND:
-                return frameList.get(actualStep % totalSteps);
+                return frameList.get(actualStep);
             case DESCEND:
-                return frameList.get(totalSteps - actualStep % totalSteps);
+                return frameList.get(totalSteps - actualStep - 1);
             case ASCEND_DESCEND:
-                if (actualStep % (totalSteps * 2) < totalSteps) {
-                    return frameList.get(actualStep % totalSteps);
+                if (actualStep < totalSteps / 2) {
+                    return frameList.get(actualStep);
                 } else {
-                    return frameList.get(totalSteps - actualStep % totalSteps);
+                    // Count from max to min
+                    return frameList.get(totalSteps - actualStep - 1);
                 }
         }
         return ""; // Should never happen

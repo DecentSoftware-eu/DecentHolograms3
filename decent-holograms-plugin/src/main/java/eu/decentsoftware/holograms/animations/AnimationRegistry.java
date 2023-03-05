@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 public class AnimationRegistry implements Ticked {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *[A-Ba-b0-9_]+>");
+    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *([a-zA-Z0-9_-]+)>");
     private static final RainbowAnimation RAINBOW_ANIMATION = new RainbowAnimation();
 
     private final @NotNull Map<String, Animation> customAnimationMap;
@@ -129,7 +129,7 @@ public class AnimationRegistry implements Ticked {
         Matcher matcher = ANIMATION_REGEX.matcher(text);
         while (matcher.find()) {
             String group = matcher.group();
-            String name = group.substring(12, group.length() - 1);
+            String name = matcher.group(1);
             Animation animation = this.customAnimationMap.get(name);
             if (animation != null) {
                 text = text.replace(group, animation.animate(step, null));
