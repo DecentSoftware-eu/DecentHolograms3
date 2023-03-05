@@ -82,6 +82,8 @@ public class SerializableHologram {
         }
         if (settings == null) {
             settings = new DefaultHologramSettings(true, true);
+        } else {
+            settings.setPersistent(true);
         }
         if (viewConditions == null) {
             viewConditions = new ConditionHolder();
