@@ -29,11 +29,8 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import org.bukkit.Location;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 public class DefaultHologramLine implements HologramLine {
 
@@ -44,7 +41,6 @@ public class DefaultHologramLine implements HologramLine {
      */
 
     private final @NotNull HologramPage parent;
-    private final @NotNull UUID uid;
     private final @NotNull HologramLineSettings settings;
     private final @NotNull PositionManager positionManager;
     private final @NotNull ConditionHolder viewConditions;
@@ -88,19 +84,12 @@ public class DefaultHologramLine implements HologramLine {
                                @NotNull ConditionHolder viewConditions, @NotNull ConditionHolder clickConditions,
                                @NotNull ActionHolder clickActions, @NotNull String content) {
         this.parent = parent;
-        this.uid = UUID.randomUUID();
         this.settings = settings;
         this.positionManager = new LinePositionManager(this, location);
         this.viewConditions = viewConditions;
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
         this.setContent(content);
-    }
-
-    @NotNull
-    @Override
-    public UUID getUid() {
-        return uid;
     }
 
     @NotNull
@@ -177,19 +166,6 @@ public class DefaultHologramLine implements HologramLine {
     @Override
     public HologramLine setClickHandler(@Nullable ClickHandler clickHandler) {
         return null;
-    }
-
-    @Contract(value = "null -> false", pure = true)
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        HologramLine other = (HologramLine) obj;
-        return this.uid.equals(other.getUid());
     }
 
 }

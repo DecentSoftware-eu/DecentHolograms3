@@ -24,8 +24,6 @@ import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 /**
  * This class represents a hologram line. A line is a collection of components
  * that can be moved in the world. A line can be added to a {@link HologramPage}.
@@ -35,14 +33,6 @@ import java.util.UUID;
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface HologramLine {
-
-    /**
-     * Get the UUID of the line.
-     *
-     * @return The UUID of the line.
-     */
-    @NotNull
-    UUID getUid();
 
     /**
      * Get the parent {@link HologramPage} of this line.
