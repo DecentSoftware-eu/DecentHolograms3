@@ -116,7 +116,7 @@ public class DefaultHologram implements Hologram, Ticked {
 
     @Override
     public void tick() {
-        if (!getSettings().isEnabled()) {
+        if (!settings.isEnabled()) {
             // Do not tick if the hologram is disabled.
             return;
         }
@@ -159,7 +159,7 @@ public class DefaultHologram implements Hologram, Ticked {
 
     @Override
     public void recalculate() {
-        getPages().forEach(HologramPage::recalculate);
+        pages.forEach(HologramPage::recalculate);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class DefaultHologram implements Hologram, Ticked {
 
     @Override
     public int getIndex(@NotNull HologramPage page) {
-        return pages.contains(page) ? getPages().indexOf(page) : -1;
+        return pages.contains(page) ? pages.indexOf(page) : -1;
     }
 
     @NotNull

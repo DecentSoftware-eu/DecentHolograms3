@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-public class DefaultDecentHologramsAPI implements DecentHologramsAPI {
+public class DecentHologramsAPIImpl implements DecentHologramsAPI {
 
     @NotNull
     @Override

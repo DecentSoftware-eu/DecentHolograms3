@@ -28,11 +28,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
-import eu.decentsoftware.holograms.api.DefaultDecentHologramsAPI;
+import eu.decentsoftware.holograms.animations.AnimationRegistry;
+import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
 import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
-import eu.decentsoftware.holograms.commands.TestCommand;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
 import eu.decentsoftware.holograms.editor.Editor;
@@ -117,7 +117,7 @@ public final class DecentHolograms extends JavaPlugin {
         this.editor = new Editor();
 
         // -- Register DecentHologramsAPI
-        DecentHologramsAPIProvider.setInstance(new DefaultDecentHologramsAPI());
+        DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl());
 
         // -- Initialize Utils
         BungeeUtils.init();
@@ -234,7 +234,6 @@ public final class DecentHolograms extends JavaPlugin {
 
             // -- Register commands
             annotationParser.parse(new DecentHologramsCommand());
-            annotationParser.parse(new TestCommand());
 
         } catch (Exception e) {
             throw new RuntimeException(e);

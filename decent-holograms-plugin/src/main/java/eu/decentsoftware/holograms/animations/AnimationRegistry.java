@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This registry is responsible for storing and replacing animations.
@@ -34,7 +36,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class AnimationRegistry implements Ticked {
 
-    private final @NotNull Map<String, Animation> animationMap;
+    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *[A-Ba-b0-9_]+>");
+    private static final RainbowAnimation RAINBOW_ANIMATION = new RainbowAnimation();
+
+    private final @NotNull Map<String, Animation> customAnimationMap;
     private final @NotNull AtomicInteger stepCounter;
 
     /**
@@ -42,7 +48,7 @@ public class AnimationRegistry implements Ticked {
      * also loads all animations from config by calling the {@link #reload()} method.
      */
     public AnimationRegistry() {
-        this.animationMap = new ConcurrentHashMap<>();
+        this.customAnimationMap = new ConcurrentHashMap<>();
         this.stepCounter = new AtomicInteger(0);
 
         this.reload();
@@ -60,9 +66,10 @@ public class AnimationRegistry implements Ticked {
     }
 
     public synchronized void shutdown() {
-        this.animationMap.clear();
+        this.customAnimationMap.clear();
     }
 
+    @Override
     public void tick() {
         this.stepCounter.incrementAndGet();
     }
@@ -86,7 +93,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public void registerAnimation(@NotNull Animation animation) {
-        this.animationMap.put(animation.getName(), animation);
+        this.customAnimationMap.put(animation.getName(), animation);
     }
 
     /**
@@ -97,7 +104,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public Animation getAnimation(@NotNull String name) {
-        return this.animationMap.get(name);
+        return this.customAnimationMap.get(name);
     }
 
     /**
@@ -108,7 +115,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public Animation removeAnimation(@NotNull String name) {
-        return this.animationMap.remove(name);
+        return this.customAnimationMap.remove(name);
     }
 
     /**
@@ -119,7 +126,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public boolean hasAnimation(@NotNull String name) {
-        return this.animationMap.containsKey(name);
+        return this.customAnimationMap.containsKey(name);
     }
 
     /**
@@ -129,7 +136,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public Map<String, Animation> getAnimations() {
-        return ImmutableMap.copyOf(this.animationMap);
+        return ImmutableMap.copyOf(this.customAnimationMap);
     }
 
 }
