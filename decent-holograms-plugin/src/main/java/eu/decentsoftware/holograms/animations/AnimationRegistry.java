@@ -108,7 +108,23 @@ public class AnimationRegistry implements Ticked {
      */
     @NotNull
     public String animate(@NotNull String text) {
-        // TODO: animate
+        int step = this.stepCounter.get();
+
+        // Rainbow text animation
+        text = text.replace("&q", RAINBOW_ANIMATION.animate(step, null));
+
+        // Custom text animations
+        Matcher matcher = ANIMATION_REGEX.matcher(text);
+        while (matcher.find()) {
+            String group = matcher.group();
+            String name = group.substring(12, group.length() - 1);
+            Animation animation = this.customAnimationMap.get(name);
+            if (animation != null) {
+                text = text.replace(group, animation.animate(step, null));
+            }
+        }
+
+        // TODO
         return text;
     }
 
