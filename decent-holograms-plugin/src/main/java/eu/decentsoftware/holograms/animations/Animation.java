@@ -72,17 +72,10 @@ public abstract class Animation {
         if (totalSteps <= 0) {
             return 0;
         }
-
-        // TODO
-
-	    // The ticks per frame of the animation.
-	    double tpf = 20.0 / speed;
-
-		// The current step of the animation.
-		int step = (int) (tick / tpf);
-
-		// The current step of the animation.
-		return step % totalSteps;
+        int actualStep = tick / speed;
+        int actualPause = pause <= 0 ? 0 : pause / speed;
+        int currentStep = actualStep % (totalSteps + actualPause);
+        return Math.min(currentStep, totalSteps);
     }
 
 }

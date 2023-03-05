@@ -18,42 +18,44 @@
 
 package eu.decentsoftware.holograms.animations.text;
 
-import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.animations.Animation;
-import eu.decentsoftware.holograms.animations.AnimationFrame;
+import eu.decentsoftware.holograms.animations.AnimationType;
+import eu.decentsoftware.holograms.utils.Common;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomTextAnimation extends Animation {
 
-    protected final @NotNull List<AnimationFrame<?>> frameList;
+    protected final @NotNull List<String> frameList;
 
-    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
-        super(name, type, totalSteps, speed, pause);
-        this.frameList = new ArrayList<>();
-    }
-
-    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause, @NotNull List<AnimationFrame<?>> frameList) {
-        super(name, type, totalSteps, speed, pause);
+    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int speed, int pause, @NotNull List<String> frameList) {
+        super(name, type, frameList.size(), speed, pause);
         this.frameList = frameList;
-    }
-
-    /**
-     * Get the n-th frame of this animation.
-     *
-     * @param step The n.
-     * @return The n-th frame of this animation.
-     */
-    public AnimationFrame<?> getFrame(int step) {
-        return frameList.get(getActualStep(step));
     }
 
     @NotNull
     public String animate(int step, @Nullable String string) {
-        return getFrame(step).toString();
+        if (type == AnimationType.RANDOM) {
+            return frameList.get(Common.irand(0, totalSteps - 1));
+        }
+
+        int actualStep = getActualStep(step);
+        switch (type) {
+            case INTERNAL:
+            case ASCEND:
+                return frameList.get(actualStep % totalSteps);
+            case DESCEND:
+                return frameList.get(totalSteps - actualStep % totalSteps);
+            case ASCEND_DESCEND:
+                if (actualStep % (totalSteps * 2) < totalSteps) {
+                    return frameList.get(actualStep % totalSteps);
+                } else {
+                    return frameList.get(totalSteps - actualStep % totalSteps);
+                }
+        }
+        return ""; // Should never happen
     }
 
 }
