@@ -19,9 +19,15 @@
 package eu.decentsoftware.holograms.animations;
 
 import com.google.common.collect.ImmutableMap;
+import eu.decentsoftware.holograms.BootMessenger;
+import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.animations.text.RainbowAnimation;
 import eu.decentsoftware.holograms.ticker.Ticked;
+import eu.decentsoftware.holograms.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,10 +62,30 @@ public class AnimationRegistry implements Ticked {
     }
 
     public synchronized void reload() {
-        this.animationMap.clear();
+        this.customAnimationMap.clear();
 
-        // Load animations
-        // TODO: load
+        // Load animations from config
+        final long startMillis = System.currentTimeMillis();
+        int counter = 0;
+
+        File folder = new File(PLUGIN.getDataFolder(), "animations");
+        List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.yml", true);
+        if (files.isEmpty()) {
+            return;
+        }
+
+        for (File file : files) {
+            try {
+                String name = file.getName().substring(0, file.getName().length() - 4);
+                // TODO
+                counter++;
+            } catch (Exception e) {
+                PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
+                e.printStackTrace();
+            }
+        }
+        long took = System.currentTimeMillis() - startMillis;
+        BootMessenger.log(String.format("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took));
 
         // Reset step counter
         this.stepCounter.set(0);
