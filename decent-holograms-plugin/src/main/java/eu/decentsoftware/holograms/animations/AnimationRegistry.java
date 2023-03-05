@@ -21,9 +21,11 @@ package eu.decentsoftware.holograms.animations;
 import com.google.common.collect.ImmutableMap;
 import eu.decentsoftware.holograms.BootMessenger;
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.animations.text.CustomTextAnimation;
 import eu.decentsoftware.holograms.animations.text.RainbowAnimation;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.FileUtils;
+import eu.decentsoftware.holograms.utils.config.FileConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -77,7 +79,17 @@ public class AnimationRegistry implements Ticked {
         for (File file : files) {
             try {
                 String name = file.getName().substring(0, file.getName().length() - 4);
-                // TODO
+                FileConfig config = new FileConfig(PLUGIN, file);
+                AnimationType type = AnimationType.getByName(config.getString("type", "ASCEND"));
+                int speed = config.getInt("speed", 1);
+                int pause = config.getInt("pause", 0);
+                List<String> frames = config.getStringList("frames");
+                if (frames.isEmpty()) {
+                    PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
+                    continue;
+                }
+                Animation animation = new CustomTextAnimation(name, type, speed, pause, frames);
+                registerAnimation(animation);
                 counter++;
             } catch (Exception e) {
                 PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
