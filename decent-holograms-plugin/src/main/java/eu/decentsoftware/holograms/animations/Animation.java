@@ -75,7 +75,7 @@ public abstract class Animation {
         int actualStep = tick / speed;
         int actualPause = pause <= 0 ? 0 : pause / speed;
         int currentStep = actualStep % (totalSteps + actualPause);
-        return Math.min(currentStep, totalSteps);
+        return Math.min(currentStep, totalSteps - 1);
     }
 
 }
