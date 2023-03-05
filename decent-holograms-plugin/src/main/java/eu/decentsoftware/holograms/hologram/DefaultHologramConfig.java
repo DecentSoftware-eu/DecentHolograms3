@@ -22,14 +22,17 @@ import com.google.gson.JsonSyntaxException;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.hologram.serialization.SerializableHologram;
 import eu.decentsoftware.holograms.conditions.Condition;
-import eu.decentsoftware.holograms.utils.SchedulerUtil;
+import eu.decentsoftware.holograms.hologram.serialization.SerializableHologram;
 import eu.decentsoftware.holograms.hologram.serialization.SerializablePage;
+import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -64,7 +67,7 @@ public class DefaultHologramConfig implements HologramConfig {
     @Override
     public CompletableFuture<Void> save() {
         return CompletableFuture.runAsync(() -> {
-            if (parent.getSettings().isPersistent()) {
+            if (!parent.getSettings().isPersistent()) {
                 return;
             }
 
@@ -117,13 +120,15 @@ public class DefaultHologramConfig implements HologramConfig {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void ensureFileExists() {
-        if (!getFile().exists()) {
-            try {
-                getFile().createNewFile();
-            } catch (IOException e) {
-                PLUGIN.getLogger().severe("Failed to create hologram file " + getFile().getName() + ":");
-                e.printStackTrace();
-            }
+        if (file.exists()) {
+            return;
+        }
+
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Failed to create hologram file " + getFile().getName() + ":");
+            e.printStackTrace();
         }
     }
 
