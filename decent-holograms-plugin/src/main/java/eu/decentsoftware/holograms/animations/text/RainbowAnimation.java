@@ -41,7 +41,7 @@ public class RainbowAnimation extends Animation {
 
     @NotNull
     public String animate(int step, @Nullable String string) {
-        return DEFAULT_COLORS[step % 6] + (string == null ? "" : string);
+        return DEFAULT_COLORS[step % 12 / 2] + (string == null ? "" : string);
     }
 
 }
