@@ -20,30 +20,38 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
-import eu.decentsoftware.holograms.nms.utils.Version;
-import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
+import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.Profile;
-import lombok.AccessLevel;
+import eu.decentsoftware.holograms.ticker.Ticked;
+import eu.decentsoftware.holograms.utils.Common;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Getter
-@Setter
-public class TextLineRenderer extends LineRenderer {
+public class TextLineRenderer extends LineRenderer implements Ticked {
 
-    private @NotNull String text;
-    private String hoverText;
-
-    @Getter(AccessLevel.NONE)
+    /**
+     * The cache of formatted text for each player. This formatted text already
+     * has all placeholders and replacements replaced. It is not colored, and it
+     * is not animated.
+     *
+     * @implNote This is only used if the line contains any animations. If it does not,
+     * then this cache is not used.
+     */
+    private final Map<UUID, String> formattedTextCache = new ConcurrentHashMap<>();
     private final int eid;
+    private boolean containsAnimations;
+    private final String hoverText; // TODO: Hover text
+    @Getter
+    private String text;
 
     public TextLineRenderer(@NotNull HologramLine parent, @NotNull String text) {
         this(parent, text, null);
@@ -51,9 +59,43 @@ public class TextLineRenderer extends LineRenderer {
 
     public TextLineRenderer(@NotNull HologramLine parent, @NotNull String text, String hoverText) {
         super(parent, HologramLineType.TEXT);
-        this.text = text;
         this.hoverText = hoverText;
         this.eid = NMS.getFreeEntityId();
+        this.setText(text);
+    }
+
+    /**
+     * Set the text of this line. This method will also check if the line contains
+     * any animations, and if it does, it will start ticking.
+     *
+     * @param text The new text of the line.
+     */
+    public void setText(@NotNull String text) {
+        this.text = text;
+        this.containsAnimations = PLUGIN.getAnimationRegistry().containsAnimation(text);
+        if (this.containsAnimations) {
+            this.startTicking();
+        } else {
+            this.stopTicking();
+        }
+    }
+
+    @Override
+    public void tick() {
+        if (!containsAnimations) {
+            return;
+        }
+
+        for (Player viewerPlayer : getViewerPlayers()) {
+            String formattedText = formattedTextCache.get(viewerPlayer.getUniqueId());
+            if (formattedText == null) {
+                formattedText = getFormattedText(viewerPlayer);
+                formattedTextCache.put(viewerPlayer.getUniqueId(), formattedText);
+            }
+            formattedText = PLUGIN.getAnimationRegistry().animate(formattedText);
+            formattedText = Common.colorize(formattedText);
+            update(viewerPlayer, formattedText);
+        }
     }
 
     /**
@@ -74,11 +116,13 @@ public class TextLineRenderer extends LineRenderer {
             }
         }
 
-        // Replace custom replacements
         formattedText = PLUGIN.getReplacementRegistry().replace(formattedText, profile);
-        // Replace PAPI placeholders
         formattedText = PAPI.setPlaceholders(player, formattedText);
-        // Colorize
+
+        if (containsAnimations) {
+            formattedTextCache.put(player.getUniqueId(), formattedText);
+            formattedText = PLUGIN.getAnimationRegistry().animate(formattedText);
+        }
         formattedText = Common.colorize(formattedText);
 
         return formattedText;
@@ -94,12 +138,7 @@ public class TextLineRenderer extends LineRenderer {
                 false, true, false, false);
         Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true,
                 true);
-        Object metaName;
-        if (Version.is(8)) {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
-        } else {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
-        }
+        Object metaName = getMetaName(formattedText);
         Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
         // Spawn the fake armor stand entity
@@ -111,15 +150,13 @@ public class TextLineRenderer extends LineRenderer {
     @Override
     public void update(@NotNull Player player) {
         String formattedText = getFormattedText(player);
+        update(player, formattedText);
+    }
 
+    private void update(@NotNull Player player, @NotNull String text) {
         // Create the metadata objects
-        Object metaName;
-        if (Version.is(8)) {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
-        } else {
-            metaName = NMS.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
-        }
-        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
+        Object metaName = getMetaName(text);
+        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!text.isEmpty());
 
         // Send the metadata
         NMS.sendEntityMetadata(player, eid, metaName, metaNameVisible);
@@ -129,12 +166,23 @@ public class TextLineRenderer extends LineRenderer {
     public void hide(@NotNull Player player) {
         // Destroy the fake armor stand entity
         NMS.removeEntity(player, eid);
+
+        // Remove the cached text
+        formattedTextCache.remove(player.getUniqueId());
     }
 
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
         // Teleport the fake armor stand entity
         NMS.teleportEntity(player, eid, location, false);
+    }
+
+    private Object getMetaName(@NotNull String formattedText) {
+        if (Version.is(8)) {
+            return NMS.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
+        } else {
+            return NMS.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
+        }
     }
 
 }

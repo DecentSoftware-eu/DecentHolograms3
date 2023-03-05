@@ -79,6 +79,7 @@ public final class DecentHolograms extends JavaPlugin {
     private ProfileRegistry profileRegistry;
     private ServerRegistry serverRegistry;
     private ReplacementRegistry replacementRegistry;
+    private AnimationRegistry animationRegistry;
     private ContentParserManager contentParserManager;
     private DefaultHologramRegistry hologramRegistry;
     @Getter(AccessLevel.NONE)
@@ -112,6 +113,7 @@ public final class DecentHolograms extends JavaPlugin {
         this.profileRegistry = new ProfileRegistry();
         this.serverRegistry = new ServerRegistry();
         this.replacementRegistry = new ReplacementRegistry();
+        this.animationRegistry = new AnimationRegistry();
         this.contentParserManager = new ContentParserManager();
         this.hologramRegistry = new DefaultHologramRegistry();
         this.editor = new Editor();
@@ -145,6 +147,7 @@ public final class DecentHolograms extends JavaPlugin {
         this.ticker.shutdown();
         this.nmsManager.shutdown();
         this.hologramRegistry.shutdown();
+        this.animationRegistry.shutdown();
         this.replacementRegistry.shutdown();
         this.serverRegistry.shutdown();
         this.profileRegistry.shutdown();
@@ -162,6 +165,7 @@ public final class DecentHolograms extends JavaPlugin {
 
         this.hologramRegistry.reload();
         this.replacementRegistry.reload();
+        this.animationRegistry.reload();
         this.serverRegistry.reload();
         this.profileRegistry.reload();
         this.editor.reload();
