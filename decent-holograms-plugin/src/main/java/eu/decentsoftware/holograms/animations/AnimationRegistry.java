@@ -113,6 +113,16 @@ public class AnimationRegistry implements Ticked {
     }
 
     /**
+     * Check if the given text contains any animations.
+     *
+     * @param text The text.
+     * @return True if the text contains any animations, false otherwise.
+     */
+    public boolean containsAnimation(@NotNull String text) {
+        return text.contains("&q") || ANIMATION_REGEX.matcher(text).find();
+    }
+
+    /**
      * Register a new animation.
      *
      * @param animation The animation.
