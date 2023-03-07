@@ -50,9 +50,6 @@ public class DefaultHologram implements Hologram, Ticked {
     private final @NotNull DefaultPositionManager positionManager;
     private final @NotNull HologramVisibilityManager visibilityManager;
     private final @NotNull List<HologramPage> pages;
-    /**
-     * The condition holder of the hologram, used for managing the view conditions of the hologram.
-     */
     private final @NotNull ConditionHolder viewConditions;
 
     @Getter(AccessLevel.NONE)

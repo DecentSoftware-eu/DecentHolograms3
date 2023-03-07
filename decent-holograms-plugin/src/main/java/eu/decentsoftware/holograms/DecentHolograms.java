@@ -52,6 +52,7 @@ import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -85,6 +86,10 @@ public final class DecentHolograms extends JavaPlugin {
     @Getter(AccessLevel.NONE)
     private NMSManager nmsManager;
     private Editor editor;
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private boolean enabled = false;
 
     public DecentHolograms() {
         instance = this;
@@ -139,18 +144,22 @@ public final class DecentHolograms extends JavaPlugin {
             BootMessenger.log("Using PlaceholderAPI for placeholder support!");
         }
         BootMessenger.sendAndFinish();
+
+        this.enabled = true;
     }
 
     @Override
     public void onDisable() {
-        this.editor.shutdown();
-        this.ticker.shutdown();
-        this.nmsManager.shutdown();
-        this.hologramRegistry.shutdown();
-        this.animationRegistry.shutdown();
-        this.replacementRegistry.shutdown();
-        this.serverRegistry.shutdown();
-        this.profileRegistry.shutdown();
+        if (this.enabled) {
+            this.editor.shutdown();
+            this.ticker.shutdown();
+            this.nmsManager.shutdown();
+            this.hologramRegistry.shutdown();
+            this.animationRegistry.shutdown();
+            this.replacementRegistry.shutdown();
+            this.serverRegistry.shutdown();
+            this.profileRegistry.shutdown();
+        }
 
         BungeeUtils.shutdown();
         HandlerList.unregisterAll(this);

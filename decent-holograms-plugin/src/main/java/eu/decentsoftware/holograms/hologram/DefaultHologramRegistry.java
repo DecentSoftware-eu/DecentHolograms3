@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.hologram;
 
 import eu.decentsoftware.holograms.BootMessenger;
+import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.hologram.serialization.SerializableHologram;
@@ -63,7 +64,7 @@ public class DefaultHologramRegistry {
         int counter = 0;
 
         File folder = new File(PLUGIN.getDataFolder(), "holograms");
-        List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.json", true);
+        List<File> files = FileUtils.getFilesFromTree(folder, Config.NAME_REGEX + "\\.json", true);
         if (files.isEmpty()) {
             return;
         }
