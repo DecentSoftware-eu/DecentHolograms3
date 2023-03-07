@@ -249,7 +249,7 @@ public class DecentHologramsCommand {
         Location location = player.getEyeLocation();
         Vector lookDirection = location.getDirection();
 
-        for (int i = 0; i < 10; i += 2) {
+        for (int i = 3; i < 24; i += 3) {
             location.add(lookDirection);
 
             List<DefaultHologram> holograms = getHologramsNearLocation(location);
