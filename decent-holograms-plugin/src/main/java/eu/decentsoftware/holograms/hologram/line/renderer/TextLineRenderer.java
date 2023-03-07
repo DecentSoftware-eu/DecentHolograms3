@@ -72,6 +72,9 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
      */
     public void setText(@NotNull String text) {
         this.text = text;
+        if (this.text.equalsIgnoreCase("{empty}")) {
+            this.text = "";
+        }
         this.containsAnimations = PLUGIN.getAnimationRegistry().containsAnimation(text);
         if (this.containsAnimations) {
             this.startTicking();
