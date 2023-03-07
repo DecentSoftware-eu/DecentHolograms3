@@ -159,7 +159,8 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     private void update(@NotNull Player player, @NotNull String text) {
         // Create the metadata objects
         Object metaName = getMetaName(text);
-        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!text.isEmpty());
+        boolean isNameInvisible = text.isEmpty() || text.replaceAll("§.", "").isEmpty();
+        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!isNameInvisible);
 
         // Send the metadata
         NMS.sendEntityMetadata(player, eid, metaName, metaNameVisible);
