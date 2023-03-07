@@ -18,12 +18,13 @@
 
 package eu.decentsoftware.holograms.replacements;
 
+import com.google.common.base.Strings;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.utils.config.FileConfig;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.server.Server;
 import eu.decentsoftware.holograms.utils.DatetimeUtils;
+import eu.decentsoftware.holograms.utils.config.FileConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ import java.util.regex.Pattern;
 public class ReplacementRegistry {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{(\\S+(:\\S+)?)}");
+    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([^:{}]+)(?::([^{}]+))?}");
     private final Map<String, Replacement> defaultReplacementMap;
     private final Map<String, Replacement> normalReplacementMap;
 
@@ -105,10 +106,11 @@ public class ReplacementRegistry {
         // Replace default replacements
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(string);
         while (matcher.find()) {
-            String key = matcher.group();
-            Optional<String> replacement = getDefaultReplacement(profile, matcher.group(1).trim());
-            string = string.replace(key, replacement.orElse(key));
-            matcher = PLACEHOLDER_PATTERN.matcher(string);
+            String placeholder = matcher.group();
+            String name = matcher.group(1);
+            String argument = matcher.group(2);
+            Optional<String> replacement = getDefaultReplacement(profile, name, argument);
+            string = string.replace(placeholder, replacement.orElse(placeholder));
         }
 
         // Replace normal replacements
@@ -124,16 +126,16 @@ public class ReplacementRegistry {
     /**
      * Get the replacement for the given placeholder string.
      *
-     * @param profile           The profile to get the replacement for.
-     * @param placeholderString The placeholder string.
+     * @param profile  The profile to get the replacement for.
+     * @param name     The name of the replacement.
+     * @param argument The argument of the replacement.
      * @return The replacement for the placeholder string or null
      * if the given placeholder string cannot be replaced.
      */
-    private Optional<String> getDefaultReplacement(@Nullable Profile profile, @NotNull String placeholderString) {
-        String[] spl = placeholderString.split(":", 2);
-        Replacement replacement = defaultReplacementMap.get(spl[0]);
+    private Optional<String> getDefaultReplacement(@Nullable Profile profile, @NotNull String name, @Nullable String argument) {
+        Replacement replacement = defaultReplacementMap.get(name);
         if (replacement != null) {
-            return replacement.getReplacement(profile, spl.length > 1 ? spl[1].trim() : null);
+            return replacement.getReplacement(profile, argument);
         }
         return Optional.empty();
     }
@@ -165,7 +167,7 @@ public class ReplacementRegistry {
             return Optional.ofNullable(player.getUniqueId().toString());
         }));
 
-        // -- Global placeholders
+        // -- Global replacements
 
         this.defaultReplacementMap.put("time", new Replacement(
                 (profile, argument) -> Optional.of(DatetimeUtils.getTimeFormatted()))
@@ -174,7 +176,7 @@ public class ReplacementRegistry {
                 (profile, argument) -> Optional.of(DatetimeUtils.getDateFormatted()))
         );
 
-        // -- World placeholders
+        // -- World replacements
 
         this.defaultReplacementMap.put("world", new Replacement(
                 (profile, argument) -> {
@@ -204,7 +206,7 @@ public class ReplacementRegistry {
                 })
         );
 
-        // -- Server & Pinger placeholders
+        // -- Server & Pinger replacements
 
         this.defaultReplacementMap.put("online", new Replacement(
                 (profile, argument) -> {
