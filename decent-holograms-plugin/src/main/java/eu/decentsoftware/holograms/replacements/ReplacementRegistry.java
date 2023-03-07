@@ -144,7 +144,18 @@ public class ReplacementRegistry {
      * Register the default built-in replacements.
      */
     private void registerDefaultReplacements() {
-        // -- Player placeholders
+        // -- QoL replacements
+
+        this.defaultReplacementMap.put("space", new Replacement((profile, argument) -> {
+            try {
+                int amount = Integer.parseInt(argument);
+                return Optional.of(Strings.repeat(" ", amount));
+            } catch (NumberFormatException e) {
+                return Optional.of(" ");
+            }
+        }));
+
+        // -- Player replacements
 
         this.defaultReplacementMap.put("player", new Replacement((profile, argument) -> {
             if (profile != null) {
