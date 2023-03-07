@@ -110,6 +110,11 @@ public class DecentHologramsCommand {
             return;
         }
 
+        if (!hologram.getSettings().isEditable()) {
+            Lang.confTell(sender, "editor.not_editable", hologram.getName());
+            return;
+        }
+
         if (hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder) {
             MoveLocationBinder binder = (MoveLocationBinder) hologram.getPositionManager().getLocationBinder();
             PLUGIN.getEditor().getMoveController().cancel(binder.getPlayer());
@@ -145,6 +150,11 @@ public class DecentHologramsCommand {
             return;
         }
 
+        if (!hologram.getSettings().isEditable()) {
+            Lang.confTell(sender, "editor.not_editable", hologram.getName());
+            return;
+        }
+
         if (hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder) {
             Lang.confTell(player, "editor.move.error.already_being_moved");
             return;
@@ -168,8 +178,13 @@ public class DecentHologramsCommand {
             return;
         }
 
+        if (!hologram.getSettings().isEditable()) {
+            Lang.confTell(player, "editor.not_editable", hologram.getName());
+            return;
+        }
+
         if (hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder) {
-            Lang.confTell(player, "editor.move.error.already_being_moved");
+            Lang.confTell(player, "editor.move.already_being_moved");
             return;
         }
 
@@ -194,6 +209,11 @@ public class DecentHologramsCommand {
             return;
         }
 
+        if (!hologram.getSettings().isEditable()) {
+            Lang.confTell(player, "editor.not_editable", hologram.getName());
+            return;
+        }
+
         Location location = hologram.getPositionManager().getLocation();
         player.teleport(location);
 
@@ -203,17 +223,19 @@ public class DecentHologramsCommand {
     // ==================== SUGGESTIONS ==================== //
 
     @Suggestions("holograms")
-    public List<String> hologramNameSuggestions(CommandContext<Player> context, String input) {
+    public List<String> suggestEditableHologramNames(CommandContext<Player> context, String input) {
         return PLUGIN.getHologramRegistry().getHolograms().stream()
+                .filter(hologram -> hologram.getSettings().isEditable())
                 .map(DefaultHologram::getName)
                 .filter(name -> input == null || input.isEmpty() || Common.startsWithIgnoreCase(name, input))
                 .collect(Collectors.toList());
     }
 
     @Suggestions("not_moving_holograms")
-    public List<String> moveHologramNameSuggestions(CommandContext<Player> context, String input) {
+    public List<String> suggestMovableHologramNames(CommandContext<Player> context, String input) {
         return PLUGIN.getHologramRegistry().getHolograms().stream()
                 .filter(hologram -> !(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder))
+                .filter(hologram -> hologram.getSettings().isEditable())
                 .map(DefaultHologram::getName)
                 .filter(name -> input == null || input.isEmpty() || Common.startsWithIgnoreCase(name, input))
                 .collect(Collectors.toList());
