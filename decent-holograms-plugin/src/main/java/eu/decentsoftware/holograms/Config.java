@@ -35,7 +35,10 @@ public final class Config {
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static boolean updateAvailable = false;
 
-    public static final String HOLOGRAM_NAME_REGEX = "[a-zA-Z0-9_]{1,64}";
+    /**
+     * The regex used for validating names of holograms, animations, etc.
+     */
+    public static final String NAME_REGEX = "[a-zA-Z0-9_]{1,64}";
 
     // ========== PERMISSIONS ========== //
 

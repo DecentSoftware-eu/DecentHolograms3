@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.animations;
 
 import com.google.common.collect.ImmutableMap;
 import eu.decentsoftware.holograms.BootMessenger;
+import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.animations.text.CustomTextAnimation;
 import eu.decentsoftware.holograms.animations.text.RainbowAnimation;
@@ -45,10 +46,8 @@ import java.util.regex.Pattern;
 public class AnimationRegistry implements Ticked {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *([a-zA-Z0-9_-]+)>");
-    private static final RainbowAnimation RAINBOW_ANIMATION = new RainbowAnimation();
-
-    private final @NotNull Map<String, Animation> customAnimationMap;
+    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *(" + Config.NAME_REGEX + ")>((.*)</animation>)?");
+    private final @NotNull Map<String, Animation> animationMap;
     private final @NotNull AtomicInteger stepCounter;
 
     /**
@@ -56,22 +55,29 @@ public class AnimationRegistry implements Ticked {
      * also loads all animations from config by calling the {@link #reload()} method.
      */
     public AnimationRegistry() {
-        this.customAnimationMap = new ConcurrentHashMap<>();
+        this.animationMap = new ConcurrentHashMap<>();
         this.stepCounter = new AtomicInteger(0);
 
         this.reload();
         this.startTicking();
     }
 
+    /**
+     * Reloads all custom animations from the config and resets the step counter
+     * starting all animations from the beginning.
+     */
     public synchronized void reload() {
-        this.customAnimationMap.clear();
+        this.shutdown();
 
-        // Load animations from config
+        // Register default animations
+        this.registerAnimation(new RainbowAnimation());
+
+        // Load custom animations from config
         final long startMillis = System.currentTimeMillis();
         int counter = 0;
 
         File folder = new File(PLUGIN.getDataFolder(), "animations");
-        List<File> files = FileUtils.getFilesFromTree(folder, "[a-zA-Z0-9_-]+\\.yml", true);
+        List<File> files = FileUtils.getFilesFromTree(folder, Config.NAME_REGEX + "\\.yml", true);
         if (files.isEmpty()) {
             return;
         }
@@ -99,12 +105,17 @@ public class AnimationRegistry implements Ticked {
         long took = System.currentTimeMillis() - startMillis;
         BootMessenger.log(String.format("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took));
 
-        // Reset step counter
-        this.stepCounter.set(0);
+        // Start ticking again after shutdown
+        this.startTicking();
     }
 
+    /**
+     * Clear all animations, reset the step counter and stop ticking.
+     */
     public synchronized void shutdown() {
-        this.customAnimationMap.clear();
+        this.startTicking();
+        this.animationMap.clear();
+        this.stepCounter.set(0);
     }
 
     @Override
@@ -122,21 +133,25 @@ public class AnimationRegistry implements Ticked {
     public String animate(@NotNull String text) {
         int step = this.stepCounter.get();
 
+        // -- Special text animations
         // Rainbow text animation
-        text = text.replace("&q", RAINBOW_ANIMATION.animate(step, null));
+        Animation rainbowAnimation = this.animationMap.get("rainbow");
+        if (rainbowAnimation != null) {
+            text = text.replace("&u", rainbowAnimation.animate(step, null));
+        }
 
-        // Custom text animations
+        // -- Generic text animations
         Matcher matcher = ANIMATION_REGEX.matcher(text);
         while (matcher.find()) {
             String group = matcher.group();
             String name = matcher.group(1);
-            Animation animation = this.customAnimationMap.get(name);
+            String innerText = matcher.group(3);
+            Animation animation = this.animationMap.get(name);
             if (animation != null) {
-                text = text.replace(group, animation.animate(step, null));
+                text = text.replace(group, animation.animate(step, innerText));
             }
         }
 
-        // TODO
         return text;
     }
 
@@ -147,7 +162,7 @@ public class AnimationRegistry implements Ticked {
      * @return True if the text contains any animations, false otherwise.
      */
     public boolean containsAnimation(@NotNull String text) {
-        return text.contains("&q") || ANIMATION_REGEX.matcher(text).find();
+        return text.contains("&u") || ANIMATION_REGEX.matcher(text).find();
     }
 
     /**
@@ -157,7 +172,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public void registerAnimation(@NotNull Animation animation) {
-        this.customAnimationMap.put(animation.getName(), animation);
+        this.animationMap.put(animation.getName(), animation);
     }
 
     /**
@@ -168,7 +183,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public Animation getAnimation(@NotNull String name) {
-        return this.customAnimationMap.get(name);
+        return this.animationMap.get(name);
     }
 
     /**
@@ -179,7 +194,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public Animation removeAnimation(@NotNull String name) {
-        return this.customAnimationMap.remove(name);
+        return this.animationMap.remove(name);
     }
 
     /**
@@ -190,7 +205,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public boolean hasAnimation(@NotNull String name) {
-        return this.customAnimationMap.containsKey(name);
+        return this.animationMap.containsKey(name);
     }
 
     /**
@@ -200,7 +215,7 @@ public class AnimationRegistry implements Ticked {
      * @see Animation
      */
     public Map<String, Animation> getAnimations() {
-        return ImmutableMap.copyOf(this.customAnimationMap);
+        return ImmutableMap.copyOf(this.animationMap);
     }
 
 }

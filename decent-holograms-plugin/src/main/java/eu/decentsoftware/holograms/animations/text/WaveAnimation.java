@@ -24,10 +24,10 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ShineAnimation extends Animation {
+public class WaveAnimation extends Animation {
 
-    public ShineAnimation() {
-        super("shine", AnimationType.ASCEND, 0, 60, 0);
+    public WaveAnimation() {
+        super("wave", AnimationType.ASCEND, 0, 2, 0);
     }
 
     @NotNull
