@@ -19,9 +19,12 @@
 package eu.decentsoftware.holograms.utils.watcher;
 
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.api.event.DecentHologramsFileEvent;
 import eu.decentsoftware.holograms.utils.Common;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 
 import java.io.File;
 import java.nio.file.*;
@@ -133,6 +136,16 @@ public class FileWatcher {
                             WatchEvent<Path> wep = (WatchEvent<Path>) event;
                             String changedFile = wep.context().toFile().getAbsolutePath();
                             changedFile = changedFile.substring(changedFile.lastIndexOf("/") + 1);
+
+                            PluginManager pm = Bukkit.getPluginManager();
+
+                            if (ENTRY_CREATE.equals(kind)) {
+                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + "/" + changedFile), DecentHologramsFileEvent.FileAction.CREATE));
+                            } else if (ENTRY_DELETE.equals(kind)) {
+                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + "/" + changedFile), DecentHologramsFileEvent.FileAction.DELETE));
+                            } else if (ENTRY_MODIFY.equals(kind)) {
+                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + "/" + changedFile), DecentHologramsFileEvent.FileAction.EDIT));
+                            }
                         }
 
                         // remove if directory is no longer accessible
