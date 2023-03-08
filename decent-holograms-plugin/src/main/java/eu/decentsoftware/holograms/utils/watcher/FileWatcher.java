@@ -62,9 +62,10 @@ public class FileWatcher {
         }
         if (!finalPath.endsWith("/")) finalPath += "/";
         File f = new File(folderPath);
+        f.mkdirs();
 
         if (!f.exists() || !f.isDirectory()) {
-            throw new RuntimeException(Common.format("Folder could not be watched as it does not exist or does not belong to SurvivalCore. " +
+            throw new RuntimeException(Common.format("Folder could not be watched as it does not exist or does not belong to DecentHolograms. " +
                     "Initial Path: {0} Final Path: {1}", folderPath, finalPath));
         }
 
