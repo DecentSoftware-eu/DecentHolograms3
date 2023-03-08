@@ -61,7 +61,7 @@ public class FileWatcher {
             finalPath = PLUGIN_PATH + (finalPath.startsWith("/") ? finalPath.substring(1) : finalPath);
         }
         if (!finalPath.endsWith("/")) finalPath += "/";
-        File f = new File(folderPath);
+        File f = new File(finalPath);
         f.mkdirs();
 
         if (!f.exists() || !f.isDirectory()) {
