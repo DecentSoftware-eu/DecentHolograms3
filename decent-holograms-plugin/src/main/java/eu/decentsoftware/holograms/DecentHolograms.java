@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
+import eu.decentsoftware.holograms.addons.AddonLoader;
 import eu.decentsoftware.holograms.animations.AnimationRegistry;
 import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
 import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
@@ -87,6 +88,7 @@ public final class DecentHolograms extends JavaPlugin {
     @Getter(AccessLevel.NONE)
     private NMSManager nmsManager;
     private Editor editor;
+    private AddonLoader addonLoader;
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -149,6 +151,10 @@ public final class DecentHolograms extends JavaPlugin {
         }
         BootMessenger.sendAndFinish();
 
+        // -- Addons
+        addonLoader = new AddonLoader("addons");
+        addonLoader.loadAllAddons();
+
         this.enabled = true;
     }
 
@@ -163,6 +169,7 @@ public final class DecentHolograms extends JavaPlugin {
             this.replacementRegistry.shutdown();
             this.serverRegistry.shutdown();
             this.profileRegistry.shutdown();
+            this.addonLoader.unloadAllAddons();
         }
 
         BungeeUtils.shutdown();
@@ -183,6 +190,7 @@ public final class DecentHolograms extends JavaPlugin {
         this.serverRegistry.reload();
         this.profileRegistry.reload();
         this.editor.reload();
+        this.addonLoader.reload();
 
         if (PAPI.isAvailable()) {
             BootMessenger.log("Using PlaceholderAPI for placeholder support!");
