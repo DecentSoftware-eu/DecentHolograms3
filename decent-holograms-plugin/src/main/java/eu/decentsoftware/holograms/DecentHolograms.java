@@ -50,6 +50,7 @@ import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.ticker.Ticker;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
+import eu.decentsoftware.holograms.utils.watcher.FileWatcher;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -137,6 +138,9 @@ public final class DecentHolograms extends JavaPlugin {
         // -- Commands
         setupCommands();
 
+        // -- FileWatcher
+        FileWatcher.assignFolder("addons");
+
         // -- Setup update checker if enabled
         setupUpdateChecker();
 
@@ -163,6 +167,7 @@ public final class DecentHolograms extends JavaPlugin {
 
         BungeeUtils.shutdown();
         HandlerList.unregisterAll(this);
+        FileWatcher.close();
     }
 
     /**
