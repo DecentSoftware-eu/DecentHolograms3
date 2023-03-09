@@ -32,7 +32,7 @@ jobs:
         java-version: 8
 
     - name: Build with Maven
-      run: mvn -B package --file decent-holograms-plugin/pom.xml
+      run: mvn -B package --file pom.xml
 
     - name: Start Spigot Server
       run: |
@@ -44,7 +44,7 @@ jobs:
         echo "eula=true" > eula.txt
     
     - name: Copy final JAR to plugins folder
-      run: cp target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/
+      run: cp decent-holograms-plugin/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/
 
     - name: Execute Minecraft Commands
       run: |
