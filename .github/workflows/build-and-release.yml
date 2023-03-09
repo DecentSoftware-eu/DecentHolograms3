@@ -67,10 +67,13 @@ jobs:
         sleep 35
         screen -r minecraft -X stuff "dh$(printf \\r)"
         screen -r minecraft -X stuff "dh test$(printf \\r)"
-        screen -r minecraft -X stuff "stop$(printf \\r)"
+        if screen -list | grep -q "minecraft"; then
+          screen -S minecraft -X stuff "stop^M"
+          sleep 10s
+        fi
         while pgrep -u $USER -f "java -Xmx2G -jar spigot.jar nogui" > /dev/null; do sleep 1; done
         cat screenlog.0
-        screen -r minecraft -X quit
+        screen -r minecraft -X quit || true
     
     - name: Create Github release
       id: create_release
