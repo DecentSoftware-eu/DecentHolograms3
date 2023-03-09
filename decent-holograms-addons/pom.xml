@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.decentsoftware.addons.holograms</groupId>
-    <artifactId>DecentHologramsAddons</artifactId>
+    <artifactId>decent-holograms-addons</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
