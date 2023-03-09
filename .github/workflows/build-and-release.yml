@@ -37,7 +37,11 @@ jobs:
     - name: Start Spigot Server
       run: |
         curl -o spigot.jar https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar
-        java -jar spigot.jar --eula=true
+        java -jar spigot.jar
+    
+    - name: Accept EULA
+      run: |
+        echo "eula=true" > eula.txt
     
     - name: Copy final JAR to plugins folder
       run: cp target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/
@@ -45,12 +49,12 @@ jobs:
     - name: Execute Minecraft Commands
       run: |
         while [ ! -f plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar ]; do sleep 1; done
-        screen -S minecraft -d -m java -Xmx2G -jar spigot.jar --eula=true nogui
+        screen -S minecraft -d -m java -Xmx2G -jar spigot.jar nogui
         sleep 5
         screen -r minecraft -X stuff "dh$(printf \\r)"
         screen -r minecraft -X stuff "dh test$(printf \\r)"
         screen -r minecraft -X stuff "stop$(printf \\r)"
-        while pgrep -u root -f "java -Xmx2G -jar spigot.jar --eula=true nogui" > /dev/null; do sleep 1; done
+        while pgrep -u root -f "java -Xmx2G -jar spigot.jar nogui" > /dev/null; do sleep 1; done
     
     - name: Create Github release
       id: create_release
