@@ -41,12 +41,6 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: DHoutput
-        path: decent-holograms-plugin/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar
-
     - name: Start Spigot Server
       run: |
         curl -o spigot.jar https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar
@@ -55,17 +49,17 @@ jobs:
     - name: Accept EULA
       run: |
         echo "eula=true" > eula.txt
-    
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: DHoutput
-        path: DecentHolograms-${{ env.RELEASE_TAG }}.jar
+
+    - name: Disable End and Nether
+      run: |
+        echo "allow-nether=false" > server.properties
+        echo "settings:" > bukkit.yml
+        echo "  allow-end: false" > bukkit.yml
 
     - name: Move jar file
       run: |
         mkdir plugins
-        mv DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar
+        mv decent-holograms-plugin/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar
 
     - name: Execute Minecraft Commands
       run: |
