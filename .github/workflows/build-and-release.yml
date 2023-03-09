@@ -85,3 +85,4 @@ jobs:
         release_name: DecentHolograms ${{ env.RELEASE_TAG }}
         draft: false
         prerelease: false
+        asset_path: "target/DecentHolograms-${{ env.RELEASE_TAG }}.jar"
