@@ -64,6 +64,7 @@ jobs:
 
     - name: Move jar file
       run: |
+        mkdir plugins
         mv DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar
 
     - name: Execute Minecraft Commands
