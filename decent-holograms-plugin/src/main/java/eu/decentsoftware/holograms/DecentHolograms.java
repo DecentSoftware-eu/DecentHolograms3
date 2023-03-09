@@ -106,7 +106,8 @@ public final class DecentHolograms extends JavaPlugin {
         // -- Attempt to initialize the NMS adapter.
         try {
             this.nmsManager = new NMSManager();
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
             getLogger().severe("*** Disabling...");
             getPluginLoader().disablePlugin(this);
