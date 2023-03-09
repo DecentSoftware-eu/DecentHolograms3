@@ -34,6 +34,8 @@ import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
 import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
+import eu.decentsoftware.holograms.commands.HologramCommands;
+import eu.decentsoftware.holograms.commands.LineCommands;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
 import eu.decentsoftware.holograms.editor.Editor;
@@ -260,6 +262,8 @@ public final class DecentHolograms extends JavaPlugin {
 
             // -- Register commands
             annotationParser.parse(new DecentHologramsCommand());
+            annotationParser.parse(new HologramCommands());
+            annotationParser.parse(new LineCommands());
 
         } catch (Exception e) {
             throw new RuntimeException(e);
