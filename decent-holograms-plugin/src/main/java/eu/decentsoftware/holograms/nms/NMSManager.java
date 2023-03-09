@@ -18,13 +18,6 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.channel.ChannelDuplexHandler;
@@ -46,192 +39,161 @@ import org.jetbrains.annotations.Nullable;
  */
 public class NMSManager {
 
-	private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-	private static final String IDENTIFIER = "DecentHolograms";
-	@Getter
-	private static NMSManager instance;
+    private static final String IDENTIFIER = "DecentHolograms";
+    @Getter
+    private static NMSManager instance;
 
-	@Getter
-	private final @NonNull NMSAdapter adapter;
-	private boolean usingProtocolLib = false;
+    @Getter
+    private final @NonNull NMSAdapter adapter;
+    private boolean usingProtocolLib = false;
 
-	/**
-	 * Initializes the NMS adapter. If the version is not supported, an exception is thrown.
-	 *
-	 * @throws IllegalStateException If the current version is not supported.
-	 */
-	public NMSManager() throws IllegalStateException {
-		if (instance != null) {
-			throw new IllegalStateException("NMSManager is already initialized!");
-		}
-		instance = this;
-		NMSAdapter adapter;
-		if ((adapter = initNMSAdapter()) == null) {
-			throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
-		}
-		this.adapter = adapter;
-	}
+    /**
+     * Initializes the NMS adapter. If the version is not supported, an exception is thrown.
+     *
+     * @throws IllegalStateException If the current version is not supported.
+     */
+    public NMSManager() throws IllegalStateException {
+        if (instance != null) {
+            throw new IllegalStateException("NMSManager is already initialized!");
+        }
+        instance = this;
+        NMSAdapter adapter;
+        if ((adapter = initNMSAdapter()) == null) {
+            throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
+        }
+        this.adapter = adapter;
+    }
 
-	/**
-	 * (Re)initialize the packet listener.
-	 */
-	public void reload() {
-		this.shutdown();
+    /**
+     * (Re)initialize the packet listener.
+     */
+    public void reload() {
+        this.shutdown();
 
-		if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-			// If ProtocolLib is present, use it for packet listening.
-			ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-			PacketAdapter packetAdapter = new PacketAdapter(
-					PLUGIN,
-					ListenerPriority.HIGHEST,
-					PacketType.Play.Server.ENTITY_METADATA
-			) {
+        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+            ProtocolLibHook.initListener(adapter);
+            usingProtocolLib = true;
+        } else {
+            hookAll();
+        }
+    }
 
-				@Override
-				public void onPacketSending(PacketEvent packetEvent) {
-					Player player = packetEvent.getPlayer();
-					if (player == null) {
-						return;
-					}
+    /**
+     * Shutdown the NMS manager, unhooking all players.
+     */
+    public void shutdown() {
+        if (usingProtocolLib) {
+            if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+                ProtocolLibHook.shutdownListener();
+                usingProtocolLib = false;
+            }
+        } else {
+            unhookAll();
+        }
+    }
 
-					Object packet = packetEvent.getPacket().getHandle();
-					PacketPlayInUseEntityEvent event = adapter.extractEventFromPacketPlayInUseEntity(player, packet);
-					if (event == null) {
-						return;
-					}
+    /**
+     * Create a packet handler for the given players. This will start listening
+     * to the packets for the given player.
+     *
+     * @param player The player to listen to.
+     * @return True if the packet handler was created, false otherwise.
+     */
+    public boolean hook(@NotNull Player player) {
+        if (usingProtocolLib) {
+            return true;
+        }
 
-					Bukkit.getPluginManager().callEvent(event);
+        try {
+            ChannelPipeline pipeline = adapter.getPipeline(player);
+            if (pipeline.get(IDENTIFIER) == null) {
+                ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
+                    @Override
+                    public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
+                        PacketPlayInUseEntityEvent event = adapter.extractEventFromPacketPlayInUseEntity(player, packet);
+                        if (event == null) {
+                            super.channelRead(channelHandlerContext, packet);
+                            return;
+                        }
 
-					if (event.isCancelled()) {
-						packetEvent.setCancelled(true);
-					}
-				}
+                        Bukkit.getPluginManager().callEvent(event);
 
-			};
-			protocolManager.addPacketListener(packetAdapter);
-			usingProtocolLib = true;
-		} else {
-			hookAll();
-		}
-	}
+                        if (!event.isCancelled()) {
+                            super.channelRead(channelHandlerContext, packet);
+                        }
+                    }
+                };
+                pipeline.addBefore("packet_handler", IDENTIFIER, channelDuplexHandler);
+            }
+            return true;
+        } catch (Exception ignored) {
+        }
+        return true;
+    }
 
-	/**
-	 * Shutdown the NMS manager, unhooking all players.
-	 */
-	public void shutdown() {
-		if (usingProtocolLib) {
-			if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-				ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-				protocolManager.removePacketListeners(PLUGIN);
-				usingProtocolLib = false;
-			}
-		} else {
-			unhookAll();
-		}
-	}
+    /**
+     * Hook all players.
+     *
+     * @see #hook(Player)
+     */
+    public void hookAll() {
+        if (!usingProtocolLib) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                hook(player);
+            }
+        }
+    }
 
-	/**
-	 * Create a packet handler for the given players. This will start listening
-	 * to the packets for the given player.
-	 *
-	 * @param player The player to listen to.
-	 * @return True if the packet handler was created, false otherwise.
-	 */
-	public boolean hook(@NotNull Player player) {
-		if (usingProtocolLib) {
-			return true;
-		}
+    /**
+     * Stop listening to the packets for the given player.
+     *
+     * @param player The player to stop listening to.
+     * @return True if the packet handler was destroyed, false otherwise.
+     */
+    public boolean unhook(@NotNull Player player) {
+        if (usingProtocolLib) {
+            return true;
+        }
 
-		try {
-			ChannelPipeline pipeline = adapter.getPipeline(player);
-			if (pipeline.get(IDENTIFIER) == null) {
-				ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
-					@Override
-					public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-						PacketPlayInUseEntityEvent event = adapter.extractEventFromPacketPlayInUseEntity(player, packet);
-						if (event == null) {
-							super.channelRead(channelHandlerContext, packet);
-							return;
-						}
+        try {
+            ChannelPipeline pipeline = adapter.getPipeline(player);
+            if (pipeline.get(IDENTIFIER) != null) {
+                pipeline.remove(IDENTIFIER);
+            }
+            return true;
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
 
-						Bukkit.getPluginManager().callEvent(event);
+    /**
+     * Unhook all players.
+     *
+     * @see #unhook(Player)
+     */
+    public void unhookAll() {
+        if (!usingProtocolLib) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                unhook(player);
+            }
+        }
+    }
 
-						if (!event.isCancelled()) {
-							super.channelRead(channelHandlerContext, packet);
-						}
-					}
-				};
-				pipeline.addBefore("packet_handler", IDENTIFIER, channelDuplexHandler);
-			}
-			return true;
-		} catch (Exception ignored) {
-		}
-		return true;
-	}
-
-	/**
-	 * Hook all players.
-	 *
-	 * @see #hook(Player)
-	 */
-	public void hookAll() {
-		if (!usingProtocolLib) {
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				hook(player);
-			}
-		}
-	}
-
-	/**
-	 * Stop listening to the packets for the given player.
-	 *
-	 * @param player The player to stop listening to.
-	 * @return True if the packet handler was destroyed, false otherwise.
-	 */
-	public boolean unhook(@NotNull Player player) {
-		if (usingProtocolLib) {
-			return true;
-		}
-
-		try {
-			ChannelPipeline pipeline = adapter.getPipeline(player);
-			if (pipeline.get(IDENTIFIER) != null) {
-				pipeline.remove(IDENTIFIER);
-			}
-			return true;
-		} catch (Exception ignored) {
-		}
-		return false;
-	}
-
-	/**
-	 * Unhook all players.
-	 *
-	 * @see #unhook(Player)
-	 */
-	public void unhookAll() {
-		if (!usingProtocolLib) {
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				unhook(player);
-			}
-		}
-	}
-
-	/**
-	 * Attempts to find the correct NMS adapter for the current version.
-	 *
-	 * @return The NMS adapter or null if none was found.
-	 */
-	@Nullable
-	private NMSAdapter initNMSAdapter() {
-		String version = Version.CURRENT.name();
-		String className = "eu.decentsoftware.holograms.nms.NMSAdapter_" + version;
-		try {
-			Class<?> clazz = Class.forName(className);
-			return (NMSAdapter) clazz.getDeclaredConstructor().newInstance();
-		} catch (Exception e) {
-			return null;
-		}
-	}
+    /**
+     * Attempts to find the correct NMS adapter for the current version.
+     *
+     * @return The NMS adapter or null if none was found.
+     */
+    @Nullable
+    private NMSAdapter initNMSAdapter() {
+        String version = Version.CURRENT.name();
+        String className = "eu.decentsoftware.holograms.nms.NMSAdapter_" + version;
+        try {
+            Class<?> clazz = Class.forName(className);
+            return (NMSAdapter) clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }
