@@ -86,3 +86,19 @@ jobs:
         draft: false
         prerelease: false
         asset_path: "target/DecentHolograms-${{ env.RELEASE_TAG }}.jar"
+    
+#    - name: Upload artifact
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: DecentHolograms-${{ env.RELEASE_TAG }}
+#        path: target/DecentHolograms-${{ env.RELEASE_TAG }}.jar
+#    
+#    - name: Publish Release to JitPack
+#      uses: jitpack-io/release-upload-action@v1
+#      with:
+#        api_token: ${{ secrets.JITPACK_API_TOKEN }}
+#        release_tag: ${{ env.RELEASE_TAG }}
+#        group_id: eu.decentsoftware.holograms
+#        artifact_id: decent-holograms-api
+#        file: ${{ github.workspace }}/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar
+#        artifact: DecentHolograms-${{ env.RELEASE_TAG }}
