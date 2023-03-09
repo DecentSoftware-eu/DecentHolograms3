@@ -10,7 +10,7 @@
     <version>3.0.0</version>
     <name>DecentHolograms3</name> <!--TODO: Remove the 3 before release -->
     <url>www.decentholograms.eu</url>
-    <description>The best thing ever - testing github action [Attempt #3]</description>
+    <description>The best thing ever - testing github action [Attempt #4]</description>
 
     <modules>
         <module>decent-holograms-api</module>
