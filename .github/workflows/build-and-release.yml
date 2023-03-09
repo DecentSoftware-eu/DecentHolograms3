@@ -34,6 +34,12 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: DecentHolograms-${{ env.RELEASE_TAG }}
+        path: decent-holograms-plugin/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar
+
     - name: Start Spigot Server
       run: |
         curl -o spigot.jar https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar
@@ -43,8 +49,11 @@ jobs:
       run: |
         echo "eula=true" > eula.txt
     
-    - name: Copy final JAR to plugins folder
-      run: cp decent-holograms-plugin/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/
+    - name: Download artifact to plugins folder
+      uses: actions/download-artifact@v2
+      with:
+        name: DecentHolograms-${{ env.RELEASE_TAG }}
+        path: plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar
 
     - name: Execute Minecraft Commands
       run: |
