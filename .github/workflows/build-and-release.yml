@@ -50,4 +50,14 @@ jobs:
         screen -r minecraft -X stuff "dh test$(printf \\r)"
         screen -r minecraft -X stuff "stop$(printf \\r)"
         while pgrep -u root -f "java -Xmx2G -jar spigot.jar --eula=true nogui" > /dev/null; do sleep 1; done
-        
+    
+    - name: Create Github release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.RELEASE_TAG }}
+        release_name: DecentHolograms ${{ env.RELEASE_TAG }}
+        draft: false
+        prerelease: false
