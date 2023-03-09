@@ -48,6 +48,7 @@ jobs:
     - name: Accept EULA
       run: |
         echo "eula=true" > eula.txt
+        pwd
     
     - name: Download artifact to plugins folder
       uses: actions/download-artifact@v2
