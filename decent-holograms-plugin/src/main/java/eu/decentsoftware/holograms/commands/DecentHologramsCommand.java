@@ -151,7 +151,7 @@ public class DecentHologramsCommand {
         }
 
         if (!hologram.getSettings().isEditable()) {
-            Lang.confTell(sender, "editor.not_editable", hologram.getName());
+            Lang.confTell(player, "editor.not_editable", hologram.getName());
             return;
         }
 
