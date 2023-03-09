@@ -64,7 +64,7 @@ jobs:
     - name: Execute Minecraft Commands
       run: |
         screen -S minecraft -d -m -L java -Xmx2G -jar spigot.jar nogui
-        while ! grep -q "Done ([0-9]*\.[0-9]*)! For help, type" <(tail -f logs/latest.log); do sleep 1; done
+        while ! grep -q "Done ([0-9]*\.[0-9]*)! For help, type" <(tail -f screenlog.0); do sleep 1; done
         screen -r minecraft -X stuff "dh$(printf \\r)"
         screen -r minecraft -X stuff "dh test$(printf \\r)"
         screen -r minecraft -X stuff "stop$(printf \\r)"
