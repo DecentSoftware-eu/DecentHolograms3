@@ -38,7 +38,7 @@ public final class Config {
     /**
      * The regex used for validating names of holograms, animations, etc.
      */
-    public static final String NAME_REGEX = "[a-zA-Z0-9_]{1,64}";
+    public static final String NAME_REGEX = "[a-zA-Z0-9_-]{1,64}";
 
     // ========== PERMISSIONS ========== //
 
