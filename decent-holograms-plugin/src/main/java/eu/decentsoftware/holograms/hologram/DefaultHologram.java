@@ -19,14 +19,14 @@
 package eu.decentsoftware.holograms.hologram;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.hologram.HologramSettings;
 import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
+import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.hologram.component.DefaultPositionManager;
 import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
-import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -95,7 +95,7 @@ public class DefaultHologram implements Hologram, Ticked {
     }
 
     public DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
-                              @NotNull ConditionHolder viewConditions) {
+                           @NotNull ConditionHolder viewConditions) {
         this.name = name;
         this.config = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);

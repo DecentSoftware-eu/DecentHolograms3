@@ -8,6 +8,7 @@
     <artifactId>damage-display-addon</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
+    <name>DHDamageDisplayAddon</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -19,7 +20,7 @@
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        <!-- TODO: add respository for DH api & build before release -->
+        <!-- TODO: add repository for DH api & build before release -->
     </repositories>
 
     <dependencies>
@@ -38,7 +39,7 @@
     </dependencies>
 
     <build>
-        <finalName>DHDamageDisplayAddon-${project.version}</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
