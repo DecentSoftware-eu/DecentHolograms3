@@ -17,6 +17,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    
+    - name: Cache for Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven-
       
     - name: Extract version from pom.xml
       id: extract-version
@@ -37,7 +44,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: DecentHolograms-${{ env.RELEASE_TAG }}
+        name: DHoutput
         path: decent-holograms-plugin/target/DecentHolograms-${{ env.RELEASE_TAG }}.jar
 
     - name: Start Spigot Server
@@ -48,13 +55,16 @@ jobs:
     - name: Accept EULA
       run: |
         echo "eula=true" > eula.txt
-        pwd
     
-    - name: Download artifact to plugins folder
+    - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: DecentHolograms-${{ env.RELEASE_TAG }}
-        path: plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar
+        name: DHoutput
+        path: DecentHolograms-${{ env.RELEASE_TAG }}.jar
+
+    - name: Move jar file
+      run: |
+        mv DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar
 
     - name: Execute Minecraft Commands
       run: |
