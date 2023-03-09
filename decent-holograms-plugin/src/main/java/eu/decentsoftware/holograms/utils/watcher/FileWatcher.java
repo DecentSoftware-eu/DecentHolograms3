@@ -58,9 +58,9 @@ public class FileWatcher {
     public void assignFolder(String folderPath) {
         String finalPath = folderPath;
         if (!finalPath.contains(PLUGIN_PATH)) {
-            finalPath = PLUGIN_PATH + (finalPath.startsWith("/") ? finalPath.substring(1) : finalPath);
+            finalPath = PLUGIN_PATH + (finalPath.startsWith(File.separator) ? finalPath.substring(1) : finalPath);
         }
-        if (!finalPath.endsWith("/")) finalPath += "/";
+        if (!finalPath.endsWith(File.separator)) finalPath += File.separator;
         File f = new File(finalPath);
         f.mkdirs();
 
@@ -73,7 +73,6 @@ public class FileWatcher {
             try {
                 watchService = FileSystems.getDefault().newWatchService();
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(Common.format("WatchService could not be initialised. Folder {0} will not be watched.", finalPath));
             }
         }
@@ -83,7 +82,6 @@ public class FileWatcher {
             WatchKey key = p.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             WATCHED_FOLDERS.put(key, p);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(Common.format("Failed to start WatchService for folder {0}.", finalPath));
         }
 
@@ -98,7 +96,6 @@ public class FileWatcher {
             try {
                 watchService.close();
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException("Could not close WatchService.", e);
             }
         }
@@ -136,16 +133,16 @@ public class FileWatcher {
                             @SuppressWarnings("unchecked")
                             WatchEvent<Path> wep = (WatchEvent<Path>) event;
                             String changedFile = wep.context().toFile().getAbsolutePath();
-                            changedFile = changedFile.substring(changedFile.lastIndexOf("/") + 1);
+                            changedFile = changedFile.substring(changedFile.lastIndexOf(File.separator) + 1);
 
                             PluginManager pm = Bukkit.getPluginManager();
 
                             if (ENTRY_CREATE.equals(kind)) {
-                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + "/" + changedFile), DecentHologramsFileEvent.FileAction.CREATE));
+                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + File.separator + changedFile), DecentHologramsFileEvent.FileAction.CREATE));
                             } else if (ENTRY_DELETE.equals(kind)) {
-                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + "/" + changedFile), DecentHologramsFileEvent.FileAction.DELETE));
+                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + File.separator + changedFile), DecentHologramsFileEvent.FileAction.DELETE));
                             } else if (ENTRY_MODIFY.equals(kind)) {
-                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + "/" + changedFile), DecentHologramsFileEvent.FileAction.EDIT));
+                                pm.callEvent(new DecentHologramsFileEvent(new File(PLUGIN_PATH + directory.toFile().getName() + File.separator + changedFile), DecentHologramsFileEvent.FileAction.EDIT));
                             }
                         }
 
