@@ -58,7 +58,6 @@ jobs:
 
     - name: Execute Minecraft Commands
       run: |
-        while [ ! -f plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar ]; do sleep 1; done
         screen -S minecraft -d -m java -Xmx2G -jar spigot.jar nogui
         sleep 5
         screen -r minecraft -X stuff "dh$(printf \\r)"
