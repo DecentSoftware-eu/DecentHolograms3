@@ -1,0 +1,63 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'pom.xml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      MAVEN_OPTS: "-Dmaven.repo.local=./.m2/repository"
+      RELEASE_TAG: "Unknown"
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Extract version from pom.xml
+      id: extract-version
+      run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+
+    - name: Set RELEASE_TAG in env
+      run: echo "RELEASE_TAG=${{ steps.extract-version.outputs.version }}" >> $GITHUB_ENV
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3
+      with:
+        java-version: 8
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Start Spigot Server
+      run: |
+        curl -o spigot.jar https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar
+        java -jar spigot.jar --eula=true
+    
+    - name: Copy final JAR to plugins folder
+      run: cp target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/
+
+    - name: Execute Minecraft Commands
+      run: |
+        while [ ! -f plugins/DecentHolograms-${{ env.RELEASE_TAG }}.jar ]; do sleep 1; done
+        screen -S minecraft -d -m java -Xmx2G -jar spigot.jar --eula=true nogui
+        sleep 5
+        screen -r minecraft -X stuff "dh$(printf \\r)"
+        screen -r minecraft -X stuff "dh test$(printf \\r)"
+        screen -r minecraft -X stuff "stop$(printf \\r)"
+        while pgrep -u root -f "java -Xmx2G -jar spigot.jar --eula=true nogui" > /dev/null; do sleep 1; done
+    
+    - name: Create Github release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.RELEASE_TAG }}
+        release_name: DecentHolograms ${{ env.RELEASE_TAG }}
+        draft: false
+        prerelease: false
