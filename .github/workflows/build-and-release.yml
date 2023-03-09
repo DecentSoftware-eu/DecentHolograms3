@@ -58,15 +58,14 @@ jobs:
 
     - name: Execute Minecraft Commands
       run: |
-        screen -S minecraft -d -m java -Xmx2G -jar spigot.jar nogui
+        screen -S minecraft -d -m -L java -Xmx2G -jar spigot.jar nogui
         sleep 5
         screen -r minecraft -X stuff "dh$(printf \\r)"
         screen -r minecraft -X stuff "dh test$(printf \\r)"
         screen -r minecraft -X stuff "stop$(printf \\r)"
         while pgrep -u $USER -f "java -Xmx2G -jar spigot.jar nogui" > /dev/null; do sleep 1; done
-        if [[ $(screen -ls | grep minecraft) ]]; then
-          screen -r minecraft -X quit
-        fi
+        cat screenlog.0
+        screen -r minecraft -X quit
     
     - name: Create Github release
       id: create_release
