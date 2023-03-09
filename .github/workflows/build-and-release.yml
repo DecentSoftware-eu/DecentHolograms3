@@ -37,6 +37,9 @@ jobs:
       run: |
         curl -o spigot.jar https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar
         java -jar spigot.jar --eula=true
+    
+    - name: Copy final JAR to plugins folder
+      run: cp target/DecentHolograms-${{ env.RELEASE_TAG }}.jar plugins/
 
     - name: Execute Minecraft Commands
       run: |
