@@ -22,6 +22,14 @@ import eu.decentsoftware.holograms.animations.Animation;
 import eu.decentsoftware.holograms.animations.AnimationType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This animation is used to animate text.
+ *
+ * @author d0by
+ * @see Animation
+ * @see AnimationType
+ * @since 3.0.0
+ */
 public abstract class TextAnimation extends Animation<String> {
 
     public TextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {

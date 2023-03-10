@@ -26,6 +26,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * This animation is used to animate items. It takes a list of materials and
+ * returns the material that should be displayed at the current tick.
+ *
+ * @author d0by
+ * @see Animation
+ * @see AnimationType
+ * @see XMaterial
+ * @since 3.0.0
+ */
 public class MaterialAnimation extends Animation<XMaterial> {
 
     private final XMaterial[] frames;

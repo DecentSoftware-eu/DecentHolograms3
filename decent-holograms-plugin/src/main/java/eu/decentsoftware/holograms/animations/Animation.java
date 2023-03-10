@@ -24,10 +24,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * This class represents a general animation.
+ * This class represents a general animation. It is used to animate any object
+ * based on the current tick of the animation.
+ * <p>
+ * There are different implementations of this class for different types of animations.
  *
  * @param <T> The type of the object to animate.
  * @author d0by
+ * @see AnimationType
  * @since 3.0.0
  */
 @Getter
