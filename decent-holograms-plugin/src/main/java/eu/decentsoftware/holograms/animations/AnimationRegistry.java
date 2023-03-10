@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.animations.text.CustomTextAnimation;
 import eu.decentsoftware.holograms.animations.text.RainbowAnimation;
+import eu.decentsoftware.holograms.animations.text.TextAnimation;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.FileUtils;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
@@ -47,7 +48,7 @@ public class AnimationRegistry implements Ticked {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *(" + Config.NAME_REGEX + ")>(?:(.*)</animation>)?");
-    private final @NotNull Map<String, Animation> animationMap;
+    private final @NotNull Map<String, Animation<?>> animationMap;
     private final @NotNull AtomicInteger stepCounter;
 
     /**
@@ -94,7 +95,7 @@ public class AnimationRegistry implements Ticked {
                     PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
                     continue;
                 }
-                Animation animation = new CustomTextAnimation(name, type, speed, pause, frames);
+                Animation<?> animation = new CustomTextAnimation(name, type, speed, pause, frames);
                 registerAnimation(animation);
                 counter++;
             } catch (Exception e) {
@@ -135,9 +136,9 @@ public class AnimationRegistry implements Ticked {
 
         // -- Special text animations
         // Rainbow text animation
-        Animation rainbowAnimation = this.animationMap.get("rainbow");
-        if (rainbowAnimation != null) {
-            text = text.replace("&u", rainbowAnimation.animate(step, null));
+        Animation<?> rainbowAnimation = this.animationMap.get("rainbow");
+        if (rainbowAnimation instanceof TextAnimation) {
+            text = text.replace("&u", ((TextAnimation) rainbowAnimation).animate(step, null));
         }
 
         // -- Generic text animations
@@ -146,9 +147,9 @@ public class AnimationRegistry implements Ticked {
             String group = matcher.group();
             String name = matcher.group(1);
             String innerText = matcher.group(2);
-            Animation animation = this.animationMap.get(name);
-            if (animation != null) {
-                text = text.replace(group, animation.animate(step, innerText));
+            Animation<?> animation = this.animationMap.get(name);
+            if (animation instanceof TextAnimation) {
+                text = text.replace(group, ((TextAnimation) animation).animate(step, innerText));
             }
         }
 
@@ -171,7 +172,7 @@ public class AnimationRegistry implements Ticked {
      * @param animation The animation.
      * @see Animation
      */
-    public void registerAnimation(@NotNull Animation animation) {
+    public void registerAnimation(@NotNull Animation<?> animation) {
         this.animationMap.put(animation.getName(), animation);
     }
 
@@ -182,7 +183,7 @@ public class AnimationRegistry implements Ticked {
      * @return The animation or null if no animation with the given name is registered.
      * @see Animation
      */
-    public Animation getAnimation(@NotNull String name) {
+    public Animation<?> getAnimation(@NotNull String name) {
         return this.animationMap.get(name);
     }
 
@@ -193,7 +194,7 @@ public class AnimationRegistry implements Ticked {
      * @return The removed animation or null if the given animation isn't registered.
      * @see Animation
      */
-    public Animation removeAnimation(@NotNull String name) {
+    public Animation<?> removeAnimation(@NotNull String name) {
         return this.animationMap.remove(name);
     }
 
@@ -214,7 +215,7 @@ public class AnimationRegistry implements Ticked {
      * @return Immutable map of all registered animations.
      * @see Animation
      */
-    public Map<String, Animation> getAnimations() {
+    public Map<String, Animation<?>> getAnimations() {
         return ImmutableMap.copyOf(this.animationMap);
     }
 
