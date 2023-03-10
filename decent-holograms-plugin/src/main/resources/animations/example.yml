@@ -1,0 +1,31 @@
+#
+# Type of the animation. There are 4 types:
+# - ASCEND: The frames will be displayed in order. (start -> end)
+# - DESCEND: The frames will be displayed in reverse order. (end -> start)
+# - ASCEND_DESCEND: The frames will be displayed in order and then in reverse order. (start -> end -> start)
+# - RANDOM: The frames will be displayed in random order.
+#
+type: ASCEND
+#
+# The interval between each frame in ticks.
+#
+interval: 1
+#
+# The pause between each iteration in ticks.
+# (e.g. when the animation reaches the last frame, it will pause before starting again)
+#
+pause: 20
+#
+# The frames of the animation.
+#
+frames:
+- ""
+- "A"
+- "An"
+- "Ani"
+- "Anim"
+- "Animat"
+- "Animati"
+- "Animatio"
+- "Animation"
+- "Animation!"
