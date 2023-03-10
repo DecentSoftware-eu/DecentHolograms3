@@ -18,35 +18,14 @@
 
 package eu.decentsoftware.holograms.animations.text;
 
+import eu.decentsoftware.holograms.animations.Animation;
 import eu.decentsoftware.holograms.animations.AnimationType;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class WaveAnimation extends TextAnimation {
+public abstract class TextAnimation extends Animation<String> {
 
-    public WaveAnimation() {
-        super("wave", AnimationType.ASCEND, 0, 2, 0);
-    }
-
-    @NotNull
-    @Override
-    public String animate(int tick, @Nullable String string) {
-        if (string == null) {
-            return "";
-        }
-
-        // TODO
-
-        int length = string.length();
-        int index = tick % length;
-
-        String start = string.substring(0, index);
-        String shine = string.substring(index, index + 1);
-        String end = string.substring(index + 1);
-        String color = ChatColor.getLastColors(start);
-
-        return start + ChatColor.WHITE + shine + color + end;
+    public TextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
+        super(name, type, totalSteps, speed, pause);
     }
 
 }

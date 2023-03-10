@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.animations.text;
 
-import eu.decentsoftware.holograms.animations.Animation;
 import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.utils.Common;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CustomTextAnimation extends Animation {
+public class CustomTextAnimation extends TextAnimation {
 
     protected final @NotNull List<String> frameList;
 

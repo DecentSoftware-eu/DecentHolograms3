@@ -19,12 +19,11 @@
 package eu.decentsoftware.holograms.animations.text;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
-import eu.decentsoftware.holograms.animations.Animation;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RainbowAnimation extends Animation {
+public class RainbowAnimation extends TextAnimation {
 
     private static final ChatColor[] DEFAULT_COLORS = new ChatColor[] {
             ChatColor.RED,

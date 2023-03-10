@@ -26,10 +26,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * This class represents a general animation.
  *
+ * @param <T> The type of the object to animate.
  * @author d0by
+ * @since 3.0.0
  */
 @Getter
-public abstract class Animation {
+public abstract class Animation<T> {
 
     protected final @NotNull String name;
     protected final @NotNull AnimationType type;
@@ -53,14 +55,14 @@ public abstract class Animation {
     }
 
     /**
-     * Animates the given string.
+     * Returns the current step of the animation based on the current tick.
      *
-     * @param tick   The current tick of animations. (1 tick = 1/20 second)
-     * @param string The string.
-     * @return The animated string.
+     * @param tick     The current tick of animations. (1 tick = 1/20 second)
+     * @param argument An argument to animate.
+     * @return The current step of the animation.
      */
     @NotNull
-    public abstract String animate(int tick, @Nullable String string);
+    public abstract T animate(int tick, @Nullable T argument);
 
     /**
      * Get the current step of this animation.
