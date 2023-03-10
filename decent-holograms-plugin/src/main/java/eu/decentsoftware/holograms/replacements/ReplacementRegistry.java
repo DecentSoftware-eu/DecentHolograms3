@@ -159,7 +159,7 @@ public class ReplacementRegistry {
 
         this.defaultReplacementMap.put("player", new Replacement((profile, argument) -> {
             if (profile != null) {
-                return Optional.of(profile.getName());
+                return Optional.ofNullable(profile.getName());
             }
             return Optional.empty();
         }));

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * This class represents a registry of pinged servers.
@@ -34,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ServerRegistry {
 
+    private static final Pattern ADDRESS_PATTERN = Pattern.compile("\\S+:(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3}):\\d{1,5}");
     private final Map<String, Server> serverMap;
 
     /**
@@ -55,7 +57,7 @@ public class ServerRegistry {
             long startMillis = System.currentTimeMillis();
             int counter = 0;
             for (String serverString : Config.PINGER_SERVERS) {
-                if (!serverString.matches("\\S+:(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3}):\\d{1,5}")) {
+                if (!ADDRESS_PATTERN.matcher(serverString).matches()) {
                     continue;
                 }
                 // -- Parse data

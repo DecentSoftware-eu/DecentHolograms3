@@ -43,7 +43,7 @@ public class DecentHologramsCommand {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
-    // ==================== MAIN COMMAND ==================== //
+    // ==================== ROOT COMMAND ==================== //
 
     @CommandMethod(CommandCommons.ROOT_ALIASES)
     @CommandDescription("The main command of the plugin.")

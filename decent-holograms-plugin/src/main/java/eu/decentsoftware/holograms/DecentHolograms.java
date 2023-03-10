@@ -105,7 +105,7 @@ public final class DecentHolograms extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
-        // -- Attempt to initialize the NMS adapter.
+        // -- Attempt to initialize the NMS adapter
         try {
             this.nmsManager = new NMSManager();
         } catch (IllegalStateException e) {

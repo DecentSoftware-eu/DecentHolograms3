@@ -19,11 +19,11 @@
 package eu.decentsoftware.holograms.server;
 
 import eu.decentsoftware.holograms.Config;
+import eu.decentsoftware.holograms.ticker.Ticked;
+import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import eu.decentsoftware.holograms.utils.pinger.Pinger;
 import eu.decentsoftware.holograms.utils.pinger.PingerResponse;
-import eu.decentsoftware.holograms.ticker.Ticked;
-import eu.decentsoftware.holograms.utils.BungeeUtils;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

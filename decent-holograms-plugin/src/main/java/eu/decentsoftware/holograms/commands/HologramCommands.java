@@ -311,8 +311,8 @@ public class HologramCommands {
     @Suggestions("not_moving_holograms")
     public List<String> suggestMovableHologramNames(CommandContext<Player> context, String input) {
         return PLUGIN.getHologramRegistry().getHolograms().stream()
-                .filter(hologram -> !(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder))
                 .filter(hologram -> hologram.getSettings().isEditable())
+                .filter(hologram -> !(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder))
                 .map(DefaultHologram::getName)
                 .filter(name -> input == null || input.isEmpty() || Common.startsWithIgnoreCase(name, input))
                 .collect(Collectors.toList());

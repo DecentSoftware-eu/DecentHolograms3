@@ -59,12 +59,12 @@ public class Profile {
     /**
      * Get the nickname of the player owning this profile.
      *
-     * @return The nickname of the player owning this profile.
+     * @return The nickname of the player owning this profile or null if the player is not online.
      */
-    @NotNull
+    @Nullable
     public String getName() {
         Player player = getPlayer();
-        return player != null ? player.getName() : "Unknown";
+        return player != null ? player.getName() : null;
     }
 
     /**
