@@ -40,19 +40,19 @@ public class MaterialAnimation extends Animation<XMaterial> {
 
     private final XMaterial[] frames;
 
-    public MaterialAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause, @NotNull XMaterial... frames) {
-        super(name, type, totalSteps, speed, pause);
+    public MaterialAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause, @NotNull XMaterial... frames) {
+        super(name, type, totalSteps, interval, pause);
         this.frames = frames;
     }
 
-    public MaterialAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause, @NotNull List<XMaterial> frames) {
-        this(name, type, totalSteps, speed, pause, frames.toArray(new XMaterial[0]));
+    public MaterialAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause, @NotNull List<XMaterial> frames) {
+        this(name, type, totalSteps, interval, pause, frames.toArray(new XMaterial[0]));
     }
 
     @NotNull
     @Override
     public XMaterial animate(int tick, @Nullable XMaterial argument) {
-        return frames[tick % (frames.length * speed) / speed];
+        return frames[tick % (frames.length * interval) / interval];
     }
 
 }

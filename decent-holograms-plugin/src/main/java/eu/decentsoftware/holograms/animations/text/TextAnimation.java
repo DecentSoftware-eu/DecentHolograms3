@@ -32,8 +32,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class TextAnimation extends Animation<String> {
 
-    public TextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
-        super(name, type, totalSteps, speed, pause);
+    public TextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause) {
+        super(name, type, totalSteps, interval, pause);
     }
 
 }

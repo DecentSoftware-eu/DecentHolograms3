@@ -29,8 +29,8 @@ public class CustomTextAnimation extends TextAnimation {
 
     protected final @NotNull List<String> frameList;
 
-    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int speed, int pause, @NotNull List<String> frameList) {
-        super(name, type, frameList.size(), speed, pause);
+    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int interval, int pause, @NotNull List<String> frameList) {
+        super(name, type, frameList.size(), interval, pause);
         this.frameList = frameList;
     }
 

@@ -40,7 +40,7 @@ public abstract class Animation<T> {
     protected final @NotNull String name;
     protected final @NotNull AnimationType type;
     protected final int totalSteps;
-    protected final int speed;
+    protected final int interval;
     protected final int pause;
 
     /**
@@ -50,11 +50,11 @@ public abstract class Animation<T> {
      * @param totalSteps the total number of steps of the animation
      */
     @Contract(pure = true)
-    public Animation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int speed, int pause) {
+    public Animation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause) {
         this.name = name;
         this.type = type;
         this.totalSteps = type == AnimationType.ASCEND_DESCEND ? totalSteps * 2 : totalSteps;
-        this.speed = speed;
+        this.interval = interval;
         this.pause = pause;
     }
 
@@ -78,8 +78,8 @@ public abstract class Animation<T> {
         if (totalSteps <= 0) {
             return 0;
         }
-        int actualStep = tick / speed;
-        int actualPause = pause <= 0 ? 0 : pause / speed;
+        int actualStep = tick / interval;
+        int actualPause = pause <= 0 ? 0 : pause / interval;
         int currentStep = actualStep % (totalSteps + actualPause);
         return Math.min(currentStep, totalSteps - 1);
     }

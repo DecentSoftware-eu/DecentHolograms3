@@ -16,31 +16,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.animations.text;
+package eu.decentsoftware.holograms.animations.text.impl;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
+import eu.decentsoftware.holograms.animations.text.TextAnimation;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RainbowAnimation extends TextAnimation {
+public class WaveAnimation extends TextAnimation {
 
-    private static final ChatColor[] DEFAULT_COLORS = new ChatColor[] {
-            ChatColor.RED,
-            ChatColor.GOLD,
-            ChatColor.YELLOW,
-            ChatColor.GREEN,
-            ChatColor.AQUA,
-            ChatColor.LIGHT_PURPLE
-    };
-
-    public RainbowAnimation() {
-        super("rainbow", AnimationType.ASCEND, DEFAULT_COLORS.length, 2, 0);
+    public WaveAnimation() {
+        super("wave", AnimationType.ASCEND, 0, 2, 0);
     }
 
     @NotNull
+    @Override
     public String animate(int tick, @Nullable String string) {
-        return DEFAULT_COLORS[tick % (DEFAULT_COLORS.length * speed) / speed] + (string == null ? "" : string);
+        if (string == null) {
+            return "";
+        }
+
+        // TODO
+
+        int length = string.length();
+        int index = tick % length;
+
+        String start = string.substring(0, index);
+        String shine = string.substring(index, index + 1);
+        String end = string.substring(index + 1);
+        String color = ChatColor.getLastColors(start);
+
+        return start + ChatColor.WHITE + shine + color + end;
     }
 
 }

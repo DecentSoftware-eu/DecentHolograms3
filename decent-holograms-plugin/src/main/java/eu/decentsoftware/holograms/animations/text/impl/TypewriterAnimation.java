@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.animations.text;
+package eu.decentsoftware.holograms.animations.text.impl;
 
-public class BurnAnimation {
+public class TypewriterAnimation {
 }
