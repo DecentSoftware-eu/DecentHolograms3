@@ -65,7 +65,7 @@ public class MoveLocationBinder implements Supplier<Location> {
 
         location.add(lookDirection.multiply(distance));
 
-        int pageIndex = hologram.getVisibilityManager().getPage(player);
+        int pageIndex = hologram.getVisibilityManager().getPageIndex(player);
         DefaultHologramPage page = (DefaultHologramPage) hologram.getPage(pageIndex);
         if (page == null) {
             return location;

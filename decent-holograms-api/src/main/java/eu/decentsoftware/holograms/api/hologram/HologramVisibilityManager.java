@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
+import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -143,7 +144,7 @@ public interface HologramVisibilityManager {
      */
     default Set<Player> getViewerPlayers(int page) {
         return getViewers().stream()
-                .filter((viewer) -> getPage(viewer) == page)
+                .filter((viewer) -> getPageIndex(viewer) == page)
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
@@ -285,8 +286,18 @@ public interface HologramVisibilityManager {
      * @param player The player to get the page for.
      * @return The page that is currently selected by the given player.
      */
-    default int getPage(@NotNull Player player) {
+    default int getPageIndex(@NotNull Player player) {
         return getPlayerPages().getOrDefault(player.getUniqueId(), 0);
+    }
+
+    /**
+     * Get the page that is currently selected by the given player.
+     *
+     * @param player The player to get the page for.
+     * @return The page that is currently selected by the given player.
+     */
+    default HologramPage getPage(@NotNull Player player) {
+        return getParent().getPage(getPageIndex(player));
     }
 
     /**
@@ -295,8 +306,18 @@ public interface HologramVisibilityManager {
      * @param uuid UUID of the player to get the page for.
      * @return The page that is currently selected by the given player.
      */
-    default int getPage(@NotNull UUID uuid) {
+    default int getPageIndex(@NotNull UUID uuid) {
         return getPlayerPages().getOrDefault(uuid, 0);
+    }
+
+    /**
+     * Get the page that is currently selected by the given player.
+     *
+     * @param uuid UUID of the player to get the page for.
+     * @return The page that is currently selected by the given player.
+     */
+    default HologramPage getPage(@NotNull UUID uuid) {
+        return getParent().getPage(getPageIndex(uuid));
     }
 
 }

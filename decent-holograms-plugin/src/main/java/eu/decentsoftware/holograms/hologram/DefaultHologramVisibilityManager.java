@@ -219,7 +219,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
      */
     @NotNull
     private Optional<HologramPage> getPageObject(@NotNull Player player) {
-        int pageIndex = getPage(player);
+        int pageIndex = getPageIndex(player);
         HologramPage page = parent.getPage(pageIndex);
         return Optional.ofNullable(page);
     }
