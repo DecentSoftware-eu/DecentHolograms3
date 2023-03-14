@@ -76,6 +76,17 @@ public abstract class Animation<T> {
      * @return The current step of this animation.
      */
     protected int getActualStep(int tick) {
+        return getActualStep(totalSteps, tick);
+    }
+
+    /**
+     * Get the current step of this animation.
+     *
+     * @param totalSteps The total number of steps of the animation.
+     * @param tick       The current tick of animations. (1 tick = 1/20 second)
+     * @return The current step of this animation.
+     */
+    protected int getActualStep(int totalSteps, int tick) {
         if (totalSteps <= 0) {
             return 0;
         }
