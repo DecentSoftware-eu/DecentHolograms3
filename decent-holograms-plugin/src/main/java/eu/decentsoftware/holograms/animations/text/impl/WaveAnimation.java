@@ -20,14 +20,26 @@ package eu.decentsoftware.holograms.animations.text.impl;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.animations.text.TextAnimation;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Wave text animation is a simple animation that creates a wave effect
+ * on the given text by changing the color of a few characters, progressing
+ * from left to right.
+ *
+ * @author d0by
+ * @see TextAnimation
+ * @see AnimationType
+ * @since 3.0.0
+ */
 public class WaveAnimation extends TextAnimation {
 
+    private static final String TEXT_COLOR = "&f";
+    private static final String WAVE_COLOR = "&b";
+
     public WaveAnimation() {
-        super("wave", AnimationType.ASCEND, 0, 2, 0);
+        super("wave", AnimationType.INTERNAL, 0, 2, 0);
     }
 
     @NotNull
@@ -37,17 +49,26 @@ public class WaveAnimation extends TextAnimation {
             return "";
         }
 
-        // TODO
+        String textColor = args != null && args.length > 0 ? args[0] : TEXT_COLOR;
+        String waveColor = args != null && args.length > 1 ? args[1] : WAVE_COLOR;
 
-        int length = string.length();
-        int index = tick % length;
-
-        String start = string.substring(0, index);
-        String shine = string.substring(index, index + 1);
-        String end = string.substring(index + 1);
-        String color = ChatColor.getLastColors(start);
-
-        return start + ChatColor.WHITE + shine + color + end;
+        int length = frameData.length();
+        int wave = tick % (length * 2);
+        int waveSize = length / 10;
+        if (waveSize < 1) {
+            waveSize = 1;
+        }
+        int waveIndex = wave < length ? wave : length * 2 - wave - 1;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            if (i >= waveIndex - waveSize && i <= waveIndex + waveSize) {
+                builder.append(waveColor);
+            } else {
+                builder.append(textColor);
+            }
+            builder.append(frameData.charAt(i));
+        }
+        return builder.toString();
     }
 
 }
