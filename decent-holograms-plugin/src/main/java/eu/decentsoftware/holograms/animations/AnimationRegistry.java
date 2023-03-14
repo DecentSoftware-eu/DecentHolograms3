@@ -100,11 +100,15 @@ public class AnimationRegistry implements Ticked {
                 String name = file.getName().substring(0, file.getName().length() - 4);
                 FileConfig config = new FileConfig(PLUGIN, file);
                 AnimationType type = AnimationType.getByName(config.getString("type", "ASCEND"));
+                if (type == AnimationType.INTERNAL) {
+                    PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "' (Invalid type: 'INTERNAL')! Skipping...");
+                    continue;
+                }
                 int interval = config.getInt("interval", 1);
                 int pause = config.getInt("pause", 0);
                 List<String> frames = config.getStringList("frames");
                 if (frames.isEmpty()) {
-                    PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
+                    PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "' (No frames)! Skipping...");
                     continue;
                 }
                 Animation<?> animation = new CustomTextAnimation(name, type, interval, pause, frames);
@@ -126,7 +130,7 @@ public class AnimationRegistry implements Ticked {
      * Clear all animations, reset the step counter and stop ticking.
      */
     public synchronized void shutdown() {
-        this.startTicking();
+        this.stopTicking();
         this.animationMap.clear();
         this.stepCounter.set(0);
     }
