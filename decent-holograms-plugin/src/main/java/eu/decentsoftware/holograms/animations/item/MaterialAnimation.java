@@ -51,7 +51,7 @@ public class MaterialAnimation extends Animation<XMaterial> {
 
     @NotNull
     @Override
-    public XMaterial animate(int tick, @Nullable XMaterial argument) {
+    public XMaterial animate(int tick, @Nullable XMaterial frameData, String... args) {
         return frames[tick % (frames.length * interval) / interval];
     }
 

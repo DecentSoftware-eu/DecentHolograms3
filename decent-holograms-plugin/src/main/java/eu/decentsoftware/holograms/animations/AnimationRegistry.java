@@ -39,9 +39,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This registry is responsible for storing and replacing animations.
+ * This registry is responsible for storing and replacing animations. It also
+ * loads all animations from config and registers them.
+ * <p>
+ * There are also some built-in animations that are registered by default. These
+ * animations can be overridden by creating a custom animation with the same name.
+ * <p>
+ * Animations are updated when requested but the step counter is incremented
+ * every tick. This means that when requesting the current frame of an animation
+ * it always returns the frame that is currently selected by the step counter.
  *
  * @author d0by
+ * @see Animation
  * @since 3.0.0
  */
 public class AnimationRegistry implements Ticked {
@@ -66,6 +75,8 @@ public class AnimationRegistry implements Ticked {
     /**
      * Reloads all custom animations from the config and resets the step counter
      * starting all animations from the beginning.
+     * <p>
+     * This method also registers the built-in, default animations.
      */
     public synchronized void reload() {
         this.shutdown();

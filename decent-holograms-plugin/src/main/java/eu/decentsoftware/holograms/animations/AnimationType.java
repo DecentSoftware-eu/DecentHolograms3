@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This enum represents the different types of animations that can be used. The
  * animation type determines how the hologram will be animated, e.g. in which
- * order will the steps be executed.
+ * order the steps will be displayed.
  *
  * @author d0by
  */
@@ -46,7 +46,11 @@ public enum AnimationType {
      * This animation type will execute the steps in random order.
      */
     RANDOM,
-
+    /**
+     * This type of animation is used internally by the plugin. It just means
+     * that the animation doesn't have a specific order but is executed in
+     * a custom way.
+     */
     INTERNAL;
 
     /**
