@@ -18,5 +18,36 @@
 
 package eu.decentsoftware.holograms.animations.text.impl;
 
-public class TypewriterAnimation {
+import eu.decentsoftware.holograms.animations.AnimationType;
+import eu.decentsoftware.holograms.animations.text.TextAnimation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * This animation will type the text letter by letter.
+ *
+ * @author d0by
+ * @see TextAnimation
+ * @since 3.0.0
+ */
+public class TypewriterAnimation extends TextAnimation {
+
+    public TypewriterAnimation() {
+        super("typewriter", AnimationType.INTERNAL, 0, 2, 20);
+    }
+
+    @NotNull
+    @Override
+    public String animate(int tick, @Nullable String frameData, String... args) {
+        if (frameData == null) {
+            return "";
+        }
+        int length = frameData.length();
+        int index = getActualStep(length, tick);
+        if (index >= length) {
+            return frameData;
+        }
+        return frameData.substring(0, index);
+    }
+
 }
