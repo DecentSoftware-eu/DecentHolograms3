@@ -18,5 +18,41 @@
 
 package eu.decentsoftware.holograms.animations.text.impl;
 
-public class ScrollAnimation {
+import eu.decentsoftware.holograms.animations.AnimationType;
+import eu.decentsoftware.holograms.animations.text.TextAnimation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * This animation will scroll the text by only displaying a part of it at a time.
+ *
+ * @author d0by
+ * @see TextAnimation
+ * @since 3.0.0
+ */
+public class ScrollAnimation extends TextAnimation {
+
+    public ScrollAnimation() {
+        super("scroll", AnimationType.INTERNAL, 0, 2, 0);
+    }
+
+    @NotNull
+    @Override
+    public String animate(int tick, @Nullable String frameData, String... args) {
+        if (frameData == null) {
+            return "";
+        }
+
+        int length = frameData.length();
+        int size = length / 3 * 2;
+        int index = getActualStep(length, tick);
+        if (index < size) {
+            return frameData.substring(0, index + size);
+        }
+        if (index + size < length) {
+            return frameData.substring(index - size, length);
+        }
+        return frameData.substring(index, length) + frameData.substring(0, index + size - length);
+    }
+
 }
