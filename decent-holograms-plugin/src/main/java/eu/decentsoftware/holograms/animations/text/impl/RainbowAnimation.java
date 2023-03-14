@@ -24,6 +24,14 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Rainbow text animation cycles through several colors, making the text
+ * have a different color every few ticks.
+ *
+ * @author d0by
+ * @see TextAnimation
+ * @since 3.0.0
+ */
 public class RainbowAnimation extends TextAnimation {
 
     private static final ChatColor[] DEFAULT_COLORS = new ChatColor[] {
@@ -36,12 +44,12 @@ public class RainbowAnimation extends TextAnimation {
     };
 
     public RainbowAnimation() {
-        super("rainbow", AnimationType.ASCEND, DEFAULT_COLORS.length, 2, 0);
+        super("rainbow", AnimationType.INTERNAL, DEFAULT_COLORS.length, 2, 0);
     }
 
     @NotNull
-    public String animate(int tick, @Nullable String string) {
-        return DEFAULT_COLORS[tick % (DEFAULT_COLORS.length * interval) / interval] + (string == null ? "" : string);
+    public String animate(int tick, @Nullable String frameData, String... args) {
+        return DEFAULT_COLORS[tick % (DEFAULT_COLORS.length * interval) / interval] + (frameData == null ? "" : frameData);
     }
 
 }
