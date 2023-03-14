@@ -18,5 +18,40 @@
 
 package eu.decentsoftware.holograms.animations.text.impl;
 
-public class BurnAnimation {
+import eu.decentsoftware.holograms.animations.AnimationType;
+import eu.decentsoftware.holograms.animations.text.TextAnimation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Burn animation will "burn" the text by changing the color of the text
+ * progressively from left to right.
+ *
+ * @author d0by
+ * @see TextAnimation
+ * @since 3.0.0
+ */
+public class BurnAnimation extends TextAnimation {
+
+    private static final String TEXT_COLOR = "&f";
+    private static final String BURN_COLOR = "&b";
+
+    public BurnAnimation() {
+        super("burn", AnimationType.INTERNAL, 0, 2, 20);
+    }
+
+    @NotNull
+    @Override
+    public String animate(int tick, @Nullable String frameData, String... args) {
+        if (frameData == null) {
+            return "";
+        }
+        int length = frameData.length();
+        int index = getActualStep(length, tick);
+        if (index >= length) {
+            return frameData;
+        }
+        return TEXT_COLOR + frameData.substring(0, index) + BURN_COLOR + frameData.substring(index);
+    }
+
 }
