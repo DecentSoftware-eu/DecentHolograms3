@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 public class AnimationRegistry implements Ticked {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation: *(" + Config.NAME_REGEX + ")>(?:(.*)</animation>)?");
+    private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation:(" + Config.NAME_REGEX + ")(?::([^/]+))?>(?:(.*)</animation>)?");
     private final @NotNull Map<String, Animation<?>> animationMap;
     private final @NotNull AtomicInteger stepCounter;
 
@@ -71,6 +71,7 @@ public class AnimationRegistry implements Ticked {
         this.shutdown();
 
         // Register default animations
+        //  TODO: Handle colors in frame data
         this.registerAnimation(new RainbowAnimation());
 
         // Load custom animations from config
@@ -141,15 +142,17 @@ public class AnimationRegistry implements Ticked {
             text = text.replace("&u", ((TextAnimation) rainbowAnimation).animate(step, null));
         }
 
-        // -- Generic text animations
+        // -- Generic & Custom text animations
         Matcher matcher = ANIMATION_REGEX.matcher(text);
         while (matcher.find()) {
             String group = matcher.group();
             String name = matcher.group(1);
-            String innerText = matcher.group(2);
+            String args = matcher.group(2);
+            String[] argsSplit = args == null ? null : args.split(",");
+            String innerText = matcher.group(3);
             Animation<?> animation = this.animationMap.get(name);
             if (animation instanceof TextAnimation) {
-                text = text.replace(group, ((TextAnimation) animation).animate(step, innerText));
+                text = text.replace(group, ((TextAnimation) animation).animate(step, innerText, argsSplit));
             }
         }
 

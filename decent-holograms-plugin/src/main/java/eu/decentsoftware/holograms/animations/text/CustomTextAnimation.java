@@ -35,7 +35,7 @@ public class CustomTextAnimation extends TextAnimation {
     }
 
     @NotNull
-    public String animate(int tick, @Nullable String string) {
+    public String animate(int tick, @Nullable String frameData, String... args) {
         if (type == AnimationType.RANDOM) {
             return frameList.get(Common.irand(0, totalSteps - 1));
         }

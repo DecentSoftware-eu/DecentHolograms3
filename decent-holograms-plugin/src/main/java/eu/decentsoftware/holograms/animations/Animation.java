@@ -61,12 +61,13 @@ public abstract class Animation<T> {
     /**
      * Returns the current step of the animation based on the current tick.
      *
-     * @param tick     The current tick of animations. (1 tick = 1/20 second)
-     * @param argument An argument to animate.
+     * @param tick      The current tick of animations. (1 tick = 1/20 second)
+     * @param frameData The data of the current frame.
+     * @param args      The arguments of the animation.
      * @return The current step of the animation.
      */
     @NotNull
-    public abstract T animate(int tick, @Nullable T argument);
+    public abstract T animate(int tick, @Nullable T frameData, String... args);
 
     /**
      * Get the current step of this animation.

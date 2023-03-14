@@ -32,8 +32,8 @@ public class WaveAnimation extends TextAnimation {
 
     @NotNull
     @Override
-    public String animate(int tick, @Nullable String string) {
-        if (string == null) {
+    public String animate(int tick, @Nullable String frameData, String... args) {
+        if (frameData == null) {
             return "";
         }
 
