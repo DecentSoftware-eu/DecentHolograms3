@@ -23,8 +23,8 @@ import eu.decentsoftware.holograms.BootMessenger;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.animations.text.CustomTextAnimation;
-import eu.decentsoftware.holograms.animations.text.impl.RainbowAnimation;
 import eu.decentsoftware.holograms.animations.text.TextAnimation;
+import eu.decentsoftware.holograms.animations.text.impl.*;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.FileUtils;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
@@ -84,6 +84,10 @@ public class AnimationRegistry implements Ticked {
         // Register default animations
         //  TODO: Handle colors in frame data
         this.registerAnimation(new RainbowAnimation());
+        this.registerAnimation(new WaveAnimation());
+        this.registerAnimation(new BurnAnimation());
+        this.registerAnimation(new ScrollAnimation());
+        this.registerAnimation(new TypewriterAnimation());
 
         // Load custom animations from config
         final long startMillis = System.currentTimeMillis();
