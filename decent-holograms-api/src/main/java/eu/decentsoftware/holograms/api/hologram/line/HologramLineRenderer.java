@@ -87,7 +87,7 @@ public interface HologramLineRenderer {
     /**
      * Teleport the parent {@link HologramLine} to a location for a player.
      *
-     * @param player The player to teleport the line to.
+     * @param player   The player to teleport the line to.
      * @param location The location to teleport the line to.
      */
     void teleport(@NotNull Player player, @NotNull Location location);
