@@ -51,7 +51,8 @@ public final class MiniMessageHook {
             StandardTags.decorations(),
             StandardTags.reset(),
             StandardTags.gradient(),
-            StandardTags.rainbow()
+            StandardTags.rainbow(),
+            StandardTags.selector()
     };
 
     @NotNull
