@@ -1,4 +1,3 @@
-![Logo](./DecentHolograms-Logo.png)
 # DecentHolograms v3.0 (NOT RELEASED, WIP)
 [![SpigotMC Downloads](https://img.shields.io/spiget/downloads/96927?label=Downloads) 
 ![SpigotMC Version](https://img.shields.io/spiget/version/96927?label=Release) 
