@@ -40,22 +40,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class BungeeUtils {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private static final String BUNGEE_CORD_CHANNEL = "BungeeCord";
     private static final Map<String, CompletableFuture<Integer>> PLAYER_COUNT_REQUESTS = new ConcurrentHashMap<>();
 
     /**
      * Init Bungee connection; Register BungeeCord channel.
      */
     public static void init() {
-        Bukkit.getMessenger().registerOutgoingPluginChannel(PLUGIN, "BungeeCord");
-        Bukkit.getMessenger().registerIncomingPluginChannel(PLUGIN, "BungeeCord", new BungeeListener());
+        Bukkit.getMessenger().registerOutgoingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL);
+        Bukkit.getMessenger().registerIncomingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL, new BungeeListener());
     }
 
     /**
      * Shutdown Bungee connection; Unregister BungeeCord channel.
      */
     public static void shutdown() {
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(PLUGIN, "BungeeCord");
-        Bukkit.getMessenger().unregisterIncomingPluginChannel(PLUGIN, "BungeeCord");
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL);
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL);
     }
 
     private static void handleReceive(@NotNull String server, int playerCount) {
@@ -80,7 +81,7 @@ public final class BungeeUtils {
         } catch (IOException ee) {
             ee.printStackTrace();
         }
-        player.sendPluginMessage(PLUGIN, "BungeeCord", b.toByteArray());
+        player.sendPluginMessage(PLUGIN, BUNGEE_CORD_CHANNEL, b.toByteArray());
     }
 
     /**
@@ -103,7 +104,7 @@ public final class BungeeUtils {
         } catch (IOException ee) {
             ee.printStackTrace();
         }
-        player.sendPluginMessage(PLUGIN, "BungeeCord", b.toByteArray());
+        player.sendPluginMessage(PLUGIN, BUNGEE_CORD_CHANNEL, b.toByteArray());
 
         CompletableFuture<Integer> future = new CompletableFuture<>();
         PLAYER_COUNT_REQUESTS.put(server, future);

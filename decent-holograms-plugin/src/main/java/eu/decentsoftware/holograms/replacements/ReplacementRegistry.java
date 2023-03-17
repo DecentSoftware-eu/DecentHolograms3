@@ -76,10 +76,10 @@ public class ReplacementRegistry {
 
         // Reload custom replacements
         String path = "replacements";
-        FileConfig config = Config.getConfig();
+        FileConfig config = Config.getFileConfig();
         ConfigurationSection section = config.getConfigurationSection(path);
         if (section != null) {
-            section.getKeys(false).forEach((key) -> {
+            section.getKeys(false).forEach(key -> {
                 String value = config.getString(path + "." + key);
                 Replacement replacement = new Replacement((player, argument) -> Optional.ofNullable(value));
                 this.normalReplacementMap.put(key, replacement);
@@ -114,10 +114,12 @@ public class ReplacementRegistry {
         }
 
         // Replace normal replacements
-        for (String key : normalReplacementMap.keySet()) {
+        for (Map.Entry<String, Replacement> entry : normalReplacementMap.entrySet()) {
+            String key = entry.getKey();
+            Replacement replacement = entry.getValue();
             if (string.contains(key)) {
-                Optional<String> replacement = normalReplacementMap.get(key).getReplacement(profile, null);
-                string = string.replace(key, replacement.orElse(key));
+                Optional<String> value = replacement.getReplacement(profile, null);
+                string = string.replace(key, value.orElse(key));
             }
         }
         return string;
@@ -195,7 +197,7 @@ public class ReplacementRegistry {
                     if (argument != null) {
                         // -- Given worlds
                         online = ReplacementCommons.getFromWorldOrWorldsInt(
-                                argument, (world) -> world.getPlayers().size()
+                                argument, world -> world.getPlayers().size()
                         );
                     } else if (profile != null) {
                         // -- Player world
@@ -227,7 +229,7 @@ public class ReplacementRegistry {
                         Player player;
                         if (profile != null && (player = profile.getPlayer()) != null) {
                             online = ReplacementCommons.getFromServerOrServersInt(
-                                    player, argument, (server) -> server.getData().getPlayers().getOnline()
+                                    player, argument, server -> server.getData().getPlayers().getOnline()
                             );
                         } else {
                             online = -1;
@@ -250,7 +252,7 @@ public class ReplacementRegistry {
                         Player player;
                         if (profile != null && (player = profile.getPlayer()) != null) {
                             online = ReplacementCommons.getFromServerOrServersInt(
-                                    player, argument, (server) -> server.getData().getPlayers().getMax()
+                                    player, argument, server -> server.getData().getPlayers().getMax()
                             );
                         } else {
                             online = -1;

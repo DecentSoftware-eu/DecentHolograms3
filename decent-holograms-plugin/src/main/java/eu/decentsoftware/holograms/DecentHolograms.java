@@ -107,7 +107,7 @@ public final class DecentHolograms extends JavaPlugin {
 
         // -- Attempt to initialize the NMS adapter
         try {
-            this.nmsManager = new NMSManager();
+            nmsManager = new NMSManager();
         } catch (IllegalStateException e) {
             getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
             getLogger().severe("*** Disabling...");
@@ -119,14 +119,14 @@ public final class DecentHolograms extends JavaPlugin {
         setupGson();
 
         // -- Initialize Managers
-        this.ticker = new Ticker();
-        this.profileRegistry = new ProfileRegistry();
-        this.serverRegistry = new ServerRegistry();
-        this.replacementRegistry = new ReplacementRegistry();
-        this.animationRegistry = new AnimationRegistry();
-        this.contentParserManager = new ContentParserManager();
-        this.hologramRegistry = new DefaultHologramRegistry();
-        this.editor = new Editor();
+        ticker = new Ticker();
+        profileRegistry = new ProfileRegistry();
+        serverRegistry = new ServerRegistry();
+        replacementRegistry = new ReplacementRegistry();
+        animationRegistry = new AnimationRegistry();
+        contentParserManager = new ContentParserManager();
+        hologramRegistry = new DefaultHologramRegistry();
+        editor = new Editor();
 
         // -- Register DecentHologramsAPI
         DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl());
@@ -157,21 +157,21 @@ public final class DecentHolograms extends JavaPlugin {
         addonLoader = new AddonLoader("addons");
         addonLoader.loadAllAddons();
 
-        this.enabled = true;
+        enabled = true;
     }
 
     @Override
     public void onDisable() {
-        if (this.enabled) {
-            this.editor.shutdown();
-            this.ticker.shutdown();
-            this.nmsManager.shutdown();
-            this.hologramRegistry.shutdown();
-            this.animationRegistry.shutdown();
-            this.replacementRegistry.shutdown();
-            this.serverRegistry.shutdown();
-            this.profileRegistry.shutdown();
-            this.addonLoader.unloadAllAddons();
+        if (enabled) {
+            editor.shutdown();
+            ticker.shutdown();
+            nmsManager.shutdown();
+            hologramRegistry.shutdown();
+            animationRegistry.shutdown();
+            replacementRegistry.shutdown();
+            serverRegistry.shutdown();
+            profileRegistry.shutdown();
+            addonLoader.unloadAllAddons();
         }
 
         BungeeUtils.shutdown();
@@ -186,13 +186,13 @@ public final class DecentHolograms extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
-        this.hologramRegistry.reload();
-        this.replacementRegistry.reload();
-        this.animationRegistry.reload();
-        this.serverRegistry.reload();
-        this.profileRegistry.reload();
-        this.editor.reload();
-        this.addonLoader.reload();
+        hologramRegistry.reload();
+        replacementRegistry.reload();
+        animationRegistry.reload();
+        serverRegistry.reload();
+        profileRegistry.reload();
+        editor.reload();
+        addonLoader.reload();
 
         if (PAPI.isAvailable()) {
             BootMessenger.log("Using PlaceholderAPI for placeholder support!");
@@ -208,7 +208,7 @@ public final class DecentHolograms extends JavaPlugin {
      */
     private void setupUpdateChecker() {
         if (Config.CHECK_FOR_UPDATES) {
-            new UpdateChecker(96927).check((s) -> {
+            new UpdateChecker(96927).check(s -> {
                 // Split the version string into 3 parts: major, minor, patch
                 String[] split = s.split("\\.", 3);
                 int[] latest = Arrays.stream(split)
@@ -266,12 +266,14 @@ public final class DecentHolograms extends JavaPlugin {
             annotationParser.parse(new LineCommands());
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            getLogger().severe("Failed to register commands!");
+            getLogger().severe("Disabling...");
+            getPluginLoader().disablePlugin(this);
         }
     }
 
     private void setupGson() {
-        this.gson = new GsonBuilder()
+        gson = new GsonBuilder()
                 .disableHtmlEscaping()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Location.class, new LocationSerializer())

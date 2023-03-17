@@ -84,15 +84,15 @@ public final class Config {
     /**
      * The "config.yml" file.
      */
-    private static FileConfig config;
+    private static FileConfig fileConfig;
 
     /**
      * Get the "config.yml" file as a {@link FileConfig}.
      *
      * @return The "config.yml" file as a {@link FileConfig}.
      */
-    public static FileConfig getConfig() {
-        return config;
+    public static FileConfig getFileConfig() {
+        return fileConfig;
     }
 
     /**
@@ -101,13 +101,13 @@ public final class Config {
      * @since 1.0.0
      */
     public static void reload() {
-        if (config == null) {
-            config = new FileConfig(PLUGIN, "config.yml");
+        if (fileConfig == null) {
+            fileConfig = new FileConfig(PLUGIN, "config.yml");
         } else {
-            config.reload();
+            fileConfig.reload();
         }
 
-        CFG.load(PLUGIN, Config.class, config.getFile());
+        CFG.load(PLUGIN, Config.class, fileConfig.getFile());
     }
 
     /*

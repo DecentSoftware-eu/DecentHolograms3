@@ -68,13 +68,15 @@ public class DatetimeUtils {
         DateTimeFormatter formatter;
         try {
             formatter = DateTimeFormatter.ofPattern(pattern);
-        } catch (Throwable ignored) {
+        } catch (Exception ignored) {
             formatter = DateTimeFormatter.ISO_INSTANT;
         }
         // Apply time zone
         try {
             formatter.withZone(ZoneId.of(zone));
-        } catch (Throwable ignored) {}
+        } catch (Exception ignored) {
+            formatter.withZone(ZoneId.systemDefault());
+        }
         return formatter;
     }
 

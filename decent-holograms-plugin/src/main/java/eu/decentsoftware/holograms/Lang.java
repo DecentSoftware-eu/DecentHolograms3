@@ -33,13 +33,13 @@ public final class Lang {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
-    public static String UPDATE_MESSAGE = "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7https://www.spigotmc.org/resources/96927/";
+    public static final String UPDATE_MESSAGE = "\n&fA newer version of &3DecentHolograms &fis available. Download it from: &7https://www.spigotmc.org/resources/96927/";
 
     /**
      * The prefix of the plugin. Use "{prefix}" in any other message to
      * display the prefix.
      */
-    public static String PREFIX = "&8[&3DecentHolograms&8] &7";
+    public static String PREFIX = "&8[&3DH&8] &7";
 
     /*
      *  Reload methods
@@ -48,7 +48,7 @@ public final class Lang {
     /**
      * The "lang.yml" file.
      */
-    private static FileConfig config;
+    private static FileConfig fileConfig;
 
     /**
      * Get the "lang.yml" file as a {@link FileConfig}.
@@ -56,7 +56,7 @@ public final class Lang {
      * @return The "lang.yml" file as a {@link FileConfig}.
      */
     public static FileConfig getConfig() {
-        return config;
+        return fileConfig;
     }
 
     /**
@@ -65,14 +65,14 @@ public final class Lang {
      * @since 1.0.0
      */
     public static void reload() {
-        if (config == null) {
-            config = new FileConfig(PLUGIN, "lang.yml");
+        if (fileConfig == null) {
+            fileConfig = new FileConfig(PLUGIN, "lang.yml");
         } else {
-            config.reload();
+            fileConfig.reload();
         }
 
         // Reload prefix
-        PREFIX = config.getString("prefix", PREFIX);
+        PREFIX = fileConfig.getString("prefix", PREFIX);
     }
 
     /*
@@ -194,10 +194,10 @@ public final class Lang {
      * @param args   Java style arguments.
      */
     public static void confTell(@NotNull CommandSender sender, @NotNull String path, Object... args) {
-        if (config.isString(path)) {
-            tell(sender, config.getString(path, ""), args);
-        } else if (config.isList(path)) {
-            for (String line : config.getStringList(path)) {
+        if (fileConfig.isString(path)) {
+            tell(sender, fileConfig.getString(path, ""), args);
+        } else if (fileConfig.isList(path)) {
+            for (String line : fileConfig.getStringList(path)) {
                 tell(sender, line, args);
             }
         }

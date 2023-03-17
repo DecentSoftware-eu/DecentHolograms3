@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
 /**
@@ -51,12 +52,12 @@ public final class Common {
     /**
      * Generate a random integer between min and max.
      *
-     * @param min The min value.
-     * @param max The max value.
+     * @param min The min value. (inclusive)
+     * @param max The max value. (inclusive)
      * @return The random number.
      */
     public static int irand(int min, int max) {
-        return min + (int) (Math.random() * ((max - min) + 1));
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
     /**
@@ -152,19 +153,6 @@ public final class Common {
      */
     public static void log(Level level, String message, Object... args) {
         log(level, String.format(message, args));
-    }
-
-    /*
-     * 	Debug
-     */
-
-    /**
-     * Print an object into console.
-     *
-     * @param o Object to print.
-     */
-    public static void debug(Object o) {
-        System.out.println(o);
     }
 
     /*

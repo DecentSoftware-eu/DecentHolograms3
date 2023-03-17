@@ -41,7 +41,7 @@ import java.util.List;
 public final class BootMessenger {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private static List<String> messages;
+    private List<String> messages;
 
     /**
      * Add a message to the final output.

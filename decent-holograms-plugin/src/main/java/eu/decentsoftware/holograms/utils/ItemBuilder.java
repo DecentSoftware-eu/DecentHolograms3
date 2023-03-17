@@ -255,6 +255,7 @@ public class ItemBuilder implements Cloneable {
             }
             itemStack.setItemMeta(meta);
         } catch (ClassCastException ignored) {
+            // Not a leather armor item
         }
         return this;
     }
@@ -267,6 +268,7 @@ public class ItemBuilder implements Cloneable {
             }
             itemStack.setItemMeta(meta);
         } catch (ClassCastException ignored) {
+            // Not a potion item
         }
         return this;
     }
@@ -279,6 +281,7 @@ public class ItemBuilder implements Cloneable {
             }
             itemStack.setItemMeta(meta);
         } catch (ClassCastException ignored) {
+            // Not a potion item
         }
         return this;
     }
@@ -291,6 +294,7 @@ public class ItemBuilder implements Cloneable {
             }
             itemStack.setItemMeta(meta);
         } catch (ClassCastException ignored) {
+            // Not a potion item
         }
         return this;
     }
@@ -303,6 +307,7 @@ public class ItemBuilder implements Cloneable {
             }
             itemStack.setItemMeta(meta);
         } catch (ClassCastException ignored) {
+            // Not a potion item
         }
         return this;
     }
@@ -316,6 +321,7 @@ public class ItemBuilder implements Cloneable {
                 this.withDurability((short) SkullType.PLAYER.ordinal());
             }
         } catch (ClassCastException ignored) {
+            // Not a skull item
         }
         return this;
     }
@@ -325,6 +331,7 @@ public class ItemBuilder implements Cloneable {
             SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
             if (meta != null) return meta.getOwner();
         } catch (ClassCastException ignored) {
+            // Not a skull item
         }
         return null;
     }
