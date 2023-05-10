@@ -19,22 +19,33 @@
 package eu.decentsoftware.holograms.utils.color.patterns;
 
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 
 public class SolidPattern implements Pattern {
 
-    private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("#?[<{]([\\dA-Fa-f]{6})[}>]|#([\\dA-Fa-f]{6})");
+    private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile(
+            "(?:<c(?:olou?r)?:)?(?:&?#|<&?#)([0-9A-Fa-f]{6})>?"
+    );
 
+    @NotNull
     @Override
-    public String process(String string) {
+    public String process(@NotNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             String color = matcher.group(1);
-            if (color == null) {
-                color = matcher.group(2);
-            }
             string = string.replace(matcher.group(), DecentColorAPI.getColor(color) + "");
+        }
+        return string;
+    }
+
+    @NotNull
+    @Override
+    public String strip(@NotNull String string) {
+        Matcher matcher = PATTERN.matcher(string);
+        while (matcher.find()) {
+            string = string.replace(matcher.group(), "");
         }
         return string;
     }

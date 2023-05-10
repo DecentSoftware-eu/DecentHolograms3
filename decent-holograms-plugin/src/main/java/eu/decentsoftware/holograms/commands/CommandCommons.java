@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.DoubleSupplier;
 
 /**
  * Common methods and constants for commands.
@@ -135,13 +135,13 @@ final class CommandCommons {
      * @param currentLocationSupplier Supplier of the current location.
      * @return The parsed coordinate.
      */
-    public double parseCoordinate(@NotNull String value, @NotNull Supplier<Double> currentLocationSupplier) {
+    public double parseCoordinate(@NotNull String value, @NotNull DoubleSupplier currentLocationSupplier) {
         if (value.equals("~")) {
-            return currentLocationSupplier.get();
+            return currentLocationSupplier.getAsDouble();
         }
 
         if (value.startsWith("~")) {
-            return currentLocationSupplier.get() + Double.parseDouble(value.substring(1));
+            return currentLocationSupplier.getAsDouble() + Double.parseDouble(value.substring(1));
         }
 
         return Double.parseDouble(value);

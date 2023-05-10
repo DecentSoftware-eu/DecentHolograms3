@@ -20,7 +20,10 @@ package eu.decentsoftware.holograms.utils.color;
 
 import com.google.common.collect.ImmutableMap;
 import eu.decentsoftware.holograms.nms.utils.Version;
-import eu.decentsoftware.holograms.utils.color.patterns.*;
+import eu.decentsoftware.holograms.utils.color.patterns.GradientPattern;
+import eu.decentsoftware.holograms.utils.color.patterns.Pattern;
+import eu.decentsoftware.holograms.utils.color.patterns.RainbowPattern;
+import eu.decentsoftware.holograms.utils.color.patterns.SolidPattern;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +61,6 @@ public final class DecentColorAPI {
             .build();
 
     private static final List<Pattern> PATTERNS = Arrays.asList(
-            new SolidLegacyPattern(),
             new SolidPattern(),
             new GradientPattern(),
             new RainbowPattern()
@@ -119,8 +121,8 @@ public final class DecentColorAPI {
      * Colors the given string with a gradient between the given colors.
      *
      * @param string The string to color.
-     * @param start The start color.
-     * @param end The end color.
+     * @param start  The start color.
+     * @param end    The end color.
      * @return The colored string.
      */
     @NotNull
@@ -131,7 +133,7 @@ public final class DecentColorAPI {
     /**
      * Colors the given string with a rainbow of the given saturation.
      *
-     * @param string The string to color.
+     * @param string     The string to color.
      * @param saturation The saturation of the rainbow.
      * @return The colored string.
      */
@@ -167,7 +169,7 @@ public final class DecentColorAPI {
      * Gets a ChatColor from a color.
      *
      * @param color The color to get the color from.
-     * @param def The default color to return if hex is not supported.
+     * @param def   The default color to return if hex is not supported.
      * @return The ChatColor.
      */
     @NotNull
@@ -184,15 +186,29 @@ public final class DecentColorAPI {
     @NotNull
     public static ChatColor getClosestColor(@NotNull Color color) {
         Color nearestColor = null;
-        double nearestDistance = Integer.MAX_VALUE;
+        int nearestDistance = Integer.MAX_VALUE;
         for (Color constantColor : COLORS.keySet()) {
-            double distance = Math.pow(color.getRed() - constantColor.getRed(), 2) + Math.pow(color.getGreen() - constantColor.getGreen(), 2) + Math.pow(color.getBlue() - constantColor.getBlue(), 2);
+            int distance = getDistanceSquared(color, constantColor);
             if (nearestDistance > distance) {
                 nearestColor = constantColor;
                 nearestDistance = distance;
             }
         }
         return COLORS.get(nearestColor);
+    }
+
+    /**
+     * Gets the distance squared between the two given colors.
+     *
+     * @param color1 The first color.
+     * @param color2 The second color.
+     * @return The distance squared.
+     */
+    public int getDistanceSquared(@NotNull Color color1, @NotNull Color color2) {
+        int dr = color1.getRed() - color2.getRed();
+        int dg = color1.getGreen() - color2.getGreen();
+        int db = color1.getBlue() - color2.getBlue();
+        return dr * dr + dg * dg + db * db;
     }
 
     /**
@@ -247,8 +263,8 @@ public final class DecentColorAPI {
      * Creates a gradient between the given colors.
      *
      * @param start The start color.
-     * @param end The end color.
-     * @param step The number of steps.
+     * @param end   The end color.
+     * @param step  The number of steps.
      * @return The gradient as an array of colors.
      */
     @NotNull
@@ -275,7 +291,7 @@ public final class DecentColorAPI {
     /**
      * Creates a rainbow gradient with the given saturation.
      *
-     * @param step The number of steps.
+     * @param step       The number of steps.
      * @param saturation The saturation of the rainbow.
      * @return The rainbow as an array of colors.
      */
@@ -292,9 +308,9 @@ public final class DecentColorAPI {
     /**
      * Creates a hex string from the given RGB color.
      *
-     * @param red The red value.
+     * @param red   The red value.
      * @param green The green value.
-     * @param blue The blue value.
+     * @param blue  The blue value.
      * @return The hex string.
      */
     @NotNull

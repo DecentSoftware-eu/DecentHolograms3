@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.utils.color.patterns;
 
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -27,8 +28,9 @@ public class GradientPattern implements Pattern {
 
     private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("[<{]#([A-Fa-f0-9]{6})[}>](((?![<{]#[A-Fa-f0-9]{6}[}>]).)*)[<{]/#([A-Fa-f0-9]{6})[}>]");
 
+    @NotNull
     @Override
-    public String process(String string) {
+    public String process(@NotNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             String start = matcher.group(1);
@@ -44,6 +46,16 @@ public class GradientPattern implements Pattern {
                     new Color(Integer.parseInt(start, 16)),
                     new Color(Integer.parseInt(end, 16))
             ));
+        }
+        return string;
+    }
+
+    @NotNull
+    @Override
+    public String strip(@NotNull String string) {
+        Matcher matcher = PATTERN.matcher(string);
+        while (matcher.find()) {
+            string = string.replace(matcher.group(), matcher.group(2));
         }
         return string;
     }

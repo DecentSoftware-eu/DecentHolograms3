@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.hologram.page;
 
 import com.google.common.collect.ImmutableList;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.ActionHolder;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
@@ -29,6 +30,7 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
+import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.math.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -64,22 +66,22 @@ public class DefaultHologramPage implements HologramPage {
 
     @Override
     public void display(@NotNull Player player) {
-        forEachLineRendererSafe((renderer) -> renderer.display(player));
+        forEachLineRendererSafe(renderer -> renderer.display(player));
     }
 
     @Override
     public void hide(@NotNull Player player) {
-        forEachLineRendererSafe((renderer) -> renderer.hide(player));
+        forEachLineRendererSafe(renderer -> renderer.hide(player));
     }
 
     @Override
     public void update(@NotNull Player player) {
-        forEachLineRendererSafe((renderer) -> renderer.update(player));
+        forEachLineRendererSafe(renderer -> renderer.update(player));
     }
 
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
-        forEachLineRendererSafe((renderer) -> renderer.teleport(player, location));
+        forEachLineRendererSafe(renderer -> renderer.teleport(player, location));
     }
 
     @Override
@@ -93,7 +95,7 @@ public class DefaultHologramPage implements HologramPage {
         final boolean isTextOnly = lines.stream().noneMatch(line -> line.getType() != HologramLineType.TEXT);
 
         for (Player viewer : viewers) {
-            recalculate(viewer, horizontal && isTextOnly, vertical, heads);
+            recalculate(viewer, horizontal, vertical && isTextOnly, heads);
         }
     }
 
@@ -128,13 +130,8 @@ public class DefaultHologramPage implements HologramPage {
         Vector playerLookDirection = playerEyeLocation.getDirection().clone().normalize();
 
         // Calculate the required vectors.
-        Vector horizontalPerpendicular = playerLookDirection.clone()
-                .crossProduct(MathUtil.UP_VECTOR)
-                .normalize();
-        Vector verticalPerpendicular = horizontalPerpendicular.clone()
-                .crossProduct(playerLookDirection)
-                .multiply(-1d)
-                .normalize();
+        Vector horizontalPerpendicular = playerLookDirection.clone().crossProduct(MathUtil.UP_VECTOR).normalize();
+        Vector verticalPerpendicular = horizontalPerpendicular.clone().crossProduct(playerLookDirection).normalize();
 
         // Calculate the pivot point. (The center of the hologram)
         Location pivot = hologramLocation.clone().subtract(0, totalHeight / 2, 0);
@@ -154,7 +151,7 @@ public class DefaultHologramPage implements HologramPage {
                 // If we rotate vertically, we put the lines along the relative vertical vector.
                 double angle = Math.toRadians(playerEyeLocation.getPitch());
                 double totalOffsetYAdjusted = totalOffsetY * Math.cos(angle);
-                Vector vector = verticalPerpendicular.clone().multiply((height - totalOffsetYAdjusted) - totalHeight / 2);
+                Vector vector = verticalPerpendicular.clone().multiply(-((height - totalOffsetYAdjusted) - totalHeight / 2));
                 location = pivot.clone().add(vector);
             } else {
                 // If we don't rotate vertically, we put the lines above each other.
@@ -210,7 +207,7 @@ public class DefaultHologramPage implements HologramPage {
 
     public double getHeight() {
         return lines.stream()
-                .mapToDouble((l) -> l.getSettings().getHeight())
+                .mapToDouble(l -> l.getSettings().getHeight())
                 .sum();
     }
 
@@ -299,7 +296,7 @@ public class DefaultHologramPage implements HologramPage {
     @Override
     public HologramPage setLinesFromStrings(@NotNull List<String> lines) {
         return setLines(lines.stream()
-                .map((s) -> new DefaultHologramLine(this, getNextLineLocation(), s))
+                .map(s -> new DefaultHologramLine(this, getNextLineLocation(), s))
                 .collect(Collectors.toList()));
     }
 
