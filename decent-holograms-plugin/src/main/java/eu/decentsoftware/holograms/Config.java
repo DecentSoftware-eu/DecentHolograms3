@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.utils.config.CFG;
 import eu.decentsoftware.holograms.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public final class Config {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static boolean updateAvailable = false;
+    private static String updateVersion = null;
 
     /**
      * The regex used for validating names of holograms, animations, etc.
@@ -130,6 +132,25 @@ public final class Config {
      */
     public static void setUpdateAvailable(boolean updateAvailable) {
         Config.updateAvailable = updateAvailable;
+    }
+
+    /**
+     * Get the version of the update.
+     *
+     * @return The version of the update.
+     */
+    @Nullable
+    public static String getUpdateVersion() {
+        return updateVersion;
+    }
+
+    /**
+     * Set the version of the update.
+     *
+     * @param updateVersion The version of the update.
+     */
+    public static void setUpdateVersion(@Nullable String updateVersion) {
+        Config.updateVersion = updateVersion;
     }
 
 }

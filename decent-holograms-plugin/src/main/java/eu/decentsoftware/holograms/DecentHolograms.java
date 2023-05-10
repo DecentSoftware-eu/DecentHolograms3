@@ -227,6 +227,7 @@ public final class DecentHolograms extends JavaPlugin {
 
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {
+                    Config.setUpdateVersion(s);
                     BootMessenger.log(Lang.formatString(Lang.UPDATE_MESSAGE));
                 }
             });

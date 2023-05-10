@@ -63,15 +63,13 @@ public final class BootMessenger {
      */
     public void sendAndFinish() {
         PluginDescriptionFile desc = PLUGIN.getDescription();
-        String latestVersion = ""; // TODO
-
         CommandSender console = Bukkit.getConsoleSender();
         console.sendMessage("――――――――――――――――――――――――――――――――――――――――――――――――――");
         console.sendMessage(Lang.formatString(" &fThank you for using &3{0}&f! &c❤", desc.getName()));
         console.sendMessage(Lang.formatString(" &f- Authors: &b[{0}]", String.join(", ", desc.getAuthors())));
         console.sendMessage(Lang.formatString(" &f- Version: &b{0}", desc.getVersion()));
         if (Config.isUpdateAvailable()) {
-            console.sendMessage(Lang.formatString("   &a➥ A newer version ({0}) is available, update asap!", latestVersion));
+            console.sendMessage(Lang.formatString("   &a➥ A newer version ({0}) is available, update asap!", Config.getUpdateVersion()));
         }
         console.sendMessage(Lang.formatString(" &f- Spigot Page:&b https://www.spigotmc.org/resources/96927/"));
         console.sendMessage("――――――――――――――――――――――――――――――――――――――――――――――――――");
