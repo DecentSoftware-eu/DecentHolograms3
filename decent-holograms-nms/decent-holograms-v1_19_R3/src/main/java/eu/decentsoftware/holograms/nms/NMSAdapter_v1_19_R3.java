@@ -16,29 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.animations;
+package eu.decentsoftware.holograms.nms;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
+public class NMSAdapter_v1_19_R3 {
 
-@Getter
-@Setter
-public class AnimationFrame<T> {
+    public NMSAdapter_v1_19_R3() {
 
-    private @NotNull T object;
-
-    public AnimationFrame(@NotNull T object) {
-        this.object = object;
-    }
-
-    @NotNull
-    public T getObject() {
-        return object;
-    }
-
-    public void setObject(@NotNull T object) {
-        this.object = object;
     }
 
 }
