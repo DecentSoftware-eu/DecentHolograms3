@@ -18,13 +18,13 @@
 
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public class NMSManager {
     private static NMSManager instance;
 
     @Getter
-    private final @NonNull NMSAdapter adapter;
+    private final NMSAdapter adapter;
     private boolean usingProtocolLib = false;
 
     /**
@@ -57,11 +57,11 @@ public class NMSManager {
             throw new IllegalStateException("NMSManager is already initialized!");
         }
         instance = this;
-        NMSAdapter adapter;
-        if ((adapter = initNMSAdapter()) == null) {
+
+        this.adapter = initNMSAdapter();
+        if (this.adapter == null) {
             throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
         }
-        this.adapter = adapter;
     }
 
     /**
@@ -126,9 +126,11 @@ public class NMSManager {
                 pipeline.addBefore("packet_handler", IDENTIFIER, channelDuplexHandler);
             }
             return true;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to hook player " + player.getName() + "!");
+            e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     /**
@@ -161,7 +163,9 @@ public class NMSManager {
                 pipeline.remove(IDENTIFIER);
             }
             return true;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            DecentHolograms.getInstance().getLogger().warning("Failed to unhook player " + player.getName() + "!");
+            e.printStackTrace();
         }
         return false;
     }
