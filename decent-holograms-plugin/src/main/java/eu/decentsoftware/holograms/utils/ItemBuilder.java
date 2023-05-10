@@ -238,7 +238,8 @@ public class ItemBuilder implements Cloneable {
     public ItemBuilder withNBT(String nbt) {
         try {
             Bukkit.getUnsafe().modifyItemStack(itemStack, nbt);
-        } catch (Throwable ignored) {
+        } catch (Exception ignored) {
+            // Not a CraftItemStack, should never happen
         }
         return this;
     }

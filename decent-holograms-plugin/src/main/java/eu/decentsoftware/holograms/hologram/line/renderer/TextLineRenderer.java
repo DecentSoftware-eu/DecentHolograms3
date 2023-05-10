@@ -112,11 +112,9 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
         String formattedText = text;
 
-        if (hoverText != null) {
-            // Check if the player in watching the line and if so, use the hover text.
-            if (profile != null && getParent().equals(profile.getContext().getWatchedLine())) {
-                formattedText = hoverText;
-            }
+        // Check if the player in watching the line and if so, use the hover text.
+        if (hoverText != null && profile != null && getParent().equals(profile.getContext().getWatchedLine())) {
+            formattedText = hoverText;
         }
 
         formattedText = PLUGIN.getReplacementRegistry().replace(formattedText, profile);

@@ -20,13 +20,10 @@
 # Check for updates on startup?
 check-for-updates: true
 
-# Save each hologram to a separate file?
-per-hologram-file: true
-
 # Some default values.
 defaults:
   # Default content of a hologram line
-  line-content: 'Blank Line'
+  line-content: "Blank Line"
   # Default view distance of holograms
   view-distance: 48
   # Default update distance of holograms
@@ -42,8 +39,8 @@ defaults:
 
 # Timezone and formats of date and time.
 datetime:
-  time-format: 'HH:mm:ss'
-  date-format: 'dd:MM:yyyy'
+  time-format: "HH:mm:ss"
+  date-format: "dd:MM:yyyy"
   zone: GMT+0
 
 
@@ -65,16 +62,16 @@ pinger:
   timeout: 500
   # List of servers to ping. Format: <name>:<ip>:<port>
   servers:
-    - 'Survival:127.0.0.1:25565'
-    - 'Lobby-01:127.0.0.1:25566'
+    - "Survival:127.0.0.1:25565"
+    - "Lobby-01:127.0.0.1:25566"
   # Define the look of status returned by the '{status: <server>}' placeholder.
   status:
-    online: '&aOnline'
-    offline: '&cOffline'
-    full: '&6Full'
+    online: "&aOnline"
+    offline: "&cOffline"
+    full: "&6Full"
   # Some default values for offline servers.
   defaults:
-    motd: 'This server is offline.'
+    motd: "This server is offline."
     max-players: 0
   # Remove the leading and trailing spaces in MOTD?
   trim-motd: true
@@ -103,12 +100,12 @@ pinger:
 # # # # # # # # # #
 
 replacements:
-  '[x]': 'U+2588;'
-  '[X]': 'U+2588;'
-  '[/]': 'U+258C;'
-  '[,]': 'U+2591;'
-  '[,,]': 'U+2592;'
-  '[,,,]': 'U+2593;'
-  '[p]': 'U+2022;'
-  '[P]': 'U+2022;'
-  '[|]': 'U+23B9;'
+  '[x]': "U+2588;"
+  '[X]': "U+2588;"
+  '[/]': "U+258C;"
+  '[,]': "U+2591;"
+  '[,,]': "U+2592;"
+  '[,,,]': "U+2593;"
+  '[p]': "U+2022;"
+  '[P]': "U+2022;"
+  '[|]': "U+23B9;"
