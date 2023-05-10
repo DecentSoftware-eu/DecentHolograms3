@@ -26,6 +26,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
+@UtilityClass
 class ProtocolLibHook {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
@@ -71,9 +73,8 @@ class ProtocolLibHook {
 
                 Bukkit.getPluginManager().callEvent(event);
 
-                if (event.isCancelled()) {
-                    packetEvent.setCancelled(true);
-                }
+                // Cancel the packet so that it can't be caught by other plugins.
+                packetEvent.setCancelled(true);
             }
 
         };
