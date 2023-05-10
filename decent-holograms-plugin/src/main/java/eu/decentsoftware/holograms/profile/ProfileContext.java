@@ -22,9 +22,17 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
  * This is the context of a players profile. It is used to store some context
@@ -40,12 +48,56 @@ public class ProfileContext {
     private final int clickableEntityId;
     private HologramLine watchedLine;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private boolean clickableEntitySpawned;
+
     /**
      * Create a new instance of {@link ProfileContext}.
      */
     public ProfileContext() {
         this.watchedLine = null;
         this.clickableEntityId = DecentHolograms.getInstance().getNMSManager().getAdapter().getFreeEntityId();
+        this.clickableEntitySpawned = false;
+    }
+
+    /**
+     * Move the clickable entity to the given location or create it, if it is not spawned yet. This
+     * entity is used to detect interaction with holograms.
+     *
+     * @param player   The player to move the entity for.
+     * @param location The location to move the entity to.
+     */
+    public void moveOrCreateClickableEntity(@NonNull Player player, @NonNull Location location) {
+        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
+        if (clickableEntitySpawned) {
+            nmsAdapter.teleportEntity(player, clickableEntityId, location, false);
+        } else {
+            nmsAdapter.spawnEntityLiving(player, clickableEntityId, UUID.randomUUID(), EntityType.SLIME, location);
+            Object metaProperties = nmsAdapter.getMetaEntityProperties(
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false
+            );
+            nmsAdapter.sendEntityMetadata(player, clickableEntityId, metaProperties);
+            clickableEntitySpawned = true;
+        }
+    }
+
+    /**
+     * Destroy the clickable entity for the given player.
+     *
+     * @param player The player to destroy the entity for.
+     */
+    public void destroyClickableEntity(@NonNull Player player) {
+        if (clickableEntitySpawned) {
+            DecentHolograms.getInstance().getNMSManager().getAdapter().removeEntity(player, clickableEntityId);
+            clickableEntitySpawned = false;
+        }
     }
 
     /**
