@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.api.hologram.component.ClickType;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import eu.decentsoftware.holograms.nms.utils.ReflectUtil;
@@ -29,7 +30,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

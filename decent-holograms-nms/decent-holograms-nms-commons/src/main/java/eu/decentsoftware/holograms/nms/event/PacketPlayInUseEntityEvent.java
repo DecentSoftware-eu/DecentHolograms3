@@ -1,13 +1,13 @@
 package eu.decentsoftware.holograms.nms.event;
 
 import eu.decentsoftware.holograms.api.event.DecentHologramsEvent;
+import eu.decentsoftware.holograms.api.hologram.component.ClickType;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.inventory.ClickType;
 
 /**
  * This event is called when a player interacts with an entity. It is just used

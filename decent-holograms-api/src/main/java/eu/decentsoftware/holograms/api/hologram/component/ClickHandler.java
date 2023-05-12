@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.api.hologram.component;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
 
 /**
