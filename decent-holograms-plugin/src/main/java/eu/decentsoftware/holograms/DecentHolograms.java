@@ -27,7 +27,9 @@ import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.actions.ClickActionHolder;
 import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
+import eu.decentsoftware.holograms.actions.serialization.ClickActionHolderSerializer;
 import eu.decentsoftware.holograms.addons.AddonLoader;
 import eu.decentsoftware.holograms.animations.AnimationRegistry;
 import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
@@ -36,7 +38,9 @@ import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
 import eu.decentsoftware.holograms.commands.HologramCommands;
 import eu.decentsoftware.holograms.commands.LineCommands;
+import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.conditions.serialization.ClickConditionHolderSerializer;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
 import eu.decentsoftware.holograms.editor.Editor;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
@@ -279,7 +283,9 @@ public final class DecentHolograms extends JavaPlugin {
                 .setPrettyPrinting()
                 .registerTypeAdapter(Location.class, new LocationSerializer())
                 .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())
+                .registerTypeAdapter(ClickActionHolder.class, new ClickActionHolderSerializer())
                 .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
+                .registerTypeAdapter(ClickConditionHolder.class, new ClickConditionHolderSerializer())
                 .create();
     }
 

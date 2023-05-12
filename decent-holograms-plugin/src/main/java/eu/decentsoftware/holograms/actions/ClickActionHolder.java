@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.actions;
 
 import com.google.common.collect.ImmutableList;
+import eu.decentsoftware.holograms.api.hologram.component.ClickType;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
@@ -26,36 +27,41 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * This class represents a holder for actions. It stores a list of actions and provides methods
- * to modify this list or to execute all actions.
+ * This class represents a holder for actions with click types. It stores a list of actions
+ * for each click type and provides methods to modify this list or to execute all actions.
  *
  * @author d0by
  * @see Action
  * @since 3.0.0
  */
-public class ActionHolder {
+public class ClickActionHolder {
 
-    private final @NonNull List<Action> actions;
+    private final @NonNull Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
 
-    public ActionHolder() {
-        this(new ArrayList<>());
+    public ClickActionHolder() {
+        this(new EnumMap<>(ClickType.class));
     }
 
     @Contract(pure = true)
-    public ActionHolder(@NonNull List<Action> actions) {
-        this.actions = actions;
+    public ClickActionHolder(@NonNull Map<ClickType, List<Action>> actions) {
+        for (ClickType clickType : ClickType.values()) {
+            this.actions.put(clickType, actions.getOrDefault(clickType, new ArrayList<>()));
+        }
     }
 
     /**
      * Execute all Actions in this holder for the given {@link Profile}.
      *
-     * @param profile The profile.
+     * @param clickType The click type.
+     * @param profile   The profile.
      */
-    public void execute(@NonNull Profile profile) {
-        for (Action action : getActions()) {
+    public void execute(@NonNull ClickType clickType, @NonNull Profile profile) {
+        for (Action action : getActions(clickType)) {
             // Check the chance
             if (!action.checkChance()) {
                 continue;
@@ -73,59 +79,65 @@ public class ActionHolder {
     /**
      * Add the given action to this holder.
      *
-     * @param action The action.
+     * @param clickType The click type.
+     * @param action    The action.
      * @see Action
      */
-    public void addAction(@NonNull Action action) {
-        this.actions.add(action);
+    public void addAction(@NonNull ClickType clickType, @NonNull Action action) {
+        this.actions.get(clickType).add(action);
     }
 
     /**
      * Remove the given action from this holder.
      *
-     * @param action The action.
+     * @param clickType The click type.
+     * @param action    The action.
      * @see Action
      */
-    public void removeAction(@NonNull Action action) {
-        this.actions.remove(action);
+    public void removeAction(@NonNull ClickType clickType, @NonNull Action action) {
+        this.actions.get(clickType).remove(action);
     }
 
     /**
      * Remove the action at the given index from this holder.
      *
-     * @param index The index.
+     * @param clickType The click type.
+     * @param index     The index.
      * @see Action
      */
-    public void removeAction(int index) {
-        this.actions.remove(index);
+    public void removeAction(@NonNull ClickType clickType, int index) {
+        this.actions.get(clickType).remove(index);
     }
 
     /**
      * Remove all actions from this holder.
      *
+     * @param clickType The click type.
      * @see Action
      */
-    public void clearActions() {
-        this.actions.clear();
+    public void clearActions(@NonNull ClickType clickType) {
+        this.actions.get(clickType).clear();
     }
 
     /**
      * Check if this holder is empty.
      *
+     * @param clickType The click type.
      * @return True if this holder is empty, false otherwise.
      */
-    public boolean isEmpty() {
-        return this.actions.isEmpty();
+    public boolean isEmpty(@NonNull ClickType clickType) {
+        return this.actions.get(clickType).isEmpty();
     }
 
     /**
      * Get all actions in this holder. The returned list is immutable.
      *
+     * @param clickType The click type.
      * @return Immutable list of all actions.
      */
     @NotNull
-    public List<Action> getActions() {
-        return ImmutableList.copyOf(this.actions);
+    public List<Action> getActions(@NonNull ClickType clickType) {
+        return ImmutableList.copyOf(this.actions.get(clickType));
     }
 
 }

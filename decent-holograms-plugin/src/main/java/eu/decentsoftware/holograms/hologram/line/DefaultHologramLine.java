@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.hologram.line;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.actions.ClickActionHolder;
 import eu.decentsoftware.holograms.api.hologram.component.ClickHandler;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
@@ -27,6 +27,7 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineSettings;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +45,9 @@ public class DefaultHologramLine implements HologramLine {
     private final @NotNull HologramLineSettings settings;
     private final @NotNull PositionManager positionManager;
     private final @NotNull ConditionHolder viewConditions;
-    private final @NotNull ConditionHolder clickConditions;
-    private final @NotNull ActionHolder clickActions;
+    private final @NotNull ClickConditionHolder clickConditions;
+    private final @NotNull ClickActionHolder clickActions;
+    private ClickHandler clickHandler;
     private HologramLineRenderer renderer;
     private String content;
 
@@ -66,7 +68,7 @@ public class DefaultHologramLine implements HologramLine {
      * @param location The location of the line.
      */
     public DefaultHologramLine(@NotNull HologramPage parent, @NotNull Location location, @NotNull String content) {
-        this(parent, new DefaultHologramLineSettings(), location, new ConditionHolder(), new ConditionHolder(), new ActionHolder(), content);
+        this(parent, new DefaultHologramLineSettings(), location, new ConditionHolder(), new ClickConditionHolder(), new ClickActionHolder(), content);
     }
 
     /**
@@ -81,8 +83,8 @@ public class DefaultHologramLine implements HologramLine {
      * @param content         The content of the line.
      */
     public DefaultHologramLine(@NotNull HologramPage parent, @NotNull HologramLineSettings settings, @NotNull Location location,
-                               @NotNull ConditionHolder viewConditions, @NotNull ConditionHolder clickConditions,
-                               @NotNull ActionHolder clickActions, @NotNull String content) {
+                               @NotNull ConditionHolder viewConditions, @NotNull ClickConditionHolder clickConditions,
+                               @NotNull ClickActionHolder clickActions, @NotNull String content) {
         this.parent = parent;
         this.settings = settings;
         this.positionManager = new LinePositionManager(this, location);
@@ -128,17 +130,17 @@ public class DefaultHologramLine implements HologramLine {
     }
 
     @NotNull
-    public ConditionHolder getViewConditionHolder() {
+    public ConditionHolder getViewConditions() {
         return viewConditions;
     }
 
     @NotNull
-    public ConditionHolder getClickConditionHolder() {
+    public ClickConditionHolder getClickConditions() {
         return clickConditions;
     }
 
     @NotNull
-    public ActionHolder getClickActionHolder() {
+    public ClickActionHolder getClickActions() {
         return clickActions;
     }
 

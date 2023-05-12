@@ -18,12 +18,12 @@
 
 package eu.decentsoftware.holograms.hologram.serialization;
 
-import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.actions.ClickActionHolder;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
-import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +42,8 @@ import java.util.List;
 public class SerializablePage {
 
     private final @NotNull List<SerializableLine> lines;
-    private ConditionHolder clickConditions;
-    private ActionHolder clickActions;
+    private ClickConditionHolder clickConditions;
+    private ClickActionHolder clickActions;
 
     /**
      * Create a new {@link SerializablePage} from the given {@link DefaultHologramPage}.
@@ -75,10 +75,10 @@ public class SerializablePage {
     @NotNull
     public DefaultHologramPage toPage(@NotNull DefaultHologram hologram) {
         if (clickConditions == null) {
-            clickConditions = new ConditionHolder();
+            clickConditions = new ClickConditionHolder();
         }
         if (clickActions == null) {
-            clickActions = new ActionHolder();
+            clickActions = new ClickActionHolder();
         }
         DefaultHologramPage page = new DefaultHologramPage(
                 hologram,

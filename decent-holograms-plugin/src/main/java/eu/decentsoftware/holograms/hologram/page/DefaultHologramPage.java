@@ -20,15 +20,16 @@ package eu.decentsoftware.holograms.hologram.page;
 
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.actions.ClickActionHolder;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
+import eu.decentsoftware.holograms.api.hologram.component.ClickHandler;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineSettings;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.math.MathUtil;
@@ -37,10 +38,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -49,15 +49,16 @@ public class DefaultHologramPage implements HologramPage {
 
     private final @NotNull Hologram parent;
     private final @NotNull List<HologramLine> lines;
-    private final @NotNull ConditionHolder clickConditions;
-    private final @NotNull ActionHolder clickActions;
+    private final @NotNull ClickConditionHolder clickConditions;
+    private final @NotNull ClickActionHolder clickActions;
+    private ClickHandler clickHandler;
 
     public DefaultHologramPage(@NotNull Hologram parent) {
-        this(parent, new ConditionHolder(), new ActionHolder());
+        this(parent, new ClickConditionHolder(), new ClickActionHolder());
     }
 
     @Contract(pure = true)
-    public DefaultHologramPage(@NotNull Hologram parent, @NotNull ConditionHolder clickConditions, @NotNull ActionHolder clickActions) {
+    public DefaultHologramPage(@NotNull Hologram parent, @NotNull ClickConditionHolder clickConditions, @NotNull ClickActionHolder clickActions) {
         this.parent = parent;
         this.lines = new ArrayList<>();
         this.clickConditions = clickConditions;

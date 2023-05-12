@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.conditions;
 
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.profile.Profile;
+import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -109,6 +110,15 @@ public class ConditionHolder {
      */
     public void clearConditions() {
         this.conditions.clear();
+    }
+
+    /**
+     * Check if this holder is empty.
+     *
+     * @return True if this holder is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        return this.conditions.isEmpty();
     }
 
     /**

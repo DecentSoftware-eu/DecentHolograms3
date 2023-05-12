@@ -18,11 +18,12 @@
 
 package eu.decentsoftware.holograms.hologram.serialization;
 
-import eu.decentsoftware.holograms.actions.ActionHolder;
+import eu.decentsoftware.holograms.actions.ClickActionHolder;
+import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLineSettings;
 import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
-import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -39,8 +40,8 @@ public class SerializableLine {
 
     private DefaultHologramLineSettings settings;
     private ConditionHolder viewConditions;
-    private ConditionHolder clickConditions;
-    private ActionHolder clickActions;
+    private ClickConditionHolder clickConditions;
+    private ClickActionHolder clickActions;
     private final String content;
 
     /**
@@ -53,9 +54,9 @@ public class SerializableLine {
     public static SerializableLine fromLine(@NotNull DefaultHologramLine line) {
         return new SerializableLine(
                 (DefaultHologramLineSettings) line.getSettings(),
-                line.getViewConditionHolder(),
-                line.getClickConditionHolder(),
-                line.getClickActionHolder(),
+                line.getViewConditions(),
+                line.getClickConditions(),
+                line.getClickActions(),
                 line.getContent()
         );
     }
@@ -75,10 +76,10 @@ public class SerializableLine {
             viewConditions = new ConditionHolder();
         }
         if (clickConditions == null) {
-            clickConditions = new ConditionHolder();
+            clickConditions = new ClickConditionHolder();
         }
         if (clickActions == null) {
-            clickActions = new ActionHolder();
+            clickActions = new ClickActionHolder();
         }
         return new DefaultHologramLine(
                 page,
