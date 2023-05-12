@@ -27,36 +27,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a holder for conditions. It stores a list of conditions and
- * provides methods to modify this list or to check all conditions.
+ * This class represents a holder for conditions. It stores a list of conditions and provides methods
+ * to modify this list or to check all conditions.
  *
  * @author d0by
+ * @see Condition
  * @since 3.0.0
  */
 public class ConditionHolder {
 
-    private final @NotNull List<Condition> conditions;
+    private final @NonNull List<Condition> conditions;
 
-    /**
-     * Create a new {@link ConditionHolder} with no conditions. You can add conditions later.
-     */
     public ConditionHolder() {
         this(new ArrayList<>());
     }
 
-    /**
-     * Create a new {@link ConditionHolder} with the given conditions.
-     *
-     * @param conditions The list of conditions.
-     */
     @Contract(pure = true)
-    public ConditionHolder(@NotNull List<Condition> conditions) {
+    public ConditionHolder(@NonNull List<Condition> conditions) {
         this.conditions = conditions;
     }
 
     /**
      * Checks all Conditions stored in this holder. This method also executes
-     * all 'met' or 'not met' actions of the checked conditions.
+     * all 'not met' actions of the checked conditions.
      *
      * @param profile Profile of the player for whom we want to check the conditions.
      * @return true if all the conditions are fulfilled, false otherwise.
@@ -83,8 +76,9 @@ public class ConditionHolder {
      * Add the given condition to this holder.
      *
      * @param condition The condition.
+     * @see Condition
      */
-    public void addCondition(@NotNull Condition condition) {
+    public void addCondition(@NonNull Condition condition) {
         this.conditions.add(condition);
     }
 
@@ -92,8 +86,9 @@ public class ConditionHolder {
      * Remove the given condition from this holder.
      *
      * @param condition The condition.
+     * @see Condition
      */
-    public void removeCondition(@NotNull Condition condition) {
+    public void removeCondition(@NonNull Condition condition) {
         this.conditions.remove(condition);
     }
 
@@ -101,6 +96,7 @@ public class ConditionHolder {
      * Remove the condition at the given index from this holder.
      *
      * @param index The index.
+     * @see Condition
      */
     public void removeCondition(int index) {
         this.conditions.remove(index);
@@ -108,6 +104,8 @@ public class ConditionHolder {
 
     /**
      * Remove all conditions from this holder.
+     *
+     * @see Condition
      */
     public void clearConditions() {
         this.conditions.clear();
@@ -116,11 +114,11 @@ public class ConditionHolder {
     /**
      * Get all conditions in this holder. The returned list is immutable.
      *
-     * @return Immutable list of conditions.
+     * @return Immutable list of all conditions.
      */
     @NotNull
     public List<Condition> getConditions() {
-        return ImmutableList.copyOf(conditions);
+        return ImmutableList.copyOf(this.conditions);
     }
 
 }

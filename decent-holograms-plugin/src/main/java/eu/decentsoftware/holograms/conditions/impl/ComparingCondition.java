@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ComparingCondition extends Condition {
 
-    private transient final @NotNull ConditionType type;
+    private final @NotNull ConditionType type;
     private final @NotNull String compare;
     private final @NotNull String input;
 
@@ -43,20 +43,22 @@ public class ComparingCondition extends Condition {
 
     @Override
     public boolean check(@NotNull Profile profile) {
-        String compare = PAPI.setPlaceholders(profile.getPlayer(), this.compare);
-        String input = PAPI.setPlaceholders(profile.getPlayer(), this.input);
+        String compareParsed = PAPI.setPlaceholders(profile.getPlayer(), this.compare);
+        String inputParsed = PAPI.setPlaceholders(profile.getPlayer(), this.input);
         if (type.name().startsWith("STRING")) {
             switch (type) {
                 case STRING_CONTAINS:
-                    return input.contains(compare);
+                    return inputParsed.contains(compareParsed);
                 case STRING_EQUAL:
-                    return input.equals(compare);
+                    return inputParsed.equals(compareParsed);
                 case STRING_EQUAL_IGNORECASE:
-                    return input.equalsIgnoreCase(compare);
+                    return inputParsed.equalsIgnoreCase(compareParsed);
+                default:
+                    return false;
             }
         } else {
-            int compareInteger = Integer.parseInt(compare);
-            int inputInteger = Integer.parseInt(input);
+            int compareInteger = Integer.parseInt(compareParsed);
+            int inputInteger = Integer.parseInt(inputParsed);
             switch (type) {
                 case LESS:
                     return inputInteger < compareInteger;
@@ -68,9 +70,10 @@ public class ComparingCondition extends Condition {
                     return inputInteger >= compareInteger;
                 case GREATER:
                     return inputInteger > compareInteger;
+                default:
+                    return false;
             }
         }
-        return false;
     }
 
 }

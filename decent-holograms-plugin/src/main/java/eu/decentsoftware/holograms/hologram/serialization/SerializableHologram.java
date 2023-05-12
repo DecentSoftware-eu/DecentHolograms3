@@ -19,10 +19,10 @@
 package eu.decentsoftware.holograms.hologram.serialization;
 
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.DefaultHologramSettings;
+import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to (de)serialize holograms from/to json.
@@ -89,12 +90,10 @@ public class SerializableHologram {
             viewConditions = new ConditionHolder();
         }
         DefaultHologram hologram = new DefaultHologram(name, location, settings, viewConditions);
-        List<HologramPage> pages = new ArrayList<>();
-        for (SerializablePage page : this.pages) {
-            DefaultHologramPage defaultPage = page.toPage(hologram);
-            pages.add(defaultPage);
-        }
-        hologram.setPages(pages);
+        hologram.setPages(new ArrayList<>(pages).stream()
+                .map(page -> page.toPage(hologram))
+                .collect(Collectors.toList())
+        );
         return hologram;
     }
 

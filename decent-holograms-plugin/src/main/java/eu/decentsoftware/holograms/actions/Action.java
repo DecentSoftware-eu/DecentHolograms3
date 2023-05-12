@@ -39,7 +39,7 @@ public abstract class Action {
      * Create a new instance of {@link Action} with default values.
      */
     @Contract(pure = true)
-    public Action() {
+    protected Action() {
         this(0, -1.0);
     }
 
@@ -50,7 +50,7 @@ public abstract class Action {
      * @param chance The chance.
      */
     @Contract(pure = true)
-    public Action(long delay, double chance) {
+    protected Action(long delay, double chance) {
         this.delay = delay;
         this.chance = chance;
     }

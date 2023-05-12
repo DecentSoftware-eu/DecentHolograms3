@@ -46,7 +46,7 @@ public abstract class Condition {
      * Create a new instance of {@link Condition}.
      */
     @Contract(pure = true)
-    public Condition() {
+    protected Condition() {
         this(false);
     }
 
@@ -56,7 +56,7 @@ public abstract class Condition {
      * @param inverted true if the condition should be inverted when checked, false otherwise.
      */
     @Contract(pure = true)
-    public Condition(boolean inverted) {
+    protected Condition(boolean inverted) {
         this.inverted = inverted;
         this.required = true;
     }

@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.actions;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
+import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,21 +29,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a holder for actions.
+ * This class represents a holder for actions. It stores a list of actions and provides methods
+ * to modify this list or to execute all actions.
  *
  * @author d0by
+ * @see Action
  * @since 3.0.0
  */
 public class ActionHolder {
 
-    private final @NotNull List<Action> actions;
+    private final @NonNull List<Action> actions;
 
     public ActionHolder() {
         this(new ArrayList<>());
     }
 
     @Contract(pure = true)
-    public ActionHolder(@NotNull List<Action> actions) {
+    public ActionHolder(@NonNull List<Action> actions) {
         this.actions = actions;
     }
 
@@ -51,7 +54,7 @@ public class ActionHolder {
      *
      * @param profile The profile.
      */
-    public void execute(@NotNull Profile profile) {
+    public void execute(@NonNull Profile profile) {
         for (Action action : getActions()) {
             // Check the chance
             if (!action.checkChance()) {
@@ -73,7 +76,7 @@ public class ActionHolder {
      * @param action The action.
      * @see Action
      */
-    public void addAction(@NotNull Action action) {
+    public void addAction(@NonNull Action action) {
         this.actions.add(action);
     }
 
@@ -83,7 +86,7 @@ public class ActionHolder {
      * @param action The action.
      * @see Action
      */
-    public void removeAction(@NotNull Action action) {
+    public void removeAction(@NonNull Action action) {
         this.actions.remove(action);
     }
 
@@ -113,7 +116,7 @@ public class ActionHolder {
      */
     @NotNull
     public List<Action> getActions() {
-        return ImmutableList.copyOf(actions);
+        return ImmutableList.copyOf(this.actions);
     }
 
 }

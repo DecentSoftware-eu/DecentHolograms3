@@ -77,7 +77,7 @@ public class DefaultHologramRegistry {
                 SerializableHologram hologram = PLUGIN.getGson().fromJson(string, SerializableHologram.class);
                 registerHologram(hologram.toHologram(name));
                 counter++;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 PLUGIN.getLogger().severe("Failed to load hologram from '" + file.getName() + "'! Skipping...");
                 e.printStackTrace();
             }

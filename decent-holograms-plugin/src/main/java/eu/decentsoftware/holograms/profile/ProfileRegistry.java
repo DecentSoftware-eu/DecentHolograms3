@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.profile;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +54,7 @@ public class ProfileRegistry {
         // -- Create profiles for all online players
         for (Player player : Bukkit.getOnlinePlayers()) {
             registerProfile(player.getUniqueId());
+            DecentHolograms.getInstance().getNMSManager().hook(player);
         }
     }
 
@@ -60,6 +62,14 @@ public class ProfileRegistry {
      * Shuts down the registry. This will remove all profiles.
      */
     public synchronized void shutdown() {
+        this.profileMap.values().forEach(profile -> {
+            Player player = profile.getPlayer();
+            if (player != null) {
+                DecentHolograms.getInstance().getNMSManager().unhook(player);
+
+                profile.getContext().destroyClickableEntity(player);
+            }
+        });
         this.profileMap.clear();
     }
 
