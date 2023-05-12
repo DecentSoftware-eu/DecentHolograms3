@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.api.hologram.page;
 
 import eu.decentsoftware.holograms.api.hologram.Hologram;
+import eu.decentsoftware.holograms.api.hologram.component.Clickable;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ import java.util.List;
  * @since 3.0.0
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public interface HologramPage {
+public interface HologramPage extends Clickable {
 
     /**
      * Get the parent {@link Hologram} of this page.

@@ -29,6 +29,7 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
+import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,6 @@ public class DefaultHologramLine implements HologramLine {
     /*
      * TODO:
      *  - Hover content for text lines
-     *  - Click handling
      */
 
     private final @NotNull HologramPage parent;
@@ -92,6 +92,19 @@ public class DefaultHologramLine implements HologramLine {
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
         this.setContent(content);
+        this.setClickHandler((player, clickType) -> {
+            Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
+            if (profile == null) {
+                return false;
+            }
+
+            if (!getClickActions().isEmpty(clickType) && getClickConditions().check(clickType, profile)) {
+                getClickActions().execute(clickType, profile);
+                return true;
+            }
+
+            return false;
+        });
     }
 
     @NotNull
@@ -161,13 +174,12 @@ public class DefaultHologramLine implements HologramLine {
     @Nullable
     @Override
     public ClickHandler getClickHandler() {
-        return null;
+        return clickHandler;
     }
 
-    @NotNull
     @Override
-    public HologramLine setClickHandler(@Nullable ClickHandler clickHandler) {
-        return null;
+    public void setClickHandler(@Nullable ClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
     }
 
 }

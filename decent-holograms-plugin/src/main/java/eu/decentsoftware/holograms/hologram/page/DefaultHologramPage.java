@@ -63,6 +63,19 @@ public class DefaultHologramPage implements HologramPage {
         this.lines = new ArrayList<>();
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
+        this.setClickHandler((player, clickType) -> {
+            Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
+            if (profile == null) {
+                return false;
+            }
+
+            if (!getClickActions().isEmpty(clickType) && getClickConditions().check(clickType, profile)) {
+                getClickActions().execute(clickType, profile);
+                return true;
+            }
+
+            return false;
+        });
     }
 
     @Override
@@ -115,15 +128,7 @@ public class DefaultHologramPage implements HologramPage {
 
         // If we don't rotate, we just align the lines properly.
         if (!horizontal && !vertical) {
-            for (HologramLine line : lines) {
-                HologramLineRenderer renderer = line.getRenderer();
-                PositionManager positionManager = line.getPositionManager();
-                positionManager.setLocation(hologramLocation.clone());
-                if (renderer != null) {
-                    renderer.teleport(player, positionManager.getActualLocation());
-                }
-                hologramLocation.subtract(0, line.getSettings().getHeight(), 0);
-            }
+            simpleRecalculate(player, hologramLocation);
             return;
         }
 
@@ -136,6 +141,15 @@ public class DefaultHologramPage implements HologramPage {
 
         // Calculate the pivot point. (The center of the hologram)
         Location pivot = hologramLocation.clone().subtract(0, totalHeight / 2, 0);
+
+        // TODO: if clickable
+        updateClickableEntityAndWatchedLine(
+            player,
+            horizontalPerpendicular,
+            verticalPerpendicular,
+            pivot.toVector(),
+            totalHeight
+        );
 
         // Calculate new location for each line.
         double height = 0.0d;
@@ -184,6 +198,88 @@ public class DefaultHologramPage implements HologramPage {
         }
     }
 
+    private void simpleRecalculate(@NotNull Player player, @NotNull Location hologramLocation) {
+        for (HologramLine line : lines) {
+            HologramLineRenderer renderer = line.getRenderer();
+            PositionManager positionManager = line.getPositionManager();
+            positionManager.setLocation(hologramLocation.clone());
+            if (renderer != null) {
+                renderer.teleport(player, positionManager.getActualLocation());
+            }
+            hologramLocation.subtract(0, line.getSettings().getHeight(), 0);
+        }
+    }
+
+    private void updateClickableEntityAndWatchedLine(
+            @NotNull Player player,
+            @NotNull Vector horizontalPerpendicular,
+            @NotNull Vector verticalPerpendicular,
+            @NotNull Vector pivot,
+            double totalHeight
+    ) {
+        Location playerEyeLocation = player.getEyeLocation();
+        Vector playerLookDirection = playerEyeLocation.getDirection().clone().normalize();
+
+        // Calculate the intersection point of the player's look direction
+        // and the hologram plane.
+        Vector pivotToTop = verticalPerpendicular.clone().multiply(totalHeight / 2);
+        Vector pivotToRight = horizontalPerpendicular.clone().multiply(2.5);
+        Vector intersection = MathUtil.getIntersectionBetweenPlaneAndVector(
+                playerEyeLocation.toVector(),
+                playerLookDirection,
+                pivot,
+                pivotToTop,
+                pivotToRight,
+                5.0d
+        );
+
+        // Find the line we are intersecting with.
+        HologramLine intersectingLine = null;
+        if (intersection != null) {
+            Vector intersectionPointOnPlane = MathUtil.getPointOnPlane(
+                    intersection,
+                    pivotToTop,
+                    pivotToRight,
+                    pivot
+            );
+
+            double y = totalHeight - (intersectionPointOnPlane.getY() + totalHeight / 2);
+            double height = 0.0d;
+
+            for (HologramLine line : lines) {
+                double lineHeight = line.getSettings().getHeight();
+                if (y >= height && y <= height + lineHeight) {
+                    intersectingLine = line;
+                    break;
+                }
+                height += lineHeight;
+            }
+        }
+
+        // Update player context (watched line).
+        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
+        HologramLine currentWatchedLine = profile.getContext().getWatchedLine();
+        if (intersectingLine != null && (currentWatchedLine == null || this.equals(currentWatchedLine.getParent()))) {
+            profile.getContext().setWatchedLine(intersectingLine);
+
+            // Update clickable entity location.
+            Location clickableEntityLocation = new Location(
+                    playerEyeLocation.getWorld(),
+                    intersection.getX(),
+                    intersection.getY() - 0.25d,
+                    intersection.getZ(),
+                    playerEyeLocation.getYaw(),
+                    playerEyeLocation.getPitch()
+            );
+            clickableEntityLocation.add(playerLookDirection.clone().normalize().multiply(-0.5d));
+
+            profile.getContext().moveOrCreateClickableEntity(player, clickableEntityLocation);
+        } else if (currentWatchedLine != null && this.equals(currentWatchedLine.getParent())) {
+            profile.getContext().setWatchedLine(null);
+            profile.getContext().destroyClickableEntity(player);
+        }
+    }
+
     @NotNull
     @Override
     public Location getNextLineLocation() {
@@ -197,12 +293,12 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     @NotNull
-    public ConditionHolder getClickConditions() {
+    public ClickConditionHolder getClickConditions() {
         return clickConditions;
     }
 
     @NotNull
-    public ActionHolder getClickActions() {
+    public ClickActionHolder getClickActions() {
         return clickActions;
     }
 
@@ -319,6 +415,17 @@ public class DefaultHologramPage implements HologramPage {
     @Override
     public List<HologramLine> getLines() {
         return ImmutableList.copyOf(lines);
+    }
+
+    @Nullable
+    @Override
+    public ClickHandler getClickHandler() {
+        return clickHandler;
+    }
+
+    @Override
+    public void setClickHandler(@Nullable ClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
     }
 
     private void forEachLineRendererSafe(@NotNull Consumer<HologramLineRenderer> consumer) {

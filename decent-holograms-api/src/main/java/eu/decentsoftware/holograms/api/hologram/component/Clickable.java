@@ -18,26 +18,33 @@
 
 package eu.decentsoftware.holograms.api.hologram.component;
 
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * This interface is used to handle clicks on a hologram.
+ * This interface represents a clickable object. A clickable object can be clicked by a player.
+ * The click handler of a clickable object can be set to handle the click event.
  *
  * @author d0by
+ * @see ClickHandler
  * @since 3.0.0
  */
-@FunctionalInterface
-public interface ClickHandler {
+public interface Clickable {
 
     /**
-     * Handle a click on a hologram.
+     * Get the click handler of this clickable object.
      *
-     * @param player    The player who clicked on the hologram.
-     * @param clickType The type of the click.
-     * @return True if the click was handled, false otherwise. If false is returned,
-     * the click will be passed to the next click handler.
+     * @return The click handler of this clickable object.
+     * @see ClickHandler
      */
-    boolean onClick(@NotNull Player player, @NotNull ClickType clickType);
+    @Nullable
+    ClickHandler getClickHandler();
+
+    /**
+     * Set the click handler of this clickable object.
+     *
+     * @param clickHandler The click handler of this clickable object.
+     * @see ClickHandler
+     */
+    void setClickHandler(@Nullable ClickHandler clickHandler);
 
 }

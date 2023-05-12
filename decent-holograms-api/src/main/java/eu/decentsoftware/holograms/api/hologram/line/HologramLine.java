@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.hologram.line;
 
-import eu.decentsoftware.holograms.api.hologram.component.ClickHandler;
+import eu.decentsoftware.holograms.api.hologram.component.Clickable;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 3.0.0
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public interface HologramLine {
+public interface HologramLine extends Clickable {
 
     /**
      * Get the parent {@link HologramPage} of this line.
@@ -101,24 +101,5 @@ public interface HologramLine {
      * @param content The raw content of this line.
      */
     void setContent(@NotNull String content);
-
-    /**
-     * Get the click handler of this hologram line.
-     *
-     * @return The click handler of this hologram line.
-     * @see ClickHandler
-     */
-    @Nullable
-    ClickHandler getClickHandler();
-
-    /**
-     * Set the click handler of this hologram line.
-     *
-     * @param clickHandler The click handler of this hologram line.
-     * @return Instance of this hologram line.
-     * @see ClickHandler
-     */
-    @NotNull
-    HologramLine setClickHandler(@Nullable ClickHandler clickHandler);
 
 }

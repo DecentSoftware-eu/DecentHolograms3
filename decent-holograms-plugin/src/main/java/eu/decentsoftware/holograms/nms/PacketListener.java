@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.api.hologram.component.ClickType;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
@@ -46,14 +46,19 @@ public class PacketListener implements Listener {
         }
 
         HologramLine clickedLine = profile.getContext().getWatchedLine();
-        if (!(clickedLine instanceof DefaultHologramLine)) {
+        if (clickedLine == null) {
             return;
         }
 
-        // TODO
-        DefaultHologramLine line = (DefaultHologramLine) clickedLine;
-        if (line.getClickConditionHolder().check(profile)) {
-            line.getClickActionHolder().execute(profile);
+        ClickType clickType = event.getClickType();
+        if (clickedLine.getClickHandler() != null && clickedLine.getClickHandler().onClick(player, clickType)) {
+            // If line has a click handler, and it handled the click, return.
+            return;
+        }
+
+        // Otherwise, pass the click to the parent page.
+        if (clickedLine.getParent().getClickHandler() != null) {
+            clickedLine.getParent().getClickHandler().onClick(player, clickType);
         }
     }
 
