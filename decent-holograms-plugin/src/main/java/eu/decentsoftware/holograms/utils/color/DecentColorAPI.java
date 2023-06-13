@@ -162,7 +162,7 @@ public final class DecentColorAPI {
      */
     @NotNull
     public static ChatColor getColor(@NotNull Color color) {
-        return Version.supportsHex() ? ChatColor.of(color) : getClosestColor(color);
+        return Version.supportsRGB() ? ChatColor.of(color) : getClosestColor(color);
     }
 
     /**
@@ -174,7 +174,7 @@ public final class DecentColorAPI {
      */
     @NotNull
     public static ChatColor getColor(@NotNull Color color, @NotNull ChatColor def) {
-        return Version.supportsHex() ? ChatColor.of(color) : def;
+        return Version.supportsRGB() ? ChatColor.of(color) : def;
     }
 
     /**

@@ -95,7 +95,7 @@ public class DecentImage {
         for (int y = 0; y < bufferedImage.getHeight(); y++) {
             line = new StringBuilder();
             for (int x = 0; x < bufferedImage.getWidth(); x++) {
-                String color = Version.supportsHex() ? colorField[y][x].toHex() : colorField[y][x].toChatColor().toString();
+                String color = Version.supportsRGB() ? colorField[y][x].toHex() : colorField[y][x].toChatColor().toString();
                 line.append(color).append("\u2588");
             }
             lines[y] = line.toString();
