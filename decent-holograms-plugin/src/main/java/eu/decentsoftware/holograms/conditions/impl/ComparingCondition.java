@@ -18,10 +18,10 @@
 
 package eu.decentsoftware.holograms.conditions.impl;
 
-import eu.decentsoftware.holograms.conditions.ConditionType;
 import eu.decentsoftware.holograms.conditions.Condition;
+import eu.decentsoftware.holograms.conditions.ConditionType;
 import eu.decentsoftware.holograms.hooks.PAPI;
-import eu.decentsoftware.holograms.profile.Profile;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ComparingCondition extends Condition {
@@ -42,9 +42,9 @@ public class ComparingCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Profile profile) {
-        String compareParsed = PAPI.setPlaceholders(profile.getPlayer(), this.compare);
-        String inputParsed = PAPI.setPlaceholders(profile.getPlayer(), this.input);
+    public boolean check(@NotNull Player player) {
+        String compareParsed = PAPI.setPlaceholders(player, this.compare);
+        String inputParsed = PAPI.setPlaceholders(player, this.input);
         if (type.name().startsWith("STRING")) {
             switch (type) {
                 case STRING_CONTAINS:

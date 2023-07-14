@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public class SoundBroadcastAction extends SoundAction {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
+    public void execute(@NotNull Player player) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.playSound(onlinePlayer.getLocation(), sound, volume, pitch);
         }

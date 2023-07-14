@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.hooks.PAPI;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,9 +41,8 @@ public class PermissionCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        return player != null && player.hasPermission(PAPI.setPlaceholders(player, this.permission));
+    public boolean check(@NotNull Player player) {
+        return player.hasPermission(PAPI.setPlaceholders(player, this.permission));
     }
 
 }

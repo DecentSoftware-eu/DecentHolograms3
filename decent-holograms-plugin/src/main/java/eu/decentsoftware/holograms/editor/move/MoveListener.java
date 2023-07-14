@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.editor.move;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +37,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class MoveListener implements Listener {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private final MoveController moveController;
+
+    public MoveListener(MoveController moveController) {
+        this.moveController = moveController;
+    }
 
     @EventHandler
     public void onLeftClickAir(PlayerInteractEvent e) {
@@ -47,7 +50,7 @@ public class MoveListener implements Listener {
         }
 
         Player player = e.getPlayer();
-        if (PLUGIN.getEditor().getMoveController().place(player)) {
+        if (moveController.place(player)) {
             Lang.confTell(player, "editor.move.success");
         }
     }
@@ -56,7 +59,7 @@ public class MoveListener implements Listener {
     public void onHotbarScroll(PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
 
-        PLUGIN.getEditor().getMoveController().findMovedHologram(player).ifPresent((hologram) -> {
+        moveController.findMovedHologram(player).ifPresent((hologram) -> {
             if (!(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder)) {
                 return;
             }
@@ -83,7 +86,7 @@ public class MoveListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        if (PLUGIN.getEditor().getMoveController().cancel(player)) {
+        if (moveController.cancel(player)) {
             Lang.confTell(player, "editor.move.cancel");
         }
     }

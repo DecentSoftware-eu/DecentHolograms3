@@ -43,9 +43,9 @@ public class EntityLineRenderer extends DoubleEntityLineRenderer {
         Location location = getParent().getPositionManager().getActualLocation();
 
         // Create the entity metadata objects
-        Object metaEntityOther = NMS.getMetaEntityProperties(false, false, false,
+        Object metaEntityOther = nmsAdapter.getMetaEntityProperties(false, false, false,
                 false, false, entity.glowing(), false);
-        Object metaSilenced = NMS.getMetaEntitySilenced(true);
+        Object metaSilenced = nmsAdapter.getMetaEntitySilenced(true);
 
         // Display
         super.display(player, location, entity.type(), metaEntityOther, metaSilenced);

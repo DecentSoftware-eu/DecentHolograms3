@@ -21,6 +21,8 @@ package eu.decentsoftware.holograms.editor.move;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -40,22 +42,25 @@ import java.util.function.Supplier;
  */
 public class MoveController {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private final DefaultHologramRegistry hologramRegistry;
     private final Map<UUID, DefaultHologram> movers = new ConcurrentHashMap<>();
     private final MoveListener listener;
 
     /**
      * Create a new MoveController and register the listener.
      */
-    public MoveController() {
-        PLUGIN.getServer().getPluginManager().registerEvents(listener = new MoveListener(), PLUGIN);
+    public MoveController(DecentHolograms plugin, DefaultHologramRegistry hologramRegistry) {
+        this.hologramRegistry = hologramRegistry;
+        this.listener = new MoveListener(this);
+
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
     /**
      * Shutdown this controller, cancelling all move actions and unregistering the listener.
      */
     public void shutdown() {
-        PLUGIN.getHologramRegistry().getHolograms().forEach(hologram -> {
+        hologramRegistry.getHolograms().forEach(hologram -> {
             Supplier<Location> binder = hologram.getPositionManager().getLocationBinder();
             if (binder instanceof MoveLocationBinder) {
                 cancel(((MoveLocationBinder) binder).getPlayer());

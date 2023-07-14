@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.profile;
 
-import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.nms.NMSManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,37 +35,29 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ProfileRegistry {
 
-    private final Map<UUID, Profile> profileMap;
+    private final Map<UUID, Profile> profileMap = new ConcurrentHashMap<>();
+    private final NMSManager nmsManager;
 
-    /**
-     * Creates a new profile registry.
-     */
-    public ProfileRegistry() {
-        this.profileMap = new ConcurrentHashMap<>();
+    public ProfileRegistry(NMSManager nmsManager) {
+        this.nmsManager = nmsManager;
         this.reload();
     }
 
-    /**
-     * Reloads the registry. This will remove all profiles and create new ones for all online players.
-     */
     public synchronized void reload() {
         this.shutdown();
 
         // -- Create profiles for all online players
         for (Player player : Bukkit.getOnlinePlayers()) {
             registerProfile(player.getUniqueId());
-            DecentHolograms.getInstance().getNMSManager().hook(player);
+            nmsManager.hook(player);
         }
     }
 
-    /**
-     * Shuts down the registry. This will remove all profiles.
-     */
     public synchronized void shutdown() {
         this.profileMap.values().forEach(profile -> {
             Player player = profile.getPlayer();
             if (player != null) {
-                DecentHolograms.getInstance().getNMSManager().unhook(player);
+                nmsManager.unhook(player);
 
                 profile.getContext().destroyClickableEntity(player);
             }

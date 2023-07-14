@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentEntity;
 import eu.decentsoftware.holograms.hologram.line.renderer.EntityLineRenderer;
@@ -27,6 +26,12 @@ import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityContentParser implements ContentParser {
+
+    private final NMSAdapter nmsAdapter;
+
+    public EntityContentParser(NMSAdapter nmsAdapter) {
+        this.nmsAdapter = nmsAdapter;
+    }
 
     @Override
     public boolean parse(@NotNull HologramLine line) {
@@ -48,7 +53,6 @@ public class EntityContentParser implements ContentParser {
 
         renderer = new EntityLineRenderer(line, entity);
         line.setRenderer(renderer);
-        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
         double entityHeight = nmsAdapter.getEntityHeight(entity.type());
         line.getPositionManager().getOffsets().setY(entityHeight);
         line.getSettings().setHeight(entityHeight);

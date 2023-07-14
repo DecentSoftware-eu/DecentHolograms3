@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,11 +37,7 @@ public class SoundBroadcastWorldAction extends SoundAction {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player == null) {
-            return;
-        }
+    public void execute(@NotNull Player player) {
         World world = player.getWorld();
         for (Player worldPlayer : world.getPlayers()) {
             worldPlayer.playSound(worldPlayer.getLocation(), sound, volume, pitch);

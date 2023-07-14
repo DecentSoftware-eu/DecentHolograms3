@@ -18,10 +18,10 @@
 
 package eu.decentsoftware.holograms;
 
-import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -37,11 +37,15 @@ import java.util.List;
  * @author d0by
  * @since 3.0.0
  */
-@UtilityClass
 public final class BootMessenger {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private final DecentHolograms plugin;
     private List<String> messages;
+
+    @Contract(pure = true)
+    public BootMessenger(DecentHolograms plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Add a message to the final output.
@@ -62,7 +66,7 @@ public final class BootMessenger {
      * @since 3.0.0
      */
     public void sendAndFinish() {
-        PluginDescriptionFile desc = PLUGIN.getDescription();
+        PluginDescriptionFile desc = plugin.getDescription();
         CommandSender console = Bukkit.getConsoleSender();
         console.sendMessage("――――――――――――――――――――――――――――――――――――――――――――――――――");
         console.sendMessage(Lang.formatString(" &fThank you for using &3{0}&f! &c❤", desc.getName()));

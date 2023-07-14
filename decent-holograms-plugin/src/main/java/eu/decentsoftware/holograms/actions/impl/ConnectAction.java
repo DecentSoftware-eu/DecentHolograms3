@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.actions.Action;
-import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,11 +37,8 @@ public class ConnectAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player != null) {
-            BungeeUtils.connect(player, server);
-        }
+    public void execute(@NotNull Player player) {
+        BungeeUtils.connect(player, server);
     }
 
 }

@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.hooks.VaultHook;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,11 +37,7 @@ public class MoneyCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player == null) {
-            return false;
-        }
+    public boolean check(@NotNull Player player) {
         return VaultHook.getMoney(player) >= amount;
     }
 

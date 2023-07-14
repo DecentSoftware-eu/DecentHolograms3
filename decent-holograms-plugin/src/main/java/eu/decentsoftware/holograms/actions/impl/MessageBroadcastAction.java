@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class MessageBroadcastAction extends MessageAction {
@@ -34,8 +34,8 @@ public class MessageBroadcastAction extends MessageAction {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Bukkit.broadcastMessage(Lang.formatString(message, profile));
+    public void execute(@NotNull Player player) {
+        Bukkit.broadcastMessage(Lang.formatString(message, player));
     }
 
 }

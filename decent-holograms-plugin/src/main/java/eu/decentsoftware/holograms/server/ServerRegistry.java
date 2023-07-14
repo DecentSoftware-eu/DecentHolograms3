@@ -18,8 +18,8 @@
 
 package eu.decentsoftware.holograms.server;
 
-import eu.decentsoftware.holograms.BootMessenger;
 import eu.decentsoftware.holograms.Config;
+import eu.decentsoftware.holograms.DecentHolograms;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * This class represents a registry of pinged servers.
+ * This registry holds all servers that are being pinged.
  *
  * @author d0by
  * @since 3.0.0
@@ -36,20 +36,14 @@ import java.util.regex.Pattern;
 public class ServerRegistry {
 
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("\\S+:(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3}):\\d{1,5}");
-    private final Map<String, Server> serverMap;
+    private final Map<String, Server> serverMap = new ConcurrentHashMap<>();
+    private final DecentHolograms plugin;
 
-    /**
-     * Creates a new server registry and loads all servers into it.
-     */
-    public ServerRegistry() {
-        this.serverMap = new ConcurrentHashMap<>();
+    public ServerRegistry(DecentHolograms plugin) {
+        this.plugin = plugin;
         this.reload();
     }
 
-    /**
-     * Reload the registry, stop all servers from ticking and clear the cache, if any.
-     * Then load all servers from the config.
-     */
     public synchronized void reload() {
         this.shutdown();
 
@@ -72,13 +66,10 @@ public class ServerRegistry {
                 counter++;
             }
             long took = System.currentTimeMillis() - startMillis;
-            BootMessenger.log(String.format("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+            plugin.getBootMessenger().log(String.format("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took));
         }
     }
 
-    /**
-     * Shutdown the registry, stop all servers from ticking and clear the cache.
-     */
     public synchronized void shutdown() {
         // -- Stop the existing servers from ticking
         for (Server server : this.serverMap.values()) {
@@ -87,44 +78,14 @@ public class ServerRegistry {
         this.serverMap.clear();
     }
 
-    /**
-     * Register a new server.
-     *
-     * @param server The server.
-     * @see Server
-     */
     public void registerServer(@NotNull Server server) {
         this.serverMap.put(server.getName(), server);
     }
 
-    /**
-     * Register a new server.
-     *
-     * @param name   The name of the server.
-     * @param server The server.
-     * @see Server
-     */
-    public void registerServer(@NotNull String name, @NotNull Server server) {
-        this.serverMap.put(name, server);
-    }
-
-    /**
-     * Get a server by its name.
-     *
-     * @param name The name of the server.
-     * @return The server.
-     * @see Server
-     */
     public Server getServer(@NotNull String name) {
         return this.serverMap.get(name);
     }
 
-    /**
-     * Check if a server exists.
-     *
-     * @param name The name of the server.
-     * @return True if the server exists.
-     */
     public boolean containsServer(@NotNull String name) {
         return this.serverMap.containsKey(name);
     }

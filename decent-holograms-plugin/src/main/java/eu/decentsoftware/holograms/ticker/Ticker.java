@@ -18,11 +18,11 @@
 
 package eu.decentsoftware.holograms.ticker;
 
-import com.google.common.collect.Sets;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -45,9 +45,9 @@ public class Ticker {
      * using the {@link #start()} method.
      */
     public Ticker() {
-        this.tickedObjects = Sets.newConcurrentHashSet();
-        this.tickedObjectsToAdd = Sets.newConcurrentHashSet();
-        this.tickedObjectsToRemove = Sets.newConcurrentHashSet();
+        this.tickedObjects = ConcurrentHashMap.newKeySet();
+        this.tickedObjectsToAdd = ConcurrentHashMap.newKeySet();
+        this.tickedObjectsToRemove = ConcurrentHashMap.newKeySet();
         this.ticking = new AtomicBoolean(false);
         this.start();
     }
@@ -62,11 +62,6 @@ public class Ticker {
         this.tickedObjectsToRemove.clear();
     }
 
-    /**
-     * Register the given object to the ticker.
-     *
-     * @param ticked The object to register.
-     */
     public void register(@NotNull Ticked ticked) {
         synchronized (tickedObjectsToAdd) {
             if (!tickedObjects.contains(ticked)) {
@@ -75,11 +70,6 @@ public class Ticker {
         }
     }
 
-    /**
-     * Unregister the given object from the ticker.
-     *
-     * @param ticked The object to unregister.
-     */
     public void unregister(@NotNull Ticked ticked) {
         synchronized (tickedObjectsToRemove) {
             if (tickedObjects.contains(ticked)) {
@@ -88,9 +78,6 @@ public class Ticker {
         }
     }
 
-    /**
-     * Unregister all objects from the ticker.
-     */
     public void unregisterAll() {
         synchronized (tickedObjectsToAdd) {
             tickedObjectsToAdd.clear();
@@ -100,16 +87,10 @@ public class Ticker {
         }
     }
 
-    /**
-     * Start the ticker.
-     */
     public synchronized void start() {
         taskId = SchedulerUtil.scheduleAsync(this::tick, 1L);
     }
 
-    /**
-     * Stop the ticker.
-     */
     public synchronized void stop() {
         SchedulerUtil.cancel(taskId);
     }

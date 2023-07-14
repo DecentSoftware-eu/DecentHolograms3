@@ -23,9 +23,16 @@ import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack
 import eu.decentsoftware.holograms.hologram.line.renderer.HeadLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.SmallHeadLineRenderer;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class SmallHeadContentParser implements ContentParser {
+
+    private final NMSAdapter nmsAdapter;
+
+    public SmallHeadContentParser(NMSAdapter nmsAdapter) {
+        this.nmsAdapter = nmsAdapter;
+    }
 
     @Override
     public boolean parse(@NotNull HologramLine line) {
@@ -45,7 +52,7 @@ public class SmallHeadContentParser implements ContentParser {
             renderer.hideAll();
         }
 
-        renderer = new SmallHeadLineRenderer(line, itemStack);
+        renderer = new SmallHeadLineRenderer(nmsAdapter, line, itemStack);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-1.1875d);
         line.getSettings().setHeight(0.6d);

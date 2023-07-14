@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.actions.Action;
-import eu.decentsoftware.holograms.profile.Profile;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class WaitAction extends Action {
@@ -33,7 +33,7 @@ public class WaitAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
+    public void execute(@NotNull Player player) {
         // do nothing, action holder will handle it
     }
 

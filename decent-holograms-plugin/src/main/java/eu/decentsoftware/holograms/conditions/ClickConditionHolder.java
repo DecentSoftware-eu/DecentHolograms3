@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.conditions;
 
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.api.hologram.component.ClickType;
-import eu.decentsoftware.holograms.profile.Profile;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,18 +42,10 @@ public class ClickConditionHolder {
 
     private final @NotNull Map<ClickType, List<Condition>> conditions = new EnumMap<>(ClickType.class);
 
-    /**
-     * Create a new {@link ClickConditionHolder} with no conditions. You can add conditions later.
-     */
     public ClickConditionHolder() {
         this(new EnumMap<>(ClickType.class));
     }
 
-    /**
-     * Create a new {@link ClickConditionHolder} with the given conditions.
-     *
-     * @param conditions The list of conditions.
-     */
     @Contract(pure = true)
     public ClickConditionHolder(@NotNull Map<ClickType, List<Condition>> conditions) {
         for (ClickType clickType : ClickType.values()) {
@@ -66,18 +58,18 @@ public class ClickConditionHolder {
      * all 'met' or 'not met' actions of the checked conditions.
      *
      * @param clickType The click type.
-     * @param profile   Profile of the player for whom we want to check the conditions.
+     * @param player    The player for whom we want to check the conditions.
      * @return true if all the conditions are fulfilled, false otherwise.
      */
-    public boolean check(@NonNull ClickType clickType, @NotNull Profile profile) {
+    public boolean check(@NonNull ClickType clickType, @NotNull Player player) {
         for (Condition condition : getConditions(clickType)) {
             // Check and flip if inverted.
-            boolean fulfilled = condition.isInverted() != condition.check(profile);
+            boolean fulfilled = condition.isInverted() != condition.check(player);
             if (fulfilled) {
                 continue;
             }
 
-            condition.getNotMetActions().ifPresent(actions -> actions.execute(profile));
+            condition.getNotMetActions().ifPresent(actions -> actions.execute(player));
 
             if (condition.isRequired()) {
                 return false;
@@ -87,67 +79,26 @@ public class ClickConditionHolder {
         return true;
     }
 
-    /**
-     * Add the given condition to this holder.
-     *
-     * @param clickType The click type.
-     * @param condition The condition.
-     * @see Condition
-     */
     public void addCondition(@NonNull ClickType clickType, @NotNull Condition condition) {
         this.conditions.get(clickType).add(condition);
     }
 
-    /**
-     * Remove the given condition from this holder.
-     *
-     * @param clickType The click type.
-     * @param condition The condition.
-     * @see Condition
-     */
     public void removeCondition(@NonNull ClickType clickType, @NotNull Condition condition) {
         this.conditions.get(clickType).remove(condition);
     }
 
-    /**
-     * Remove the condition at the given index from this holder.
-     *
-     * @param clickType The click type.
-     * @param index     The index.
-     * @see Condition
-     */
     public void removeCondition(@NonNull ClickType clickType, int index) {
         this.conditions.get(clickType).remove(index);
     }
 
-    /**
-     * Remove all conditions from this holder.
-     *
-     * @param clickType The click type.
-     * @see Condition
-     */
     public void clearConditions(@NonNull ClickType clickType) {
         this.conditions.get(clickType).clear();
     }
 
-    /**
-     * Check if this holder is empty.
-     *
-     * @param clickType The click type.
-     * @return True if this holder is empty, false otherwise.
-     * @see Condition
-     */
     public boolean isEmpty(@NonNull ClickType clickType) {
         return this.conditions.get(clickType).isEmpty();
     }
 
-    /**
-     * Get all conditions in this holder. The returned list is immutable.
-     *
-     * @param clickType The click type.
-     * @return Immutable list of conditions.
-     * @see Condition
-     */
     @NotNull
     public List<Condition> getConditions(@NonNull ClickType clickType) {
         return ImmutableList.copyOf(this.conditions.get(clickType));

@@ -64,13 +64,8 @@ public class DefaultHologramPage implements HologramPage {
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
         this.setClickHandler((player, clickType) -> {
-            Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
-            if (profile == null) {
-                return false;
-            }
-
-            if (!getClickActions().isEmpty(clickType) && getClickConditions().check(clickType, profile)) {
-                getClickActions().execute(clickType, profile);
+            if (!getClickActions().isEmpty(clickType) && getClickConditions().check(clickType, player)) {
+                getClickActions().execute(clickType, player);
                 return true;
             }
 
@@ -142,14 +137,16 @@ public class DefaultHologramPage implements HologramPage {
         // Calculate the pivot point. (The center of the hologram)
         Location pivot = hologramLocation.clone().subtract(0, totalHeight / 2, 0);
 
-        // TODO: if clickable
-        updateClickableEntityAndWatchedLine(
-            player,
-            horizontalPerpendicular,
-            verticalPerpendicular,
-            pivot.toVector(),
-            totalHeight
-        );
+        if (parent.getSettings().isInteractive()) {
+            updateClickableEntityAndWatchedLine(
+                    player,
+                    horizontalPerpendicular,
+                    verticalPerpendicular,
+                    pivot.toVector(),
+                    totalHeight
+            );
+        }
+        // TODO: Remove clickable entity if not interactive anymore?
 
         // Calculate new location for each line.
         double height = 0.0d;

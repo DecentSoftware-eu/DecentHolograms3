@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.actions.Action;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,11 +36,8 @@ public class ChatAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player != null) {
-            player.chat(message);
-        }
+    public void execute(@NotNull Player player) {
+        player.chat(message);
     }
 
 }

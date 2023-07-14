@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.conditions;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.profile.Profile;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,18 +52,18 @@ public class ConditionHolder {
      * Checks all Conditions stored in this holder. This method also executes
      * all 'not met' actions of the checked conditions.
      *
-     * @param profile Profile of the player for whom we want to check the conditions.
+     * @param player The player for whom we want to check the conditions.
      * @return true if all the conditions are fulfilled, false otherwise.
      */
-    public boolean check(@NotNull Profile profile) {
+    public boolean check(@NotNull Player player) {
         for (Condition condition : getConditions()) {
             // Check and flip if inverted.
-            boolean fulfilled = condition.isInverted() != condition.check(profile);
+            boolean fulfilled = condition.isInverted() != condition.check(player);
             if (fulfilled) {
                 continue;
             }
 
-            condition.getNotMetActions().ifPresent(actions -> actions.execute(profile));
+            condition.getNotMetActions().ifPresent(actions -> actions.execute(player));
 
             if (condition.isRequired()) {
                 return false;
@@ -73,59 +73,26 @@ public class ConditionHolder {
         return true;
     }
 
-    /**
-     * Add the given condition to this holder.
-     *
-     * @param condition The condition.
-     * @see Condition
-     */
     public void addCondition(@NonNull Condition condition) {
         this.conditions.add(condition);
     }
 
-    /**
-     * Remove the given condition from this holder.
-     *
-     * @param condition The condition.
-     * @see Condition
-     */
     public void removeCondition(@NonNull Condition condition) {
         this.conditions.remove(condition);
     }
 
-    /**
-     * Remove the condition at the given index from this holder.
-     *
-     * @param index The index.
-     * @see Condition
-     */
     public void removeCondition(int index) {
         this.conditions.remove(index);
     }
 
-    /**
-     * Remove all conditions from this holder.
-     *
-     * @see Condition
-     */
     public void clearConditions() {
         this.conditions.clear();
     }
 
-    /**
-     * Check if this holder is empty.
-     *
-     * @return True if this holder is empty, false otherwise.
-     */
     public boolean isEmpty() {
         return this.conditions.isEmpty();
     }
 
-    /**
-     * Get all conditions in this holder. The returned list is immutable.
-     *
-     * @return Immutable list of all conditions.
-     */
     @NotNull
     public List<Condition> getConditions() {
         return ImmutableList.copyOf(this.conditions);

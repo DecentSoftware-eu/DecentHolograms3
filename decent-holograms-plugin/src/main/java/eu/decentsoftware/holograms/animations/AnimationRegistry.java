@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.animations;
 
 import com.google.common.collect.ImmutableMap;
-import eu.decentsoftware.holograms.BootMessenger;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.animations.text.CustomTextAnimation;
@@ -55,16 +54,17 @@ import java.util.regex.Pattern;
  */
 public class AnimationRegistry implements Ticked {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation:(" + Config.NAME_REGEX + ")(?::([^/]+))?>(?:(.*)</animation>)?");
     private final @NotNull Map<String, Animation<?>> animationMap;
     private final @NotNull AtomicInteger stepCounter;
+    private final DecentHolograms plugin;
 
     /**
      * Create a new instance of {@link AnimationRegistry}. This constructor
      * also loads all animations from config by calling the {@link #reload()} method.
      */
-    public AnimationRegistry() {
+    public AnimationRegistry(DecentHolograms plugin) {
+        this.plugin = plugin;
         this.animationMap = new ConcurrentHashMap<>();
         this.stepCounter = new AtomicInteger(0);
 
@@ -93,7 +93,7 @@ public class AnimationRegistry implements Ticked {
         final long startMillis = System.currentTimeMillis();
         int counter = 0;
 
-        File folder = new File(PLUGIN.getDataFolder(), "animations");
+        File folder = new File(plugin.getDataFolder(), "animations");
         List<File> files = FileUtils.getFilesFromTree(folder, Config.NAME_REGEX + "\\.yml", true);
         if (files.isEmpty()) {
             return;
@@ -102,37 +102,34 @@ public class AnimationRegistry implements Ticked {
         for (File file : files) {
             try {
                 String name = file.getName().substring(0, file.getName().length() - 4);
-                FileConfig config = new FileConfig(PLUGIN, file);
+                FileConfig config = new FileConfig(plugin, file);
                 AnimationType type = AnimationType.getByName(config.getString("type", "ASCEND"));
                 if (type == AnimationType.INTERNAL) {
-                    PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "' (Invalid type: 'INTERNAL')! Skipping...");
+                    plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "' (Invalid type: 'INTERNAL')! Skipping...");
                     continue;
                 }
                 int interval = config.getInt("interval", 1);
                 int pause = config.getInt("pause", 0);
                 List<String> frames = config.getStringList("frames");
                 if (frames.isEmpty()) {
-                    PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "' (No frames)! Skipping...");
+                    plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "' (No frames)! Skipping...");
                     continue;
                 }
                 Animation<?> animation = new CustomTextAnimation(name, type, interval, pause, frames);
                 registerAnimation(animation);
                 counter++;
             } catch (Exception e) {
-                PLUGIN.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
+                plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
                 e.printStackTrace();
             }
         }
         long took = System.currentTimeMillis() - startMillis;
-        BootMessenger.log(String.format("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+        plugin.getBootMessenger().log(String.format("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took));
 
         // Start ticking again after shutdown
         this.startTicking();
     }
 
-    /**
-     * Clear all animations, reset the step counter and stop ticking.
-     */
     public synchronized void shutdown() {
         this.stopTicking();
         this.animationMap.clear();
@@ -144,12 +141,6 @@ public class AnimationRegistry implements Ticked {
         this.stepCounter.incrementAndGet();
     }
 
-    /**
-     * Animate the given text by replacing all animations in it.
-     *
-     * @param text The text.
-     * @return The animated text.
-     */
     @NotNull
     public String animate(@NotNull String text) {
         int step = this.stepCounter.get();
@@ -178,65 +169,26 @@ public class AnimationRegistry implements Ticked {
         return text;
     }
 
-    /**
-     * Check if the given text contains any animations.
-     *
-     * @param text The text.
-     * @return True if the text contains any animations, false otherwise.
-     */
     public boolean containsAnimation(@NotNull String text) {
         return text.contains("&u") || ANIMATION_REGEX.matcher(text).find();
     }
 
-    /**
-     * Register a new animation.
-     *
-     * @param animation The animation.
-     * @see Animation
-     */
     public void registerAnimation(@NotNull Animation<?> animation) {
         this.animationMap.put(animation.getName(), animation);
     }
 
-    /**
-     * Get animation by its name.
-     *
-     * @param name The name.
-     * @return The animation or null if no animation with the given name is registered.
-     * @see Animation
-     */
     public Animation<?> getAnimation(@NotNull String name) {
         return this.animationMap.get(name);
     }
 
-    /**
-     * Remove animation by its name.
-     *
-     * @param name The name.
-     * @return The removed animation or null if the given animation isn't registered.
-     * @see Animation
-     */
     public Animation<?> removeAnimation(@NotNull String name) {
         return this.animationMap.remove(name);
     }
 
-    /**
-     * Check it this registry contains an animation with the given name.
-     *
-     * @param name The name.
-     * @return True if this registry contains an animation with the name, false otherwise.
-     * @see Animation
-     */
     public boolean hasAnimation(@NotNull String name) {
         return this.animationMap.containsKey(name);
     }
 
-    /**
-     * Get all registered animations as a map. The returned map is immutable.
-     *
-     * @return Immutable map of all registered animations.
-     * @see Animation
-     */
     public Map<String, Animation<?>> getAnimations() {
         return ImmutableMap.copyOf(this.animationMap);
     }

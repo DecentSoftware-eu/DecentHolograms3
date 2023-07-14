@@ -20,12 +20,10 @@ package eu.decentsoftware.holograms.server;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.ticker.Ticked;
-import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import eu.decentsoftware.holograms.utils.pinger.Pinger;
 import eu.decentsoftware.holograms.utils.pinger.PingerResponse;
 import lombok.Getter;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
@@ -49,12 +47,6 @@ public class Server implements Ticked {
     private final AtomicLong lastUpdate;
     private PingerResponse data;
 
-    /**
-     * Creates a new server instance.
-     *
-     * @param name    the name of the server
-     * @param address the address of the server
-     */
     public Server(@NotNull String name, @NotNull InetSocketAddress address) {
         this.name = name;
         this.pinger = new Pinger(address, Config.PINGER_TIMEOUT);
@@ -72,9 +64,6 @@ public class Server implements Ticked {
         }
     }
 
-    /**
-     * Update the server data.
-     */
     public void update() {
         try {
             data = pinger.fetchData();
@@ -84,48 +73,19 @@ public class Server implements Ticked {
         }
     }
 
-    /**
-     * Connects the player to the server.
-     *
-     * @param player the player to connect
-     */
-    public void connect(@NotNull Player player) {
-        BungeeUtils.connect(player, name);
-    }
-
-    /**
-     * Get the name of the server.
-     *
-     * @return The name of the server.
-     */
     @NotNull
     public String getName() {
         return name;
     }
 
-    /**
-     * Get the last server ping response.
-     *
-     * @return The last server ping response.
-     */
     public PingerResponse getData() {
         return data;
     }
 
-    /**
-     * Check if the server is online.
-     *
-     * @return True if the server is online, false otherwise.
-     */
     public boolean isOnline() {
         return data != null && online.get();
     }
 
-    /**
-     * Check if the server is full.
-     *
-     * @return True if the server is full, false otherwise.
-     */
     public boolean isFull() {
         if (isOnline()) {
             PingerResponse.Players players = getData().getPlayers();

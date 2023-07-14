@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.actions.Action;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ConsoleAction extends Action {
@@ -37,7 +37,7 @@ public class ConsoleAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
+    public void execute(@NotNull Player player) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 

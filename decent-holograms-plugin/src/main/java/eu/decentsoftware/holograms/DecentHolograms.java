@@ -63,14 +63,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
-import java.util.function.Function;
+
 
 /**
  * "Introducing a powerful hologram plugin that offers a wide range
@@ -91,10 +89,11 @@ public final class DecentHolograms extends JavaPlugin {
     private AnimationRegistry animationRegistry;
     private ContentParserManager contentParserManager;
     private DefaultHologramRegistry hologramRegistry;
-    @Getter(AccessLevel.NONE)
     private NMSManager nmsManager;
     private Editor editor;
     private AddonLoader addonLoader;
+
+    private BootMessenger bootMessenger;
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -106,6 +105,8 @@ public final class DecentHolograms extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        bootMessenger = new BootMessenger(this);
+
         Config.reload();
         Lang.reload();
 
@@ -124,13 +125,13 @@ public final class DecentHolograms extends JavaPlugin {
 
         // -- Initialize Managers
         ticker = new Ticker();
-        profileRegistry = new ProfileRegistry();
-        serverRegistry = new ServerRegistry();
-        replacementRegistry = new ReplacementRegistry();
-        animationRegistry = new AnimationRegistry();
-        contentParserManager = new ContentParserManager();
-        hologramRegistry = new DefaultHologramRegistry();
-        editor = new Editor();
+        profileRegistry = new ProfileRegistry(nmsManager);
+        serverRegistry = new ServerRegistry(this);
+        replacementRegistry = new ReplacementRegistry(serverRegistry);
+        animationRegistry = new AnimationRegistry(this);
+        contentParserManager = new ContentParserManager(nmsManager.getAdapter(), animationRegistry, profileRegistry, replacementRegistry);
+        hologramRegistry = new DefaultHologramRegistry(this, gson);
+        editor = new Editor(this, hologramRegistry);
 
         // -- Register DecentHologramsAPI
         DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl());
@@ -153,9 +154,9 @@ public final class DecentHolograms extends JavaPlugin {
         setupUpdateChecker();
 
         if (PAPI.isAvailable()) {
-            BootMessenger.log("Using PlaceholderAPI for placeholder support!");
+            bootMessenger.log("Using PlaceholderAPI for placeholder support!");
         }
-        BootMessenger.sendAndFinish();
+        bootMessenger.sendAndFinish();
 
         // -- Addons
         addonLoader = new AddonLoader("addons");
@@ -199,9 +200,9 @@ public final class DecentHolograms extends JavaPlugin {
         addonLoader.reload();
 
         if (PAPI.isAvailable()) {
-            BootMessenger.log("Using PlaceholderAPI for placeholder support!");
+            bootMessenger.log("Using PlaceholderAPI for placeholder support!");
         }
-        BootMessenger.sendAndFinish();
+        bootMessenger.sendAndFinish();
 
         // Call the reload event
         Bukkit.getPluginManager().callEvent(new DecentHologramsReloadEvent());
@@ -232,7 +233,7 @@ public final class DecentHolograms extends JavaPlugin {
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {
                     Config.setUpdateVersion(s);
-                    BootMessenger.log(Lang.formatString(Lang.UPDATE_MESSAGE));
+                    bootMessenger.log(Lang.formatString(Lang.UPDATE_MESSAGE));
                 }
             });
         }
@@ -289,12 +290,14 @@ public final class DecentHolograms extends JavaPlugin {
                 .create();
     }
 
-    @Contract(pure = true)
+    public BootMessenger getBootMessenger() {
+        return bootMessenger;
+    }
+
     public NMSManager getNMSManager() {
         return nmsManager;
     }
 
-    @Contract(pure = true)
     public static DecentHolograms getInstance() {
         return instance;
     }

@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.actions.Action;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,11 +37,8 @@ public class CommandAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player != null) {
-            Bukkit.dispatchCommand(player, command);
-        }
+    public void execute(@NotNull Player player) {
+        Bukkit.dispatchCommand(player, command);
     }
 
 }

@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -41,11 +40,7 @@ public class DistanceCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player == null) {
-            return false;
-        }
+    public boolean check(@NotNull Player player) {
         Location pLocation = player.getLocation();
         World pWorld = pLocation.getWorld();
         World world = location.getWorld();

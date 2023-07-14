@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
-import eu.decentsoftware.holograms.profile.Profile;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class RegexCondition extends Condition {
@@ -38,7 +38,7 @@ public class RegexCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Profile profile) {
+    public boolean check(@NotNull Player player) {
         return input.matches(pattern);
     }
 

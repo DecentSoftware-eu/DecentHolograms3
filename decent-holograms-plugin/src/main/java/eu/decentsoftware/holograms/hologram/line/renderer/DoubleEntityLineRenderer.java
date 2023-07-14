@@ -20,6 +20,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -40,10 +41,10 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
     protected final int eid;
     protected final int eidOther;
 
-    public DoubleEntityLineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
-        super(parent, type);
-        this.eid = NMS.getFreeEntityId();
-        this.eidOther = NMS.getFreeEntityId();
+    public DoubleEntityLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull HologramLineType type) {
+        super(nmsAdapter, parent, type);
+        this.eid = nmsAdapter.getFreeEntityId();
+        this.eidOther = nmsAdapter.getFreeEntityId();
     }
 
     /**
@@ -56,48 +57,48 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
      */
     protected void display(@NotNull Player player, @NotNull Location location, @NotNull EntityType typeOther, @NotNull Object... metaOther) {
         // Create the armor stand metadata objects
-        Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
+        Object metaEntity = nmsAdapter.getMetaEntityProperties(false, false, false,
                 false, true, false, false);
-        Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true,
+        Object metaArmorStand = nmsAdapter.getMetaArmorStandProperties(false, false, true,
                 true);
-        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(false);
+        Object metaNameVisible = nmsAdapter.getMetaEntityCustomNameVisible(false);
 
         // Spawn the fake armor stand entity
-        NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, location);
+        nmsAdapter.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, location);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
+        nmsAdapter.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
 
         // Spawn the passenger entity
         if (typeOther.isAlive()) {
-            NMS.spawnEntityLiving(player, eidOther, UUID.randomUUID(), typeOther, location);
+            nmsAdapter.spawnEntityLiving(player, eidOther, UUID.randomUUID(), typeOther, location);
         } else {
-            NMS.spawnEntity(player, eidOther, UUID.randomUUID(), typeOther, location);
+            nmsAdapter.spawnEntity(player, eidOther, UUID.randomUUID(), typeOther, location);
         }
         // Send the metadata
-        NMS.sendEntityMetadata(player, eidOther, metaOther);
+        nmsAdapter.sendEntityMetadata(player, eidOther, metaOther);
 
         // Add the other entity to the armor stand
-        NMS.updatePassengers(player, eid, eidOther);
+        nmsAdapter.updatePassengers(player, eid, eidOther);
     }
 
     @Override
     public void hide(@NotNull Player player) {
         // Remove the entity from the armor stand
-        NMS.updatePassengers(player, eid);
+        nmsAdapter.updatePassengers(player, eid);
         // Remove the armor stand for the player
-        NMS.removeEntity(player, eid);
+        nmsAdapter.removeEntity(player, eid);
         // Remove the entity for the player
-        NMS.removeEntity(player, eidOther);
+        nmsAdapter.removeEntity(player, eidOther);
     }
 
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
         // Remove the entity from the armor stand
-        NMS.updatePassengers(player, eid);
+        nmsAdapter.updatePassengers(player, eid);
         // Teleport the armor stand to the new location
-        NMS.teleportEntity(player, eid, location, false);
+        nmsAdapter.teleportEntity(player, eid, location, false);
         // Add the entity to the armor stand
-        NMS.updatePassengers(player, eid, eidOther);
+        nmsAdapter.updatePassengers(player, eid, eidOther);
     }
 
 }

@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.conditions;
 
 import eu.decentsoftware.holograms.actions.ActionHolder;
-import eu.decentsoftware.holograms.profile.Profile;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,9 +73,9 @@ public abstract class Condition {
     /**
      * Check whether this {@link Condition} is met.
      *
-     * @param profile The profile to check this condition for.
+     * @param player The player to check this condition for.
      * @return true if the condition is met, false otherwise.
      */
-    public abstract boolean check(@NotNull Profile profile);
+    public abstract boolean check(@NotNull Player player);
 
 }

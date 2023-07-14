@@ -43,7 +43,7 @@ import java.util.function.DoubleSupplier;
  * @since 3.0.0
  */
 @UtilityClass
-final class CommandCommons {
+public final class CommandCommons {
 
     private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     public static final String ROOT_ALIASES = "dh|decentholograms|holograms|holo";

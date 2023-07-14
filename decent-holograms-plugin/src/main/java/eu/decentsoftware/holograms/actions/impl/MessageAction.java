@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.actions.impl;
 
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions.Action;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,11 +37,8 @@ public class MessageAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player != null) {
-            Lang.tell(player, message);
-        }
+    public void execute(@NotNull Player player) {
+        Lang.tell(player, message);
     }
 
 }

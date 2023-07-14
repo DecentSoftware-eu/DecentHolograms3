@@ -18,12 +18,16 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.animations.AnimationRegistry;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.Profile;
+import eu.decentsoftware.holograms.profile.ProfileRegistry;
+import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.Common;
 import lombok.Getter;
@@ -53,14 +57,36 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     @Getter
     private String text;
 
-    public TextLineRenderer(@NotNull HologramLine parent, @NotNull String text) {
-        this(parent, text, null);
+    private final AnimationRegistry animationRegistry;
+    private final ProfileRegistry profileRegistry;
+    private final ReplacementRegistry replacementRegistry;
+
+    public TextLineRenderer(
+            @NotNull NMSAdapter nmsAdapter,
+            @NotNull AnimationRegistry animationRegistry,
+            @NotNull ProfileRegistry profileRegistry,
+            @NotNull ReplacementRegistry replacementRegistry,
+            @NotNull String text,
+            @NotNull HologramLine parent
+    ) {
+        this(nmsAdapter, animationRegistry, profileRegistry, replacementRegistry, text, null, parent);
     }
 
-    public TextLineRenderer(@NotNull HologramLine parent, @NotNull String text, String hoverText) {
-        super(parent, HologramLineType.TEXT);
+    public TextLineRenderer(
+            @NotNull NMSAdapter nmsAdapter,
+            @NotNull AnimationRegistry animationRegistry,
+            @NotNull ProfileRegistry profileRegistry,
+            @NotNull ReplacementRegistry replacementRegistry,
+            @NotNull String text,
+            String hoverText,
+            @NotNull HologramLine parent
+    ) {
+        super(nmsAdapter, parent, HologramLineType.TEXT);
+        this.animationRegistry = animationRegistry;
+        this.profileRegistry = profileRegistry;
+        this.replacementRegistry = replacementRegistry;
         this.hoverText = hoverText;
-        this.eid = NMS.getFreeEntityId();
+        this.eid = nmsAdapter.getFreeEntityId();
         this.setText(text);
     }
 
@@ -75,7 +101,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         if (this.text.equalsIgnoreCase("{empty}")) {
             this.text = "";
         }
-        this.containsAnimations = PLUGIN.getAnimationRegistry().containsAnimation(text);
+        this.containsAnimations = animationRegistry.containsAnimation(text);
         if (this.containsAnimations) {
             this.startTicking();
         } else {
@@ -95,7 +121,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
                 formattedText = getFormattedText(viewerPlayer);
                 formattedTextCache.put(viewerPlayer.getUniqueId(), formattedText);
             }
-            formattedText = PLUGIN.getAnimationRegistry().animate(formattedText);
+            formattedText = animationRegistry.animate(formattedText);
             formattedText = Common.colorize(formattedText);
             update(viewerPlayer, formattedText);
         }
@@ -109,7 +135,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
      */
     @NotNull
     private String getFormattedText(@NotNull Player player) {
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
+        Profile profile = profileRegistry.getProfile(player.getUniqueId());
         String formattedText = text;
 
         // Check if the player in watching the line and if so, use the hover text.
@@ -117,12 +143,12 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
             formattedText = hoverText;
         }
 
-        formattedText = PLUGIN.getReplacementRegistry().replace(formattedText, profile);
+        formattedText = replacementRegistry.replace(formattedText, profile);
         formattedText = PAPI.setPlaceholders(player, formattedText);
 
         if (containsAnimations) {
             formattedTextCache.put(player.getUniqueId(), formattedText);
-            formattedText = PLUGIN.getAnimationRegistry().animate(formattedText);
+            formattedText = animationRegistry.animate(formattedText);
         }
         formattedText = Common.colorize(formattedText);
 
@@ -135,17 +161,17 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         String formattedText = getFormattedText(player);
 
         // Create the metadata objects
-        Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
+        Object metaEntity = nmsAdapter.getMetaEntityProperties(false, false, false,
                 false, true, false, false);
-        Object metaArmorStand = NMS.getMetaArmorStandProperties(false, false, true,
+        Object metaArmorStand = nmsAdapter.getMetaArmorStandProperties(false, false, true,
                 true);
         Object metaName = getMetaName(formattedText);
-        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
+        Object metaNameVisible = nmsAdapter.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
         // Spawn the fake armor stand entity
-        NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
+        nmsAdapter.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaName, metaNameVisible);
+        nmsAdapter.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaName, metaNameVisible);
     }
 
     @Override
@@ -158,16 +184,16 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         // Create the metadata objects
         Object metaName = getMetaName(text);
         boolean isNameInvisible = text.isEmpty() || text.replaceAll("§.", "").isEmpty();
-        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(!isNameInvisible);
+        Object metaNameVisible = nmsAdapter.getMetaEntityCustomNameVisible(!isNameInvisible);
 
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaName, metaNameVisible);
+        nmsAdapter.sendEntityMetadata(player, eid, metaName, metaNameVisible);
     }
 
     @Override
     public void hide(@NotNull Player player) {
         // Destroy the fake armor stand entity
-        NMS.removeEntity(player, eid);
+        nmsAdapter.removeEntity(player, eid);
 
         // Remove the cached text
         formattedTextCache.remove(player.getUniqueId());
@@ -176,14 +202,14 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
         // Teleport the fake armor stand entity
-        NMS.teleportEntity(player, eid, location, false);
+        nmsAdapter.teleportEntity(player, eid, location, false);
     }
 
     private Object getMetaName(@NotNull String formattedText) {
         if (Version.is(8)) {
-            return NMS.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
+            return nmsAdapter.getMetaEntityCustomName(MiniMessageHook.serializeToString(formattedText, true));
         } else {
-            return NMS.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
+            return nmsAdapter.getMetaEntityCustomName(MiniMessageHook.serializeToIChatBaseComponent(formattedText, Version.before(16)));
         }
     }
 

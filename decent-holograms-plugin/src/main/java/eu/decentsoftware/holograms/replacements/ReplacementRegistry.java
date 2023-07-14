@@ -20,9 +20,9 @@ package eu.decentsoftware.holograms.replacements;
 
 import com.google.common.base.Strings;
 import eu.decentsoftware.holograms.Config;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.server.Server;
+import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.utils.DatetimeUtils;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
 import org.bukkit.Bukkit;
@@ -52,15 +52,16 @@ import java.util.regex.Pattern;
  */
 public class ReplacementRegistry {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([^:{}]+)(?::([^{}]+))?}");
     private final Map<String, Replacement> defaultReplacementMap;
     private final Map<String, Replacement> normalReplacementMap;
+    private final ServerRegistry serverRegistry;
 
     /**
      * Create a new instance of {@link ReplacementRegistry}.
      */
-    public ReplacementRegistry() {
+    public ReplacementRegistry(ServerRegistry serverRegistry) {
+        this.serverRegistry = serverRegistry;
         this.defaultReplacementMap = new ConcurrentHashMap<>();
         this.normalReplacementMap = new ConcurrentHashMap<>();
         this.reload();
@@ -235,11 +236,11 @@ public class ReplacementRegistry {
                             online = -1;
                         }
                         if (online >= 0) {
-                            return Optional.of(online + "");
+                            return Optional.of(String.valueOf(online));
                         }
                     } else {
                         // -- This server
-                        return Optional.of(Bukkit.getOnlinePlayers().size() + "");
+                        return Optional.of(String.valueOf(Bukkit.getOnlinePlayers().size()));
                     }
                     return Optional.empty();
                 })
@@ -258,11 +259,11 @@ public class ReplacementRegistry {
                             online = -1;
                         }
                         if (online >= 0) {
-                            return Optional.of(online + "");
+                            return Optional.of(String.valueOf(online));
                         }
                     } else {
                         // -- This server
-                        return Optional.of(Bukkit.getServer().getMaxPlayers() + "");
+                        return Optional.of(String.valueOf(Bukkit.getServer().getMaxPlayers()));
                     }
                     return Optional.empty();
                 })
@@ -272,7 +273,7 @@ public class ReplacementRegistry {
                     String motd = null;
                     if (argument != null) {
                         // -- Pinged server
-                        Server server = PLUGIN.getServerRegistry().getServer(argument);
+                        Server server = serverRegistry.getServer(argument);
                         if (server != null && server.isOnline()) {
                             motd = server.getData().getDescription();
                         }
@@ -290,7 +291,7 @@ public class ReplacementRegistry {
                 (profile, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
-                        Server server = PLUGIN.getServerRegistry().getServer(argument);
+                        Server server = serverRegistry.getServer(argument);
                         if (server != null && server.isOnline()) {
                             if (server.isFull()) {
                                 return Optional.ofNullable(Config.PINGER_STATUS_FULL);

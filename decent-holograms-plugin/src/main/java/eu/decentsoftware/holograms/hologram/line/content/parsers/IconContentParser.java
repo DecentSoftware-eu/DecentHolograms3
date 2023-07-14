@@ -22,9 +22,16 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
 import eu.decentsoftware.holograms.hologram.line.renderer.IconLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class IconContentParser implements ContentParser {
+
+    private final NMSAdapter nmsAdapter;
+
+    public IconContentParser(NMSAdapter nmsAdapter) {
+        this.nmsAdapter = nmsAdapter;
+    }
 
     @Override
     public boolean parse(@NotNull HologramLine line) {
@@ -44,7 +51,7 @@ public class IconContentParser implements ContentParser {
             renderer.hideAll();
         }
 
-        renderer = new IconLineRenderer(line, itemStack);
+        renderer = new IconLineRenderer(nmsAdapter, line, itemStack);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-0.55d);
         line.getSettings().setHeight(0.6d);

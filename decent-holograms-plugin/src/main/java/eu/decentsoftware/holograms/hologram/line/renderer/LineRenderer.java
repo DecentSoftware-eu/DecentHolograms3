@@ -18,12 +18,12 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -35,13 +35,13 @@ public abstract class LineRenderer implements HologramLineRenderer {
      *  - Add support for animations
      */
 
-    protected static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    protected static final NMSAdapter NMS = PLUGIN.getNMSManager().getAdapter();
+    protected final NMSAdapter nmsAdapter;
+    private final HologramLine parent;
+    private final HologramLineType type;
 
-    private final @NotNull HologramLine parent;
-    private final @NotNull HologramLineType type;
-
-    public LineRenderer(@NotNull HologramLine parent, @NotNull HologramLineType type) {
+    @Contract(pure = true)
+    public LineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull HologramLineType type) {
+        this.nmsAdapter = nmsAdapter;
         this.parent = parent;
         this.type = type;
     }

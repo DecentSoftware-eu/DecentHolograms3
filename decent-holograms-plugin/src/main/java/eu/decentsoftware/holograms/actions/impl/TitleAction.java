@@ -21,7 +21,6 @@ package eu.decentsoftware.holograms.actions.impl;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,11 +50,7 @@ public class TitleAction extends Action {
     }
 
     @Override
-    public void execute(@NotNull Profile profile) {
-        Player player = profile.getPlayer();
-        if (player == null) {
-            return;
-        }
+    public void execute(@NotNull Player player) {
         NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
         nmsAdapter.sendPacket(player, nmsAdapter.packetClearTitle());
         if (title != null) {

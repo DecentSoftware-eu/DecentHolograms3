@@ -20,12 +20,10 @@ package eu.decentsoftware.holograms.hologram;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.hologram.Visibility;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.math.MathUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -101,12 +99,6 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
             return;
         }
 
-        // Get the player's profile.
-        Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
-        if (profile == null) {
-            return;
-        }
-
         // Check if the player is in the view distance.
         boolean inViewDistance = MathUtil.inDistance(
                 parent.getPositionManager().getActualLocation(),
@@ -115,7 +107,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         );
 
         // Check if the player satisfies the view conditions.
-        boolean meetsConditions = !isVisibleByDefault() || parent.getViewConditions().check(profile);
+        boolean meetsConditions = !isVisibleByDefault() || parent.getViewConditions().check(player);
 
         if (isViewing(player) && (!inViewDistance || !meetsConditions)) {
             // If the player is currently viewing the hologram but is no

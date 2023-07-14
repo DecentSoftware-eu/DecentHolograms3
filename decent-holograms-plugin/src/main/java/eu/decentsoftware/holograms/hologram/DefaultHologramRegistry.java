@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.hologram;
 
-import eu.decentsoftware.holograms.BootMessenger;
+import com.google.gson.Gson;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
@@ -28,12 +28,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -45,17 +43,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultHologramRegistry {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    private final @NotNull Map<String, DefaultHologram> holograms;
+    private final @NotNull Map<String, DefaultHologram> holograms = new ConcurrentHashMap<>();
+    private final DecentHolograms plugin;
+    private final Gson gson;
 
-    public DefaultHologramRegistry() {
-        this.holograms = new ConcurrentHashMap<>();
+    public DefaultHologramRegistry(DecentHolograms plugin, Gson gson) {
+        this.plugin = plugin;
+        this.gson = gson;
         this.reload();
     }
 
-    /**
-     * Reload the registry. This method is called when the plugin is reloaded.
-     */
     public synchronized void reload() {
         this.shutdown();
 
@@ -63,7 +60,7 @@ public class DefaultHologramRegistry {
         final long startMillis = System.currentTimeMillis();
         int counter = 0;
 
-        File folder = new File(PLUGIN.getDataFolder(), "holograms");
+        File folder = new File(plugin.getDataFolder(), "holograms");
         List<File> files = FileUtils.getFilesFromTree(folder, Config.NAME_REGEX + "\\.json", true);
         if (files.isEmpty()) {
             return;
@@ -74,21 +71,18 @@ public class DefaultHologramRegistry {
                 String fileName = file.getName();
                 String name = fileName.substring(0, fileName.length() - ".json".length());
                 String string = new String(Files.readAllBytes(file.toPath()));
-                SerializableHologram hologram = PLUGIN.getGson().fromJson(string, SerializableHologram.class);
+                SerializableHologram hologram = gson.fromJson(string, SerializableHologram.class);
                 registerHologram(hologram.toHologram(name));
                 counter++;
             } catch (Exception e) {
-                PLUGIN.getLogger().severe("Failed to load hologram from '" + file.getName() + "'! Skipping...");
+                plugin.getLogger().severe("Failed to load hologram from '" + file.getName() + "'! Skipping...");
                 e.printStackTrace();
             }
         }
         long took = System.currentTimeMillis() - startMillis;
-        BootMessenger.log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+        plugin.getBootMessenger().log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
     }
 
-    /**
-     * Shutdown the registry. This method is called when the plugin is disabled.
-     */
     public synchronized void shutdown() {
         // Destroy all holograms
         for (DefaultHologram hologram : this.holograms.values()) {
@@ -98,56 +92,23 @@ public class DefaultHologramRegistry {
         this.holograms.clear();
     }
 
-    /**
-     * Register a new hologram.
-     *
-     * @param hologram The hologram.
-     * @see Hologram
-     */
     public void registerHologram(@NotNull DefaultHologram hologram) {
         this.holograms.put(hologram.getName(), hologram);
     }
 
-    /**
-     * Get a hologram by its name.
-     *
-     * @param name The name of the hologram.
-     * @return The hologram.
-     * @see DefaultHologram
-     */
     @Nullable
     public DefaultHologram getHologram(@NotNull String name) {
         return this.holograms.get(name);
     }
 
-    /**
-     * Remove a hologram by its name.
-     *
-     * @param name The name of the hologram.
-     * @see DefaultHologram
-     */
-    @Nullable
-    public DefaultHologram removeHologram(@NotNull String name) {
-        return this.holograms.remove(name);
+    public void removeHologram(@NotNull String name) {
+        this.holograms.remove(name);
     }
 
-    /**
-     * Get the names of all registered holograms.
-     *
-     * @return The set of all hologram names.
-     * @see DefaultHologram
-     */
-    @NotNull
-    public Set<String> getHologramNames() {
-        return this.holograms.keySet();
+    public boolean isHologramRegistered(@NotNull String name) {
+        return this.holograms.containsKey(name);
     }
 
-    /**
-     * Get all registered holograms.
-     *
-     * @return The collection of all holograms.
-     * @see DefaultHologram
-     */
     @NotNull
     public Collection<DefaultHologram> getHolograms() {
         return this.holograms.values();

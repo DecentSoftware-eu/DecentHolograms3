@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.actions;
 
 import eu.decentsoftware.holograms.profile.Profile;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,9 +59,9 @@ public abstract class Action {
     /**
      * Execute this action for the given {@link Profile}.
      *
-     * @param profile The profile.
+     * @param player The player for whom we want to execute the action.
      */
-    public abstract void execute(@NotNull Profile profile);
+    public abstract void execute(@NotNull Player player);
 
     /**
      * Check if this action should be executed according to chance.

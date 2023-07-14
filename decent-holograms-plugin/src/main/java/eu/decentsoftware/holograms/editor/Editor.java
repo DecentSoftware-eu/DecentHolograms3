@@ -18,7 +18,9 @@
 
 package eu.decentsoftware.holograms.editor;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.editor.move.MoveController;
+import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import lombok.Getter;
 
 @Getter
@@ -26,8 +28,8 @@ public class Editor {
 
     private final MoveController moveController;
 
-    public Editor() {
-        this.moveController = new MoveController();
+    public Editor(DecentHolograms plugin, DefaultHologramRegistry hologramRegistry) {
+        this.moveController = new MoveController(plugin, hologramRegistry);
 
     }
 

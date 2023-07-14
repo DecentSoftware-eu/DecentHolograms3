@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.actions;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,12 +49,7 @@ public class ActionHolder {
         this.actions = actions;
     }
 
-    /**
-     * Execute all Actions in this holder for the given {@link Profile}.
-     *
-     * @param profile The profile.
-     */
-    public void execute(@NonNull Profile profile) {
+    public void execute(@NonNull Player player) {
         for (Action action : getActions()) {
             // Check the chance
             if (!action.checkChance()) {
@@ -63,66 +58,33 @@ public class ActionHolder {
             // Execute with delay if needed
             long delay = action.getDelay();
             if (delay > 0) {
-                SchedulerUtil.run(() -> action.execute(profile), delay);
+                SchedulerUtil.run(() -> action.execute(player), delay);
             } else {
-                SchedulerUtil.run(() -> action.execute(profile));
+                SchedulerUtil.run(() -> action.execute(player));
             }
         }
     }
 
-    /**
-     * Add the given action to this holder.
-     *
-     * @param action The action.
-     * @see Action
-     */
     public void addAction(@NonNull Action action) {
         this.actions.add(action);
     }
 
-    /**
-     * Remove the given action from this holder.
-     *
-     * @param action The action.
-     * @see Action
-     */
     public void removeAction(@NonNull Action action) {
         this.actions.remove(action);
     }
 
-    /**
-     * Remove the action at the given index from this holder.
-     *
-     * @param index The index.
-     * @see Action
-     */
     public void removeAction(int index) {
         this.actions.remove(index);
     }
 
-    /**
-     * Remove all actions from this holder.
-     *
-     * @see Action
-     */
     public void clearActions() {
         this.actions.clear();
     }
 
-    /**
-     * Check if this holder is empty.
-     *
-     * @return True if this holder is empty, false otherwise.
-     */
     public boolean isEmpty() {
         return this.actions.isEmpty();
     }
 
-    /**
-     * Get all actions in this holder. The returned list is immutable.
-     *
-     * @return Immutable list of all actions.
-     */
     @NotNull
     public List<Action> getActions() {
         return ImmutableList.copyOf(this.actions);

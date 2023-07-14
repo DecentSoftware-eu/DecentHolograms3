@@ -29,7 +29,6 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.profile.Profile;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,13 +92,8 @@ public class DefaultHologramLine implements HologramLine {
         this.clickActions = clickActions;
         this.setContent(content);
         this.setClickHandler((player, clickType) -> {
-            Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
-            if (profile == null) {
-                return false;
-            }
-
-            if (!getClickActions().isEmpty(clickType) && getClickConditions().check(clickType, profile)) {
-                getClickActions().execute(clickType, profile);
+            if (!getClickActions().isEmpty(clickType) && getClickConditions().check(clickType, player)) {
+                getClickActions().execute(clickType, player);
                 return true;
             }
 

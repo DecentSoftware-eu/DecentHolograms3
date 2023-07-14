@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.hologram.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
+import eu.decentsoftware.holograms.nms.NMSAdapter;
 import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,15 +44,15 @@ public class HeadLineRenderer extends LineRenderer {
     @Getter(AccessLevel.NONE)
     private final int eid;
 
-    public HeadLineRenderer(@NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
-        this(parent, itemStack, HologramLineType.HEAD, false);
+    public HeadLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
+        this(nmsAdapter, parent, itemStack, HologramLineType.HEAD, false);
     }
 
-    public HeadLineRenderer(@NotNull HologramLine parent, @NotNull DecentItemStack itemStack, @NotNull HologramLineType type, boolean small) {
-        super(parent, type);
+    public HeadLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack, @NotNull HologramLineType type, boolean small) {
+        super(nmsAdapter, parent, type);
         this.itemStack = itemStack;
         this.small = small;
-        this.eid = NMS.getFreeEntityId();
+        this.eid = nmsAdapter.getFreeEntityId();
     }
 
     @Override
@@ -60,17 +61,17 @@ public class HeadLineRenderer extends LineRenderer {
         ItemStack item = itemStack.toItemStack(player);
 
         // Create the metadata objects
-        Object metaEntity = NMS.getMetaEntityProperties(false, false, false,
+        Object metaEntity = nmsAdapter.getMetaEntityProperties(false, false, false,
                 false, true, itemStack.glowing(), false);
-        Object metaArmorStand = NMS.getMetaArmorStandProperties(small, false, true, true);
-        Object metaNameVisible = NMS.getMetaEntityCustomNameVisible(false);
+        Object metaArmorStand = nmsAdapter.getMetaArmorStandProperties(small, false, true, true);
+        Object metaNameVisible = nmsAdapter.getMetaEntityCustomNameVisible(false);
 
         // Spawn the fake armor stand entity
-        NMS.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
+        nmsAdapter.spawnEntityLiving(player, eid, UUID.randomUUID(), EntityType.ARMOR_STAND, loc);
         // Send the metadata
-        NMS.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
+        nmsAdapter.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
         // Set the helmet
-        NMS.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
+        nmsAdapter.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
     }
 
     @Override
@@ -78,13 +79,13 @@ public class HeadLineRenderer extends LineRenderer {
         ItemStack item = itemStack.toItemStack(player);
 
         // Set the helmet
-        NMS.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
+        nmsAdapter.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
     }
 
     @Override
     public void hide(@NotNull Player player) {
         // Remove the entity
-        NMS.removeEntity(player, eid);
+        nmsAdapter.removeEntity(player, eid);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class HeadLineRenderer extends LineRenderer {
         Location loc = getParent().getPositionManager().getActualLocation();
 
         // Teleport the armor stand
-        NMS.teleportEntity(player, eid, loc, false);
+        nmsAdapter.teleportEntity(player, eid, loc, false);
     }
 
 }
