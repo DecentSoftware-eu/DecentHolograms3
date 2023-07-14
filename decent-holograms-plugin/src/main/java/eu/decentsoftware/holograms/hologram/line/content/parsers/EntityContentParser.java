@@ -51,7 +51,7 @@ public class EntityContentParser implements ContentParser {
             renderer.hideAll();
         }
 
-        renderer = new EntityLineRenderer(line, entity);
+        renderer = new EntityLineRenderer(nmsAdapter, line, entity);
         line.setRenderer(renderer);
         double entityHeight = nmsAdapter.getEntityHeight(entity.type());
         line.getPositionManager().getOffsets().setY(entityHeight);
