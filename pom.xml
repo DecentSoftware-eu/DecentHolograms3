@@ -21,9 +21,8 @@
     <properties>
         <java.version>1.8</java.version>
         <spigot.version>1.13-R0.1-SNAPSHOT</spigot.version>
-        <cloud.version>1.8.3</cloud.version>
-        <lombok.version>1.18.26</lombok.version>
-        <jetbrains.annotations.version>24.0.0</jetbrains.annotations.version>
+        <lombok.version>1.18.30</lombok.version>
+        <jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shadedPattern>eu.decentsoftware.holograms.libs</shadedPattern>
     </properties>
@@ -74,7 +73,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
