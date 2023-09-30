@@ -69,7 +69,6 @@ public class AnimationRegistry implements Ticked {
         this.stepCounter = new AtomicInteger(0);
 
         this.reload();
-        this.startTicking();
     }
 
     /**

@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.hologram.line.content.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.hooks.HDB;
 import eu.decentsoftware.holograms.utils.ItemBuilder;
@@ -50,9 +49,6 @@ import java.util.Optional;
 public class DecentItemStack {
 
     // TODO: Add support for ItemsAdder, Oraxen
-
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-
     private @NotNull XMaterial material;
     private String owner;
     private String texture;

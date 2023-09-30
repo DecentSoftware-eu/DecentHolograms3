@@ -20,9 +20,9 @@ package eu.decentsoftware.holograms.replacements;
 
 import com.google.common.base.Strings;
 import eu.decentsoftware.holograms.Config;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.server.Server;
-import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.utils.DatetimeUtils;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
 import org.bukkit.Bukkit;
@@ -55,13 +55,13 @@ public class ReplacementRegistry {
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([^:{}]+)(?::([^{}]+))?}");
     private final Map<String, Replacement> defaultReplacementMap;
     private final Map<String, Replacement> normalReplacementMap;
-    private final ServerRegistry serverRegistry;
+    private final DecentHolograms plugin;
 
     /**
      * Create a new instance of {@link ReplacementRegistry}.
      */
-    public ReplacementRegistry(ServerRegistry serverRegistry) {
-        this.serverRegistry = serverRegistry;
+    public ReplacementRegistry(DecentHolograms plugin) {
+        this.plugin = plugin;
         this.defaultReplacementMap = new ConcurrentHashMap<>();
         this.normalReplacementMap = new ConcurrentHashMap<>();
         this.reload();
@@ -230,7 +230,10 @@ public class ReplacementRegistry {
                         Player player;
                         if (profile != null && (player = profile.getPlayer()) != null) {
                             online = ReplacementCommons.getFromServerOrServersInt(
-                                    player, argument, server -> server.getData().getPlayers().getOnline()
+                                    plugin.getServerRegistry(),
+                                    player,
+                                    argument,
+                                    server -> server.getData().getPlayers().getOnline()
                             );
                         } else {
                             online = -1;
@@ -253,7 +256,10 @@ public class ReplacementRegistry {
                         Player player;
                         if (profile != null && (player = profile.getPlayer()) != null) {
                             online = ReplacementCommons.getFromServerOrServersInt(
-                                    player, argument, server -> server.getData().getPlayers().getMax()
+                                    plugin.getServerRegistry(),
+                                    player,
+                                    argument,
+                                    server -> server.getData().getPlayers().getMax()
                             );
                         } else {
                             online = -1;
@@ -273,7 +279,7 @@ public class ReplacementRegistry {
                     String motd = null;
                     if (argument != null) {
                         // -- Pinged server
-                        Server server = serverRegistry.getServer(argument);
+                        Server server = plugin.getServerRegistry().getServer(argument);
                         if (server != null && server.isOnline()) {
                             motd = server.getData().getDescription();
                         }
@@ -291,7 +297,7 @@ public class ReplacementRegistry {
                 (profile, argument) -> {
                     if (argument != null) {
                         // -- Pinged server
-                        Server server = serverRegistry.getServer(argument);
+                        Server server = plugin.getServerRegistry().getServer(argument);
                         if (server != null && server.isOnline()) {
                             if (server.isFull()) {
                                 return Optional.ofNullable(Config.PINGER_STATUS_FULL);

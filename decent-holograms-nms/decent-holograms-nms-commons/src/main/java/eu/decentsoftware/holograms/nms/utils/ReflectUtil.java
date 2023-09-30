@@ -18,89 +18,113 @@
 
 package eu.decentsoftware.holograms.nms.utils;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
-/**
- * Utility class for working with reflection.
- *
- * @author d0by
- */
+@UtilityClass
 public class ReflectUtil {
 
     private static String version;
-    private final @NotNull Object object;
 
     /**
-     * Creates a new instance of {@link ReflectUtil} with the given object.
+     * Set the value of a field with the given name on the given object.
+     * <p>
+     * If the field is not found, or is not accessible, this method will return false.
      *
-     * @param object The object to work with.
+     * @param object    The object to set the field on.
+     * @param fieldName The name of the field to set.
+     * @param value     The value to set the field to.
+     * @param <T>       The type of the field and value.
+     * @return True if the field was found and set, false otherwise.
      */
-    public ReflectUtil(@NotNull Object object) {
-        this.object = object;
-    }
-
-    /**
-     * Invokes a method with the given name and arguments.
-     *
-     * @param methodName The name of the method to invoke.
-     * @param args       The arguments to pass to the method.
-     */
-    public void invoke(String methodName, Object... args) {
-        try {
-            Method method = object.getClass().getMethod(methodName, Arrays.stream(args).map(Object::getClass).toArray(Class[]::new));
-            method.setAccessible(true);
-            method.invoke(object, args);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
+    public static <T> boolean setFieldValue(final @NotNull Object object, final @NotNull String fieldName, final @Nullable T value) {
+        Class<?> clazz = object.getClass();
+        Field field = getField(clazz, fieldName);
+        if (field != null) {
+            try {
+                field.set(object, value);
+                return true;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
+        return false;
     }
 
     /**
-     * Gets the value of the field with the given name.
+     * Get the value of a field with the given name from the given object.
+     * <p>
+     * If the field is not found, or is not accessible, this method will return null.
      *
-     * @param fieldName The name of the field to get the value of.
-     * @return The value of the field.
+     * @param object    The object to get the field from.
+     * @param fieldName The name of the field to get.
+     * @param <T>       The type of the field.
+     * @return The value of the field, or null if the field was not found.
      */
-    public Object get(String fieldName) {
-        try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+    @Nullable
+    public static <T> T getFieldValue(final @NotNull Object object, final @NotNull String fieldName) {
+        Class<?> clazz = object instanceof Class<?> ? (Class<?>) object : object.getClass();
+        Field field = getField(clazz, fieldName);
+        if (field != null) {
+            try {
+                //noinspection unchecked
+                return (T) field.get(object);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
     /**
-     * Sets the value of the field with the given name.
+     * Get a field with the given name from the given class.
+     * <p>
+     * If the field is not found, this method will return null.
      *
-     * @param fieldName The name of the field to set the value of.
-     * @param value     The value to set.
+     * @param clazz     The class to get the field from.
+     * @param fieldName The name of the field to get.
+     * @return The field, or null if the field was not found.
      */
-    public void set(String fieldName, Object value) {
+    @Nullable
+    public static Field getField(final @NotNull Class<?> clazz, final @NotNull String fieldName) {
+        Field field;
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(object, value);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            field = clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            try {
+                // Try superclass
+                field = clazz.getField(fieldName);
+            } catch (NoSuchFieldException ex) {
+                // Field does not exist
+                ex.printStackTrace();
+                return null;
+            }
         }
+
+        field.setAccessible(true);
+        return field;
     }
 
-    /*
-     *  ============== Static methods ==============
-     */
+    public static Method getMethod(final @NotNull Class<?> clazz, final @NotNull String methodName, final Class<?>... parameterTypes) {
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod(methodName, parameterTypes);
+            method.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return method;
+    }
 
     /**
-     * Gets the version of the server.
+     * Get the NMS version of the server.
+     * <p>
+     * This is the version of the server, such as v1_8_R3. This is used for reflection.
      *
      * @return The version of the server.
      */
@@ -112,15 +136,15 @@ public class ReflectUtil {
     }
 
     /**
-     * Gets the class of the given name.
+     * Get a class by class path. The classPath should be the full path, including the package.
      *
-     * @param name The name of the class.
-     * @return The class of the given name.
+     * @param classPath The path of the class to get.
+     * @return The class, or null if the class was not found.
      */
     @Nullable
-    public static Class<?> getClass(String name) {
+    public static Class<?> getClass(final @NotNull String classPath) {
         try {
-            return Class.forName(name);
+            return Class.forName(classPath);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -128,15 +152,22 @@ public class ReflectUtil {
     }
 
     /**
-     * Gets the class of the given name from the "net.minecraft" package.
+     * Get a class from the {@code net.minecraft} package. The classPath should be the full path to the class,
+     * including the package without the {@code net.minecraft} prefix.
+     * <p>
+     * This is a shortcut for {@code getClass("net.minecraft." + classPath)}.
+     * <p>
+     * If you are looking for the old {@code net.minecraft.server.<VERSION>} package,
+     * use {@link #getNMSClass(String)}.
      *
-     * @param name The name of the class.
-     * @return The class of the given name.
+     * @param classPath The path of the class to get.
+     * @return The class, or null if the class was not found.
+     * @see #getNMSClass(String)
      */
     @Nullable
-    public static Class<?> getNMClass(String name) {
+    public static Class<?> getNMClass(final @NotNull String classPath) {
         try {
-            return Class.forName("net.minecraft." + name);
+            return Class.forName("net.minecraft." + classPath);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -144,15 +175,20 @@ public class ReflectUtil {
     }
 
     /**
-     * Gets the class of the given name from the "net.minecraft.server.VERSION" package.
+     * Get a class from the {@code net.minecraft.server.<VERSION>} package. The classPath should be the full path to the class,
+     * including the package without the {@code net.minecraft.server.<VERSION>} prefix.
+     * <p>
+     * This is a shortcut for {@code getClass("net.minecraft.server." + getVersion() + "." + classPath)}.
+     * <p>
+     * If you are looking for the new {@code net.minecraft} package, use {@link #getNMClass(String)}.
      *
-     * @param name The name of the class.
-     * @return The class of the given name.
+     * @param classPath The path of the class to get.
+     * @return The class, or null if the class was not found.
      */
     @Nullable
-    public static Class<?> getNMSClass(String name) {
+    public static Class<?> getNMSClass(final @NotNull String classPath) {
         try {
-            return Class.forName("net.minecraft.server." + getVersion() + "." + name);
+            return Class.forName("net.minecraft.server." + getVersion() + "." + classPath);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -160,58 +196,20 @@ public class ReflectUtil {
     }
 
     /**
-     * Gets the class of the given name from the "org.bukkit.craftbukkit.VERSION" package.
+     * Get a class from the {@code org.bukkit.craftbukkit.<VERSION>} package. The classPath should be the full path to the class,
+     * including the package without the {@code org.bukkit.craftbukkit.<VERSION>} prefix.
+     * <p>
+     * This is a shortcut for {@code getClass("org.bukkit.craftbukkit." + getVersion() + "." + name)}.
      *
-     * @param name The name of the class.
-     * @return The class of the given name.
+     * @param classPath The path of the class to get.
+     * @return The class, or null if the class was not found.
      */
     @Nullable
-    public static Class<?> getObcClass(String name) {
+    public static Class<?> getObcClass(final @NotNull String classPath) {
         try {
-            return Class.forName("org.bukkit.craftbukkit." + getVersion() + "." + name);
+            return Class.forName("org.bukkit.craftbukkit." + getVersion() + "." + classPath);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Sets the value of the field with the given name in the given object.
-     *
-     * @param object    The object to set the value of the field in.
-     * @param fieldName The name of the field to set the value of.
-     * @param value     The value to set.
-     * @param <T>       The type of the value.
-     * @return Whether the field was successfully set.
-     */
-    public static <T> boolean setFieldValue(@NotNull Object object, String fieldName, T value) {
-        Class<?> clazz = object instanceof Class<?> ? (Class<?>) object : object.getClass();
-        try {
-            Field field = clazz.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(object, value);
-            return true;
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {
-            return false;
-        }
-    }
-
-    /**
-     * Gets the value of the field with the given name in the given object.
-     *
-     * @param object    The object to get the value of the field from.
-     * @param fieldName The name of the field to get the value of.
-     * @param <T>       The type of the value.
-     * @return The value of the field.
-     */
-    @Nullable
-    public static <T> T getFieldValue(@NotNull Object object, String fieldName) {
-        Class<?> clazz = object instanceof Class<?> ? (Class<?>) object : object.getClass();
-        try {
-            Field field = clazz.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return (T) field.get(object);
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {
             return null;
         }
     }

@@ -18,9 +18,10 @@
 
 package eu.decentsoftware.holograms.profile;
 
-import eu.decentsoftware.holograms.nms.NMSManager;
+import eu.decentsoftware.holograms.DecentHolograms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -36,29 +37,29 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProfileRegistry {
 
     private final Map<UUID, Profile> profileMap = new ConcurrentHashMap<>();
-    private final NMSManager nmsManager;
+    private final ProfileListener listener;
 
-    public ProfileRegistry(NMSManager nmsManager) {
-        this.nmsManager = nmsManager;
+    public ProfileRegistry(DecentHolograms plugin) {
+        this.listener = new ProfileListener(this);
         this.reload();
+
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
     public synchronized void reload() {
         this.shutdown();
 
-        // -- Create profiles for all online players
         for (Player player : Bukkit.getOnlinePlayers()) {
             registerProfile(player.getUniqueId());
-            nmsManager.hook(player);
         }
     }
 
     public synchronized void shutdown() {
+        HandlerList.unregisterAll(listener);
+
         this.profileMap.values().forEach(profile -> {
             Player player = profile.getPlayer();
             if (player != null) {
-                nmsManager.unhook(player);
-
                 profile.getContext().destroyClickableEntity(player);
             }
         });

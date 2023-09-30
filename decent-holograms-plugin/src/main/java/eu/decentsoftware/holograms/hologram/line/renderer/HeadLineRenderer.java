@@ -18,17 +18,17 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
-import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,12 +44,12 @@ public class HeadLineRenderer extends LineRenderer {
     @Getter(AccessLevel.NONE)
     private final int eid;
 
-    public HeadLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
-        this(nmsAdapter, parent, itemStack, HologramLineType.HEAD, false);
+    public HeadLineRenderer(@NotNull DecentHolograms plugin, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
+        this(plugin, parent, itemStack, HologramLineType.HEAD, false);
     }
 
-    public HeadLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack, @NotNull HologramLineType type, boolean small) {
-        super(nmsAdapter, parent, type);
+    HeadLineRenderer(@NotNull DecentHolograms plugin, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack, @NotNull HologramLineType type, boolean small) {
+        super(plugin, parent, type);
         this.itemStack = itemStack;
         this.small = small;
         this.eid = nmsAdapter.getFreeEntityId();
@@ -71,7 +71,7 @@ public class HeadLineRenderer extends LineRenderer {
         // Send the metadata
         nmsAdapter.sendEntityMetadata(player, eid, metaEntity, metaArmorStand, metaNameVisible);
         // Set the helmet
-        nmsAdapter.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
+        nmsAdapter.setEquipment(player, eid, EquipmentSlot.HEAD, item);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class HeadLineRenderer extends LineRenderer {
         ItemStack item = itemStack.toItemStack(player);
 
         // Set the helmet
-        nmsAdapter.setEquipment(player, eid, EntityEquipmentSlot.HEAD, item);
+        nmsAdapter.setEquipment(player, eid, EquipmentSlot.HEAD, item);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class HeadLineRenderer extends LineRenderer {
         Location loc = getParent().getPositionManager().getActualLocation();
 
         // Teleport the armor stand
-        nmsAdapter.teleportEntity(player, eid, loc, false);
+        nmsAdapter.teleportEntity(player, eid, loc, true);
     }
 
 }

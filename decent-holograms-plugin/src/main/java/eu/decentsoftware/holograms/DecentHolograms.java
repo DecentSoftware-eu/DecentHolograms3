@@ -18,12 +18,6 @@
 
 package eu.decentsoftware.holograms;
 
-import cloud.commandframework.annotations.AnnotationParser;
-import cloud.commandframework.bukkit.BukkitCommandManager;
-import cloud.commandframework.exceptions.InvalidSyntaxException;
-import cloud.commandframework.exceptions.NoPermissionException;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.decentsoftware.holograms.actions.ActionHolder;
@@ -35,9 +29,7 @@ import eu.decentsoftware.holograms.animations.AnimationRegistry;
 import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
 import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
-import eu.decentsoftware.holograms.commands.DecentHologramsCommand;
-import eu.decentsoftware.holograms.commands.HologramCommands;
-import eu.decentsoftware.holograms.commands.LineCommands;
+import eu.decentsoftware.holograms.commands.RootCommand;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.serialization.ClickConditionHolderSerializer;
@@ -56,6 +48,7 @@ import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.ticker.Ticker;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
+import eu.decentsoftware.holograms.utils.CommandUtil;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import eu.decentsoftware.holograms.utils.watcher.FileWatcher;
 import lombok.AccessLevel;
@@ -69,7 +62,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 
-
 /**
  * "Introducing a powerful hologram plugin that offers a wide range
  * of features and customization options, all while maintaining
@@ -80,6 +72,7 @@ import java.util.Arrays;
 @Getter
 public final class DecentHolograms extends JavaPlugin {
 
+    @Getter
     private static DecentHolograms instance;
     private Gson gson;
     private Ticker ticker;
@@ -89,7 +82,7 @@ public final class DecentHolograms extends JavaPlugin {
     private AnimationRegistry animationRegistry;
     private ContentParserManager contentParserManager;
     private DefaultHologramRegistry hologramRegistry;
-    private NMSManager nmsManager;
+    private NMSManager nMSManager;
     private Editor editor;
     private AddonLoader addonLoader;
 
@@ -105,14 +98,9 @@ public final class DecentHolograms extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        bootMessenger = new BootMessenger(this);
-
-        Config.reload();
-        Lang.reload();
-
         // -- Attempt to initialize the NMS adapter
         try {
-            nmsManager = new NMSManager();
+            nMSManager = new NMSManager(this);
         } catch (IllegalStateException e) {
             getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
             getLogger().severe("*** Disabling...");
@@ -120,32 +108,37 @@ public final class DecentHolograms extends JavaPlugin {
             return;
         }
 
+        bootMessenger = new BootMessenger(this);
+
+        Config.reload();
+        Lang.reload();
+
         // -- Initialize Custom Gson Instance
         setupGson();
 
         // -- Initialize Managers
         ticker = new Ticker();
-        profileRegistry = new ProfileRegistry(nmsManager);
+        profileRegistry = new ProfileRegistry(this);
         serverRegistry = new ServerRegistry(this);
-        replacementRegistry = new ReplacementRegistry(serverRegistry);
+        replacementRegistry = new ReplacementRegistry(this);
         animationRegistry = new AnimationRegistry(this);
-        contentParserManager = new ContentParserManager(nmsManager.getAdapter(), animationRegistry, profileRegistry, replacementRegistry);
-        hologramRegistry = new DefaultHologramRegistry(this, gson);
-        editor = new Editor(this, hologramRegistry);
+        contentParserManager = new ContentParserManager(this);
+        hologramRegistry = new DefaultHologramRegistry(this);
+        editor = new Editor(this);
 
         // -- Register DecentHologramsAPI
         DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl());
 
         // -- Initialize Utils
-        BungeeUtils.init();
+        BungeeUtils.init(this);
 
         // -- Register listeners
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
-        pm.registerEvents(new PacketListener(), this);
+        pm.registerEvents(new PacketListener(this), this);
 
         // -- Commands
-        setupCommands();
+        CommandUtil.register(this, new RootCommand(this));
 
         // -- FileWatcher
         FileWatcher.assignFolder("addons");
@@ -170,7 +163,7 @@ public final class DecentHolograms extends JavaPlugin {
         if (enabled) {
             editor.shutdown();
             ticker.shutdown();
-            nmsManager.shutdown();
+            nMSManager.shutdown();
             hologramRegistry.shutdown();
             animationRegistry.shutdown();
             replacementRegistry.shutdown();
@@ -213,7 +206,7 @@ public final class DecentHolograms extends JavaPlugin {
      */
     private void setupUpdateChecker() {
         if (Config.CHECK_FOR_UPDATES) {
-            new UpdateChecker(96927).check(s -> {
+            new UpdateChecker(this, 96927).check(s -> {
                 // Split the version string into 3 parts: major, minor, patch
                 String[] split = s.split("\\.", 3);
                 int[] latest = Arrays.stream(split)
@@ -239,45 +232,6 @@ public final class DecentHolograms extends JavaPlugin {
         }
     }
 
-    private void setupCommands() {
-        try {
-            // -- Setup command manager
-            final BukkitCommandManager<CommandSender> manager = new BukkitCommandManager<>(
-                    this,
-                    CommandExecutionCoordinator.simpleCoordinator(),
-                    Function.identity(),
-                    Function.identity()
-            );
-
-            // -- Setup command parser
-            final AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
-                    manager,
-                    CommandSender.class,
-                    parameters -> SimpleCommandMeta.empty()
-            );
-
-            // -- Register exception handlers
-            manager.registerExceptionHandler(
-                    NoPermissionException.class,
-                    (sender, e) -> Lang.confTell(sender, "no_permission")
-            );
-            manager.registerExceptionHandler(
-                    InvalidSyntaxException.class,
-                    (sender, e) -> Lang.confTell(sender, "plugin.help")
-            );
-
-            // -- Register commands
-            annotationParser.parse(new DecentHologramsCommand());
-            annotationParser.parse(new HologramCommands());
-            annotationParser.parse(new LineCommands());
-
-        } catch (Exception e) {
-            getLogger().severe("Failed to register commands!");
-            getLogger().severe("Disabling...");
-            getPluginLoader().disablePlugin(this);
-        }
-    }
-
     private void setupGson() {
         gson = new GsonBuilder()
                 .disableHtmlEscaping()
@@ -288,18 +242,6 @@ public final class DecentHolograms extends JavaPlugin {
                 .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
                 .registerTypeAdapter(ClickConditionHolder.class, new ClickConditionHolderSerializer())
                 .create();
-    }
-
-    public BootMessenger getBootMessenger() {
-        return bootMessenger;
-    }
-
-    public NMSManager getNMSManager() {
-        return nmsManager;
-    }
-
-    public static DecentHolograms getInstance() {
-        return instance;
     }
 
 }

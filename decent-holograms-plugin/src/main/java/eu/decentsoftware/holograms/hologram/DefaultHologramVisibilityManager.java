@@ -60,7 +60,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
         this.playerVisibility.clear();
 
         // Hide the hologram for all players that are currently viewing it
-        getViewerPlayers().forEach(player -> updateVisibility(player, false));
+        getViewersAsPlayers().forEach(player -> updateVisibility(player, false));
 
         // Clear the cache
         this.playerPages.clear();
@@ -149,7 +149,7 @@ public class DefaultHologramVisibilityManager implements HologramVisibilityManag
 
     @Override
     public void updateContents() {
-        getViewerPlayers().forEach(this::updateContents);
+        getViewersAsPlayers().forEach(this::updateContents);
     }
 
     @Override

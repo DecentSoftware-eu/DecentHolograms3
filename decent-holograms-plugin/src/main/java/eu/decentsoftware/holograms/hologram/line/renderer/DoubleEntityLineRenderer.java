@@ -18,9 +18,9 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -41,8 +41,8 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
     protected final int eid;
     protected final int eidOther;
 
-    public DoubleEntityLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull HologramLineType type) {
-        super(nmsAdapter, parent, type);
+    public DoubleEntityLineRenderer(DecentHolograms plugin, @NotNull HologramLine parent, @NotNull HologramLineType type) {
+        super(plugin, parent, type);
         this.eid = nmsAdapter.getFreeEntityId();
         this.eidOther = nmsAdapter.getFreeEntityId();
     }
@@ -96,7 +96,7 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
         // Remove the entity from the armor stand
         nmsAdapter.updatePassengers(player, eid);
         // Teleport the armor stand to the new location
-        nmsAdapter.teleportEntity(player, eid, location, false);
+        nmsAdapter.teleportEntity(player, eid, location, true);
         // Add the entity to the armor stand
         nmsAdapter.updatePassengers(player, eid, eidOther);
     }

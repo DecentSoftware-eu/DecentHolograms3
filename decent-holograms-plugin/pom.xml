@@ -119,26 +119,22 @@
             <artifactId>adventure-text-minimessage</artifactId>
             <version>4.13.0</version>
         </dependency>
-        <!-- Cloud -->
+        <!-- Testing | JUnit -->
         <dependency>
-            <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-core</artifactId>
-            <version>${cloud.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-bukkit</artifactId>
-            <version>${cloud.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-annotations</artifactId>
-            <version>${cloud.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
         </dependency>
         <!-- NMS Versions -->
         <dependency>
             <groupId>eu.decentsoftware.holograms</groupId>
             <artifactId>decent-holograms-nms-commons</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.decentsoftware.holograms</groupId>
+            <artifactId>decent-holograms-v1_8_R2</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -154,6 +150,11 @@
         <dependency>
             <groupId>eu.decentsoftware.holograms</groupId>
             <artifactId>decent-holograms-v1_9_R2</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.decentsoftware.holograms</groupId>
+            <artifactId>decent-holograms-v1_20_R2</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

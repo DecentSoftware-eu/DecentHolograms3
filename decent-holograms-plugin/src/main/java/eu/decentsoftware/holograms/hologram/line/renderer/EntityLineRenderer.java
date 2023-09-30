@@ -18,10 +18,10 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentEntity;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -34,8 +34,8 @@ public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
     private @NotNull DecentEntity entity;
 
-    public EntityLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentEntity entity) {
-        super(nmsAdapter, parent, HologramLineType.ENTITY);
+    public EntityLineRenderer(@NotNull DecentHolograms plugin, @NotNull HologramLine parent, @NotNull DecentEntity entity) {
+        super(plugin, parent, HologramLineType.ENTITY);
         this.entity = entity;
     }
 

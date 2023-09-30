@@ -39,24 +39,28 @@ import java.util.concurrent.ConcurrentHashMap;
 @UtilityClass
 public final class BungeeUtils {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
     private static final String BUNGEE_CORD_CHANNEL = "BungeeCord";
     private static final Map<String, CompletableFuture<Integer>> PLAYER_COUNT_REQUESTS = new ConcurrentHashMap<>();
+    private static DecentHolograms plugin;
 
     /**
      * Init Bungee connection; Register BungeeCord channel.
      */
-    public static void init() {
-        Bukkit.getMessenger().registerOutgoingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL);
-        Bukkit.getMessenger().registerIncomingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL, new BungeeListener());
+    public static void init(DecentHolograms plugin) {
+        if (BungeeUtils.plugin != null) {
+            throw new IllegalStateException("BungeeUtils is already initialized!");
+        }
+        BungeeUtils.plugin = plugin;
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
+        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, BUNGEE_CORD_CHANNEL, new BungeeListener());
     }
 
     /**
      * Shutdown Bungee connection; Unregister BungeeCord channel.
      */
     public static void shutdown() {
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL);
-        Bukkit.getMessenger().unregisterIncomingPluginChannel(PLUGIN, BUNGEE_CORD_CHANNEL);
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
     }
 
     private static void handleReceive(@NotNull String server, int playerCount) {
@@ -81,7 +85,7 @@ public final class BungeeUtils {
         } catch (IOException ee) {
             ee.printStackTrace();
         }
-        player.sendPluginMessage(PLUGIN, BUNGEE_CORD_CHANNEL, b.toByteArray());
+        player.sendPluginMessage(plugin, BUNGEE_CORD_CHANNEL, b.toByteArray());
     }
 
     /**
@@ -104,7 +108,7 @@ public final class BungeeUtils {
         } catch (IOException ee) {
             ee.printStackTrace();
         }
-        player.sendPluginMessage(PLUGIN, BUNGEE_CORD_CHANNEL, b.toByteArray());
+        player.sendPluginMessage(plugin, BUNGEE_CORD_CHANNEL, b.toByteArray());
 
         CompletableFuture<Integer> future = new CompletableFuture<>();
         PLAYER_COUNT_REQUESTS.put(server, future);

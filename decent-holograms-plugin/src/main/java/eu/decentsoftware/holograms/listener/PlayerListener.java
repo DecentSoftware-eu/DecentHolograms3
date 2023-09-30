@@ -19,16 +19,11 @@
 package eu.decentsoftware.holograms.listener;
 
 import eu.decentsoftware.holograms.Config;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
  * This listener handles some events related to the players.
@@ -38,56 +33,12 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  */
 public class PlayerListener implements Listener {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        PLUGIN.getProfileRegistry().registerProfile(player.getUniqueId());
-        PLUGIN.getNMSManager().hook(player);
-
-        // -- Notify the player about a new version (if available)
         if (Config.isUpdateAvailable() && player.hasPermission(Config.ADMIN_PERM)) {
             Lang.sendUpdateMessage(player);
         }
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        PLUGIN.getProfileRegistry().removeProfile(player.getUniqueId());
-        PLUGIN.getNMSManager().unhook(player);
-
-        // -- Remove the player from the visibility cache
-        PLUGIN.getHologramRegistry().getHolograms().forEach((hologram) -> {
-            //
-            hologram.getVisibilityManager().removePlayer(player);
-        });
-    }
-
-    @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
-        hideAllHologramsOnTeleport(e.getPlayer());
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        hideAllHologramsOnTeleport(e.getPlayer());
-    }
-
-    /**
-     * Hide all holograms for the player. They will be shown again immediately
-     * but this will prevent the holograms from becoming invisible for the player
-     * due to how client handles teleportation.
-     *
-     * @param player Player to hide the holograms for.
-     * @see HologramVisibilityManager#updateVisibility(Player, boolean)
-     */
-    private void hideAllHologramsOnTeleport(Player player) {
-        PLUGIN.getHologramRegistry().getHolograms().forEach((hologram) -> {
-            //
-            hologram.getVisibilityManager().updateVisibility(player, false);
-        });
     }
 
 }

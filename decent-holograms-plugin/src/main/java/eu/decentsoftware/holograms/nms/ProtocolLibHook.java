@@ -26,7 +26,6 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
-import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -40,20 +39,23 @@ import org.jetbrains.annotations.NotNull;
  * @author d0by
  * @since 3.0.0
  */
-@UtilityClass
 class ProtocolLibHook {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private final DecentHolograms plugin;
+
+    public ProtocolLibHook(DecentHolograms plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Initializes the listener for the {@link PacketPlayInUseEntityEvent} in ProtocolLib.
      *
      * @param adapter The NMS adapter.
      */
-    public static void initListener(@NotNull NMSAdapter adapter) {
+    public void initListener(@NotNull NMSAdapter adapter) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         PacketAdapter packetAdapter = new PacketAdapter(
-                PLUGIN,
+                plugin,
                 ListenerPriority.HIGHEST,
                 PacketType.Play.Server.ENTITY_METADATA
         ) {
@@ -84,9 +86,9 @@ class ProtocolLibHook {
     /**
      * Removes the listener for the {@link PacketPlayInUseEntityEvent} from ProtocolLib.
      */
-    public static void shutdownListener() {
+    public void shutdownListener() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.removePacketListeners(PLUGIN);
+        protocolManager.removePacketListeners(plugin);
     }
 
 }

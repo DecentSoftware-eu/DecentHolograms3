@@ -32,6 +32,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for parsing colors in a string.
@@ -90,8 +91,7 @@ public final class DecentColorAPI {
      */
     @NotNull
     public static List<String> process(@NotNull List<String> strings) {
-        strings.replaceAll(DecentColorAPI::process);
-        return strings;
+        return strings.stream().map(DecentColorAPI::process).collect(Collectors.toList());
     }
 
     /**

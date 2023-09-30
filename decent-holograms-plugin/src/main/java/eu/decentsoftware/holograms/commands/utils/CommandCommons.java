@@ -16,9 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.commands;
+package eu.decentsoftware.holograms.commands.utils;
 
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.DoubleSupplier;
 
 /**
  * Common methods and constants for commands.
@@ -45,9 +43,6 @@ import java.util.function.DoubleSupplier;
 @UtilityClass
 public final class CommandCommons {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-    public static final String ROOT_ALIASES = "dh|decentholograms|holograms|holo";
-
     /**
      * Returns the first hologram in the player's view.
      *
@@ -55,15 +50,14 @@ public final class CommandCommons {
      * @return The first hologram in the player's view.
      */
     @Nullable
-    public static DefaultHologram getHologramInView(@NonNull Player player) {
-        // Ray trace
+    public static DefaultHologram getHologramInView(DefaultHologramRegistry hologramRegistry, @NonNull Player player) {
         Location location = player.getEyeLocation();
         Vector lookDirection = location.getDirection();
 
         for (int i = 3; i < 24; i += 3) {
             location.add(lookDirection);
 
-            List<DefaultHologram> holograms = getHologramsNearLocation(location);
+            List<DefaultHologram> holograms = getHologramsNearLocation(hologramRegistry, location);
 
             if (!holograms.isEmpty()) {
                 return holograms.get(0);
@@ -84,12 +78,12 @@ public final class CommandCommons {
      * @param name   Name of the hologram.
      * @return The hologram, if found.
      */
-    public static Optional<DefaultHologram> getEditableHologramInViewOrByName(@NotNull CommandSender sender, @Nullable String name) {
+    public static Optional<DefaultHologram> getEditableHologramInViewOrByName(DefaultHologramRegistry hologramRegistry, @NotNull CommandSender sender, @Nullable String name) {
         DefaultHologram hologram = null;
         if (sender instanceof Player && name == null) {
-            hologram = getHologramInView((Player) sender);
+            hologram = getHologramInView(hologramRegistry, (Player) sender);
         } else if (name != null) {
-            hologram = PLUGIN.getHologramRegistry().getHologram(name);
+            hologram = hologramRegistry.getHologram(name);
         }
 
         if (hologram == null) {
@@ -112,39 +106,14 @@ public final class CommandCommons {
      * @return All holograms within 4 blocks of the location.
      */
     @NotNull
-    public static List<DefaultHologram> getHologramsNearLocation(@NonNull Location location) {
-        DefaultHologramRegistry registry = PLUGIN.getHologramRegistry();
-
+    public static List<DefaultHologram> getHologramsNearLocation(DefaultHologramRegistry hologramRegistry, @NonNull Location location) {
         List<DefaultHologram> holograms = new ArrayList<>();
-
-        for (DefaultHologram hologram : registry.getHolograms()) {
+        for (DefaultHologram hologram : hologramRegistry.getHolograms()) {
             if (hologram.getPositionManager().getActualLocation().distanceSquared(location) <= 4 * 4) {
                 holograms.add(hologram);
             }
         }
-
         return holograms;
-    }
-
-    /**
-     * Parses a coordinate from a string.
-     * <p>
-     * This method supports relative coordinates (e.g. ~5).
-     *
-     * @param value                   Value to parse.
-     * @param currentLocationSupplier Supplier of the current location.
-     * @return The parsed coordinate.
-     */
-    public double parseCoordinate(@NotNull String value, @NotNull DoubleSupplier currentLocationSupplier) {
-        if (value.equals("~")) {
-            return currentLocationSupplier.getAsDouble();
-        }
-
-        if (value.startsWith("~")) {
-            return currentLocationSupplier.getAsDouble() + Double.parseDouble(value.substring(1));
-        }
-
-        return Double.parseDouble(value);
     }
 
 }

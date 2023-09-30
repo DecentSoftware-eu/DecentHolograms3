@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.utils;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +60,7 @@ public class FileUtils {
                 }
             }
         } else if (createDir && root.mkdirs()) {
-            Common.log("Created directory %s", root.getPath());
+            Bukkit.getLogger().info("Created directory " + root.getAbsolutePath());
         }
         return files;
     }

@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.hologram;
 
 import com.google.common.collect.ImmutableList;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.HologramConfig;
 import eu.decentsoftware.holograms.api.hologram.HologramSettings;
@@ -30,10 +31,10 @@ import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,18 +45,19 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 public class DefaultHologram implements Hologram, Ticked {
 
-    private final @NotNull String name;
-    private final @NotNull HologramConfig config;
-    private final @NotNull HologramSettings settings;
-    private final @NotNull DefaultPositionManager positionManager;
-    private final @NotNull HologramVisibilityManager visibilityManager;
-    private final @NotNull List<HologramPage> pages;
-    private final @NotNull ConditionHolder viewConditions;
+    private final String name;
+    private final HologramConfig config;
+    private final HologramSettings settings;
+    private final DefaultPositionManager positionManager;
+    private final HologramVisibilityManager visibilityManager;
+    private final List<HologramPage> pages = new ArrayList<>();
+    private final ConditionHolder viewConditions;
+    private final DefaultHologramEntityIDProvider entityIDProvider = new DefaultHologramEntityIDProvider(DecentHolograms.getInstance().getNMSManager().getAdapter());
 
     @Getter(AccessLevel.NONE)
-    private final @NotNull AtomicLong lastVisibilityUpdate;
+    private final AtomicLong lastVisibilityUpdate = new AtomicLong(0);
     @Getter(AccessLevel.NONE)
-    private final @NotNull AtomicLong lastContentUpdate;
+    private final AtomicLong lastContentUpdate = new AtomicLong(0);
 
     /**
      * Creates a new instance of {@link DefaultHologram} with the given name.
@@ -63,7 +65,7 @@ public class DefaultHologram implements Hologram, Ticked {
      * @param name     The name of the hologram.
      * @param location The location of the hologram.
      */
-    public DefaultHologram(@NotNull String name, @NotNull Location location) {
+    public DefaultHologram(@NonNull String name, @NonNull Location location) {
         this(name, location, true, true);
     }
 
@@ -75,16 +77,13 @@ public class DefaultHologram implements Hologram, Ticked {
      * @param enabled    Whether the hologram is enabled or not.
      * @param persistent Whether the hologram is persistent.
      */
-    public DefaultHologram(@NotNull String name, @NotNull Location location, boolean enabled, boolean persistent) {
+    public DefaultHologram(@NonNull String name, @NonNull Location location, boolean enabled, boolean persistent) {
         this.name = name;
         this.config = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);
         this.settings = new DefaultHologramSettings(false, persistent);
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
-        this.pages = new ArrayList<>();
         this.viewConditions = new ConditionHolder();
-        this.lastVisibilityUpdate = new AtomicLong(0);
-        this.lastContentUpdate = new AtomicLong(0);
         this.addPage(); // We always need at least one page.
 
         // Start the ticking.
@@ -94,21 +93,23 @@ public class DefaultHologram implements Hologram, Ticked {
         this.getConfig().reload().thenRun(() -> getSettings().setEnabled(enabled));
     }
 
-    public DefaultHologram(@NotNull String name, @NotNull Location location, @NotNull HologramSettings settings,
-                           @NotNull ConditionHolder viewConditions) {
+    public DefaultHologram(@NonNull String name, @NonNull Location location, @NonNull HologramSettings settings,
+                           @NonNull ConditionHolder viewConditions) {
         this.name = name;
         this.config = new DefaultHologramConfig(this);
         this.positionManager = new DefaultPositionManager(location);
         this.settings = settings;
         this.visibilityManager = new DefaultHologramVisibilityManager(this);
-        this.pages = new ArrayList<>();
         this.viewConditions = viewConditions;
-        this.lastVisibilityUpdate = new AtomicLong(0);
-        this.lastContentUpdate = new AtomicLong(0);
         this.addPage(); // We always need at least one page.
 
         // Start the ticking.
         this.startTicking();
+    }
+
+    public DefaultHologram copy(final @NonNull String newName) {
+        // TODO: implement copying
+        return null;
     }
 
     @Override
@@ -165,35 +166,31 @@ public class DefaultHologram implements Hologram, Ticked {
     }
 
     @Override
-    public int getIndex(@NotNull HologramPage page) {
+    public int getIndex(final @NonNull HologramPage page) {
         return pages.contains(page) ? pages.indexOf(page) : -1;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Hologram addPage() {
-        return addPage(new DefaultHologramPage(this));
-    }
-
-    @NotNull
-    @Override
-    public Hologram addPage(@NotNull HologramPage page) {
+    public HologramPage addPage() {
+        DefaultHologramPage page = new DefaultHologramPage(this, entityIDProvider);
         pages.add(page);
-        return this;
+        return page;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Hologram addPage(int index, @NotNull HologramPage page) {
+    public HologramPage addPage(int index) {
+        DefaultHologramPage page = new DefaultHologramPage(this, entityIDProvider);
         pages.add(index, page);
 
         // Shift the player page indexes in visibility manager.
         shiftPlayerPages(index, 1);
 
-        return this;
+        return page;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Hologram removePage(int index) {
         pages.remove(index);
@@ -204,7 +201,7 @@ public class DefaultHologram implements Hologram, Ticked {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Hologram clearPages() {
         pages.clear();
@@ -215,18 +212,15 @@ public class DefaultHologram implements Hologram, Ticked {
         return this;
     }
 
-    @NotNull
-    @Override
-    public Hologram setPages(@NotNull List<HologramPage> pages) {
-        clearPages();
-        this.pages.addAll(pages);
-        return this;
-    }
-
-    @NotNull
+    @NonNull
     @Override
     public List<HologramPage> getPages() {
         return ImmutableList.copyOf(pages);
+    }
+
+    public void setPages(List<HologramPage> pages) {
+        this.pages.clear();
+        this.pages.addAll(pages);
     }
 
     /**

@@ -1,6 +1,7 @@
 package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.hologram.Hologram;
+import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,8 @@ public class DecentHologramsAPIImpl implements DecentHologramsAPI {
     @Override
     public Hologram createHologram(@NotNull Location location, @NotNull List<String> lines) {
         Hologram hologram = new DefaultHologram(UUID.randomUUID().toString(), location);
-        hologram.addPage().getPage(0).setLinesFromStrings(lines);
+        HologramPage page = hologram.addPage();
+        page.setLinesFromStrings(lines);
         return hologram;
     }
 
@@ -34,7 +36,8 @@ public class DecentHologramsAPIImpl implements DecentHologramsAPI {
     @Override
     public Hologram createHologram(@NotNull Location location, @NotNull List<String> lines, boolean persistent) {
         Hologram hologram = new DefaultHologram(UUID.randomUUID().toString(), location, true, persistent);
-        hologram.addPage().getPage(0).setLinesFromStrings(lines);
+        HologramPage page = hologram.addPage();
+        page.setLinesFromStrings(lines);
         return hologram;
     }
 

@@ -18,12 +18,9 @@
 
 package eu.decentsoftware.holograms.hologram.line.content;
 
-import eu.decentsoftware.holograms.animations.AnimationRegistry;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.content.parsers.*;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
-import eu.decentsoftware.holograms.profile.ProfileRegistry;
-import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -50,12 +47,7 @@ public class ContentParserManager {
      * Creates a new instance of {@link ContentParserManager}. This constructor
      * will also register the default parsers.
      */
-    public ContentParserManager(
-            @NotNull NMSAdapter nmsAdapter,
-            @NotNull AnimationRegistry animationRegistry,
-            @NotNull ProfileRegistry profileRegistry,
-            @NotNull ReplacementRegistry replacementRegistry
-    ) {
+    public ContentParserManager(DecentHolograms plugin) {
         this.parsers = new ArrayList<>();
 
         // - Register default parsers -
@@ -67,11 +59,11 @@ public class ContentParserManager {
         // generic one being able to parse any content. It's considered to be
         // the fallback parser.
 
-        register(new TextContentParser(nmsAdapter, animationRegistry, profileRegistry, replacementRegistry));
-        register(new IconContentParser(nmsAdapter));
-        register(new HeadContentParser(nmsAdapter));
-        register(new SmallHeadContentParser(nmsAdapter));
-        register(new EntityContentParser(nmsAdapter));
+        register(new TextContentParser(plugin));
+        register(new IconContentParser(plugin));
+        register(new HeadContentParser(plugin));
+        register(new SmallHeadContentParser(plugin));
+        register(new EntityContentParser(plugin));
 
     }
 

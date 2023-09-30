@@ -18,12 +18,11 @@
 
 package eu.decentsoftware.holograms.hologram.line.content.objects;
 
-import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.utils.color.DecentColor;
 import eu.decentsoftware.holograms.nms.utils.Version;
+import eu.decentsoftware.holograms.utils.color.DecentColor;
 import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
@@ -39,10 +38,9 @@ import java.net.URL;
  * @author d0by
  * @since 3.0.0
  */
+@SuppressWarnings("unused")
 @Getter
 public class DecentImage {
-
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
 
     private BufferedImage bufferedImage;
     private DecentColor[][] colorField;
@@ -96,7 +94,7 @@ public class DecentImage {
             line = new StringBuilder();
             for (int x = 0; x < bufferedImage.getWidth(); x++) {
                 String color = Version.supportsRGB() ? colorField[y][x].toHex() : colorField[y][x].toChatColor().toString();
-                line.append(color).append("\u2588");
+                line.append(color).append("█");
             }
             lines[y] = line.toString();
         }
@@ -168,13 +166,14 @@ public class DecentImage {
      *
      * @param string String to parse.
      * @return DecentImage parsed from the string.
+     * @throws IllegalArgumentException If the string could not be parsed.
      */
-    @Nullable
-    public static DecentImage fromString(@NotNull String string) {
+    @NotNull
+    public static DecentImage fromString(@NotNull JavaPlugin plugin, @NotNull String string) {
         DecentImage decentImage = null;
         if (string.contains("--file:")) {
             String fileName = getFlagValue(string, "--file:");
-            File file = new File(PLUGIN.getDataFolder(), "images/" + fileName);
+            File file = new File(plugin.getDataFolder(), "images/" + fileName);
             try {
                 BufferedImage image = ImageIO.read(file);
                 decentImage = new DecentImage(image);
@@ -200,8 +199,7 @@ public class DecentImage {
         }
 
         if (decentImage == null) {
-            PLUGIN.getLogger().warning("Could not parse image from string: " + string);
-            return null;
+            throw new IllegalArgumentException("Could not parse image from string: " + string);
         }
 
         if (string.contains("--size:")) {

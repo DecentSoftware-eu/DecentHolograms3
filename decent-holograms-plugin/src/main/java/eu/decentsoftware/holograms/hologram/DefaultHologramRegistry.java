@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.hologram;
 
-import com.google.gson.Gson;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
@@ -45,11 +44,9 @@ public class DefaultHologramRegistry {
 
     private final @NotNull Map<String, DefaultHologram> holograms = new ConcurrentHashMap<>();
     private final DecentHolograms plugin;
-    private final Gson gson;
 
-    public DefaultHologramRegistry(DecentHolograms plugin, Gson gson) {
+    public DefaultHologramRegistry(DecentHolograms plugin) {
         this.plugin = plugin;
-        this.gson = gson;
         this.reload();
     }
 
@@ -71,7 +68,7 @@ public class DefaultHologramRegistry {
                 String fileName = file.getName();
                 String name = fileName.substring(0, fileName.length() - ".json".length());
                 String string = new String(Files.readAllBytes(file.toPath()));
-                SerializableHologram hologram = gson.fromJson(string, SerializableHologram.class);
+                SerializableHologram hologram = plugin.getGson().fromJson(string, SerializableHologram.class);
                 registerHologram(hologram.toHologram(name));
                 counter++;
             } catch (Exception e) {

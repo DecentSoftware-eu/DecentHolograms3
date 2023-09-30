@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineRenderer;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
@@ -35,13 +36,15 @@ public abstract class LineRenderer implements HologramLineRenderer {
      *  - Add support for animations
      */
 
+    protected final DecentHolograms plugin;
     protected final NMSAdapter nmsAdapter;
     private final HologramLine parent;
     private final HologramLineType type;
 
     @Contract(pure = true)
-    public LineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull HologramLineType type) {
-        this.nmsAdapter = nmsAdapter;
+    public LineRenderer(DecentHolograms plugin, @NotNull HologramLine parent, @NotNull HologramLineType type) {
+        this.plugin = plugin;
+        this.nmsAdapter = plugin.getNMSManager().getAdapter();
         this.parent = parent;
         this.type = type;
     }
@@ -52,7 +55,7 @@ public abstract class LineRenderer implements HologramLineRenderer {
      * @return The set of players.
      */
     public Set<Player> getViewerPlayers() {
-        return parent.getParent().getParent().getVisibilityManager().getViewerPlayers();
+        return parent.getParent().getParent().getVisibilityManager().getViewersAsPlayers();
     }
 
     /**

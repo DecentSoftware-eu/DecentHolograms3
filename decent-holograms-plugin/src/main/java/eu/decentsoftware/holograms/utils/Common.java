@@ -19,7 +19,6 @@
 package eu.decentsoftware.holograms.utils;
 
 import com.google.common.collect.Lists;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
@@ -33,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
 
 /**
  * Common utility methods.
@@ -103,56 +101,6 @@ public final class Common {
     @Contract("_ -> param1")
     public static List<String> colorize(@NotNull List<String> list) {
         return DecentColorAPI.process(list);
-    }
-
-    /*
-     * 	Log
-     */
-
-    /**
-     * Log a message into console.
-     *
-     * @param message The message.
-     */
-    public static void log(String message) {
-        log(Level.INFO, message);
-    }
-
-    /**
-     * Log a message into console.
-     * <p>
-     * This method formats given arguments in the message.
-     * </p>
-     *
-     * @param message The message.
-     * @param args    The arguments
-     */
-    public static void log(String message, Object... args) {
-        log(String.format(message, args));
-    }
-
-    /**
-     * Log a message into console.
-     *
-     * @param level   Level of this message.
-     * @param message The message.
-     */
-    public static void log(Level level, String message) {
-        DecentHolograms.getInstance().getLogger().log(level, message);
-    }
-
-    /**
-     * Log a message into console.
-     * <p>
-     * This method formats given arguments in the message.
-     * </p>
-     *
-     * @param level   Level of this message.
-     * @param message The message.
-     * @param args    The arguments.
-     */
-    public static void log(Level level, String message, Object... args) {
-        log(level, String.format(message, args));
     }
 
     /*
@@ -296,15 +244,15 @@ public final class Common {
      * @return The width.
      */
     public static int getCharWidth(char c) {
-        if (c >= '\u2588' && c <= '\u258F') {
-            return ('\u258F' - c) + 2;
+        if (c >= '█' && c <= '▏') {
+            return ('▏' - c) + 2;
         }
         switch (c) {
             case ' ':
                 return 4;
-            case '\u2714':
+            case '✔':
                 return 8;
-            case '\u2718':
+            case '✘':
                 return 7;
             default:
                 break;

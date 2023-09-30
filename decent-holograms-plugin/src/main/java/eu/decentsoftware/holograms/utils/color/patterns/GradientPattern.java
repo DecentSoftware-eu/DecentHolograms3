@@ -26,7 +26,9 @@ import java.util.regex.Matcher;
 
 public class GradientPattern implements Pattern {
 
-    private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("[<{]#([A-Fa-f0-9]{6})[}>](((?![<{]#[A-Fa-f0-9]{6}[}>]).)*)[<{]/#([A-Fa-f0-9]{6})[}>]");
+    private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile(
+            "[<{]#([A-Fa-f0-9]{6})[}>](((?![<{]#[A-Fa-f0-9]{6}[}>]).)*)[<{]/#([A-Fa-f0-9]{6})[}>]"
+    );
 
     @NotNull
     @Override

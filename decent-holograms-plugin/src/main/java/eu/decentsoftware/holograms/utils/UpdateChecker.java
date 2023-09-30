@@ -18,26 +18,30 @@
 
 package eu.decentsoftware.holograms.utils;
 
+import eu.decentsoftware.holograms.DecentHolograms;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 /**
  * This class is used to check for updates.
  */
 public class UpdateChecker {
 
+    private final DecentHolograms plugin;
     private final String url;
 
     /**
      * Creates a new update checker.
      *
+     * @param plugin     The plugin to check for updates.
      * @param resourceId The resource id of the plugin.
      */
-    public UpdateChecker(int resourceId) {
+    public UpdateChecker(DecentHolograms plugin, int resourceId) {
+        this.plugin = plugin;
         this.url = "https://api.spigotmc.org/legacy/update.php?resource=" + resourceId;
     }
 
@@ -54,7 +58,7 @@ public class UpdateChecker {
                     consumer.accept(scanner.next());
                 }
             } catch (IOException exception) {
-                Common.log(Level.WARNING, "Cannot look for updates: " + exception.getMessage());
+                plugin.getLogger().warning("Cannot look for updates: " + exception.getMessage());
             }
         });
     }

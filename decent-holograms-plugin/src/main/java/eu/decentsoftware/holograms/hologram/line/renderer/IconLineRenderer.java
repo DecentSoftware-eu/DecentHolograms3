@@ -18,10 +18,10 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,8 +37,8 @@ public class IconLineRenderer extends DoubleEntityLineRenderer implements Ticked
 
     private @NotNull DecentItemStack itemStack;
 
-    public IconLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
-        super(nmsAdapter, parent, HologramLineType.ICON);
+    public IconLineRenderer(DecentHolograms plugin, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
+        super(plugin, parent, HologramLineType.ICON);
         this.itemStack = itemStack;
     }
 

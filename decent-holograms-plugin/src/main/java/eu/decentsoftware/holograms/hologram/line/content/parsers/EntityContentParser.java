@@ -18,19 +18,19 @@
 
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentEntity;
 import eu.decentsoftware.holograms.hologram.line.renderer.EntityLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityContentParser implements ContentParser {
 
-    private final NMSAdapter nmsAdapter;
+    private final DecentHolograms plugin;
 
-    public EntityContentParser(NMSAdapter nmsAdapter) {
-        this.nmsAdapter = nmsAdapter;
+    public EntityContentParser(DecentHolograms plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -51,9 +51,9 @@ public class EntityContentParser implements ContentParser {
             renderer.hideAll();
         }
 
-        renderer = new EntityLineRenderer(nmsAdapter, line, entity);
+        renderer = new EntityLineRenderer(plugin, line, entity);
         line.setRenderer(renderer);
-        double entityHeight = nmsAdapter.getEntityHeight(entity.type());
+        double entityHeight = plugin.getNMSManager().getAdapter().getEntityHeight(entity.type());
         line.getPositionManager().getOffsets().setY(entityHeight);
         line.getSettings().setHeight(entityHeight);
         renderer.displayAll();

@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.Config;
-import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.server.Server;
+import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
@@ -34,15 +34,13 @@ import java.util.function.Function;
 @UtilityClass
 final class ReplacementCommons {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
-
-    static int getFromServerOrServersInt(Player player, @NotNull String argument, @NotNull Function<Server, Integer> getValue) {
+    static int getFromServerOrServersInt(ServerRegistry serverRegistry, Player player, @NotNull String argument, @NotNull Function<Server, Integer> getValue) {
         // -- Get from multiple servers
         if (argument.contains(",")) {
             int total = 0;
             for (String s : argument.split(",")) {
-                if (Config.PINGER_ENABLED && PLUGIN.getServerRegistry().containsServer(s)) {
-                    Server server = PLUGIN.getServerRegistry().getServer(s);
+                if (Config.PINGER_ENABLED && serverRegistry.containsServer(s)) {
+                    Server server = serverRegistry.getServer(s);
                     if (server != null && server.isOnline()) {
                         total += getValue.apply(server);
                     }
@@ -57,8 +55,8 @@ final class ReplacementCommons {
             return total;
         }
         // -- Get from one server
-        if (Config.PINGER_ENABLED && PLUGIN.getServerRegistry().containsServer(argument)) {
-            Server server = PLUGIN.getServerRegistry().getServer(argument);
+        if (Config.PINGER_ENABLED && serverRegistry.containsServer(argument)) {
+            Server server = serverRegistry.getServer(argument);
             if (server != null && server.isOnline()) {
                 return getValue.apply(server);
             }

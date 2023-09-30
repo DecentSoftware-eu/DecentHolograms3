@@ -18,16 +18,13 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
-import eu.decentsoftware.holograms.animations.AnimationRegistry;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.Profile;
-import eu.decentsoftware.holograms.profile.ProfileRegistry;
-import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.Common;
 import lombok.Getter;
@@ -57,34 +54,21 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     @Getter
     private String text;
 
-    private final AnimationRegistry animationRegistry;
-    private final ProfileRegistry profileRegistry;
-    private final ReplacementRegistry replacementRegistry;
-
     public TextLineRenderer(
-            @NotNull NMSAdapter nmsAdapter,
-            @NotNull AnimationRegistry animationRegistry,
-            @NotNull ProfileRegistry profileRegistry,
-            @NotNull ReplacementRegistry replacementRegistry,
+            @NotNull DecentHolograms plugin,
             @NotNull String text,
             @NotNull HologramLine parent
     ) {
-        this(nmsAdapter, animationRegistry, profileRegistry, replacementRegistry, text, null, parent);
+        this(plugin, text, null, parent);
     }
 
     public TextLineRenderer(
-            @NotNull NMSAdapter nmsAdapter,
-            @NotNull AnimationRegistry animationRegistry,
-            @NotNull ProfileRegistry profileRegistry,
-            @NotNull ReplacementRegistry replacementRegistry,
+            @NotNull DecentHolograms plugin,
             @NotNull String text,
             String hoverText,
             @NotNull HologramLine parent
     ) {
-        super(nmsAdapter, parent, HologramLineType.TEXT);
-        this.animationRegistry = animationRegistry;
-        this.profileRegistry = profileRegistry;
-        this.replacementRegistry = replacementRegistry;
+        super(plugin, parent, HologramLineType.TEXT);
         this.hoverText = hoverText;
         this.eid = nmsAdapter.getFreeEntityId();
         this.setText(text);
@@ -101,7 +85,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         if (this.text.equalsIgnoreCase("{empty}")) {
             this.text = "";
         }
-        this.containsAnimations = animationRegistry.containsAnimation(text);
+        this.containsAnimations = plugin.getAnimationRegistry().containsAnimation(text);
         if (this.containsAnimations) {
             this.startTicking();
         } else {
@@ -121,7 +105,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
                 formattedText = getFormattedText(viewerPlayer);
                 formattedTextCache.put(viewerPlayer.getUniqueId(), formattedText);
             }
-            formattedText = animationRegistry.animate(formattedText);
+            formattedText = plugin.getAnimationRegistry().animate(formattedText);
             formattedText = Common.colorize(formattedText);
             update(viewerPlayer, formattedText);
         }
@@ -135,7 +119,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
      */
     @NotNull
     private String getFormattedText(@NotNull Player player) {
-        Profile profile = profileRegistry.getProfile(player.getUniqueId());
+        Profile profile = plugin.getProfileRegistry().getProfile(player.getUniqueId());
         String formattedText = text;
 
         // Check if the player in watching the line and if so, use the hover text.
@@ -143,12 +127,12 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
             formattedText = hoverText;
         }
 
-        formattedText = replacementRegistry.replace(formattedText, profile);
+        formattedText = plugin.getReplacementRegistry().replace(formattedText, profile);
         formattedText = PAPI.setPlaceholders(player, formattedText);
 
         if (containsAnimations) {
             formattedTextCache.put(player.getUniqueId(), formattedText);
-            formattedText = animationRegistry.animate(formattedText);
+            formattedText = plugin.getAnimationRegistry().animate(formattedText);
         }
         formattedText = Common.colorize(formattedText);
 
@@ -202,7 +186,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     @Override
     public void teleport(@NotNull Player player, @NotNull Location location) {
         // Teleport the fake armor stand entity
-        nmsAdapter.teleportEntity(player, eid, location, false);
+        nmsAdapter.teleportEntity(player, eid, location, true);
     }
 
     private Object getMetaName(@NotNull String formattedText) {

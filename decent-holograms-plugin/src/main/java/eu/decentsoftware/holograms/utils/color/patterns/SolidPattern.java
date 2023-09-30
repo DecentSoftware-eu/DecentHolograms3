@@ -26,7 +26,8 @@ import java.util.regex.Matcher;
 public class SolidPattern implements Pattern {
 
     private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile(
-            "(?:<c(?:olou?r)?:)?(?:&?#|<&?#)([0-9A-Fa-f]{6})>?"
+            // "(?:<c(?:olou?r)?:)?(?:&?#|<&?#)(?<color>[0-9A-Fa-f]{6})>?"
+            "(?i)<(?:c(?:olou?r)?:)?&?#(?<color>[0-9A-F]{6})>"
     );
 
     @NotNull
@@ -34,8 +35,8 @@ public class SolidPattern implements Pattern {
     public String process(@NotNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
-            String color = matcher.group(1);
-            string = string.replace(matcher.group(), DecentColorAPI.getColor(color) + "");
+            String color = matcher.group("color");
+            string = string.replace(matcher.group(), String.valueOf(DecentColorAPI.getColor(color)));
         }
         return string;
     }

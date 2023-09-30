@@ -127,7 +127,7 @@ public interface HologramVisibilityManager {
      *
      * @return The set of players that see this hologram.
      */
-    default Set<Player> getViewerPlayers() {
+    default Set<Player> getViewersAsPlayers() {
         return getViewers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
@@ -139,12 +139,12 @@ public interface HologramVisibilityManager {
      * the view conditions and the view distance setting of this hologram.
      * The hologram's contents are updated for all players in this list.
      *
-     * @param page The page of the players to get.
+     * @param pageIndex The page of the players to get.
      * @return The set of players that see this hologram at the given page.
      */
-    default Set<Player> getViewerPlayers(int page) {
+    default Set<Player> getViewersAsPlayers(int pageIndex) {
         return getViewers().stream()
-                .filter((viewer) -> getPageIndex(viewer) == page)
+                .filter((viewer) -> getPageIndex(viewer) == pageIndex)
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());

@@ -41,7 +41,7 @@ public class ActionBarAction extends Action {
     @Override
     public void execute(@NotNull Player player) {
         NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
-        nmsAdapter.sendPacket(player, nmsAdapter.packetActionbarMessage(Lang.formatString(message, player)));
+        nmsAdapter.sendActionBar(player, Lang.formatString(message, player));
     }
 
 }

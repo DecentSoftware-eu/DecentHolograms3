@@ -52,14 +52,8 @@ public class TitleAction extends Action {
     @Override
     public void execute(@NotNull Player player) {
         NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
-        nmsAdapter.sendPacket(player, nmsAdapter.packetClearTitle());
-        if (title != null) {
-            nmsAdapter.sendPacket(player, nmsAdapter.packetTitleMessage(title));
-        }
-        if (subtitle != null) {
-            nmsAdapter.sendPacket(player, nmsAdapter.packetSubtitleMessage(subtitle));
-        }
-        nmsAdapter.sendPacket(player, nmsAdapter.packetTimes(Math.max(fadeIn, 1), Math.max(stay, 1), Math.max(fadeOut, 1)));
+        nmsAdapter.resetTitle(player);
+        nmsAdapter.sendTitle(player, title, subtitle, Math.max(fadeIn, 1), Math.max(stay, 1), Math.max(fadeOut, 1));
     }
 
 }

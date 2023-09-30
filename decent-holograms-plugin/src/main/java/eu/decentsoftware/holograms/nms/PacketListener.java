@@ -30,12 +30,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class PacketListener implements Listener {
 
-    private static final DecentHolograms PLUGIN = DecentHolograms.getInstance();
+    private final DecentHolograms plugin;
+
+    public PacketListener(DecentHolograms plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onPacketPlayInUseEntity(@NotNull PacketPlayInUseEntityEvent event) {
         Player player = event.getPlayer();
-        Profile profile = PLUGIN.getProfileRegistry().getProfile(player.getUniqueId());
+        Profile profile = plugin.getProfileRegistry().getProfile(player.getUniqueId());
         if (profile == null) {
             return;
         }

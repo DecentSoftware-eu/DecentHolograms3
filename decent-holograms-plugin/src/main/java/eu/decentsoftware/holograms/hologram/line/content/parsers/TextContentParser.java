@@ -18,27 +18,18 @@
 
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
-import eu.decentsoftware.holograms.animations.AnimationRegistry;
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.TextLineRenderer;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
-import eu.decentsoftware.holograms.profile.ProfileRegistry;
-import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class TextContentParser implements ContentParser {
 
-    private final NMSAdapter nmsAdapter;
-    private final AnimationRegistry animationRegistry;
-    private final ProfileRegistry profileRegistry;
-    private final ReplacementRegistry replacementRegistry;
+    private final DecentHolograms plugin;
 
-    public TextContentParser(NMSAdapter nmsAdapter, AnimationRegistry animationRegistry, ProfileRegistry profileRegistry, ReplacementRegistry replacementRegistry) {
-        this.nmsAdapter = nmsAdapter;
-        this.animationRegistry = animationRegistry;
-        this.profileRegistry = profileRegistry;
-        this.replacementRegistry = replacementRegistry;
+    public TextContentParser(DecentHolograms plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -58,7 +49,7 @@ public class TextContentParser implements ContentParser {
             line.getSettings().setHeight(0.3d);
         }
 
-        renderer = new TextLineRenderer(nmsAdapter, animationRegistry, profileRegistry, replacementRegistry, content, line);
+        renderer = new TextLineRenderer(plugin, content, line);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-0.5d);
         renderer.displayAll();

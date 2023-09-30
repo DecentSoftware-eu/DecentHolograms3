@@ -19,13 +19,13 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
-import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
 import io.netty.channel.ChannelPipeline;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -127,118 +127,81 @@ public interface NMSAdapter {
     PacketPlayInUseEntityEvent extractEventFromPacketPlayInUseEntity(Player player, Object packet);
 
     /**
-     * Create a packet to update the world time for a player.
+     * Send a packet to update the time for a player.
      *
+     * @param player   The player to send the packet to.
      * @param worldAge The world age.
-     * @param day      The day.
-     * @return The packet.
+     * @param day      The day time.
+     * @see <a href="https://wiki.vg/Protocol#Update_Time">https://wiki.vg/Protocol#Update_Time</a>
      */
-    Object updateTimePacket(long worldAge, long day);
+    void sendUpdateTimePacket(Player player, long worldAge, long day);
 
     /**
-     * Create a packet to update the game state for a player.
+     * Send a packet to update the game state for a player.
      *
-     * @param mode  The game state mode.
-     * @param value The game state value.
-     * @return The packet.
+     * @param player The player to send the packet to.
+     * @param mode   The game state mode.
+     * @param value  The game state value.
      * @see <a href="https://wiki.vg/Protocol#Game_Event">https://wiki.vg/Protocol#Game_Event</a>
      */
-    Object packetGameState(int mode, float value);
+    void updateGameState(Player player, int mode, float value);
 
     /**
-     * Create a packet to update the title times for a player.
+     * Send a title to a player.
      *
-     * @param in   The fade in time.
-     * @param stay The stay time.
-     * @param out  The fade out time.
-     * @return The packet.
+     * @param title    The title text.
+     * @param subtitle The subtitle text.
+     * @param fadeIn   The fade in time.
+     * @param stay     The stay time.
+     * @param fadeOut  The fade out time.
      */
-    Object packetTimes(int in, int stay, int out);
+    void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut);
 
     /**
-     * Create a packet to update the title for a player.
+     * Reset the title of a player.
      *
-     * @param text The title text.
-     * @return The packet.
+     * @param player The player to reset the title for.
      */
-    Object packetTitleMessage(String text);
+    void resetTitle(Player player);
 
     /**
-     * Create a packet to update the subtitle for a player.
+     * Send an actionbar message to a player.
      *
-     * @param text The subtitle text.
-     * @return The packet.
+     * @param player  The player to send the message to.
+     * @param message The message to send.
      */
-    Object packetSubtitleMessage(String text);
+    void sendActionBar(Player player, String message);
 
     /**
-     * Create a packet to update the action bar for a player.
+     * Send a TAB header and footer to a player.
      *
-     * @param text The action bar text.
-     * @return The packet.
-     */
-    Object packetActionbarMessage(String text);
-
-    /**
-     * Create a packet to send a json message to a player.
-     *
-     * @param text The json message.
-     * @return The packet.
-     */
-    Object packetJsonMessage(String text);
-
-    /**
-     * Create a packet to reset the title for a player.
-     *
-     * @return The packet.
-     */
-    Object packetResetTitle();
-
-    /**
-     * Create a packet to clear the title for a player.
-     *
-     * @return The packet.
-     */
-    Object packetClearTitle();
-
-    /**
-     * Create a packet to update the player list header and footer for a player.
-     *
+     * @param player The player to send the header and footer to.
      * @param header The header text.
      * @param footer The footer text.
-     * @return The packet.
      */
-    Object packetHeaderFooter(String header, String footer);
+    void sendHeaderFooter(Player player, String header, String footer);
 
     /**
-     * Create a packet to play entity animation for a player.
+     * Send a packet to play an entity animation for a player.
      *
+     * @param player    The player to send the packet to.
      * @param eid       The entity id.
      * @param animation The animation id.
-     * @return The packet.
+     * @see <a href="https://wiki.vg/Protocol#Entity_Animation">https://wiki.vg/Protocol#Entity_Animation</a>
      */
-    Object packetEntityAnimation(int eid, int animation);
+    void sendEntityAnimation(Player player, int eid, int animation);
 
     /**
-     * Create a packet to play a block action for a player.
+     * Send a packet to play a block action for a player.
      *
-     * @param l         The location of the block.
+     * @param player    The player to send the packet to.
+     * @param location  The location of the block.
      * @param action    The action id.
-     * @param param     The parameter.
+     * @param param     The action param.
      * @param blockType The block type.
-     * @return The packet.
+     * @see <a href="https://wiki.vg/Protocol#Block_Action">https://wiki.vg/Protocol#Block_Action</a>
      */
-    Object packetBlockAction(Location l, int action, int param, int blockType);
-
-    /**
-     * Create a packet to play a block change for a player.
-     *
-     * @param l         The location of the block.
-     * @param blockId   The block id.
-     * @param blockData The block data.
-     * @return The packet.
-     */
-    Object packetBlockChange(Location l, int blockId, byte blockData);
+    void sendBlockAction(Player player, Location location, int action, int param, int blockType);
 
     /*
      *  Entity Metadata
@@ -403,25 +366,25 @@ public interface NMSAdapter {
      * Send the spawn packet for an entity to the given player. This spawns
      * the entity at the given location only for the given player.
      *
-     * @param player The player to spawn the entity for.
-     * @param eid    The entity id.
-     * @param id     The entity uuid.
-     * @param type   The entity type.
-     * @param l      The location to spawn the entity at.
+     * @param player   The player to spawn the entity for.
+     * @param eid      The entity id.
+     * @param id       The entity uuid.
+     * @param type     The entity type.
+     * @param location The location to spawn the entity at.
      */
-    void spawnEntity(Player player, int eid, UUID id, EntityType type, Location l);
+    void spawnEntity(Player player, int eid, UUID id, EntityType type, Location location);
 
     /**
      * Send the spawn packet for a living entity to the given player. This spawns
      * the entity at the given location only for the given player.
      *
-     * @param player The player to spawn the entity for.
-     * @param eid    The entity id.
-     * @param id     The entity uuid.
-     * @param type   The entity type.
-     * @param l      The location to spawn the entity at.
+     * @param player   The player to spawn the entity for.
+     * @param eid      The entity id.
+     * @param id       The entity uuid.
+     * @param type     The entity type.
+     * @param location The location to spawn the entity at.
      */
-    void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l);
+    void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location location);
 
     /**
      * Send the packet to update the equipment of an entity to the given player.
@@ -431,17 +394,17 @@ public interface NMSAdapter {
      * @param slot      The slot to update.
      * @param itemStack The item stack to set.
      */
-    void setEquipment(Player player, int eid, EntityEquipmentSlot slot, ItemStack itemStack);
+    void setEquipment(Player player, int eid, EquipmentSlot slot, ItemStack itemStack);
 
     /**
      * Send the packet to teleport an entity to the given player.
      *
      * @param player   The player to send the packet to.
      * @param eid      The entity id.
-     * @param l        The location to teleport the entity to.
+     * @param location The location to teleport the entity to.
      * @param onGround Whether the entity is on the ground.
      */
-    void teleportEntity(Player player, int eid, Location l, boolean onGround);
+    void teleportEntity(Player player, int eid, Location location, boolean onGround);
 
     /**
      * Send the packet to update the passengers of an entity to the given player.

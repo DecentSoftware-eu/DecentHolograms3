@@ -18,19 +18,19 @@
 
 package eu.decentsoftware.holograms.hologram.line.content.parsers;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
 import eu.decentsoftware.holograms.hologram.line.renderer.HeadLineRenderer;
 import eu.decentsoftware.holograms.hologram.line.renderer.LineRenderer;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class HeadContentParser implements ContentParser {
 
-    private final NMSAdapter nmsAdapter;
+    private final DecentHolograms plugin;
 
-    public HeadContentParser(NMSAdapter nmsAdapter) {
-        this.nmsAdapter = nmsAdapter;
+    public HeadContentParser(DecentHolograms plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class HeadContentParser implements ContentParser {
             renderer.hideAll();
         }
 
-        renderer = new HeadLineRenderer(nmsAdapter, line, itemStack);
+        renderer = new HeadLineRenderer(plugin, line, itemStack);
         line.setRenderer(renderer);
         line.getPositionManager().getOffsets().setY(-2.0d);
         line.getSettings().setHeight(0.75d);

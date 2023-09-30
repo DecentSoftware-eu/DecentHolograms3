@@ -20,21 +20,22 @@ package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.api.hologram.component.ClickType;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
-import eu.decentsoftware.holograms.nms.utils.EntityEquipmentSlot;
+import eu.decentsoftware.holograms.nms.utils.ReflectField;
 import eu.decentsoftware.holograms.nms.utils.ReflectUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,23 +44,13 @@ import java.util.UUID;
 public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     private static final Map<String, Integer> ENTITY_TYPE_NAME_ID_MAP;
-    private static final Field ENTITY_COUNT_FIELD;
-    private static final Field USE_PACKET_ENTITY_ID_FIELD;
+    private static final ReflectField ENTITY_COUNT_FIELD;
+    private static final ReflectField USE_PACKET_ENTITY_ID_FIELD;
 
     static {
         ENTITY_TYPE_NAME_ID_MAP = ReflectUtil.getFieldValue(EntityTypes.class, "g");
-        try {
-            ENTITY_COUNT_FIELD = Entity.class.getDeclaredField("entityCount");
-            ENTITY_COUNT_FIELD.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            USE_PACKET_ENTITY_ID_FIELD = PacketPlayInUseEntity.class.getDeclaredField("a");
-            USE_PACKET_ENTITY_ID_FIELD.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+        ENTITY_COUNT_FIELD = new ReflectField(Entity.class, "entityCount");
+        USE_PACKET_ENTITY_ID_FIELD = new ReflectField(PacketPlayInUseEntity.class, "a");
     }
 
     /**
@@ -69,6 +60,10 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
      * because we don't want to create a new instance every time we need to send a packet.
      */
     private final PacketDataSerializer serializer = new PacketDataSerializer(Unpooled.buffer());
+
+    public NMSAdapter_v1_8_R3() {
+        System.out.println("Entity Type ID for ArmorStand: " + getEntityTypeId(EntityType.ARMOR_STAND));
+    }
 
     /*
      *  Utils
@@ -112,6 +107,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         return ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
     }
 
+
     /*
      *  Packets
      */
@@ -122,12 +118,7 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
             return null;
         }
         PacketPlayInUseEntity useEntityPacket = (PacketPlayInUseEntity) packet;
-        int entityId;
-        try {
-            entityId = USE_PACKET_ENTITY_ID_FIELD.getInt(useEntityPacket);
-        } catch (IllegalAccessException e) {
-            return null;
-        }
+        int entityId = (int) USE_PACKET_ENTITY_ID_FIELD.get(useEntityPacket);
         ClickType clickType;
         switch (useEntityPacket.a()) {
             case ATTACK:
@@ -144,52 +135,60 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public Object updateTimePacket(long worldAge, long day) {
-        return new PacketPlayOutUpdateTime(worldAge, day, true);
+    public void sendUpdateTimePacket(Player player, long worldAge, long day) {
+        sendPacket(player, new PacketPlayOutUpdateTime(worldAge, day, true));
     }
 
     @Override
-    public Object packetGameState(int mode, float value) {
-        return new PacketPlayOutGameStateChange(mode, value);
+    public void updateGameState(Player player, int mode, float value) {
+        sendPacket(player, new PacketPlayOutGameStateChange(mode, value));
     }
 
     @Override
-    public Object packetTimes(int in, int stay, int out) {
-        return new PacketPlayOutTitle(in, stay, out);
+    public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        PacketPlayOutTitle titleTimesPacket = new PacketPlayOutTitle(
+                PacketPlayOutTitle.EnumTitleAction.TIMES,
+                null,
+                fadeIn,
+                stay,
+                fadeOut
+        );
+        sendPacket(player, titleTimesPacket);
+
+        if (title != null) {
+            PacketPlayOutTitle titleMessagePacket = new PacketPlayOutTitle(
+                    PacketPlayOutTitle.EnumTitleAction.TITLE,
+                    s(title)
+            );
+            sendPacket(player, titleMessagePacket);
+        }
+
+        if (subtitle != null) {
+            PacketPlayOutTitle subtitleMessagePacket = new PacketPlayOutTitle(
+                    PacketPlayOutTitle.EnumTitleAction.SUBTITLE,
+                    s(subtitle)
+            );
+            sendPacket(player, subtitleMessagePacket);
+        }
     }
 
     @Override
-    public Object packetTitleMessage(String text) {
-        return new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, s(text));
+    public void resetTitle(Player player) {
+        PacketPlayOutTitle resetPacket = new PacketPlayOutTitle(
+                PacketPlayOutTitle.EnumTitleAction.RESET,
+                null
+        );
+        sendPacket(player, resetPacket);
     }
 
     @Override
-    public Object packetSubtitleMessage(String text) {
-        return new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, s(text));
+    public void sendActionBar(Player player, String message) {
+        PacketPlayOutChat packet = new PacketPlayOutChat(s(message), (byte) 2);
+        sendPacket(player, packet);
     }
 
     @Override
-    public Object packetActionbarMessage(String text) {
-        return new PacketPlayOutChat(s(text), (byte) 2);
-    }
-
-    @Override
-    public Object packetJsonMessage(String text) {
-        return new PacketPlayOutChat(s(text));
-    }
-
-    @Override
-    public Object packetResetTitle() {
-        return new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.RESET, null);
-    }
-
-    @Override
-    public Object packetClearTitle() {
-        return new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.CLEAR, null);
-    }
-
-    @Override
-    public Object packetHeaderFooter(String header, String footer) {
+    public void sendHeaderFooter(Player player, String header, String footer) {
         serializer.clear();
         serializer.a(header);
         serializer.a(footer);
@@ -197,15 +196,14 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
             packet.b(serializer);
-            return packet;
+            sendPacket(player, packet);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
     }
 
     @Override
-    public Object packetEntityAnimation(int eid, int animation) {
+    public void sendEntityAnimation(Player player, int eid, int animation) {
         serializer.clear();
         serializer.b(eid);
         serializer.writeByte(animation);
@@ -213,38 +211,28 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
         try {
             PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
             packet.a(serializer);
-            return packet;
+            sendPacket(player, packet);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
     }
 
     @Override
-    public Object packetBlockAction(Location l, int action, int param, int blockType) {
-        return new PacketPlayOutBlockAction(blockPos(l), Block.getByCombinedId(blockType).getBlock(), action, param);
-    }
-
-    @Override
-    public Object packetBlockChange(Location l, int blockId, byte blockData) {
-        serializer.clear();
-        serializer.a(blockPos(l));
-        serializer.b(blockId << 4 | (blockData & 15));
-
-        try {
-            PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange();
-            packet.a(serializer);
-            return packet;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public void sendBlockAction(Player player, Location location, int action, int param, int blockType) {
+        PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(
+                blockPos(location),
+                Block.getByCombinedId(blockType).getBlock(),
+                action,
+                param
+        );
+        sendPacket(player, packet);
     }
 
     /*
      *  Entity Metadata
      */
 
+    @SuppressWarnings("unchecked")
     @Override
     public void sendEntityMetadata(Player player, int eid, List<?> objects) {
         try {
@@ -298,21 +286,21 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     @Override
     public Object getMetaEntityProperties(boolean onFire, boolean crouched, boolean sprinting, boolean swimming, boolean invisible, boolean glowing, boolean flyingElytra) {
         byte data = 0x00;
-        data += onFire ? 0x01 : 0x00;
-        data += crouched ? 0x02 : 0x00;
-        data += sprinting ? 0x08 : 0x00;
-        data += swimming ? 0x10 : 0x00;
-        data += invisible ? 0x20 : 0x00;
+        data += (byte) (onFire ? 0x01 : 0x00);
+        data += (byte) (crouched ? 0x02 : 0x00);
+        data += (byte) (sprinting ? 0x08 : 0x00);
+        data += (byte) (swimming ? 0x10 : 0x00);
+        data += (byte) (invisible ? 0x20 : 0x00);
         return new DataWatcher.WatchableObject(0, 0, data);
     }
 
     @Override
     public Object getMetaArmorStandProperties(boolean small, boolean arms, boolean noBasePlate, boolean marker) {
         byte data = 0x00;
-        data += small ? 0x01 : 0x00;
-        data += arms ? 0x02 : 0x00;
-        data += noBasePlate ? 0x08 : 0x00;
-        data += marker ? 0x10 : 0x00;
+        data += (byte) (small ? 0x01 : 0x00);
+        data += (byte) (arms ? 0x02 : 0x00);
+        data += (byte) (noBasePlate ? 0x08 : 0x00);
+        data += (byte) (marker ? 0x10 : 0x00);
         return new DataWatcher.WatchableObject(0, 10, data);
     }
 
@@ -332,8 +320,8 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
              * We are getting the new entity ids the same way as the server does. This is to ensure
              * that the ids are unique and don't conflict with any other entities.
              */
-            int entityCount = ENTITY_COUNT_FIELD.getInt(null);
-            ENTITY_COUNT_FIELD.setInt(null, entityCount + 1);
+            int entityCount = (int) ENTITY_COUNT_FIELD.get(null);
+            ENTITY_COUNT_FIELD.set(null, entityCount + 1);
             return entityCount;
         } catch (Exception e) {
             throw new RuntimeException("Failed to get new entity ID", e);
@@ -342,6 +330,13 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
 
     @Override
     public int getEntityTypeId(EntityType type) {
+        // TODO: Find a better way to get the entity type id
+//        if (type == EntityType.ARMOR_STAND) {
+//            return 30;
+//        }
+//        if (type == EntityType.DROPPED_ITEM) {
+//            return 2;
+//        }
         // noinspection deprecation
         return ENTITY_TYPE_NAME_ID_MAP == null ? type.getTypeId() : ENTITY_TYPE_NAME_ID_MAP.get(type.getName());
     }
@@ -352,15 +347,15 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public void spawnEntity(Player player, int eid, UUID id, EntityType type, Location l) {
+    public void spawnEntity(Player player, int eid, UUID id, EntityType type, Location location) {
         serializer.clear();
         serializer.b(eid);
         serializer.writeByte(getEntityTypeId(type));
-        serializer.writeInt(MathHelper.floor(l.getX() * 32));
-        serializer.writeInt(MathHelper.floor(l.getY() * 32));
-        serializer.writeInt(MathHelper.floor(l.getZ() * 32));
-        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
-        serializer.writeByte(MathHelper.d(l.getPitch() * 256.0F / 360.0F));
+        serializer.writeInt(MathHelper.floor(location.getX() * 32));
+        serializer.writeInt(MathHelper.floor(location.getY() * 32));
+        serializer.writeInt(MathHelper.floor(location.getZ() * 32));
+        serializer.writeByte(MathHelper.d(location.getYaw() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(location.getPitch() * 256.0F / 360.0F));
         serializer.writeInt(1);
         serializer.writeShort(0);
         serializer.writeShort(0);
@@ -378,16 +373,16 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location l) {
+    public void spawnEntityLiving(Player player, int eid, UUID id, EntityType type, Location location) {
         serializer.clear();
         serializer.b(eid);
         serializer.writeByte(getEntityTypeId(type));
-        serializer.writeInt(MathHelper.floor(l.getX() * 32));
-        serializer.writeInt(MathHelper.floor(l.getY() * 32));
-        serializer.writeInt(MathHelper.floor(l.getZ() * 32));
-        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
-        serializer.writeByte(MathHelper.d(l.getPitch() * 256.0F / 360.0F));
-        serializer.writeByte(MathHelper.d(l.getYaw() * 256.0F / 360.0F));
+        serializer.writeInt(MathHelper.floor(location.getX() * 32));
+        serializer.writeInt(MathHelper.floor(location.getY() * 32));
+        serializer.writeInt(MathHelper.floor(location.getZ() * 32));
+        serializer.writeByte(MathHelper.d(location.getYaw() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(location.getPitch() * 256.0F / 360.0F));
+        serializer.writeByte(MathHelper.d(location.getYaw() * 256.0F / 360.0F));
         serializer.writeShort(0);
         serializer.writeShort(0);
         serializer.writeShort(0);
@@ -404,20 +399,24 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
     }
 
     @Override
-    public void setEquipment(Player player, int eid, EntityEquipmentSlot slot, org.bukkit.inventory.ItemStack itemStack) {
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(eid, slot.getLegacySlotId(), i(itemStack));
+    public void setEquipment(Player player, int eid, EquipmentSlot slot, org.bukkit.inventory.ItemStack itemStack) {
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(
+                eid,
+                CraftEquipmentSlot.getSlotIndex(slot),
+                i(itemStack)
+        );
         sendPacket(player, packet);
     }
 
     @Override
-    public void teleportEntity(Player player, int eid, Location l, boolean onGround) {
+    public void teleportEntity(Player player, int eid, Location location, boolean onGround) {
         sendPacket(player, new PacketPlayOutEntityTeleport(
                 eid,
-                MathHelper.floor(l.getX() * 32.0),
-                MathHelper.floor(l.getY() * 32.0),
-                MathHelper.floor(l.getZ() * 32.0),
-                (byte) ((int) (l.getYaw() * 256.0F / 360.0F)),
-                (byte) ((int) (l.getPitch() * 256.0F / 360.0F)),
+                MathHelper.floor(location.getX() * 32.0),
+                MathHelper.floor(location.getY() * 32.0),
+                MathHelper.floor(location.getZ() * 32.0),
+                (byte) ((int) (location.getYaw() * 256.0F / 360.0F)),
+                (byte) ((int) (location.getPitch() * 256.0F / 360.0F)),
                 onGround
         ));
     }

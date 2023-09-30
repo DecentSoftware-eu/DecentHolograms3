@@ -24,9 +24,9 @@ import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,28 +40,24 @@ import org.jetbrains.annotations.Nullable;
 public class NMSManager {
 
     private static final String IDENTIFIER = "DecentHolograms";
-    @Getter
-    private static NMSManager instance;
-
-    @Getter
+    private final DecentHolograms plugin;
     private final NMSAdapter adapter;
-    private boolean usingProtocolLib = false;
+    private final NMSListener listener;
+    private ProtocolLibHook protocolLibHook;
 
     /**
      * Initializes the NMS adapter. If the version is not supported, an exception is thrown.
      *
      * @throws IllegalStateException If the current version is not supported.
      */
-    public NMSManager() throws IllegalStateException {
-        if (instance != null) {
-            throw new IllegalStateException("NMSManager is already initialized!");
-        }
-        instance = this;
-
+    public NMSManager(DecentHolograms plugin) throws IllegalStateException {
+        this.plugin = plugin;
         this.adapter = initNMSAdapter();
         if (this.adapter == null) {
             throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
         }
+        this.listener = new NMSListener(this);
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
     /**
@@ -71,8 +67,10 @@ public class NMSManager {
         this.shutdown();
 
         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            ProtocolLibHook.initListener(adapter);
-            usingProtocolLib = true;
+            if (protocolLibHook == null) {
+                protocolLibHook = new ProtocolLibHook(plugin);
+            }
+            protocolLibHook.initListener(adapter);
         } else {
             hookAll();
         }
@@ -82,11 +80,10 @@ public class NMSManager {
      * Shutdown the NMS manager, unhooking all players.
      */
     public void shutdown() {
-        if (usingProtocolLib) {
-            if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-                ProtocolLibHook.shutdownListener();
-                usingProtocolLib = false;
-            }
+        HandlerList.unregisterAll(listener);
+
+        if (usingProtocolLib()) {
+            protocolLibHook.shutdownListener();
         } else {
             unhookAll();
         }
@@ -100,7 +97,7 @@ public class NMSManager {
      * @return True if the packet handler was created, false otherwise.
      */
     public boolean hook(@NotNull Player player) {
-        if (usingProtocolLib) {
+        if (usingProtocolLib()) {
             return true;
         }
 
@@ -127,7 +124,7 @@ public class NMSManager {
             }
             return true;
         } catch (Exception e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to hook player " + player.getName() + "!");
+            plugin.getLogger().warning("Failed to hook player " + player.getName() + "!");
             e.printStackTrace();
         }
         return false;
@@ -139,7 +136,7 @@ public class NMSManager {
      * @see #hook(Player)
      */
     public void hookAll() {
-        if (!usingProtocolLib) {
+        if (!usingProtocolLib()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 hook(player);
             }
@@ -153,7 +150,7 @@ public class NMSManager {
      * @return True if the packet handler was destroyed, false otherwise.
      */
     public boolean unhook(@NotNull Player player) {
-        if (usingProtocolLib) {
+        if (usingProtocolLib()) {
             return true;
         }
 
@@ -164,7 +161,7 @@ public class NMSManager {
             }
             return true;
         } catch (Exception e) {
-            DecentHolograms.getInstance().getLogger().warning("Failed to unhook player " + player.getName() + "!");
+            plugin.getLogger().warning("Failed to unhook player " + player.getName() + "!");
             e.printStackTrace();
         }
         return false;
@@ -176,18 +173,21 @@ public class NMSManager {
      * @see #unhook(Player)
      */
     public void unhookAll() {
-        if (!usingProtocolLib) {
+        if (!usingProtocolLib()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 unhook(player);
             }
         }
     }
 
-    /**
-     * Attempts to find the correct NMS adapter for the current version.
-     *
-     * @return The NMS adapter or null if none was found.
-     */
+    public NMSAdapter getAdapter() {
+        return adapter;
+    }
+
+    private boolean usingProtocolLib() {
+        return Bukkit.getPluginManager().isPluginEnabled("ProtocolLib") && protocolLibHook != null;
+    }
+
     @Nullable
     private NMSAdapter initNMSAdapter() {
         String version = Version.CURRENT.name();

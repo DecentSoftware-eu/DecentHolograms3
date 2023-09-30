@@ -93,6 +93,13 @@ public interface HologramPage extends Clickable {
     void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads);
 
     /**
+     * Get the height of this page. The height is the sum of the heights of all the lines.
+     *
+     * @return The height of this page.
+     */
+    double getHeight();
+
+    /**
      * Get the next {@link Location}, that's free to use for a line.
      *
      * @return The next {@link Location}, that's free to use for a line.

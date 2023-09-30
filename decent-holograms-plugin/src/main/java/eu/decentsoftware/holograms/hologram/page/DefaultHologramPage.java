@@ -30,36 +30,49 @@ import eu.decentsoftware.holograms.api.hologram.line.HologramLineSettings;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
+import eu.decentsoftware.holograms.hologram.DefaultHologramEntityIDProvider;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.math.MathUtil;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class DefaultHologramPage implements HologramPage {
 
-    private final @NotNull Hologram parent;
-    private final @NotNull List<HologramLine> lines;
-    private final @NotNull ClickConditionHolder clickConditions;
-    private final @NotNull ClickActionHolder clickActions;
+    private final Hologram parent;
+    private final DefaultHologramEntityIDProvider entityIDProvider;
+    private final List<HologramLine> lines;
+    private final ClickConditionHolder clickConditions;
+    private final ClickActionHolder clickActions;
     private ClickHandler clickHandler;
 
-    public DefaultHologramPage(@NotNull Hologram parent) {
-        this(parent, new ClickConditionHolder(), new ClickActionHolder());
+    public DefaultHologramPage(
+            @NonNull Hologram parent,
+            @NonNull DefaultHologramEntityIDProvider entityIDProvider
+    ) {
+        this(parent, entityIDProvider, new ClickConditionHolder(), new ClickActionHolder());
     }
 
     @Contract(pure = true)
-    public DefaultHologramPage(@NotNull Hologram parent, @NotNull ClickConditionHolder clickConditions, @NotNull ClickActionHolder clickActions) {
+    public DefaultHologramPage(
+            @NonNull Hologram parent,
+            @NonNull DefaultHologramEntityIDProvider entityIDProvider,
+            @NonNull ClickConditionHolder clickConditions,
+            @NonNull ClickActionHolder clickActions
+    ) {
         this.parent = parent;
+        this.entityIDProvider = entityIDProvider;
         this.lines = new ArrayList<>();
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
@@ -74,29 +87,29 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     @Override
-    public void display(@NotNull Player player) {
+    public void display(@NonNull Player player) {
         forEachLineRendererSafe(renderer -> renderer.display(player));
     }
 
     @Override
-    public void hide(@NotNull Player player) {
+    public void hide(@NonNull Player player) {
         forEachLineRendererSafe(renderer -> renderer.hide(player));
     }
 
     @Override
-    public void update(@NotNull Player player) {
+    public void update(@NonNull Player player) {
         forEachLineRendererSafe(renderer -> renderer.update(player));
     }
 
     @Override
-    public void teleport(@NotNull Player player, @NotNull Location location) {
+    public void teleport(@NonNull Player player, @NonNull Location location) {
         forEachLineRendererSafe(renderer -> renderer.teleport(player, location));
     }
 
     @Override
     public void recalculate() {
         int pageIndex = parent.getIndex(this);
-        Set<Player> viewers = parent.getVisibilityManager().getViewerPlayers(pageIndex);
+        Set<Player> viewers = parent.getVisibilityManager().getViewersAsPlayers(pageIndex);
 
         final boolean horizontal = parent.getSettings().isRotateHorizontal();
         final boolean vertical = parent.getSettings().isRotateVertical();
@@ -109,7 +122,9 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     @Override
-    public void recalculate(@NotNull Player player, boolean horizontal, boolean vertical, boolean heads) {
+    public void recalculate(@NonNull Player player, boolean horizontal, boolean vertical, boolean heads) {
+        // TODO: don't send packets if the difference is insignificant
+
         final Location hologramLocation = parent.getPositionManager().getActualLocation();
         final boolean downOrigin = parent.getSettings().isDownOrigin();
         final double totalHeight = getHeight();
@@ -145,8 +160,11 @@ public class DefaultHologramPage implements HologramPage {
                     pivot.toVector(),
                     totalHeight
             );
+        } else {
+            Profile profile = DecentHolograms.getInstance().getProfileRegistry().getProfile(player.getUniqueId());
+            profile.getContext().destroyClickableEntity(player);
+            profile.getContext().setWatchedLine(null);
         }
-        // TODO: Remove clickable entity if not interactive anymore?
 
         // Calculate new location for each line.
         double height = 0.0d;
@@ -195,7 +213,7 @@ public class DefaultHologramPage implements HologramPage {
         }
     }
 
-    private void simpleRecalculate(@NotNull Player player, @NotNull Location hologramLocation) {
+    private void simpleRecalculate(@NonNull Player player, @NonNull Location hologramLocation) {
         for (HologramLine line : lines) {
             HologramLineRenderer renderer = line.getRenderer();
             PositionManager positionManager = line.getPositionManager();
@@ -208,10 +226,10 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     private void updateClickableEntityAndWatchedLine(
-            @NotNull Player player,
-            @NotNull Vector horizontalPerpendicular,
-            @NotNull Vector verticalPerpendicular,
-            @NotNull Vector pivot,
+            @NonNull Player player,
+            @NonNull Vector horizontalPerpendicular,
+            @NonNull Vector verticalPerpendicular,
+            @NonNull Vector pivot,
             double totalHeight
     ) {
         Location playerEyeLocation = player.getEyeLocation();
@@ -277,28 +295,29 @@ public class DefaultHologramPage implements HologramPage {
         }
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Location getNextLineLocation() {
         return parent.getPositionManager().getActualLocation().subtract(0, getHeight(), 0);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Hologram getParent() {
         return parent;
     }
 
-    @NotNull
+    @NonNull
     public ClickConditionHolder getClickConditions() {
         return clickConditions;
     }
 
-    @NotNull
+    @NonNull
     public ClickActionHolder getClickActions() {
         return clickActions;
     }
 
+    @Override
     public double getHeight() {
         return lines.stream()
                 .mapToDouble(l -> l.getSettings().getHeight())
@@ -311,7 +330,7 @@ public class DefaultHologramPage implements HologramPage {
     }
 
     @Override
-    public int getIndex(@NotNull HologramLine line) {
+    public int getIndex(@NonNull HologramLine line) {
         return lines.contains(line) ? lines.indexOf(line) : -1;
     }
 
@@ -326,15 +345,15 @@ public class DefaultHologramPage implements HologramPage {
         return line;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage addLine(@NotNull String line) {
+    public HologramPage addLine(@NonNull String line) {
         return addLine(new DefaultHologramLine(this, getNextLineLocation(), line));
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage addLine(@NotNull HologramLine line) {
+    public HologramPage addLine(@NonNull HologramLine line) {
         lines.add(line);
 
         // Show the line to all viewers
@@ -345,15 +364,15 @@ public class DefaultHologramPage implements HologramPage {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage addLine(int index, @NotNull String line) {
+    public HologramPage addLine(int index, @NonNull String line) {
         return addLine(index, new DefaultHologramLine(this, getNextLineLocation(), line));
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage addLine(int index, @NotNull HologramLine line) {
+    public HologramPage addLine(int index, @NonNull HologramLine line) {
         lines.add(index, line);
 
         // Show the line to all viewers
@@ -364,9 +383,9 @@ public class DefaultHologramPage implements HologramPage {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage setLine(int index, @NotNull HologramLine line) {
+    public HologramPage setLine(int index, @NonNull HologramLine line) {
         HologramLine previousLine = lines.remove(index);
 
         // Hide the previous line to all viewers
@@ -376,7 +395,7 @@ public class DefaultHologramPage implements HologramPage {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public HologramPage clearLines() {
         // Hide all lines from all viewers
@@ -386,17 +405,17 @@ public class DefaultHologramPage implements HologramPage {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage setLinesFromStrings(@NotNull List<String> lines) {
+    public HologramPage setLinesFromStrings(@NonNull List<String> lines) {
         return setLines(lines.stream()
                 .map(s -> new DefaultHologramLine(this, getNextLineLocation(), s))
                 .collect(Collectors.toList()));
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public HologramPage setLines(@NotNull List<HologramLine> lines) {
+    public HologramPage setLines(@NonNull List<HologramLine> lines) {
         // Hide all lines from all viewers
         forEachLineRendererAndViewerSafe(HologramLineRenderer::hide);
 
@@ -408,7 +427,7 @@ public class DefaultHologramPage implements HologramPage {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public List<HologramLine> getLines() {
         return ImmutableList.copyOf(lines);
@@ -425,7 +444,7 @@ public class DefaultHologramPage implements HologramPage {
         this.clickHandler = clickHandler;
     }
 
-    private void forEachLineRendererSafe(@NotNull Consumer<HologramLineRenderer> consumer) {
+    private void forEachLineRendererSafe(@NonNull Consumer<HologramLineRenderer> consumer) {
         for (HologramLine line : lines) {
             HologramLineRenderer renderer = line.getRenderer();
             if (renderer != null) {
@@ -434,21 +453,16 @@ public class DefaultHologramPage implements HologramPage {
         }
     }
 
-    private void forEachLineRendererAndViewerSafe(@NotNull BiConsumer<HologramLineRenderer, Player> consumer) {
+    private void forEachLineRendererAndViewerSafe(@NonNull BiConsumer<HologramLineRenderer, Player> consumer) {
         for (HologramLine line : lines) {
-            HologramLineRenderer renderer = line.getRenderer();
-            if (renderer != null) {
-                for (Player viewerPlayer : parent.getVisibilityManager().getViewerPlayers()) {
-                    consumer.accept(renderer, viewerPlayer);
-                }
-            }
+            forEachViewerUseLineRendererSafe(line, consumer);
         }
     }
 
-    private void forEachViewerUseLineRendererSafe(@NotNull HologramLine line, @NotNull BiConsumer<HologramLineRenderer, Player> consumer) {
+    private void forEachViewerUseLineRendererSafe(@NonNull HologramLine line, @NonNull BiConsumer<HologramLineRenderer, Player> consumer) {
         HologramLineRenderer renderer = line.getRenderer();
         if (renderer != null) {
-            for (Player viewerPlayer : parent.getVisibilityManager().getViewerPlayers()) {
+            for (Player viewerPlayer : parent.getVisibilityManager().getViewersAsPlayers()) {
                 consumer.accept(renderer, viewerPlayer);
             }
         }

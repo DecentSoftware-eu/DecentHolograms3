@@ -19,9 +19,8 @@
 package eu.decentsoftware.holograms.editor.move;
 
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -42,15 +41,15 @@ import java.util.function.Supplier;
  */
 public class MoveController {
 
-    private final DefaultHologramRegistry hologramRegistry;
-    private final Map<UUID, DefaultHologram> movers = new ConcurrentHashMap<>();
+    private final DecentHolograms plugin;
+    private final Map<UUID, Hologram> movers = new ConcurrentHashMap<>();
     private final MoveListener listener;
 
     /**
      * Create a new MoveController and register the listener.
      */
-    public MoveController(DecentHolograms plugin, DefaultHologramRegistry hologramRegistry) {
-        this.hologramRegistry = hologramRegistry;
+    public MoveController(DecentHolograms plugin) {
+        this.plugin = plugin;
         this.listener = new MoveListener(this);
 
         Bukkit.getPluginManager().registerEvents(listener, plugin);
@@ -60,7 +59,7 @@ public class MoveController {
      * Shutdown this controller, cancelling all move actions and unregistering the listener.
      */
     public void shutdown() {
-        hologramRegistry.getHolograms().forEach(hologram -> {
+        plugin.getHologramRegistry().getHolograms().forEach(hologram -> {
             Supplier<Location> binder = hologram.getPositionManager().getLocationBinder();
             if (binder instanceof MoveLocationBinder) {
                 cancel(((MoveLocationBinder) binder).getPlayer());
@@ -81,7 +80,7 @@ public class MoveController {
      * @see #place(Player)
      * @see #cancel(Player)
      */
-    public boolean initiate(@NotNull Player player, @NotNull DefaultHologram hologram) {
+    public boolean initiate(@NotNull Player player, @NotNull Hologram hologram) {
         hologram.getPositionManager().bindLocation(new MoveLocationBinder(player, hologram));
         movers.put(player.getUniqueId(), hologram);
         return true;
@@ -93,13 +92,13 @@ public class MoveController {
      * who can see it.
      *
      * @param player The player who is placing the hologram.
-     * @see #initiate(Player, DefaultHologram)
+     * @see #initiate(Player, Hologram)
      * @see #cancel(Player)
      */
     public boolean place(@NotNull Player player) {
-        Optional<DefaultHologram> optional = findMovedHologram(player);
+        Optional<Hologram> optional = findMovedHologram(player);
         if (optional.isPresent()) {
-            DefaultHologram hologram = optional.get();
+            Hologram hologram = optional.get();
             PositionManager positionManager = hologram.getPositionManager();
             positionManager.setLocation(positionManager.getActualLocation());
             positionManager.unbindLocation();
@@ -118,13 +117,13 @@ public class MoveController {
      * put the hologram back to its original location.
      *
      * @param player The player who is cancelling the move.
-     * @see #initiate(Player, DefaultHologram)
+     * @see #initiate(Player, Hologram)
      * @see #place(Player)
      */
     public boolean cancel(@NotNull Player player) {
-        Optional<DefaultHologram> optional = findMovedHologram(player);
+        Optional<Hologram> optional = findMovedHologram(player);
         if (optional.isPresent()) {
-            DefaultHologram hologram = optional.get();
+            Hologram hologram = optional.get();
             hologram.getPositionManager().unbindLocation();
             hologram.recalculate();
 
@@ -140,7 +139,7 @@ public class MoveController {
      * @param player The player who is moving the hologram.
      * @return The hologram that is being moved by the player. Empty if the player is not moving any hologram.
      */
-    public Optional<DefaultHologram> findMovedHologram(@NotNull Player player) {
+    public Optional<Hologram> findMovedHologram(@NotNull Player player) {
         if (!movers.containsKey(player.getUniqueId())) {
             return Optional.empty();
         }

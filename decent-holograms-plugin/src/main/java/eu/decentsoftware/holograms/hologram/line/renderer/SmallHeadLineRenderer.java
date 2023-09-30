@@ -18,16 +18,16 @@
 
 package eu.decentsoftware.holograms.hologram.line.renderer;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLineType;
 import eu.decentsoftware.holograms.hologram.line.content.objects.DecentItemStack;
-import eu.decentsoftware.holograms.nms.NMSAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class SmallHeadLineRenderer extends HeadLineRenderer {
 
-    public SmallHeadLineRenderer(@NotNull NMSAdapter nmsAdapter, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
-        super(nmsAdapter, parent, itemStack, HologramLineType.SMALL_HEAD, true);
+    public SmallHeadLineRenderer(@NotNull DecentHolograms plugin, @NotNull HologramLine parent, @NotNull DecentItemStack itemStack) {
+        super(plugin, parent, itemStack, HologramLineType.SMALL_HEAD, true);
     }
 
 }

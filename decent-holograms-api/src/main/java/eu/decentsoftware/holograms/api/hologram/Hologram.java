@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.api.hologram;
 
 import eu.decentsoftware.holograms.api.hologram.component.PositionManager;
 import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public interface Hologram {
      * @return The configuration manager of the hologram.
      * @see HologramConfig
      */
-    @NotNull
+    @NonNull
     HologramConfig getConfig();
 
     /**
@@ -70,7 +70,7 @@ public interface Hologram {
      * @return The settings manager of the hologram.
      * @see HologramSettings
      */
-    @NotNull
+    @NonNull
     HologramSettings getSettings();
 
     /**
@@ -80,7 +80,7 @@ public interface Hologram {
      * @return The position manager of the hologram.
      * @see PositionManager
      */
-    @NotNull
+    @NonNull
     PositionManager getPositionManager();
 
     /**
@@ -90,7 +90,7 @@ public interface Hologram {
      * @return The visibility manager of the hologram.
      * @see HologramVisibilityManager
      */
-    @NotNull
+    @NonNull
     HologramVisibilityManager getVisibilityManager();
 
     /**
@@ -108,34 +108,24 @@ public interface Hologram {
      * @param page The page to get the index of.
      * @return The index or -1 if the given page in not present in this page holder.
      */
-    int getIndex(@NotNull HologramPage page);
+    int getIndex(@NonNull HologramPage page);
 
     /**
      * Append a new page to this hologram.
      *
      * @return Instance of this hologram.
      */
-    @NotNull
-    Hologram addPage();
-
-    /**
-     * Add a page to this hologram.
-     *
-     * @param page The page to add.
-     * @return Instance of this hologram.
-     */
-    @NotNull
-    Hologram addPage(@NotNull HologramPage page);
+    @NonNull
+    HologramPage addPage();
 
     /**
      * Insert a page to this hologram at the specified index.
      *
      * @param index The index to insert the page at.
-     * @param page The page to insert.
      * @return Instance of this hologram.
      */
-    @NotNull
-    Hologram addPage(int index, @NotNull HologramPage page);
+    @NonNull
+    HologramPage addPage(int index);
 
     /**
      * Remove a page from this hologram by its index.
@@ -143,7 +133,7 @@ public interface Hologram {
      * @param index The index of the page to remove.
      * @return Instance of this hologram.
      */
-    @NotNull
+    @NonNull
     Hologram removePage(int index);
 
     /**
@@ -151,24 +141,15 @@ public interface Hologram {
      *
      * @return Instance of this hologram.
      */
-    @NotNull
+    @NonNull
     Hologram clearPages();
-
-    /**
-     * Set the pages of this hologram.
-     *
-     * @param pages The pages to set.
-     * @return Instance of this hologram.
-     */
-    @NotNull
-    Hologram setPages(@NotNull List<HologramPage> pages);
 
     /**
      * Get the list of pages in this hologram. The returned list is immutable.
      *
      * @return Immutable list of pages in this hologram.
      */
-    @NotNull
+    @NonNull
     List<HologramPage> getPages();
 
 }

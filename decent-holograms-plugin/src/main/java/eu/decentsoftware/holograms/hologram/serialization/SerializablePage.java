@@ -20,10 +20,10 @@ package eu.decentsoftware.holograms.hologram.serialization;
 
 import eu.decentsoftware.holograms.actions.ClickActionHolder;
 import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
+import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.line.DefaultHologramLine;
-import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
+import eu.decentsoftware.holograms.hologram.page.DefaultHologramPage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +82,7 @@ public class SerializablePage {
         }
         DefaultHologramPage page = new DefaultHologramPage(
                 hologram,
-                clickConditions,
+                hologram.getEntityIDProvider(), clickConditions,
                 clickActions
         );
         for (SerializableLine line : this.lines) {
