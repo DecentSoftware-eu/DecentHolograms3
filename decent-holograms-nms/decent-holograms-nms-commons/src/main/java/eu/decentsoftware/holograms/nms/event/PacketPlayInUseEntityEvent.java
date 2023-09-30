@@ -4,7 +4,6 @@ import eu.decentsoftware.holograms.api.event.DecentHologramsEvent;
 import eu.decentsoftware.holograms.api.hologram.component.ClickType;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -18,12 +17,18 @@ import org.bukkit.event.Cancellable;
  */
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class PacketPlayInUseEntityEvent extends DecentHologramsEvent implements Cancellable {
 
     private final @NonNull Player player;
     private final int entityId;
     private final @NonNull ClickType clickType;
-    private boolean cancelled;
+    private boolean cancelled = false;
+
+    public PacketPlayInUseEntityEvent(@NonNull Player player, int entityId, @NonNull ClickType clickType) {
+        super(true);
+        this.player = player;
+        this.entityId = entityId;
+        this.clickType = clickType;
+    }
 
 }

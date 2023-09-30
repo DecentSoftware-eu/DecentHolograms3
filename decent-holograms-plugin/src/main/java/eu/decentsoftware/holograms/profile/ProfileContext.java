@@ -71,7 +71,7 @@ public class ProfileContext {
     public void moveOrCreateClickableEntity(@NonNull Player player, @NonNull Location location) {
         NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
         if (clickableEntitySpawned) {
-            nmsAdapter.teleportEntity(player, clickableEntityId, location, true);
+            nmsAdapter.teleportEntity(player, clickableEntityId, location, false);
         } else {
             nmsAdapter.spawnEntityLiving(player, clickableEntityId, UUID.randomUUID(), EntityType.SLIME, location);
             Object metaProperties = nmsAdapter.getMetaEntityProperties(
