@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.utils;
 import lombok.NonNull;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -66,10 +67,10 @@ public class ComponentMessage {
     /**
      * Send this message to the given {@link CommandSender}.
      *
-     * @param commandSender The command sender to send the message to.
+     * @param player The command sender to send the message to.
      */
-    public void send(@NonNull CommandSender commandSender) {
-        commandSender.spigot().sendMessage(build());
+    public void send(@NonNull Player player) {
+        player.spigot().sendMessage(builder.create());
     }
 
     /**
@@ -78,9 +79,15 @@ public class ComponentMessage {
      * @return This message.
      */
     @NonNull
-    public ComponentBuilder newLine() {
+    public ComponentMessage newLine() {
         builder.append("\n");
-        return builder;
+        return this;
+    }
+
+    @NonNull
+    public ComponentMessage reset() {
+        builder.reset();
+        return this;
     }
 
     /**
@@ -91,7 +98,9 @@ public class ComponentMessage {
      */
     @NonNull
     public ComponentMessage append(@NonNull BaseComponent... components) {
-        builder.append(components);
+        for (BaseComponent component : components) {
+            builder.append(component);
+        }
         return this;
     }
 

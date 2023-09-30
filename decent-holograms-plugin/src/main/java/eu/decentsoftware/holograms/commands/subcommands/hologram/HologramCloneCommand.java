@@ -39,10 +39,10 @@ public class HologramCloneCommand extends DecentCommand {
         super(
                 "clone",
                 Config.ADMIN_PERM,
-                "/hologram clone <hologram> <new name>",
+                "/dh hologram clone <hologram> <new name>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram clone <hologram> <new name>",
+                        " ",
+                        "&b> &3&l/dh hologram clone <hologram> <new name>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to clone.",
                         "&b> &8∙ &b<new name> &8- &7Name of the new hologram.",
                         "&b>",
@@ -50,7 +50,7 @@ public class HologramCloneCommand extends DecentCommand {
                         "&b> &flocation, with the given name.",
                         "&b> ",
                         "&b> &7Aliases: &bclone, copy",
-                        ""
+                        " "
                 ),
                 "copy"
         );

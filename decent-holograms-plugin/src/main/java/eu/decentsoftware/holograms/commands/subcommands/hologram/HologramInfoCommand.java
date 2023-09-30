@@ -37,14 +37,14 @@ public class HologramInfoCommand extends DecentCommand {
                 Config.ADMIN_PERM,
                 "/dh hologram info <hologram>",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh hologram info <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to get info about.",
                         "&b>",
                         "&b> &fShows information about the given hologram.",
                         "&b> ",
                         "&b> &7Aliases: &binfo, i, about",
-                        ""
+                        " "
                 ),
                 "i", "about"
         );

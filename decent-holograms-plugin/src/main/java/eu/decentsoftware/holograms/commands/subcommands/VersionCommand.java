@@ -34,14 +34,14 @@ public class VersionCommand extends DecentCommand {
                 null,
                 "/dh version",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh version",
                         "&b>",
                         "&b> &fThis command displays some information about the",
                         "&b> &fplugin's version.",
                         "&b>",
                         "&b> &7Aliases: &bversion, ver, about",
-                        ""
+                        " "
                 ),
                 "ver", "about"
         );

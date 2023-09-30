@@ -35,7 +35,7 @@ public class WikiCommand extends DecentCommand {
                 Config.ADMIN_PERM,
                 "/dh wiki [search]",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh wiki [search]",
                         "&b> &8∙ &b[search] &8- &7Optional search query.",
                         "&b>",
@@ -44,7 +44,7 @@ public class WikiCommand extends DecentCommand {
                         "&b> &fyou need to use this plugin.",
                         "&b>",
                         "&b> &7Aliases: &bwiki, docs, documentation",
-                        ""
+                        " "
                 ),
                 "docs", "documentation"
         );

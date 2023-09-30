@@ -39,28 +39,29 @@ public class RootCommand extends DecentCommand {
         super(
                 "decentholograms",
                 null,
-                "/dh ...",
+                "/dh",
                 Arrays.asList(
-                        "",
+                        " ",
                         " &3&lDECENT HOLOGRAMS",
                         " &fGeneral usage of commands.",
-                        "",
+                        " ",
                         " &3Arguments:",
-                        " &8• &b<required> &8- &7This argument is required.",
-                        " &8• &b[optional] &8- &7This argument is optional.",
-                        "",
+                        " &8∙ &b<required> &8- &7This argument is required.",
+                        " &8∙ &b[optional] &8- &7This argument is optional.",
+                        " ",
                         " &8The parenthesis are not a part of the final command.",
-                        "",
+                        " ",
                         " &3Root aliases:",
-                        " &8• &b/dh, /decentholograms, /holograms, /hologram, /holo",
-                        "",
+                        " &8∙ &b/dh, /decentholograms, /holograms, /hologram, /holo",
+                        " ",
                         " &7Use &b&n/dh help&7 to view all available commands.",
-                        "",
+                        " ",
                         " &6&lTIP! &eYou can hover over any command in the help message to see some more detailed information. Typing the command without arguments also shows you the same information.",
-                        ""
+                        " "
                 ),
                 "dh", "holograms", "hologram", "holo"
         );
+        setHidden(true);
 
         subCommands.add(new HelpCommand());
         subCommands.add(new VersionCommand());
@@ -79,7 +80,8 @@ public class RootCommand extends DecentCommand {
             Lang.sendVersionMessage(sender);
             return true;
         }
-        return false;
+        sendDescription(sender);
+        return true;
     }
 
     @Override

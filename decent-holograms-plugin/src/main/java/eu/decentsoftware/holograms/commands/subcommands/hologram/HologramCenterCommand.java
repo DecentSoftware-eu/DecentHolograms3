@@ -40,10 +40,10 @@ public class HologramCenterCommand extends DecentCommand {
         super(
                 "center",
                 Config.ADMIN_PERM,
-                "/hologram center <hologram>",
+                "/dh hologram center <hologram>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram center <hologram> [--y]",
+                        " ",
+                        "&b> &3&l/dh hologram center <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to center.",
                         "&b> &8∙ &b[--y] &8- &7If set, the hologram will be centered",
                         "&b>       &7on the Y axis as well.",
@@ -54,7 +54,7 @@ public class HologramCenterCommand extends DecentCommand {
                         "&b> &flooking at will be centered. (Player only)",
                         "&b> ",
                         "&b> &7Aliases: &bcenter, centre",
-                        ""
+                        " "
                 ),
                 "centre"
         );

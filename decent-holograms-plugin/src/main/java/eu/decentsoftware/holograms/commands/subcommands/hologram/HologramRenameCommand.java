@@ -39,17 +39,17 @@ public class HologramRenameCommand extends DecentCommand {
         super(
                 "rename",
                 Config.ADMIN_PERM,
-                "/hologram rename <hologram> <new name>",
+                "/dh hologram rename <hologram> <new name>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram rename <hologram> <new name>",
+                        " ",
+                        "&b> &3&l/dh hologram rename <hologram> <new name>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to rename.",
                         "&b> &8∙ &b<new name> &8- &7New name of the hologram.",
                         "&b>",
                         "&b> &fRenames the given hologram to the given name.",
                         "&b>",
                         "&b> &7Aliases: &brename, rn",
-                        ""
+                        " "
                 )
         );
         this.plugin = plugin;

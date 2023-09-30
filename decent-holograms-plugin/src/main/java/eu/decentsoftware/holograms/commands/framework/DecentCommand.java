@@ -42,9 +42,10 @@ import java.util.*;
 @Setter
 public abstract class DecentCommand extends Command {
 
-    protected static final Map<String, DecentCommand> COMMANDS = new HashMap<>();
-    protected final Set<DecentCommand> subCommands = new HashSet<>();
+    protected static final List<DecentCommand> COMMANDS = new ArrayList<>();
+    protected final List<DecentCommand> subCommands = new ArrayList<>();
     protected boolean playerOnly = false;
+    protected boolean hidden = false;
 
     protected DecentCommand(
             final @NonNull String name,
@@ -65,6 +66,7 @@ public abstract class DecentCommand extends Command {
     ) {
         super(name, String.join("\n", description), syntax, aliases);
         setPermission(permission);
+        COMMANDS.add(this);
     }
 
     public abstract boolean execute(@NonNull CommandSender sender, @NonNull Arguments args);
@@ -85,13 +87,15 @@ public abstract class DecentCommand extends Command {
             return true;
         }
 
-        for (DecentCommand subCommand : subCommands) {
-            if (!subCommand.isAlias(args[0])) {
-                continue;
-            }
+        if (args.length > 0) {
+            for (DecentCommand subCommand : subCommands) {
+                if (!subCommand.isAlias(args[0])) {
+                    continue;
+                }
 
-            if (!subCommand.execute(sender, label, Arrays.copyOfRange(args, 1, args.length))) {
-                subCommand.sendDescription(sender);
+                if (!subCommand.execute(sender, label, Arrays.copyOfRange(args, 1, args.length))) {
+                    subCommand.sendDescription(sender);
+                }
                 return true;
             }
         }

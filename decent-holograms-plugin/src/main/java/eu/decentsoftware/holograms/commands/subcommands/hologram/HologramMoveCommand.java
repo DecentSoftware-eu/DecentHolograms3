@@ -49,10 +49,10 @@ public class HologramMoveCommand extends DecentCommand {
         super(
                 "move",
                 Config.ADMIN_PERM,
-                "/hologram move <hologram> [<x> <y> <z>] [world]",
+                "/dh hologram move <hologram> [<x> <y> <z>] [world]",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram move <hologram> [<x> <y> <z>] [world]",
+                        " ",
+                        "&b> &3&l/dh hologram move <hologram> [<x> <y> <z>] [world]",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to move.",
                         "&b> &8∙ &b[<x> <y> <z>] &8- &7New location. (Optional)",
                         "&b> &8∙ &b[world] &8- &7New world. (Optional)",
@@ -67,7 +67,7 @@ public class HologramMoveCommand extends DecentCommand {
                         "&b> &fare looking at will be moved. (Player only)",
                         "&b>",
                         "&b> &7Aliases: &bmove, mv",
-                        ""
+                        " "
                 ),
                 "mv"
         );
@@ -82,7 +82,7 @@ public class HologramMoveCommand extends DecentCommand {
         if (name != null && args.peek().isPresent()) {
             world = args.next(World.class).orElse(null);
             if (world == null) {
-                Lang.confTell(sender, "editor.move.invalid_world");
+                Lang.confTell(sender, "editor.error.invalid_world");
                 return true;
             }
         } else {
@@ -93,8 +93,7 @@ public class HologramMoveCommand extends DecentCommand {
             Player player = (Player) sender;
             DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), player, name).orElse(null);
             if (hologram == null) {
-                Lang.confTell(player, "editor.error.invalid_hologram_name_or_view", name);
-                return true;
+                return false;
             }
 
             if (!hologram.getSettings().isEditable()) {

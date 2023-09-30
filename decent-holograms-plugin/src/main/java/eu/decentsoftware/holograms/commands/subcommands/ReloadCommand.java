@@ -38,14 +38,14 @@ public class ReloadCommand extends DecentCommand {
                 Config.ADMIN_PERM,
                 "/dh reload",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh reload",
                         "&b>",
                         "&b> &fThis command reloads the configuration, the language",
                         "&b> &ffile, custom animations and all persistent holograms.",
                         "&b>",
                         "&b> &7Aliases: &breload, rl",
-                        ""
+                        " "
                 ),
                 "rl"
         );

@@ -41,10 +41,10 @@ public class HologramDeleteCommand extends DecentCommand {
         super(
                 "delete",
                 Config.ADMIN_PERM,
-                "/hologram delete <hologram>",
+                "/dh hologram delete <hologram>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram delete <hologram>",
+                        " ",
+                        "&b> &3&l/dh hologram delete <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to delete.",
                         "&b>",
                         "&b> &fThis command deletes the hologram with the given name.",
@@ -52,7 +52,7 @@ public class HologramDeleteCommand extends DecentCommand {
                         "&b> &fat will be deleted.",
                         "&b>",
                         "&b> &7Aliases:&b delete, del, remove, rm",
-                        ""
+                        " "
                 ),
                 "delete", "del", "remove", "rm"
         );

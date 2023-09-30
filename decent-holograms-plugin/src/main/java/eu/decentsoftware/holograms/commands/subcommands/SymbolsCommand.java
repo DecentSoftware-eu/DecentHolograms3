@@ -32,10 +32,10 @@ public class SymbolsCommand extends DecentCommand {
         super(
                 "symbols",
                 Config.ADMIN_PERM,
-                "/hologram symbols",
+                "/dh symbols",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram symbols",
+                        " ",
+                        "&b> &3&l/dh symbols",
                         "&b>",
                         "&b> &fView a list of symbols that can be used",
                         "&b> &fin holograms. Clicking on a symbol will",
@@ -43,7 +43,7 @@ public class SymbolsCommand extends DecentCommand {
                         "&b> &fit into a hologram.",
                         "&b>",
                         "&b> &7Aliases: &bsymbols, emojis, emoji, symbol",
-                        ""
+                        " "
                 ),
                 "emojis", "emoji", "symbol"
         );

@@ -26,6 +26,7 @@ import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Collections;
 
@@ -35,10 +36,12 @@ public class HologramCommand extends DecentCommand {
         super(
                 "hologram",
                 Config.ADMIN_PERM,
-                "/dh hologram ...",
+                "/dh hologram",
                 Collections.emptyList(),
                 "holograms", "holo", "h"
         );
+        setHidden(true);
+
         subCommands.add(new HologramCenterCommand(plugin));
         subCommands.add(new HologramCloneCommand(plugin));
         subCommands.add(new HologramCreateCommand(plugin));
@@ -56,20 +59,42 @@ public class HologramCommand extends DecentCommand {
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        return false;
+        sendDescription(sender);
+        return true;
     }
 
     @Override
     protected void sendDescription(@NonNull CommandSender sender) {
-        ComponentMessage message = new ComponentMessage("");
-        message.appendLine("&b> &3&l/dh holograms ...");
-        for (DecentCommand subCommand : subCommands) {
-            message.appendLine("&b> &b... " + subCommand.getName());
-            message.hoverText(Lang.formatString(subCommand.getDescription(), sender));
-            message.clickCommand("/dh holograms " + subCommand.getName());
+        if (sender instanceof Player) {
+            ComponentMessage message = new ComponentMessage(" ");
+            message.appendLine(Lang.formatString("&b> &3&l" + getUsage() + " ..."));
+            for (DecentCommand subCommand : subCommands) {
+                String syntax = subCommand.getUsage();
+                syntax = syntax.substring(syntax.indexOf(subCommand.getName()));
+                message.appendLine(Lang.formatString("&b>  "));
+                message.reset();
+                message.append(Lang.formatString("&b... " + syntax));
+                message.hoverText(Lang.formatString(subCommand.getDescription()));
+                message.clickSuggest("/dh hologram " + subCommand.getName());
+            }
+            message.appendLine(Lang.formatString("&b>"));
+            message.reset();
+            message.appendLine(Lang.formatString("&b> &7Aliases: &bhologram, holograms, holo, h"));
+            message.newLine();
+            message.send((Player) sender);
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append(" ");
+            builder.append("\n&b> &3&l").append(getUsage());
+            for (DecentCommand subCommand : subCommands) {
+                String syntax = subCommand.getUsage();
+                syntax = syntax.substring(syntax.indexOf(subCommand.getName()));
+                builder.append("\n&b>  &b... ").append(syntax);
+            }
+            builder.append("\n&b>");
+            builder.append("\n&b> &7Aliases: &bhologram, holograms, holo, h");
+            builder.append("\n ");
+            Lang.tell(sender, builder.toString());
         }
-        message.appendLine("&b>");
-        message.appendLine("&b> &7Aliases: &bhologram, holograms, holo, h");
-        message.send(sender);
     }
 }

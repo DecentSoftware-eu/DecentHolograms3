@@ -37,19 +37,18 @@ public class HologramNearCommand extends DecentCommand {
         super(
                 "near",
                 Config.ADMIN_PERM,
-                "/hologram near <hologram> <radius>",
+                "/dh hologram near <radius>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram near <hologram> <radius>",
-                        "&b> &8∙ &b<hologram> &8- &7Name of the hologram to teleport.",
-                        "&b> &8∙ &b<radius> &8- &7Radius in which to search for players.",
+                        " ",
+                        "&b> &3&l/dh hologram near <radius>",
+                        "&b> &8∙ &b<radius> &8- &7Radius in which to search.",
                         "&b>",
-                        "&b> &fTeleports the given hologram to the nearest player.",
+                        "&b> &fLists all holograms within the specified radius.",
                         "&b> ",
-                        "&b> &7Aliases: &bnear, tpnear, teleportnear",
-                        ""
+                        "&b> &7Aliases: &bnear, nearest, nearby",
+                        " "
                 ),
-                "near", "tpnear", "teleportnear"
+                "nearest", "nearby"
         );
         this.plugin = plugin;
     }

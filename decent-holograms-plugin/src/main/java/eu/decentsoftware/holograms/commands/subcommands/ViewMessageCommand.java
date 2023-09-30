@@ -35,7 +35,7 @@ public class ViewMessageCommand extends DecentCommand {
                 Config.ADMIN_PERM,
                 "/dh viewmessage <path> [arguments]",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh viewmessage <path>",
                         "&b> &8∙ &b<path> &8- &7Path to the message to view.",
                         "&b> &8∙ &b[arguments] &8- &7Arguments to format the message.",
@@ -44,7 +44,7 @@ public class ViewMessageCommand extends DecentCommand {
                         "&b> &fin the lang.yml file.",
                         "&b>",
                         "&b> &7Aliases: &bviewmessage, vm",
-                        ""
+                        " "
                 ),
                 "vm"
         );

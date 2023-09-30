@@ -44,10 +44,10 @@ public class HologramCreateCommand extends DecentCommand {
         super(
                 "create",
                 Config.ADMIN_PERM,
-                "/hologram create <name> [<x> <y> <z>] [world] [--move, -m] [--empty, -e]",
+                "/dh hologram create <name> [<x> <y> <z>] [world]",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram create <name> [<x> <y> <z>] [world] [--move, -m] [--empty, -e]",
+                        " ",
+                        "&b> &3&l/dh hologram create <name> [<x> <y> <z>] [world]",
                         "&b> &8∙ &b<name> &8- &7Name of the hologram to create.",
                         "&b> &8∙ &b[<x> <y> <z>] &8- &7Position of the hologram.",
                         "&b> &8∙ &b[world] &8- &7World of the hologram.",
@@ -65,7 +65,7 @@ public class HologramCreateCommand extends DecentCommand {
                         "&b> &fin the default world.",
                         "&b>",
                         "&b> &7Aliases: &bcreate, make, new, c",
-                        ""
+                        " "
                 ),
                 "make", "new", "c"
         );

@@ -37,16 +37,16 @@ public class HologramSettingsCommand extends DecentCommand {
         super(
                 "settings",
                 Config.ADMIN_PERM,
-                "/hologram settings <hologram>",
+                "/dh hologram settings <hologram>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram settings <hologram>",
+                        " ",
+                        "&b> &3&l/dh hologram settings <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to edit.",
                         "&b>",
                         "&b> &fOpens the settings menu for the given hologram.",
                         "&b> ",
                         "&b> &7Aliases: &bsettings, setting, options, config",
-                        ""
+                        " "
                 ),
                 "setting", "options", "config"
         );

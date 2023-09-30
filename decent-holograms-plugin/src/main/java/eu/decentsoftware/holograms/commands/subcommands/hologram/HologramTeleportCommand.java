@@ -43,14 +43,14 @@ public class HologramTeleportCommand extends DecentCommand {
                 Config.ADMIN_PERM,
                 "/dh hologram teleport <hologram>",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh hologram teleport <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to teleport to.",
                         "&b>",
                         "&b> &fTeleports you to the location of the hologram.",
                         "&b>",
                         "&b> &7Aliases: &bteleport, tp, tele",
-                        ""
+                        " "
                 ),
                 "tp", "tele"
         );

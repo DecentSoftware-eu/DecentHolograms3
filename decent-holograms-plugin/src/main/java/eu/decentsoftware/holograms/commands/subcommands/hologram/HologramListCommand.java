@@ -36,10 +36,10 @@ public class HologramListCommand extends DecentCommand {
         super(
                 "list",
                 Config.ADMIN_PERM,
-                "/dh h list [page] [search]",
+                "/dh hologram list [page] [search]",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/dh h list [page] [search]",
+                        " ",
+                        "&b> &3&l/dh hologram list [page] [search]",
                         "&b> &8∙ &b[page] &8- &7Page number. (Optional)",
                         "&b> &8∙ &b[search] &8- &7Search term. (Optional)",
                         "&b>",
@@ -47,7 +47,7 @@ public class HologramListCommand extends DecentCommand {
                         "&b> &fYou can also specify a page number and search for holograms.",
                         "&b>",
                         "&b> &7Aliases: &blist, ls, l",
-                        ""
+                        " "
                 ),
                 "ls"
         );

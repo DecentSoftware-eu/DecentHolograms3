@@ -25,8 +25,8 @@ import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +43,7 @@ public class HelpCommand extends DecentCommand {
                 Config.ADMIN_PERM,
                 "/dh help",
                 Arrays.asList(
-                        "",
+                        " ",
                         "&b> &3&l/dh help [page]",
                         "&b> &8∙ &b[page] &8- &7Number of the page to view. &8(Default: 1)",
                         "&b>",
@@ -51,7 +51,7 @@ public class HelpCommand extends DecentCommand {
                         "&b> &falso specify a page number to view a specific page.",
                         "&b>",
                         "&b> &7Aliases: &bhelp, ?",
-                        ""
+                        " "
                 ),
                 "?"
         );
@@ -59,37 +59,48 @@ public class HelpCommand extends DecentCommand {
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        List<DecentCommand> commands = new ArrayList<>(DecentCommand.COMMANDS.values());
+        List<DecentCommand> commands = DecentCommand.COMMANDS.stream()
+                .filter(command -> !command.isHidden())
+                .collect(Collectors.toList());
         int totalCommands = commands.size();
-        int totalPages = totalCommands / COMMANDS_PER_PAGE + 2;
+        int totalPages = totalCommands / COMMANDS_PER_PAGE + (totalCommands % COMMANDS_PER_PAGE == 0 ? 0 : 1);
         int page = args.nextInteger(1, totalPages).orElse(1);
         int pageZeroBased = page - 1;
 
         sender.sendMessage("");
-        Lang.tell(sender, " &3&lDECENT HOLOGRAMS &8- &7HELP &8[&b" + page + "&7/&b" + totalPages + "&8]");
-        Lang.tell(sender, " &fList of all " + totalCommands + " (sub)commands.");
+        Lang.tell(sender, " &3&lDECENT HOLOGRAMS HELP &7[" + page + "/" + totalPages + "]");
+        Lang.tell(sender, " &fList of all " + totalCommands + " commands.");
         sender.sendMessage("");
 
-        List<DecentCommand> commandsOnPage = commands.subList(pageZeroBased * COMMANDS_PER_PAGE, (pageZeroBased + 1) * COMMANDS_PER_PAGE);
+        int start = pageZeroBased * COMMANDS_PER_PAGE;
+        int end = Math.min(totalCommands, page * COMMANDS_PER_PAGE);
+        List<DecentCommand> commandsOnPage = commands.subList(start, end);
         for (DecentCommand command : commandsOnPage) {
-            new ComponentMessage(" &8∙ &b" + command.getUsage())
-                    .hoverText(command.getDescription())
-                    .clickSuggest(command.getUsage())
-                    .send(sender);
+            if (sender instanceof Player) {
+                new ComponentMessage(Lang.formatString(" &8∙ &b" + command.getUsage()))
+                        .hoverText(Lang.formatString(command.getDescription()))
+                        .clickSuggest(command.getUsage())
+                        .send((Player) sender);
+            } else {
+                Lang.tell(sender, " &8∙ &b" + command.getUsage());
+            }
         }
 
         sender.sendMessage("");
-        Lang.tell(sender, " &6&lTIP! &eYou can hover over any command in the help message to see some more detailed information. Typing the command without arguments also shows you the same information.");
-        sender.sendMessage("");
-        sendPaginationButtons(sender, page, totalPages);
-        sender.sendMessage("");
+        if (sender instanceof Player) {
+            sendPaginationButtons((Player) sender, page, totalPages);
+            sender.sendMessage("");
+        }
         return true;
     }
 
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return IntStream.range(1, DecentCommand.COMMANDS.size() / COMMANDS_PER_PAGE + 2)
+            int totalCommands = (int) DecentCommand.COMMANDS.stream()
+                    .filter(command -> !command.isHidden())
+                    .count();
+            return IntStream.range(1, totalCommands / COMMANDS_PER_PAGE + 2)
                     .mapToObj(Integer::toString)
                     .filter(page -> page.startsWith(args.nextString().orElse("")))
                     .collect(Collectors.toList());
@@ -97,20 +108,21 @@ public class HelpCommand extends DecentCommand {
         return Collections.emptyList();
     }
 
-    private void sendPaginationButtons(CommandSender sender, int page, int totalPages) {
+    private void sendPaginationButtons(Player player, int page, int totalPages) {
         ComponentMessage message = new ComponentMessage(" ");
-        message.append("&b««««« Prev Page");
+        message.append(Lang.formatString("&3««««« Prev Page"));
         if (page > 1) {
             message.clickCommand("/dh help " + (page - 1));
-            message.hoverText("&bClick to view the previous page");
+            message.hoverText(Lang.formatString("&aClick to view the previous page"));
         }
-        message.append("&b | ");
-        message.append("&bNext Page »»»»»");
+        message.append(Lang.formatString("&3 | "));
+        message.reset();
+        message.append(Lang.formatString("&3Next Page »»»»»"));
         if (page < totalPages) {
             message.clickCommand("/dh help " + (page + 1));
-            message.hoverText("Click to view the next page");
+            message.hoverText(Lang.formatString("&aClick to view the next page"));
         }
-        message.send(sender);
+        message.send(player);
     }
 
 }

@@ -41,17 +41,17 @@ public class HologramMovehereCommand extends DecentCommand {
         super(
                 "movehere",
                 Config.ADMIN_PERM,
-                "/hologram movehere <hologram> [--center, -c]",
+                "/dh hologram movehere <hologram>",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/hologram movehere <hologram>",
+                        " ",
+                        "&b> &3&l/dh hologram movehere <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to move.",
                         "&b> &8∙ &b[--center, -c] &8- &7Center the hologram to a block.",
                         "&b>",
                         "&b> &fMoves the given hologram to your current location.",
                         "&b>",
                         "&b> &7Aliases:&b movehere, mvhere, mvhr",
-                        ""
+                        " "
                 ),
                 "mvhere", "mvhr"
         );

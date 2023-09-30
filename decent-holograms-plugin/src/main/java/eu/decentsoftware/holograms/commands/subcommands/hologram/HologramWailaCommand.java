@@ -39,16 +39,16 @@ public class HologramWailaCommand extends DecentCommand {
         super(
                 "waila",
                 Config.ADMIN_PERM,
-                "/dh h waila",
+                "/dh hologram waila",
                 Arrays.asList(
-                        "",
-                        "&b> &3&l/dh h waila",
+                        " ",
+                        "&b> &3&l/dh hologram waila",
                         "&b>",
                         "&b> &fThis command tells you the name of the hologram",
                         "&b> &fthat you are looking at. (What Am I Looking At?)",
                         "&b>",
                         "&b> &7Aliases: &bwaila, what, wtf",
-                        ""
+                        " "
                 ),
                 "what", "wtf"
         );
