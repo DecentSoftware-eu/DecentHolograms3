@@ -452,16 +452,7 @@ public class NMSAdapter_v1_20_R2 implements NMSAdapter {
 
         try {
             PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(serializer);
-
-            System.out.println(String.format("Teleporting to: %s, %s, %s, %s, %s",
-                    (int) packet.d(),
-                    (int) packet.e(),
-                    (int) packet.f(),
-                    (int) packet.g(),
-                    (int) packet.h()
-            ));
-
-            //sendPacket(player, packet);
+            sendPacket(player, packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
