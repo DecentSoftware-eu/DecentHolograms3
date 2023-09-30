@@ -66,7 +66,7 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
      */
 
     private IChatBaseComponent s(String s) {
-        return IChatBaseComponent.ChatSerializer.a(s);
+        return new ChatComponentText(s);
     }
 
     private String c(IChatBaseComponent c) {
