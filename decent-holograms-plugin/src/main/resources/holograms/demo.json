@@ -1,0 +1,124 @@
+{
+  "location": {
+    "world": "world",
+    "x": 0,
+    "y": 80,
+    "z": 0,
+    "yaw": 0,
+    "pitch": 0
+  },
+  "settings": {
+    "enabled": true,
+    "interactive": true,
+    "editable": true,
+    "downOrigin": false,
+    "rotateHorizontal": true,
+    "rotateVertical": true,
+    "rotateHeads": false,
+    "viewDistance": 48,
+    "updateDistance": 48,
+    "updateInterval": 20,
+    "updating": true
+  },
+  "pages": [
+    {
+      "lines": [
+        {
+          "content": "<b><u><gradient:#b22afe:#ff8157>DECENT HOLOGRAMS</gradient>",
+          "settings": {
+            "height": 0.3
+          }
+        },
+        {
+          "content": "<white>Very powerful hologram plugin and API",
+          "settings": {
+            "height": 0.6
+          }
+        },
+        {
+          "content": "<green>✔ <#b9ff28>RGB Support",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -1.03
+          }
+        },
+        {
+          "content": "<green>✔ <rainbow>Rainbow Text</rainbow>",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -1.01
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>&sCustom Animations",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -0.71
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Many Useful Commands",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -0.42
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>PlaceholderAPI Support",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -0.33
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Customizable height for each line",
+          "settings": {
+            "height": 0.3,
+            "offsetX": 0.26
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Customizable Offsets for each line",
+          "settings": {
+            "height": 0.3,
+            "offsetX": 0.36
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Permissions for Holograms & Lines",
+          "settings": {
+            "height": 0.3,
+            "offsetX": 0.33
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Display & Update distance",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -0.23
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Damage Display Feature",
+          "settings": {
+            "height": 0.3,
+            "offsetX": -0.36
+          }
+        },
+        {
+          "content": "<green>✔ <aqua>Heal Display Feature",
+          "settings": {
+            "height": 0.6,
+            "offsetX": -0.57
+          }
+        },
+        {
+          "content": "<gradient:#b22afe:#ff8157><- Left Click | Right Click -></gradient>",
+          "settings": {
+            "height": 0.3
+          }
+        }
+      ]
+    }
+  ]
+}

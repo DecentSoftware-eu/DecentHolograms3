@@ -1,98 +1,183 @@
 {
-	"name": "Example",
-	"location": {
-		"world": "world",
-		"x": 0,
-		"y": 100,
-		"z": 0,
-		"yaw": 0,
-		"pitch": 0
-	},
-	"settings": {
-		"enabled": true,
-		"interactive": true,
-		"editable": true,
-		"rotateHorizontal": true,
-		"rotateVertical": true,
-		"rotateHeads": true,
-		"viewDistance": 48,
-		"updateDistance": 48,
-		"updateInterval": 20,
-		"updating": true
-	},
-	"viewConditions": [
-		{
-			"type": "PERMISSION",
-			"permission": "example.permission",
-			"notMetActions": [
-				{
-					"type": "MESSAGE",
-					"message": "You don't have the permission!"
-				}
-			]
-		}
-	],
-	"pages": [
-		{
-			"lines": [
-				{
-					"content": "Line 1",
-					"settings": {
-						"height": 0.5,
-						"offsetX": 0.0,
-						"offsetY": 0.0,
-						"offsetZ": 0.0
-					},
-					"viewConditions": [
-						{
-							"type": "PERMISSION",
-							"permission": "example.permission"
-						}
-					],
-					"clickActions": [
-						{
-							"type": "MESSAGE",
-							"message": "You clicked line 1!"
-						}
-					],
-					"clickConditions": [
-						{
-							"type": "PERMISSION",
-							"permission": "example.permission"
-						}
-					]
-				},
-				{
-					"content": "Line 2",
-					"settings": {
-						"height": 0.3,
-						"offsetX": 0.0,
-						"offsetY": 0.0,
-						"offsetZ": 0.0
-					},
-					"clickActions": [
-						{
-							"type": "MESSAGE",
-							"message": "You clicked line 2!"
-						}
-					]
-				},
-				{
-					"content": "Line 3"
-				},
-				{
-					"content": "Line 4"
-				},
-				{
-					"content": "Line 5"
-				}
-			],
-			"clickActions": [
-				{
-					"type": "MESSAGE",
-					"message": "You clicked page 1!"
-				}
-			]
-		}
-	]
+  "location": {
+    "world": "world",
+    "x": 52.947993520165646,
+    "y": 80.50569479751861,
+    "z": 4.5638981684299225,
+    "yaw": -75.28073,
+    "pitch": 31.400644
+  },
+  "settings": {
+    "enabled": true,
+    "editable": true,
+    "interactive": true,
+    "downOrigin": false,
+    "rotateHorizontal": true,
+    "rotateVertical": true,
+    "rotateHeads": false,
+    "viewDistance": 48,
+    "updateDistance": 48,
+    "updateInterval": 20,
+    "updating": true
+  },
+  "viewConditions": [
+    {
+      "permission": "example.permission",
+      "inverted": false,
+      "required": false,
+      "notMetActions": [
+        {
+          "message": "You don't have the permission!",
+          "delay": 0,
+          "chance": -1.0,
+          "type": "MESSAGE"
+        }
+      ],
+      "type": "PERMISSION"
+    }
+  ],
+  "pages": [
+    {
+      "lines": [
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.5,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "clickConditions": {
+            "LEFT": [
+              {
+                "permission": "example.permission",
+                "inverted": false,
+                "required": false,
+                "type": "PERMISSION"
+              }
+            ]
+          },
+          "clickActions": {
+            "LEFT": [
+              {
+                "message": "You clicked line 1!",
+                "delay": 0,
+                "chance": -1.0,
+                "type": "MESSAGE"
+              }
+            ]
+          },
+          "content": "<u><b><dark_aqua>DECENT HOLOGRAMS"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.3,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "viewConditions": [
+            {
+              "permission": "example.permission",
+              "inverted": false,
+              "required": false,
+              "type": "PERMISSION"
+            }
+          ],
+          "clickConditions": {
+            "LEFT": [
+              {
+                "permission": "example.permission",
+                "inverted": false,
+                "required": false,
+                "type": "PERMISSION"
+              }
+            ]
+          },
+          "clickActions": {
+            "LEFT": [
+              {
+                "message": "You clicked line 2!",
+                "delay": 0,
+                "chance": -1.0,
+                "type": "MESSAGE"
+              }
+            ]
+          },
+          "content": "&7Use &b&l/dh edit&r &7to edit this"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.3,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "content": "&7Use &b&l/dh move&r &7to move this"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.5,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "content": "&7Use &b&l/dh delete&r &7to delete this"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.3,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "content": "&7The &a&lGLOW&r &7color code is &a& g"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.3,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "content": "&7The &6&lSHINE&r &7color code is &6& s"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.5,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "content": "&7The &u&lRAINBOW&r &7color code is &f& u"
+        },
+        {
+          "settings": {
+            "updating": true,
+            "height": 0.3,
+            "offsetX": 0.0,
+            "offsetY": 0.0,
+            "offsetZ": 0.0
+          },
+          "content": "&7View &bDocumentation&7 (Click me)"
+        }
+      ],
+      "clickActions": {
+        "LEFT": [
+          {
+            "message": "You clicked page 1!",
+            "delay": 0,
+            "chance": -1.0,
+            "type": "MESSAGE"
+          }
+        ]
+      }
+    }
+  ]
 }

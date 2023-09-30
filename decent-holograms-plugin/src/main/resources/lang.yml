@@ -20,12 +20,14 @@ plugin:
     - ""
     - " &7Aliases: &b/dh, /decentholograms, /holograms, /holo"
     - ""
-  wiki: "{prefix}&7For more information, visit &bhttps://wiki.decentholograms.eu/"
 editor:
   error:
     not_editable: "{prefix}&cThis hologram is not editable."
-    invalid_location: "{prefix}&cInvalid location."
+    invalid_arguments: "{prefix}&cInvalid arguments."
+    invalid_position: "{prefix}&cInvalid position."
+    invalid_new_name: "{prefix}&cThat is not a valid name for a hologram."
     invalid_hologram_name: "{prefix}&cHologram with name &b'{0}'&c doesn't exist."
+    already_exists: "{prefix}&cHologram with name &b'{0}'&c already exists."
     invalid_hologram_name_or_view: "{prefix}&cNo hologram found, either look at a hologram or enter a valid name."
     invalid_world: "{prefix}&cWorld with that name doesn't exist."
     invalid_page: "{prefix}&cInvalid page number."
@@ -37,6 +39,9 @@ editor:
     invalid_name: "{prefix}&cInvalid hologram name."
   delete:
     success: "{prefix}&aSuccessfully deleted &b'{0}'&a."
+  rename:
+    invalid_name: "{prefix}&cCan't rename to &b'{0}'&c, invalid name."
+    success: "{prefix}&aSuccessfully renamed &b'{0}'&a to &b'{1}'&a."
   move:
     initiate:
       - "{prefix}You are now moving &b'{0}'&7."
