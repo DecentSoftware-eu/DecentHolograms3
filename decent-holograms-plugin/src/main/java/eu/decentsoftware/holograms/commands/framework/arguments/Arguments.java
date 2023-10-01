@@ -406,36 +406,33 @@ public class Arguments {
                 .map(s -> s.charAt(0));
     }
 
+    /**
+     * Extract the given flag from the list of arguments. If the flag is found, all
+     * of its occurrences will be removed from the list of arguments.
+     * <p>
+     * This method will not move the index.
+     *
+     * @param aliases The aliases of the flag to extract. (e.g. "--flag", "-f")
+     * @return True if the flag was found and removed, false otherwise.
+     */
     public boolean extractFlag(String... aliases) {
-        return extractAnyFlag("--", aliases);
-    }
-
-    public boolean extractShortFlag(String... aliases) {
-        return extractAnyFlag("-", aliases);
-    }
-
-    private boolean extractAnyFlag(String prefix, String... aliases) {
+        boolean found = false;
         final int index = this.index.get();
-        for (int i = 0; i < rawArguments.size(); i++) {
-            String arg = rawArguments.get(i);
-            if (!arg.startsWith(prefix)) {
-                continue;
-            }
-
-            String flag = arg.substring(prefix.length());
-            for (String alias : aliases) {
-                if (!flag.equalsIgnoreCase(alias)) {
-                    break;
+        for (String alias : aliases) {
+            int i = 0;
+            while (i < rawArguments.size()) {
+                if (rawArguments.get(i).equalsIgnoreCase(alias)) {
+                    rawArguments.remove(i);
+                    if (i < index) {
+                        this.index.decrementAndGet();
+                    }
+                    found = true;
+                } else {
+                    i++;
                 }
-
-                rawArguments.remove(i);
-                if (i < index) {
-                    this.index.decrementAndGet();
-                }
-                return true;
             }
         }
-        return false;
+        return found;
     }
 
 }

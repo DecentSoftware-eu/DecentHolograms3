@@ -63,7 +63,7 @@ public class HologramCenterCommand extends DecentCommand {
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        boolean centerOnY = args.extractFlag("y") || args.extractShortFlag("y");
+        boolean centerOnY = args.extractFlag("--y", "-y");
         String name = args.nextString().orElse(null);
         DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), sender, name).orElse(null);
         if (hologram == null) {

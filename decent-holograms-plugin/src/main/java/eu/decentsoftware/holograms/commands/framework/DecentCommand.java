@@ -100,7 +100,7 @@ public abstract class DecentCommand extends Command {
             }
         }
 
-        if (!execute(sender, new Arguments(Arrays.asList(args)))) {
+        if (!execute(sender, new Arguments(new ArrayList<>(Arrays.asList(args))))) {
             sendDescription(sender);
         }
         return true;

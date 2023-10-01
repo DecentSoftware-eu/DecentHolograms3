@@ -78,8 +78,8 @@ public class HologramCreateCommand extends DecentCommand {
             return false;
         }
 
-        boolean move = args.extractFlag("move") || args.extractShortFlag("m");
-        boolean empty = args.extractFlag("empty") || args.extractShortFlag("e");
+        boolean move = args.extractFlag("--move", "-m");
+        boolean empty = args.extractFlag("--empty", "-e");
         String name = args.nextString().orElse(null);
         if (name == null || !name.matches(Config.NAME_REGEX)) {
             Lang.confTell(sender, "editor.error.invalid_hologram_name", name);
