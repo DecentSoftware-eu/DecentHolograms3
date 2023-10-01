@@ -20,14 +20,19 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
+import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
+import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import lombok.NonNull;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class HologramInfoCommand extends DecentCommand {
 
@@ -43,20 +48,35 @@ public class HologramInfoCommand extends DecentCommand {
                         "&b> &3&l/dh hologram info <hologram>",
                         "&b> &8∙ &b<hologram> &8- &7Name of the hologram to get info about.",
                         "&b>",
-                        "&b> &fShows information about the given hologram.",
+                        "&b> &fShows some information about the given hologram.",
+                        "&b> &fIf hologram name is not specified, the hologram you",
+                        "&b> &fare looking at will be used. (Player only)",
                         "&b> ",
-                        "&b> &7Aliases: &binfo, i, about",
+                        "&b> &7Aliases: &binfo, inspect, about",
                         " "
                 ),
-                "i", "about"
+                "inspect", "about"
         );
         this.plugin = plugin;
     }
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        // TODO: implement info command
-        return false;
+        String name = args.nextString().orElse(null);
+        DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), sender, name).orElse(null);
+        if (hologram == null) {
+            return false;
+        }
+
+        sender.sendMessage(" ");
+        Lang.tell(sender, " &3&lHOLOGRAM INFO");
+        sender.sendMessage(" ");
+        Lang.tell(sender, " &8∙ &fName: &b%s", hologram.getName());
+        Lang.tell(sender, " &8∙ &fEnabled: &b%s", hologram.getSettings().isEnabled());
+        Lang.tell(sender, " &8∙ &fLocation: &b%s", formatLocation(hologram.getPositionManager().getLocation()));
+        Lang.tell(sender, " &8∙ &fPages: &b%d (%d lines)", hologram.getPages().size(), hologram.getPages().stream().mapToInt(page -> page.getLines().size()).sum());
+        sender.sendMessage(" ");
+        return true;
     }
 
     @Override
@@ -65,6 +85,16 @@ public class HologramInfoCommand extends DecentCommand {
             return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramRegistry(), args);
         }
         return super.tabComplete(sender, args);
+    }
+
+    private String formatLocation(Location location) {
+        return String.format(
+                "%s, %.2f, %.2f, %.2f",
+                Objects.requireNonNull(location.getWorld()).getName(),
+                location.getX(),
+                location.getY(),
+                location.getZ()
+        );
     }
 
 }
