@@ -4,22 +4,6 @@ no_permission: "{prefix}&cYou don't have permission to use this."
 only_players: "{prefix}&cOnly players can use this command."
 plugin:
   reloaded: "{prefix}&aSuccessfully reloaded in {0} ms."
-  help:
-    - ""
-    - " &3&lDECENT HOLOGRAMS"
-    - " &fThe most important commands."
-    - ""
-    - " &8• &b/dh reload &8- &7Reloads the plugin."
-    - " &8• &b/dh create &8- &7Create a hologram."
-    - " &8• &b/dh edit &8- &7Edit a hologram."
-    - " &8• &b/dh move &8- &7Move a hologram."
-    - " &8• &b/dh delete &8- &7Delete a hologram."
-    - " &8• &b/dh teleport &8- &7Teleport to a hologram."
-    - " &8• &b/dh list &8- &7List all holograms."
-    - " &8• &b/dh wiki &8- &7Open the wiki."
-    - ""
-    - " &7Aliases: &b/dh, /decentholograms, /holograms, /holo"
-    - ""
 editor:
   error:
     not_editable: "{prefix}&cThis hologram is not editable."
@@ -52,6 +36,8 @@ editor:
     success: "{prefix}&aThe position has been updated!"
     cancel: "{prefix}You are no longer moving a hologram."
     already_being_moved: "{prefix}&cThis hologram is already being moved."
+  center:
+    success: "{prefix}&aThe position has been updated!"
   setline:
     success: "{prefix}&aThe line has been updated!"
   waila:
