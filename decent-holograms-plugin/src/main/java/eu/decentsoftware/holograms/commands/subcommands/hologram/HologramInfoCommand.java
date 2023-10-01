@@ -71,10 +71,10 @@ public class HologramInfoCommand extends DecentCommand {
         sender.sendMessage(" ");
         Lang.tell(sender, " &3&lHOLOGRAM INFO");
         sender.sendMessage(" ");
-        Lang.tell(sender, " &8∙ &fName: &b%s", hologram.getName());
-        Lang.tell(sender, " &8∙ &fEnabled: &b%s", hologram.getSettings().isEnabled());
-        Lang.tell(sender, " &8∙ &fLocation: &b%s", formatLocation(hologram.getPositionManager().getLocation()));
-        Lang.tell(sender, " &8∙ &fPages: &b%d (%d lines)", hologram.getPages().size(), hologram.getPages().stream().mapToInt(page -> page.getLines().size()).sum());
+        Lang.tell(sender, " &8∙ &7Name: &b{0}", hologram.getName());
+        Lang.tell(sender, " &8∙ &7Enabled: &b{0}", hologram.getSettings().isEnabled());
+        Lang.tell(sender, " &8∙ &7Location: &b{0}", formatLocation(hologram.getPositionManager().getLocation()));
+        Lang.tell(sender, " &8∙ &7Pages: &b{0} ({1} lines)", hologram.getPages().size(), hologram.getPages().stream().mapToInt(page -> page.getLines().size()).sum());
         sender.sendMessage(" ");
         return true;
     }

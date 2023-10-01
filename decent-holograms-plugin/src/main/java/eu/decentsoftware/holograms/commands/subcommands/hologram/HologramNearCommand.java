@@ -84,26 +84,26 @@ public class HologramNearCommand extends DecentCommand {
             return true;
         }
 
-        int maxPage = (int) Math.ceil(nearHolograms.size() / (double) HOLOGRAMS_PER_PAGE);
-        int page = args.nextInteger(1, maxPage).orElse(1);
+        int totalPages = (int) Math.ceil(nearHolograms.size() / (double) HOLOGRAMS_PER_PAGE);
+        int page = args.nextInteger(1, totalPages).orElse(1);
         int fromIndex = (page - 1) * HOLOGRAMS_PER_PAGE;
         int toIndex = Math.min(fromIndex + HOLOGRAMS_PER_PAGE, nearHolograms.size());
         nearHolograms = nearHolograms.subList(fromIndex, toIndex);
 
         sender.sendMessage(" ");
-        Lang.tell(sender, "&3&lHOLOGRAMS NEARBY &7[%d/%d]", page, maxPage);
-        Lang.tell(sender, "{prefix}There are &b%d &7holograms within &b%.2f &7blocks:", nearHolograms.size(), radius);
+        Lang.tell(sender, " &3&lHOLOGRAMS NEARBY &7[{0}/{1}]", page, totalPages);
+        Lang.tell(sender, String.format(" &fAll holograms (%d) within %.2f blocks.", nearHolograms.size(), radius));
         sender.sendMessage(" ");
         nearHolograms.forEach(hologram -> {
             double distance = hologram.getPositionManager().getLocation().distance(playerLocation);
             new ComponentMessage(Lang.formatString(" &8∙ "))
-                    .append(Lang.formatString("&b%s &f(%.2f blocks away)", hologram.getName(), distance))
-                    .hoverText(Lang.formatString("&cClick to teleport to this hologram."))
+                    .append(Lang.formatString(String.format("&b%s &8(%.2f blocks away)", hologram.getName(), distance)))
+                    .hoverText(Lang.formatString("&aClick to teleport to this hologram."))
                     .clickCommand("/dh hologram tp " + hologram.getName())
                     .send((Player) sender);
         });
         sender.sendMessage(" ");
-        CommandCommons.sendChatPaginationButtons((Player) sender, page, maxPage, "/dh hologram near " + radius + " %d");
+        CommandCommons.sendChatPaginationButtons((Player) sender, page, totalPages, "/dh hologram near " + radius + " %d");
         sender.sendMessage(" ");
         return true;
     }

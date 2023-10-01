@@ -50,7 +50,8 @@ public class HologramListCommand extends DecentCommand {
                         "&b> &8∙ &b[page] &8- &7Page number. (Optional)",
                         "&b> &8∙ &b[search] &8- &7Search term. (Optional)",
                         "&b>",
-                        "&b> &fThis command lists all holograms.",
+                        "&b> &fThis command lists all holograms or holograms",
+                        "&b> &fmatching a given search term.",
                         "&b>",
                         "&b> &7Aliases: &blist, ls, l",
                         " "
@@ -87,11 +88,11 @@ public class HologramListCommand extends DecentCommand {
         }
 
         sender.sendMessage(" ");
-        sender.sendMessage(" &3&lHOLOGRAMS LIST &7[" + page + "/" + totalPages + "]");
+        Lang.tell(sender, String.format(" &3&lHOLOGRAMS LIST &7[%d/%d]", page, totalPages));
         if (search != null) {
-            sender.sendMessage(" &fList of all " + holograms.size() + " holograms matching \"" + search + "\".");
+            Lang.tell(sender, String.format(" &fList of all %d holograms matching \"%s\".", holograms.size(), search));
         } else {
-            sender.sendMessage(" &fList of all " + holograms.size() + " holograms.");
+            Lang.tell(sender, String.format(" &fList of all %d holograms.", holograms.size()));
         }
         sender.sendMessage(" ");
 

@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
+import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
@@ -54,10 +55,12 @@ public class ReloadCommand extends DecentCommand {
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        final long start = System.currentTimeMillis();
-        plugin.reload();
-        final long end = System.currentTimeMillis();
-        Lang.confTell(sender, "reloaded", end - start);
+        SchedulerUtil.async(() -> {
+            final long start = System.currentTimeMillis();
+            plugin.reload();
+            final long end = System.currentTimeMillis();
+            Lang.confTell(sender, "plugin.reloaded", end - start);
+        });
         return true;
     }
 

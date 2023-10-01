@@ -62,13 +62,13 @@ public class HologramTeleportCommand extends DecentCommand {
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         String name = args.nextString().orElse(null);
         if (name == null) {
-            Lang.tell(sender, "editor.error.invalid_arguments");
+            Lang.confTell(sender, "editor.error.invalid_arguments");
             return true;
         }
 
         DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
         if (hologram == null) {
-            Lang.tell(sender, "editor.error.hologram_not_found", name);
+            Lang.confTell(sender, "editor.error.hologram_not_found", name);
             return true;
         }
 
@@ -77,7 +77,7 @@ public class HologramTeleportCommand extends DecentCommand {
 
         player.teleport(location);
 
-        Lang.tell(sender, "editor.teleported", name);
+        Lang.confTell(sender, "editor.teleported", name);
         return true;
     }
 

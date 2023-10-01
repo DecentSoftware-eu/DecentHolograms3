@@ -63,18 +63,18 @@ public class HologramMovehereCommand extends DecentCommand {
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         String name = args.nextString().orElse(null);
         if (name == null) {
-            Lang.tell(sender, "editor.error.invalid_arguments");
+            Lang.confTell(sender, "editor.error.invalid_arguments");
             return true;
         }
 
         DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
         if (hologram == null) {
-            Lang.tell(sender, "editor.error.invalid_hologram_name", name);
+            Lang.confTell(sender, "editor.error.invalid_hologram_name", name);
             return true;
         }
 
         if (!hologram.getSettings().isEditable()) {
-            Lang.tell(sender, "editor.error.not_editable");
+            Lang.confTell(sender, "editor.error.not_editable");
             return true;
         }
 
@@ -88,7 +88,7 @@ public class HologramMovehereCommand extends DecentCommand {
         hologram.getPositionManager().setLocation(newLocation);
         hologram.getConfig().save();
 
-        Lang.tell(sender, "editor.move.success", name);
+        Lang.confTell(sender, "editor.move.success", name);
         return true;
     }
 

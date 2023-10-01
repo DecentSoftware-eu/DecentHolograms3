@@ -97,7 +97,7 @@ public class HologramMoveCommand extends DecentCommand {
             }
 
             if (!hologram.getSettings().isEditable()) {
-                Lang.tell(sender, "editor.error.not_editable");
+                Lang.confTell(sender, "editor.error.not_editable");
                 return true;
             }
 
@@ -141,7 +141,7 @@ public class HologramMoveCommand extends DecentCommand {
         }
 
         if (!hologram.getSettings().isEditable()) {
-            Lang.tell(sender, "editor.error.not_editable");
+            Lang.confTell(sender, "editor.error.not_editable");
             return true;
         }
 
