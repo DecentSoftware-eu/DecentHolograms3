@@ -20,27 +20,37 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
+import eu.decentsoftware.holograms.commands.utils.CommandCommons;
+import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class HologramNearCommand extends DecentCommand {
 
+    private static final int HOLOGRAMS_PER_PAGE = 10;
     private final DecentHolograms plugin;
 
     public HologramNearCommand(DecentHolograms plugin) {
         super(
                 "near",
                 Config.ADMIN_PERM,
-                "/dh hologram near <radius>",
+                "/dh hologram near <radius> [page]",
                 Arrays.asList(
                         " ",
-                        "&b> &3&l/dh hologram near <radius>",
+                        "&b> &3&l/dh hologram near <radius> [page]",
                         "&b> &8∙ &b<radius> &8- &7Radius in which to search.",
+                        "&b> &8∙ &b[page] &8- &7Page of the list to display.",
                         "&b>",
                         "&b> &fLists all holograms within the specified radius.",
                         "&b> ",
@@ -49,13 +59,53 @@ public class HologramNearCommand extends DecentCommand {
                 ),
                 "nearest", "nearby"
         );
+        setPlayerOnly(true);
+
         this.plugin = plugin;
     }
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        // TODO: implement near command
-        return false;
+        double radius = args.nextDouble(1, Double.MAX_VALUE).orElse(0d);
+        if (radius == 0d) {
+            return false;
+        }
+
+        Location playerLocation = ((Player) sender).getLocation();
+        List<DefaultHologram> nearHolograms = plugin.getHologramRegistry().getHolograms().stream()
+                .filter(hologram -> {
+                    Location location = hologram.getPositionManager().getLocation();
+                    return Objects.equals(location.getWorld(), playerLocation.getWorld())
+                            && location.distanceSquared(playerLocation) <= radius * radius;
+                })
+                .collect(Collectors.toList());
+        if (nearHolograms.isEmpty()) {
+            Lang.confTell(sender, "editor.near.no-holograms");
+            return true;
+        }
+
+        int maxPage = (int) Math.ceil(nearHolograms.size() / (double) HOLOGRAMS_PER_PAGE);
+        int page = args.nextInteger(1, maxPage).orElse(1);
+        int fromIndex = (page - 1) * HOLOGRAMS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + HOLOGRAMS_PER_PAGE, nearHolograms.size());
+        nearHolograms = nearHolograms.subList(fromIndex, toIndex);
+
+        sender.sendMessage(" ");
+        Lang.tell(sender, "&3&lHOLOGRAMS NEARBY &7[%d/%d]", page, maxPage);
+        Lang.tell(sender, "{prefix}There are &b%d &7holograms within &b%.2f &7blocks:", nearHolograms.size(), radius);
+        sender.sendMessage(" ");
+        nearHolograms.forEach(hologram -> {
+            double distance = hologram.getPositionManager().getLocation().distance(playerLocation);
+            new ComponentMessage(Lang.formatString(" &8∙ "))
+                    .append(Lang.formatString("&b%s &f(%.2f blocks away)", hologram.getName(), distance))
+                    .hoverText(Lang.formatString("&cClick to teleport to this hologram."))
+                    .clickCommand("/dh hologram tp " + hologram.getName())
+                    .send((Player) sender);
+        });
+        sender.sendMessage(" ");
+        CommandCommons.sendChatPaginationButtons((Player) sender, page, maxPage, "/dh hologram near " + radius + " %d");
+        sender.sendMessage(" ");
+        return true;
     }
 
     @Override
