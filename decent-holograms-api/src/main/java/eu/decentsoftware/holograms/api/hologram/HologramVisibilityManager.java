@@ -34,6 +34,15 @@ import java.util.stream.Collectors;
  * for certain players. It is able to show/hide the hologram for specific
  * players and to automatically update the visibility according to the
  * holograms view distance setting and view conditions.
+ * <p>
+ * To change the default visibility of the hologram, use {@link #setVisibleByDefault(boolean)}.
+ * To change the visibility of a specific player, use {@link #setVisibility(Player, boolean)}.
+ * If you only want to show the hologram to a specific player (or players), first set the
+ * default visibility to false and then use {@link #updateVisibility(Player, boolean)}. If
+ * the hologram is visible by default, the visibility will automatically be updated for all
+ * players, meaning that hiding it from some players will not be effective. Basically,
+ * you get the most control over specific player's visibility with the default visibility
+ * set to false.
  *
  * @author d0by
  * @since 3.0.0
