@@ -184,10 +184,10 @@ public final class DecentHolograms extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
-        hologramRegistry.reload();
         replacementRegistry.reload();
         animationRegistry.reload();
         serverRegistry.reload();
+        hologramRegistry.reload();
         profileRegistry.reload();
         editor.reload();
         addonLoader.reload();

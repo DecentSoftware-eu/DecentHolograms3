@@ -69,6 +69,7 @@ public class AnimationRegistry implements Ticked {
         this.stepCounter = new AtomicInteger(0);
 
         this.reload();
+        this.startTicking();
     }
 
     /**
@@ -78,7 +79,8 @@ public class AnimationRegistry implements Ticked {
      * This method also registers the built-in, default animations.
      */
     public synchronized void reload() {
-        this.shutdown();
+        this.animationMap.clear();
+        this.stepCounter.set(0);
 
         // Register default animations
         //  TODO: Handle colors in frame data
@@ -124,9 +126,6 @@ public class AnimationRegistry implements Ticked {
         }
         long took = System.currentTimeMillis() - startMillis;
         plugin.getBootMessenger().log(String.format("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took));
-
-        // Start ticking again after shutdown
-        this.startTicking();
     }
 
     public synchronized void shutdown() {
