@@ -20,16 +20,23 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
+import eu.decentsoftware.holograms.commands.utils.CommandCommons;
+import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class HologramListCommand extends DecentCommand {
 
+    private static final int HOLOGRAMS_PER_PAGE = 10;
     private final DecentHolograms plugin;
 
     public HologramListCommand(DecentHolograms plugin) {
@@ -44,7 +51,6 @@ public class HologramListCommand extends DecentCommand {
                         "&b> &8∙ &b[search] &8- &7Search term. (Optional)",
                         "&b>",
                         "&b> &fThis command lists all holograms.",
-                        "&b> &fYou can also specify a page number and search for holograms.",
                         "&b>",
                         "&b> &7Aliases: &blist, ls, l",
                         " "
@@ -56,14 +62,57 @@ public class HologramListCommand extends DecentCommand {
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        // TODO: implement list command
-        return true;
-    }
+        Collection<DefaultHologram> holograms = plugin.getHologramRegistry().getHolograms();
+        int page = args.nextInteger().orElse(1);
+        String search = args.nextString().orElse(null);
+        if (search != null) {
+            holograms = plugin.getHologramRegistry().getHolograms().stream()
+                    .filter(hologram -> hologram.getName().toLowerCase().contains(search.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        int totalPages = (int) Math.ceil((double) holograms.size() / HOLOGRAMS_PER_PAGE);
+        page = Math.max(1, Math.min(page, totalPages));
+        holograms = holograms.stream()
+                .skip((long) (page - 1) * HOLOGRAMS_PER_PAGE)
+                .limit(HOLOGRAMS_PER_PAGE)
+                .collect(Collectors.toList());
 
-    @Override
-    public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
-        // page numbers
-        return null;
+        if (holograms.isEmpty()) {
+            if (search != null) {
+                Lang.confTell(sender, "editor.list.no_holograms_matching", search);
+            } else {
+                Lang.confTell(sender, "editor.list.no_holograms");
+            }
+            return true;
+        }
+
+        sender.sendMessage(" ");
+        sender.sendMessage(" &3&lHOLOGRAMS LIST &7[" + page + "/" + totalPages + "]");
+        if (search != null) {
+            sender.sendMessage(" &fList of all " + holograms.size() + " holograms matching \"" + search + "\".");
+        } else {
+            sender.sendMessage(" &fList of all " + holograms.size() + " holograms.");
+        }
+        sender.sendMessage(" ");
+
+        for (DefaultHologram hologram : holograms) {
+            if (sender instanceof Player) {
+                new ComponentMessage(Lang.formatString(" &8∙ "))
+                        .append(Lang.formatString("&b" + hologram.getName()))
+                        .hoverText(Lang.formatString("&aClick to teleport to this hologram."))
+                        .clickCommand("/dh hologram tp " + hologram.getName())
+                        .send((Player) sender);
+            } else {
+                Lang.tell(sender, " &8∙ &b" + hologram.getName());
+            }
+        }
+
+        sender.sendMessage(" ");
+        if (sender instanceof Player) {
+            CommandCommons.sendChatPaginationButtons((Player) sender, page, totalPages, "/dh hologram list %d");
+            sender.sendMessage(" ");
+        }
+        return true;
     }
 
 }
