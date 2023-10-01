@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.commands.utils;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
@@ -114,6 +115,37 @@ public final class CommandCommons {
             }
         }
         return holograms;
+    }
+
+    /**
+     * Sends pagination buttons to the player.
+     *
+     * @param player     Player to send to.
+     * @param page       Current page number.
+     * @param totalPages Total number of pages.
+     * @param command    Command to execute when the button is clicked. Will be formatted
+     *                   with the page number so make sure to include a %d in the command.
+     */
+    public static void sendChatPaginationButtons(
+            @NonNull Player player,
+            int page,
+            int totalPages,
+            @NonNull String command
+    ) {
+        ComponentMessage message = new ComponentMessage(" ");
+        message.append(Lang.formatString("&3««««« Prev Page"));
+        if (page > 1) {
+            message.clickCommand(String.format(command, page - 1));
+            message.hoverText(Lang.formatString("&aClick to view the previous page"));
+        }
+        message.append(Lang.formatString("&3 | "));
+        message.reset();
+        message.append(Lang.formatString("&3Next Page »»»»»"));
+        if (page < totalPages) {
+            message.clickCommand(String.format(command, page + 1));
+            message.hoverText(Lang.formatString("&aClick to view the next page"));
+        }
+        message.send(player);
     }
 
 }

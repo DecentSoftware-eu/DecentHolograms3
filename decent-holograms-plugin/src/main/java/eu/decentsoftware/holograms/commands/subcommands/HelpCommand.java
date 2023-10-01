@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
+import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
@@ -67,17 +68,18 @@ public class HelpCommand extends DecentCommand {
         int page = args.nextInteger(1, totalPages).orElse(1);
         int pageZeroBased = page - 1;
 
-        sender.sendMessage("");
+        sender.sendMessage(" ");
         Lang.tell(sender, " &3&lDECENT HOLOGRAMS HELP &7[" + page + "/" + totalPages + "]");
         Lang.tell(sender, " &fList of all " + totalCommands + " commands.");
-        sender.sendMessage("");
+        sender.sendMessage(" ");
 
         int start = pageZeroBased * COMMANDS_PER_PAGE;
         int end = Math.min(totalCommands, page * COMMANDS_PER_PAGE);
         List<DecentCommand> commandsOnPage = commands.subList(start, end);
         for (DecentCommand command : commandsOnPage) {
             if (sender instanceof Player) {
-                new ComponentMessage(Lang.formatString(" &8∙ &b" + command.getUsage()))
+                new ComponentMessage(Lang.formatString(" &8∙ "))
+                        .append(Lang.formatString("&b" + command.getUsage()))
                         .hoverText(Lang.formatString(command.getDescription()))
                         .clickSuggest(command.getUsage())
                         .send((Player) sender);
@@ -86,10 +88,10 @@ public class HelpCommand extends DecentCommand {
             }
         }
 
-        sender.sendMessage("");
+        sender.sendMessage(" ");
         if (sender instanceof Player) {
-            sendPaginationButtons((Player) sender, page, totalPages);
-            sender.sendMessage("");
+            CommandCommons.sendChatPaginationButtons((Player) sender, page, totalPages, "/dh help %d");
+            sender.sendMessage(" ");
         }
         return true;
     }
@@ -106,23 +108,6 @@ public class HelpCommand extends DecentCommand {
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
-    }
-
-    private void sendPaginationButtons(Player player, int page, int totalPages) {
-        ComponentMessage message = new ComponentMessage(" ");
-        message.append(Lang.formatString("&3««««« Prev Page"));
-        if (page > 1) {
-            message.clickCommand("/dh help " + (page - 1));
-            message.hoverText(Lang.formatString("&aClick to view the previous page"));
-        }
-        message.append(Lang.formatString("&3 | "));
-        message.reset();
-        message.append(Lang.formatString("&3Next Page »»»»»"));
-        if (page < totalPages) {
-            message.clickCommand("/dh help " + (page + 1));
-            message.hoverText(Lang.formatString("&aClick to view the next page"));
-        }
-        message.send(player);
     }
 
 }
