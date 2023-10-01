@@ -92,8 +92,7 @@ public class HologramRenameCommand extends DecentCommand {
 
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
-        final int size = args.size();
-        if (size == 1) {
+        if (args.size() == 1) {
             return TabCompleteCommons.getMatchingNotMovingEditableHologramNames(plugin.getHologramRegistry(), args);
         }
         return super.tabComplete(sender, args);

@@ -35,7 +35,7 @@ public final class TabCompleteCommons {
                 .filter(hologram -> hologram.getSettings().isEditable())
                 .filter(hologram -> !(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder))
                 .map(DefaultHologram::getName)
-                .filter(name -> name.startsWith(args.peek().orElse("")))
+                .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
                 .collect(Collectors.toList());
     }
 
@@ -43,14 +43,14 @@ public final class TabCompleteCommons {
         return hologramRegistry.getHolograms().stream()
                 .filter(hologram -> hologram.getSettings().isEditable())
                 .map(DefaultHologram::getName)
-                .filter(name -> name.startsWith(args.peek().orElse("")))
+                .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     public static List<String> getMatchingHologramNames(DefaultHologramRegistry hologramRegistry, Arguments args) {
         return hologramRegistry.getHolograms().stream()
                 .map(DefaultHologram::getName)
-                .filter(name -> name.startsWith(args.peek().orElse("")))
+                .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
                 .collect(Collectors.toList());
     }
 

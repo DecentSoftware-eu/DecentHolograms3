@@ -22,10 +22,12 @@ import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
+import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class HologramInfoCommand extends DecentCommand {
 
@@ -55,6 +57,14 @@ public class HologramInfoCommand extends DecentCommand {
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         // TODO: implement info command
         return false;
+    }
+
+    @Override
+    public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
+        if (args.size() == 1) {
+            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramRegistry(), args);
+        }
+        return super.tabComplete(sender, args);
     }
 
 }

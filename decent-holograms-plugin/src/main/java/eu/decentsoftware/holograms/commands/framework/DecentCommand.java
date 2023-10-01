@@ -28,7 +28,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a command that can be executed by a {@link CommandSender}. This
@@ -72,7 +76,14 @@ public abstract class DecentCommand extends Command {
     public abstract boolean execute(@NonNull CommandSender sender, @NonNull Arguments args);
 
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
-        return null;
+        if (args.size() <= 1) {
+            return subCommands.stream()
+                    .filter(subCommand -> subCommand.testPermissionSilent(sender))
+                    .map(Command::getName)
+                    .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -117,14 +128,15 @@ public abstract class DecentCommand extends Command {
             return Collections.emptyList();
         }
 
-        final Arguments arguments = new Arguments(Arrays.asList(args));
-        for (DecentCommand subCommand : subCommands) {
-            if (subCommand.isAlias(args[0])) {
-                return subCommand.tabComplete(sender, arguments);
+        if (args.length > 0) {
+            for (DecentCommand subCommand : subCommands) {
+                if (subCommand.isAlias(args[0])) {
+                    return subCommand.tabComplete(sender, args[0], Arrays.copyOfRange(args, 1, args.length));
+                }
             }
         }
 
-        return tabComplete(sender, arguments);
+        return tabComplete(sender, new Arguments(new ArrayList<>(Arrays.asList(args))));
     }
 
     /**

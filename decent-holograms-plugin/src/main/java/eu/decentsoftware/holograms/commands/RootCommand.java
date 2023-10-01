@@ -29,9 +29,6 @@ import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class RootCommand extends DecentCommand {
 
@@ -82,17 +79,6 @@ public class RootCommand extends DecentCommand {
         }
         sendDescription(sender);
         return true;
-    }
-
-    @Override
-    public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
-        if (args.size() == 1) {
-            return subCommands.stream()
-                    .map(DecentCommand::getName)
-                    .filter(name -> name.startsWith(args.nextString().orElse("")))
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
     }
 
 }

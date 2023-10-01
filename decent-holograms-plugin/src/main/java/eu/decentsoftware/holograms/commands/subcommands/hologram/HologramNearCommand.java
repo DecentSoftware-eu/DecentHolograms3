@@ -22,7 +22,6 @@ import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
-import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
@@ -62,7 +61,7 @@ public class HologramNearCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramRegistry(), args);
+            return Arrays.asList("5", "10", "15", "20", "25", "30", "35", "40", "45", "50");
         }
         return null;
     }

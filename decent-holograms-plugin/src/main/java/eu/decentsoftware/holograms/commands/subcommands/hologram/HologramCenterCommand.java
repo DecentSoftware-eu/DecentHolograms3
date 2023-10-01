@@ -24,6 +24,7 @@ import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
+import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.hologram.component.DefaultPositionManager;
 import lombok.NonNull;
@@ -31,6 +32,8 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class HologramCenterCommand extends DecentCommand {
 
@@ -67,8 +70,11 @@ public class HologramCenterCommand extends DecentCommand {
         String name = args.nextString().orElse(null);
         DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), sender, name).orElse(null);
         if (hologram == null) {
-            Lang.confTell(sender, "editor.error.invalid_hologram_name_or_view", name);
-            return true;
+            if (name != null) {
+                Lang.confTell(sender, "editor.error.invalid_hologram_name", name);
+                return true;
+            }
+            return false;
         }
 
         DefaultPositionManager positionManager = hologram.getPositionManager();
@@ -80,8 +86,18 @@ public class HologramCenterCommand extends DecentCommand {
         }
         positionManager.setLocation(newLocation);
         hologram.getConfig().save();
-        Lang.confTell(sender, "editor.hologram.centered", hologram.getName());
-        return false;
+        Lang.confTell(sender, "editor.center.success", hologram.getName());
+        return true;
+    }
+
+    @Override
+    public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
+        if (args.size() == 1) {
+            return TabCompleteCommons.getMatchingNotMovingEditableHologramNames(plugin.getHologramRegistry(), args);
+        } else if (args.size() == 2) {
+            return Collections.singletonList("--y");
+        }
+        return super.tabComplete(sender, args);
     }
 
 }
