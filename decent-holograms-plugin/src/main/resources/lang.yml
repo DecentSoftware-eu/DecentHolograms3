@@ -43,3 +43,8 @@ editor:
   waila:
     found: "{prefix}You are looking at &b'{0}'&7."
     not_found: "{prefix}You are not looking at any hologram. At least not one created by Decent Holograms."
+  near:
+    no_holograms: "{prefix}&cThere are no holograms nearby."
+  list:
+    no_holograms: "{prefix}&cThere are no holograms."
+    no_holograms_matching: "{prefix}&cThere are no holograms matching &b'{0}'&c."
