@@ -91,17 +91,18 @@ public class HologramCreateCommand extends DecentCommand {
             return true;
         }
 
-        Location location;
-        if (sender instanceof Player) {
-            location = ((Player) sender).getLocation();
-        } else {
-            Position3D position3D = args.next(Position3D.class).orElse(null);
-            World world = args.next(World.class).orElse(Bukkit.getWorlds().get(0));
-            if (position3D == null || world == null) {
-                Lang.confTell(sender, "editor.error.invalid_position");
-                return true;
-            }
+        Location location = null;
+        Position3D position3D = args.next(Position3D.class).orElse(null);
+        World world = args.next(World.class).orElse(Bukkit.getWorlds().get(0));
+        if (position3D != null && world != null) {
             location = new Location(world, position3D.getX(), position3D.getY(), position3D.getZ());
+        }
+
+        if (location == null && sender instanceof Player) {
+            location = ((Player) sender).getLocation();
+        } else if (location == null) {
+            Lang.confTell(sender, "editor.error.invalid_position");
+            return true;
         }
 
         DefaultHologram hologram = new DefaultHologram(name, location, true, true);
