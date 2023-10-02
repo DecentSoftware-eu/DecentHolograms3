@@ -83,7 +83,6 @@ public class AnimationRegistry implements Ticked {
         this.stepCounter.set(0);
 
         // Register default animations
-        //  TODO: Handle colors in frame data
         this.registerAnimation(new RainbowAnimation());
         this.registerAnimation(new WaveAnimation());
         this.registerAnimation(new BurnAnimation());

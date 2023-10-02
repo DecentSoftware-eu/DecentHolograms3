@@ -24,7 +24,10 @@ import java.util.List;
 
 /**
  * This class stores data about a pinged server.
+ *
+ * @since 3.0.0
  */
+@SuppressWarnings("unused")
 @Getter
 public class PingerResponse {
 

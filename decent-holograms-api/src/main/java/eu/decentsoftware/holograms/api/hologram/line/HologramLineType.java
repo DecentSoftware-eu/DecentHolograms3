@@ -50,9 +50,5 @@ public enum HologramLineType {
      * A line displaying an Entity.
      */
     ENTITY,
-    /**
-     * A line, made of multiple lines, displaying an image.
-     */
-    IMAGE,
     UNKNOWN
 }

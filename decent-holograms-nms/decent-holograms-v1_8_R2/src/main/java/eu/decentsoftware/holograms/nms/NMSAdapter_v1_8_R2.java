@@ -324,16 +324,9 @@ public class NMSAdapter_v1_8_R2 implements NMSAdapter {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public int getEntityTypeId(EntityType type) {
-        // TODO: Find a better way to get the entity type id
-        if (type == EntityType.ARMOR_STAND) {
-            return 30;
-        }
-        if (type == EntityType.DROPPED_ITEM) {
-            return 2;
-        }
-        // noinspection deprecation
         return ENTITY_TYPE_NAME_ID_MAP == null ? type.getTypeId() : ENTITY_TYPE_NAME_ID_MAP.get(type.getName());
     }
 

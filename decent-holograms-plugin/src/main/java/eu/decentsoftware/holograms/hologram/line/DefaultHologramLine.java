@@ -35,11 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class DefaultHologramLine implements HologramLine {
 
-    /*
-     * TODO:
-     *  - Hover content for text lines
-     */
-
     private final @NotNull HologramPage parent;
     private final @NotNull HologramLineSettings settings;
     private final @NotNull PositionManager positionManager;

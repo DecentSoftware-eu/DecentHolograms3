@@ -50,14 +50,14 @@ public interface HologramConfig {
     /**
      * Save the hologram file.
      *
-     * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
+     * @return CompletableFuture that completes when the operation is finished.
      */
     CompletableFuture<Void> save();
 
     /**
      * Reload the hologram file.
      *
-     * @return True if the operation was successful, false otherwise in a {@link CompletableFuture}.
+     * @return CompletableFuture that completes when the operation is finished.
      */
     CompletableFuture<Void> reload();
 
