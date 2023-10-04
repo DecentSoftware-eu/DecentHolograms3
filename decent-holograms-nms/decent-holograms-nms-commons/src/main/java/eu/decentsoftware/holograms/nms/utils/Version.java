@@ -30,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
  * @since 3.0.0
  */
 public enum Version {
+    v1_8_R1(8),
+    v1_8_R2(8),
     v1_8_R3(8),
     v1_9_R1(9),
     v1_9_R2(9),
