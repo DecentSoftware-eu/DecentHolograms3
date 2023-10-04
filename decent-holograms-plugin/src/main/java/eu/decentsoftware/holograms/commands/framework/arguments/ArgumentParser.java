@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableMap;
 import eu.decentsoftware.holograms.commands.framework.arguments.parsers.HologramParser;
 import eu.decentsoftware.holograms.commands.framework.arguments.parsers.PositionParser;
 import eu.decentsoftware.holograms.commands.framework.arguments.parsers.WorldParser;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.utils.location.Position3D;
 import lombok.NonNull;
@@ -45,7 +44,7 @@ import java.util.Optional;
 public interface ArgumentParser<T> {
 
     Map<Class<?>, ArgumentParser<?>> PARSERS = ImmutableMap.of(
-            DefaultHologram.class, new HologramParser(),
+            PluginHologram.class, new HologramParser(),
             Position3D.class, new PositionParser(),
             World.class, new WorldParser()
     );

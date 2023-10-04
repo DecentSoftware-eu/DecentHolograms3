@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.editor.move;
 
 import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -32,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 /**
- * This class is used as a location binder to bind a {@link DefaultHologram} to a {@link Player}. It
+ * This class is used as a location binder to bind a {@link CoreHologram} to a {@link Player}. It
  * is used by the {@link MoveController} to move the hologram.
  *
  * @author d0by
