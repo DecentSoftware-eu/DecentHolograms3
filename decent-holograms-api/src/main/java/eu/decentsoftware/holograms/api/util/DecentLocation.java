@@ -22,6 +22,7 @@ import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,6 +119,22 @@ public class DecentLocation {
     }
 
     /**
+     * Set the world of this location.
+     *
+     * @param world The new world.
+     * @return This location.
+     */
+    public DecentLocation setWorld(@NonNull World world) {
+        lock.writeLock().lock();
+        try {
+            this.worldName = world.getName();
+            return this;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    /**
      * Get the x coordinate of this location.
      *
      * @return The x coordinate of this location.
@@ -126,6 +143,20 @@ public class DecentLocation {
         lock.readLock().lock();
         try {
             return x;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Get the block x coordinate of this location.
+     *
+     * @return The block x coordinate of this location.
+     */
+    public int getBlockX() {
+        lock.readLock().lock();
+        try {
+            return (int) Math.floor(x);
         } finally {
             lock.readLock().unlock();
         }
@@ -162,6 +193,20 @@ public class DecentLocation {
     }
 
     /**
+     * Get the block y coordinate of this location.
+     *
+     * @return The block y coordinate of this location.
+     */
+    public int getBlockY() {
+        lock.readLock().lock();
+        try {
+            return (int) Math.floor(y);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
      * Set the y coordinate of this location.
      *
      * @param y The new y coordinate.
@@ -186,6 +231,20 @@ public class DecentLocation {
         lock.readLock().lock();
         try {
             return z;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Get the block z coordinate of this location.
+     *
+     * @return The block z coordinate of this location.
+     */
+    public int getBlockZ() {
+        lock.readLock().lock();
+        try {
+            return (int) Math.floor(z);
         } finally {
             lock.readLock().unlock();
         }
@@ -279,12 +338,36 @@ public class DecentLocation {
         }
     }
 
+    public DecentLocation add(Vector vector) {
+        lock.writeLock().lock();
+        try {
+            this.x += vector.getX();
+            this.y += vector.getY();
+            this.z += vector.getZ();
+            return this;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
     public DecentLocation subtract(double x, double y, double z) {
         lock.writeLock().lock();
         try {
             this.x -= x;
             this.y -= y;
             this.z -= z;
+            return this;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    public DecentLocation subtract(Vector vector) {
+        lock.writeLock().lock();
+        try {
+            this.x -= vector.getX();
+            this.y -= vector.getY();
+            this.z -= vector.getZ();
             return this;
         } finally {
             lock.writeLock().unlock();
@@ -326,12 +409,38 @@ public class DecentLocation {
     }
 
     /**
+     * Get the distance between this location and another location.
+     *
+     * @param location The other location.
+     * @return The distance between the two locations.
+     */
+    public double distance(@NonNull Location location) {
+        return Math.sqrt(distanceSquared(location));
+    }
+
+    /**
      * Get the squared distance between this location and another location.
      *
      * @param location The other location.
      * @return The squared distance between the two locations.
      */
     public double distanceSquared(@NonNull DecentLocation location) {
+        if (!isSameWorld(location)) {
+            throw new IllegalArgumentException("Cannot calculate distance between locations in different worlds");
+        }
+        final double dx = getX() - location.getX();
+        final double dy = getY() - location.getY();
+        final double dz = getZ() - location.getZ();
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    /**
+     * Get the squared distance between this location and another location.
+     *
+     * @param location The other location.
+     * @return The squared distance between the two locations.
+     */
+    public double distanceSquared(@NonNull Location location) {
         if (!isSameWorld(location)) {
             throw new IllegalArgumentException("Cannot calculate distance between locations in different worlds");
         }
@@ -349,6 +458,16 @@ public class DecentLocation {
      */
     public boolean isSameWorld(@NonNull DecentLocation location) {
         return getWorldName().equals(location.getWorldName());
+    }
+
+    /**
+     * Check if this location is in the same world as another location.
+     *
+     * @param location The other location.
+     * @return True if the locations are in the same world.
+     */
+    public boolean isSameWorld(@NonNull Location location) {
+        return getWorldName().equals(location.getWorld().getName());
     }
 
     /**

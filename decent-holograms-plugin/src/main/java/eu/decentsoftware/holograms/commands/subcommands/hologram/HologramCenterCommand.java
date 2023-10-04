@@ -21,14 +21,14 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.hologram.component.DefaultPositionManager;
+import eu.decentsoftware.holograms.core.CorePositionManager;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
@@ -68,7 +68,7 @@ public class HologramCenterCommand extends DecentCommand {
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         boolean centerOnY = args.extractFlag("--y", "-y");
         String name = args.nextString().orElse(null);
-        DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), sender, name).orElse(null);
+        PluginHologram hologram = CommandCommons.getHologramInViewOrByName(this.plugin.getHologramManager(), sender, name).orElse(null);
         if (hologram == null) {
             if (name != null) {
                 Lang.confTell(sender, "editor.error.invalid_hologram_name", name);
@@ -77,8 +77,8 @@ public class HologramCenterCommand extends DecentCommand {
             return false;
         }
 
-        DefaultPositionManager positionManager = hologram.getPositionManager();
-        Location newLocation = positionManager.getLocation().clone();
+        CorePositionManager positionManager = hologram.getPositionManager();
+        DecentLocation newLocation = positionManager.getLocation().clone();
         newLocation.setX(newLocation.getBlockX() + 0.5);
         newLocation.setZ(newLocation.getBlockZ() + 0.5);
         if (centerOnY) {
@@ -93,7 +93,7 @@ public class HologramCenterCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingNotMovingEditableHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingNotMovingHologramNames(this.plugin.getHologramManager(), args);
         } else if (args.size() == 2) {
             return Collections.singletonList("--y");
         }

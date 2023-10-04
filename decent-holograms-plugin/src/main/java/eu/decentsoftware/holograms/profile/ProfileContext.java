@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.profile;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
-import eu.decentsoftware.holograms.api.hologram.line.HologramLine;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.api.hologram.HologramLine;
+import eu.decentsoftware.holograms.api.hologram.HologramPage;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import lombok.AccessLevel;
 import lombok.Getter;

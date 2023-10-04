@@ -59,6 +59,9 @@ public final class BungeeUtils {
      * Shutdown Bungee connection; Unregister BungeeCord channel.
      */
     public static void shutdown() {
+        if (BungeeUtils.plugin == null) {
+            return;
+        }
         Bukkit.getMessenger().unregisterOutgoingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
         Bukkit.getMessenger().unregisterIncomingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
     }

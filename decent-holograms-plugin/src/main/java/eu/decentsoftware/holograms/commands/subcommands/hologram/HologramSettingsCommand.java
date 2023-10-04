@@ -62,7 +62,7 @@ public class HologramSettingsCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingEditableHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramManager(), args);
         }
         return null;
     }

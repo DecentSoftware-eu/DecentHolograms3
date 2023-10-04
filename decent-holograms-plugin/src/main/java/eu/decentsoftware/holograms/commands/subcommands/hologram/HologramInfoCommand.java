@@ -21,13 +21,13 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class HologramInfoCommand extends DecentCommand {
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         String name = args.nextString().orElse(null);
-        DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), sender, name).orElse(null);
+        PluginHologram hologram = CommandCommons.getHologramInViewOrByName(plugin.getHologramManager(), sender, name).orElse(null);
         if (hologram == null) {
             return false;
         }
@@ -82,12 +82,12 @@ public class HologramInfoCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramManager(), args);
         }
         return super.tabComplete(sender, args);
     }
 
-    private String formatLocation(Location location) {
+    private String formatLocation(DecentLocation location) {
         return String.format(
                 "%s, %.2f, %.2f, %.2f",
                 Objects.requireNonNull(location.getWorld()).getName(),

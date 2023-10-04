@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.server;
 
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class ServerRegistry {
     private final Map<String, Server> serverMap = new ConcurrentHashMap<>();
     private final DecentHolograms plugin;
 
-    public ServerRegistry(DecentHolograms plugin) {
+    public ServerRegistry(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
         this.reload();
     }
@@ -78,15 +78,15 @@ public class ServerRegistry {
         this.serverMap.clear();
     }
 
-    public void registerServer(@NotNull Server server) {
+    public void registerServer(@NonNull Server server) {
         this.serverMap.put(server.getName(), server);
     }
 
-    public Server getServer(@NotNull String name) {
+    public Server getServer(@NonNull String name) {
         return this.serverMap.get(name);
     }
 
-    public boolean containsServer(@NotNull String name) {
+    public boolean containsServer(@NonNull String name) {
         return this.serverMap.containsKey(name);
     }
 

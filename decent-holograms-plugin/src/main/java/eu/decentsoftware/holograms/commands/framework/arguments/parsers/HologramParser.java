@@ -21,20 +21,20 @@ package eu.decentsoftware.holograms.commands.framework.arguments.parsers;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.commands.framework.arguments.ArgumentParser;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.internal.PluginHologram;
+import eu.decentsoftware.holograms.internal.PluginHologramManager;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class HologramParser implements ArgumentParser<DefaultHologram> {
+public class HologramParser implements ArgumentParser<PluginHologram> {
 
     @Override
-    public Optional<DefaultHologram> parse(final @NonNull Arguments args, final @Nullable CommandSender sender, final @Nullable DefaultHologram hologram) {
-        final DefaultHologramRegistry registry = DecentHolograms.getInstance().getHologramRegistry();
-        return args.nextString().map(registry::getHologram);
+    public Optional<PluginHologram> parse(@NonNull Arguments args, @Nullable CommandSender sender, @Nullable PluginHologram hologram) {
+        PluginHologramManager hologramManager = DecentHolograms.getInstance().getHologramManager();
+        return args.nextString().map(hologramManager::getHologram);
     }
 
 }

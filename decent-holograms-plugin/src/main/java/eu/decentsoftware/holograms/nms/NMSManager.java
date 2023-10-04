@@ -56,7 +56,7 @@ public class NMSManager {
         if (this.adapter == null) {
             throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
         }
-        this.listener = new NMSListener(this);
+        this.listener = new NMSListener(plugin, this);
         Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 

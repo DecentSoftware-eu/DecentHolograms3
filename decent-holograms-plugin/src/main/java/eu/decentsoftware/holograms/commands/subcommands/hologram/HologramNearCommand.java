@@ -21,10 +21,12 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -72,9 +74,9 @@ public class HologramNearCommand extends DecentCommand {
         }
 
         Location playerLocation = ((Player) sender).getLocation();
-        List<DefaultHologram> nearHolograms = plugin.getHologramRegistry().getHolograms().stream()
+        List<PluginHologram> nearHolograms = plugin.getHologramManager().getHolograms().stream()
                 .filter(hologram -> {
-                    Location location = hologram.getPositionManager().getLocation();
+                    DecentLocation location = hologram.getPositionManager().getLocation();
                     return Objects.equals(location.getWorld(), playerLocation.getWorld())
                             && location.distanceSquared(playerLocation) <= radius * radius;
                 })

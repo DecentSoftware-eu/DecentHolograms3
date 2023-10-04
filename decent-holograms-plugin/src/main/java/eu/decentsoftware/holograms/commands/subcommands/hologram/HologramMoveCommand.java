@@ -21,17 +21,17 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
 import eu.decentsoftware.holograms.editor.move.MoveController;
 import eu.decentsoftware.holograms.editor.move.MoveLocationBinder;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.utils.location.Position3D;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -91,14 +91,9 @@ public class HologramMoveCommand extends DecentCommand {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), player, name).orElse(null);
+            PluginHologram hologram = CommandCommons.getHologramInViewOrByName(plugin.getHologramManager(), player, name).orElse(null);
             if (hologram == null) {
                 return false;
-            }
-
-            if (!hologram.getSettings().isEditable()) {
-                Lang.confTell(sender, "editor.error.not_editable");
-                return true;
             }
 
             if (position == null) {
@@ -134,14 +129,9 @@ public class HologramMoveCommand extends DecentCommand {
             return true;
         }
 
-        DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
+        PluginHologram hologram = plugin.getHologramManager().getHologram(name);
         if (hologram == null) {
             Lang.confTell(sender, "editor.error.invalid_hologram_name");
-            return true;
-        }
-
-        if (!hologram.getSettings().isEditable()) {
-            Lang.confTell(sender, "editor.error.not_editable");
             return true;
         }
 
@@ -155,10 +145,10 @@ public class HologramMoveCommand extends DecentCommand {
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         final int size = args.size();
         if (size == 1) {
-            return TabCompleteCommons.getMatchingNotMovingEditableHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingNotMovingHologramNames(plugin.getHologramManager(), args);
         } else if (size == 2) {
             return args.nextString().map(name -> {
-                DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
+                PluginHologram hologram = plugin.getHologramManager().getHologram(name);
                 if (hologram != null) {
                     double x = hologram.getPositionManager().getLocation().getX();
                     return Arrays.asList(String.valueOf(x), String.valueOf((int) x), "0", "~");
@@ -167,7 +157,7 @@ public class HologramMoveCommand extends DecentCommand {
             }).orElse(null);
         } else if (size == 3) {
             return args.nextString().map(name -> {
-                DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
+                PluginHologram hologram = plugin.getHologramManager().getHologram(name);
                 if (hologram != null) {
                     double y = hologram.getPositionManager().getLocation().getY();
                     return Arrays.asList(String.valueOf(y), String.valueOf((int) y), "0", "~");
@@ -176,7 +166,7 @@ public class HologramMoveCommand extends DecentCommand {
             }).orElse(null);
         } else if (size == 4) {
             return args.nextString().map(name -> {
-                DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
+                PluginHologram hologram = plugin.getHologramManager().getHologram(name);
                 if (hologram != null) {
                     double z = hologram.getPositionManager().getLocation().getZ();
                     return Arrays.asList(String.valueOf(z), String.valueOf((int) z), "0", "~");
@@ -192,8 +182,8 @@ public class HologramMoveCommand extends DecentCommand {
         return super.tabComplete(sender, args);
     }
 
-    private void setHologramLocation(@NonNull DefaultHologram hologram, @NonNull Position3D position, @Nullable World world) {
-        Location newLocation = hologram.getPositionManager().getLocation().clone();
+    private void setHologramLocation(@NonNull PluginHologram hologram, @NonNull Position3D position, @Nullable World world) {
+        DecentLocation newLocation = hologram.getPositionManager().getLocation().clone();
         newLocation.setX(position.getX());
         newLocation.setY(position.getY());
         newLocation.setZ(position.getZ());

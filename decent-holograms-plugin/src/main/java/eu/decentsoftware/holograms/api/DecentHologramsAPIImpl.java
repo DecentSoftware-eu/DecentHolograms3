@@ -1,42 +1,36 @@
 package eu.decentsoftware.holograms.api;
 
+import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.api.hologram.APIHologram;
 import eu.decentsoftware.holograms.api.hologram.Hologram;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.api.hologram.HologramPage;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
+import lombok.NonNull;
 import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 
 import java.util.List;
-import java.util.UUID;
 
 public class DecentHologramsAPIImpl implements DecentHologramsAPI {
 
-    @NotNull
-    @Override
-    public Hologram createHologram(@NotNull Location location) {
-        return new DefaultHologram(UUID.randomUUID().toString(), location);
+    private final DecentHolograms plugin;
+
+    @Contract(pure = true)
+    public DecentHologramsAPIImpl(@NonNull DecentHolograms plugin) {
+        this.plugin = plugin;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Hologram createHologram(@NotNull Location location, boolean persistent) {
-        return new DefaultHologram(UUID.randomUUID().toString(), location, true, persistent);
+    public Hologram createHologram(@NonNull Location location) {
+        return new APIHologram(plugin, new DecentLocation(location));
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Hologram createHologram(@NotNull Location location, @NotNull List<String> lines) {
-        Hologram hologram = new DefaultHologram(UUID.randomUUID().toString(), location);
-        HologramPage page = hologram.addPage();
-        page.setLinesFromStrings(lines);
-        return hologram;
-    }
-
-    @NotNull
-    @Override
-    public Hologram createHologram(@NotNull Location location, @NotNull List<String> lines, boolean persistent) {
-        Hologram hologram = new DefaultHologram(UUID.randomUUID().toString(), location, true, persistent);
-        HologramPage page = hologram.addPage();
+    public Hologram createHologram(@NonNull Location location, @NonNull List<String> lines) {
+        APIHologram hologram = new APIHologram(plugin, new DecentLocation(location));
+        HologramPage page = hologram.appendPage();
         page.setLinesFromStrings(lines);
         return hologram;
     }

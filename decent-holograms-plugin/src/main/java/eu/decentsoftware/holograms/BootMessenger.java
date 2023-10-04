@@ -18,11 +18,11 @@
 
 package eu.decentsoftware.holograms;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public final class BootMessenger {
     private List<String> messages;
 
     @Contract(pure = true)
-    public BootMessenger(DecentHolograms plugin) {
+    public BootMessenger(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
     }
 
@@ -53,7 +53,7 @@ public final class BootMessenger {
      * @param message The message.
      * @since 3.0.0
      */
-    public void log(@NotNull String message) {
+    public void log(@NonNull String message) {
         if (messages == null) {
             messages = new ArrayList<>();
         }

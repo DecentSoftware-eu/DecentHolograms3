@@ -46,12 +46,12 @@ public interface DecentHologramsAddon {
     // A default method that returns the plugin instance.
     default Plugin getPlugin() {
         return Bukkit.getPluginManager().getPlugin("DecentHolograms");
-    };
+    }
 
     // A default method that registers a listener.
     default void registerListener(@NonNull Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, getPlugin());
-    };
+    }
 
     // A default method that loads a file from the plugin's resources.
     default FileConfiguration loadFile(@NonNull String path, @NonNull String fileName) {
@@ -83,6 +83,6 @@ public interface DecentHologramsAddon {
             }
         }
         return YamlConfiguration.loadConfiguration(file);
-    };
+    }
 
 }

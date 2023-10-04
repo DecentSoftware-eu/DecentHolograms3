@@ -18,27 +18,69 @@
 
 package eu.decentsoftware.holograms.nms;
 
+import eu.decentsoftware.holograms.DecentHolograms;
+import eu.decentsoftware.holograms.api.hologram.HologramLine;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
+import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
+import eu.decentsoftware.holograms.profile.Profile;
+import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Contract;
 
 class NMSListener implements Listener {
 
+    private final DecentHolograms plugin;
     private final NMSManager nmsManager;
 
-    public NMSListener(NMSManager nmsManager) {
+    @Contract(pure = true)
+    public NMSListener(@NonNull DecentHolograms plugin, @NonNull NMSManager nmsManager) {
+        this.plugin = plugin;
         this.nmsManager = nmsManager;
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(@NonNull PlayerJoinEvent event) {
         nmsManager.hook(event.getPlayer());
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    public void onQuit(@NonNull PlayerQuitEvent event) {
         nmsManager.unhook(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPacketPlayInUseEntity(@NonNull PacketPlayInUseEntityEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = plugin.getProfileRegistry().getProfile(player.getUniqueId());
+        if (profile == null) {
+            return;
+        }
+
+        int clickableEntityId = profile.getContext().getClickableEntityId();
+        if (clickableEntityId != event.getEntityId()) {
+            return;
+        }
+
+        HologramLine clickedLine = profile.getContext().getWatchedLine();
+        if (clickedLine == null) {
+            return;
+        }
+
+        ClickType clickType = event.getClickType();
+//        if (clickedLine.getClickHandler() != null && clickedLine.getClickHandler().onClick(player, clickType)) {
+//            // If line has a click handler, and it handled the click, return.
+//            return;
+//        }
+//
+//        // Otherwise, pass the click to the parent page.
+//        if (clickedLine.getParent().getClickHandler() != null) {
+//            clickedLine.getParent().getClickHandler().onClick(player, clickType);
+//        }
+        // TODO: fix click detection
     }
 
 }

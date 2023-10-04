@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.nms;
 
-import eu.decentsoftware.holograms.api.hologram.component.ClickType;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.ReflectField;
 import eu.decentsoftware.holograms.nms.utils.ReflectUtil;

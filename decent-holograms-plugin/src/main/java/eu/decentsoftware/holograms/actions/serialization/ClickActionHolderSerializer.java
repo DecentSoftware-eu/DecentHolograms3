@@ -22,7 +22,7 @@ import com.google.gson.*;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionType;
 import eu.decentsoftware.holograms.actions.ClickActionHolder;
-import eu.decentsoftware.holograms.api.hologram.component.ClickType;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;

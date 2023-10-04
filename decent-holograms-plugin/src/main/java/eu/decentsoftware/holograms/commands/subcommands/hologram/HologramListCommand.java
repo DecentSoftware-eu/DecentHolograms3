@@ -24,7 +24,7 @@ import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
@@ -63,11 +63,11 @@ public class HologramListCommand extends DecentCommand {
 
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
-        Collection<DefaultHologram> holograms = plugin.getHologramRegistry().getHolograms();
+        Collection<PluginHologram> holograms = plugin.getHologramManager().getHolograms();
         int page = args.nextInteger().orElse(1);
         String search = args.nextString().orElse(null);
         if (search != null) {
-            holograms = plugin.getHologramRegistry().getHolograms().stream()
+            holograms = plugin.getHologramManager().getHolograms().stream()
                     .filter(hologram -> hologram.getName().toLowerCase().contains(search.toLowerCase()))
                     .collect(Collectors.toList());
         }
@@ -96,7 +96,7 @@ public class HologramListCommand extends DecentCommand {
         }
         sender.sendMessage(" ");
 
-        for (DefaultHologram hologram : holograms) {
+        for (PluginHologram hologram : holograms) {
             if (sender instanceof Player) {
                 new ComponentMessage(Lang.formatString(" &8∙ "))
                         .append(Lang.formatString("&b" + hologram.getName()))

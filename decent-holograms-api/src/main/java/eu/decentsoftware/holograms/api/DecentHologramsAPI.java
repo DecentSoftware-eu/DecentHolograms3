@@ -20,9 +20,9 @@ package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -51,19 +51,8 @@ public interface DecentHologramsAPI {
      * @return The new hologram.
      * @see Hologram
      */
-    @NotNull
-    Hologram createHologram(@NotNull Location location);
-
-    /**
-     * Create a new, empty hologram.
-     *
-     * @param location   The location of the hologram.
-     * @param persistent Whether the hologram should be persistent. (Saved in a file)
-     * @return The new hologram.
-     * @see Hologram
-     */
-    @NotNull
-    Hologram createHologram(@NotNull Location location, boolean persistent);
+    @NonNull
+    Hologram createHologram(@NonNull Location location);
 
     /**
      * Create a new hologram with the given lines at the first page.
@@ -76,22 +65,7 @@ public interface DecentHologramsAPI {
      * @return The new hologram.
      * @see Hologram
      */
-    @NotNull
-    Hologram createHologram(@NotNull Location location, @NotNull List<String> lines);
-
-    /**
-     * Create a new hologram with the given lines at the first page.
-     * <p>
-     * You can use any kind of formatting in the lines. It will be automatically
-     * parsed just like if you were using the commands.
-     *
-     * @param location   The location of the hologram.
-     * @param lines      The lines of the first page of the hologram.
-     * @param persistent Whether the hologram should be persistent. (Saved in a file)
-     * @return The new hologram.
-     * @see Hologram
-     */
-    @NotNull
-    Hologram createHologram(@NotNull Location location, @NotNull List<String> lines, boolean persistent);
+    @NonNull
+    Hologram createHologram(@NonNull Location location, @NonNull List<String> lines);
 
 }

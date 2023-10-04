@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.commands.framework.arguments.parsers;
 
 import eu.decentsoftware.holograms.commands.framework.arguments.ArgumentParser;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.utils.location.Position3D;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public class PositionParser implements ArgumentParser<Position3D> {
 
     @Override
-    public Optional<Position3D> parse(final @NonNull Arguments args, final @Nullable CommandSender sender, final @Nullable DefaultHologram hologram) {
+    public Optional<Position3D> parse(final @NonNull Arguments args, final @Nullable CommandSender sender, final @Nullable PluginHologram hologram) {
         final Optional<Double> x = args.peek().map(string -> parseRelative(string, sender, hologram));
         final Optional<Double> y = args.peek().map(string -> parseRelative(string, sender, hologram));
         final Optional<Double> z = args.peek().map(string -> parseRelative(string, sender, hologram));
@@ -49,7 +49,7 @@ public class PositionParser implements ArgumentParser<Position3D> {
     }
 
     @Nullable
-    private Double parseRelative(final @NonNull String string, final @Nullable CommandSender sender, final @Nullable DefaultHologram hologram) {
+    private Double parseRelative(final @NonNull String string, final @Nullable CommandSender sender, final @Nullable PluginHologram hologram) {
         if (string.startsWith("~")) {
             final String substring = string.substring(1);
             final double relativeX;

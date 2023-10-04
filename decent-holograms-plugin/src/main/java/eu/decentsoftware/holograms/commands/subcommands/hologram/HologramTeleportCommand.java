@@ -21,10 +21,11 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -66,25 +67,29 @@ public class HologramTeleportCommand extends DecentCommand {
             return true;
         }
 
-        DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
+        PluginHologram hologram = plugin.getHologramManager().getHologram(name);
         if (hologram == null) {
             Lang.confTell(sender, "editor.error.hologram_not_found", name);
             return true;
         }
 
         Player player = (Player) sender;
-        Location location = hologram.getPositionManager().getLocation();
+        DecentLocation location = hologram.getPositionManager().getLocation();
+        Location bukkitLocation = location.toBukkitLocation();
 
-        player.teleport(location);
+        if (bukkitLocation != null) {
+            player.teleport(bukkitLocation);
+            Lang.confTell(sender, "editor.teleport.success", name);
+        }
 
-        Lang.confTell(sender, "editor.teleported", name);
+        Lang.confTell(sender, "editor.teleport.fail", name);
         return true;
     }
 
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramManager(), args);
         }
         return super.tabComplete(sender, args);
     }

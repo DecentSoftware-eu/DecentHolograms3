@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.commands.framework.arguments.parsers.Hologram
 import eu.decentsoftware.holograms.commands.framework.arguments.parsers.PositionParser;
 import eu.decentsoftware.holograms.commands.framework.arguments.parsers.WorldParser;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.utils.location.Position3D;
 import lombok.NonNull;
 import org.bukkit.World;
@@ -57,7 +58,7 @@ public interface ArgumentParser<T> {
      * @param hologram The hologram to parse for. May be {@code null}.
      * @return The parsed argument or {@link Optional#empty()} if the argument could not be parsed.
      */
-    Optional<T> parse(final @NonNull Arguments args, final @Nullable CommandSender sender, final @Nullable DefaultHologram hologram);
+    Optional<T> parse(final @NonNull Arguments args, final @Nullable CommandSender sender, final @Nullable PluginHologram hologram);
 
     /**
      * Parses the next argument from the given {@link Arguments}.
@@ -66,7 +67,7 @@ public interface ArgumentParser<T> {
      * @param hologram The hologram to parse for. May be {@code null}.
      * @return The parsed argument or {@link Optional#empty()} if the argument could not be parsed.
      */
-    default Optional<T> parse(final @NonNull Arguments args, final @Nullable DefaultHologram hologram) {
+    default Optional<T> parse(final @NonNull Arguments args, final @Nullable PluginHologram hologram) {
         return this.parse(args, null, hologram);
     }
 

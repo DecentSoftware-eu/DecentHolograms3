@@ -20,8 +20,9 @@ package eu.decentsoftware.holograms.commands.utils;
 
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.editor.move.MoveLocationBinder;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.internal.PluginHologram;
+import eu.decentsoftware.holograms.internal.PluginHologramManager;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -30,26 +31,17 @@ import java.util.stream.Collectors;
 @UtilityClass
 public final class TabCompleteCommons {
 
-    public static List<String> getMatchingNotMovingEditableHologramNames(DefaultHologramRegistry hologramRegistry, Arguments args) {
-        return hologramRegistry.getHolograms().stream()
-                .filter(hologram -> hologram.getSettings().isEditable())
+    public static List<String> getMatchingNotMovingHologramNames(@NonNull PluginHologramManager hologramManager, @NonNull Arguments args) {
+        return hologramManager.getHolograms().stream()
                 .filter(hologram -> !(hologram.getPositionManager().getLocationBinder() instanceof MoveLocationBinder))
-                .map(DefaultHologram::getName)
+                .map(PluginHologram::getName)
                 .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
                 .collect(Collectors.toList());
     }
 
-    public static List<String> getMatchingEditableHologramNames(DefaultHologramRegistry hologramRegistry, Arguments args) {
-        return hologramRegistry.getHolograms().stream()
-                .filter(hologram -> hologram.getSettings().isEditable())
-                .map(DefaultHologram::getName)
-                .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    public static List<String> getMatchingHologramNames(DefaultHologramRegistry hologramRegistry, Arguments args) {
-        return hologramRegistry.getHolograms().stream()
-                .map(DefaultHologram::getName)
+    public static List<String> getMatchingHologramNames(@NonNull PluginHologramManager hologramManager, @NonNull Arguments args) {
+        return hologramManager.getHolograms().stream()
+                .map(PluginHologram::getName)
                 .filter(name -> name.toLowerCase().startsWith(args.peek().orElse("").toLowerCase()))
                 .collect(Collectors.toList());
     }

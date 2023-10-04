@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 /**
  * This class holds all the settings for a hologram.
@@ -33,7 +33,7 @@ public interface HologramSettings {
      *
      * @param settings The settings to copy from.
      */
-    void set(@NotNull HologramSettings settings);
+    void set(@NonNull HologramSettings settings);
 
     /**
      * Check if this hologram is enabled. If this hologram is disabled, it will
@@ -67,21 +67,6 @@ public interface HologramSettings {
      */
     void setInteractive(boolean interactive);
 
-    /**
-     * Get if the hologram is persistent, meaning it will be saved and loaded
-     * when the server is restarted.
-     *
-     * @return True if the hologram is persistent, false otherwise.
-     */
-    boolean isPersistent();
-
-    /**
-     * Set if the hologram is persistent, meaning it will be saved and loaded
-     * when the server is restarted.
-     *
-     * @param persistent True if the hologram is persistent, false otherwise.
-     */
-    void setPersistent(boolean persistent);
 
     /**
      * Get if the origin of the hologram is down, meaning the hologram will
@@ -100,20 +85,6 @@ public interface HologramSettings {
      * @param downOrigin True if the origin is down, false otherwise.
      */
     void setDownOrigin(boolean downOrigin);
-
-    /**
-     * Get if the hologram is editable in-game.
-     *
-     * @return True if the hologram is editable, false otherwise.
-     */
-    boolean isEditable();
-
-    /**
-     * Set if the hologram is editable in-game.
-     *
-     * @param editable True if the hologram is editable, false otherwise.
-     */
-    void setEditable(boolean editable);
 
     /**
      * Get if the hologram should rotate horizontally. If true, the hologram will
@@ -150,22 +121,6 @@ public interface HologramSettings {
      * @param rotateVertical True if the hologram should rotate vertically, false otherwise.
      */
     void setRotateVertical(boolean rotateVertical);
-
-    /**
-     * Get if the hologram should rotate the heads of entities in it. If true,
-     * the hologram will rotate all heads and entities to face the player.
-     *
-     * @return True if the hologram should rotate the heads, false otherwise.
-     */
-    boolean isRotateHeads();
-
-    /**
-     * Set if the hologram should rotate the heads of entities in it. If true,
-     * the hologram will rotate all heads and entities to face the player.
-     *
-     * @param rotateHeads True if the hologram should rotate the heads, false otherwise.
-     */
-    void setRotateHeads(boolean rotateHeads);
 
     /**
      * Get the view distance of the hologram. This is the range in which the

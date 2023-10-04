@@ -1,7 +1,7 @@
 package eu.decentsoftware.holograms.nms.event;
 
 import eu.decentsoftware.holograms.api.event.DecentHologramsEvent;
-import eu.decentsoftware.holograms.api.hologram.component.ClickType;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

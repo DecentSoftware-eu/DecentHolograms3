@@ -26,7 +26,7 @@ import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
 import eu.decentsoftware.holograms.editor.move.MoveLocationBinder;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
@@ -62,7 +62,7 @@ public class HologramDeleteCommand extends DecentCommand {
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         String name = args.nextString().orElse(null);
-        DefaultHologram hologram = CommandCommons.getEditableHologramInViewOrByName(plugin.getHologramRegistry(), sender, name).orElse(null);
+        PluginHologram hologram = CommandCommons.getHologramInViewOrByName(plugin.getHologramManager(), sender, name).orElse(null);
         if (hologram == null) {
             Lang.confTell(sender, "editor.error.invalid_hologram_name_or_view", name);
             return true;
@@ -74,7 +74,7 @@ public class HologramDeleteCommand extends DecentCommand {
             Lang.confTell(binder.getPlayer(), "editor.move.cancel");
         }
 
-        plugin.getHologramRegistry().removeHologram(hologram.getName());
+        plugin.getHologramManager().removeHologram(hologram.getName());
         hologram.delete();
 
         Lang.confTell(sender, "editor.delete.success", hologram.getName());
@@ -84,7 +84,7 @@ public class HologramDeleteCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingEditableHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramManager(), args);
         }
         return super.tabComplete(sender, args);
     }

@@ -29,22 +29,22 @@ import eu.decentsoftware.holograms.animations.AnimationRegistry;
 import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
 import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.RootCommand;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.serialization.ClickConditionHolderSerializer;
 import eu.decentsoftware.holograms.conditions.serialization.ConditionHolderSerializer;
+import eu.decentsoftware.holograms.content.parser.ContentParserManager;
 import eu.decentsoftware.holograms.editor.Editor;
-import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
-import eu.decentsoftware.holograms.hologram.line.content.ContentParserManager;
-import eu.decentsoftware.holograms.hologram.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.hooks.PAPI;
-import eu.decentsoftware.holograms.listener.PlayerListener;
+import eu.decentsoftware.holograms.internal.PluginHologramManager;
 import eu.decentsoftware.holograms.nms.NMSManager;
-import eu.decentsoftware.holograms.nms.PacketListener;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
+import eu.decentsoftware.holograms.serialization.DecentLocationSerializer;
+import eu.decentsoftware.holograms.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.ticker.Ticker;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
@@ -81,7 +81,7 @@ public final class DecentHolograms extends JavaPlugin {
     private ReplacementRegistry replacementRegistry;
     private AnimationRegistry animationRegistry;
     private ContentParserManager contentParserManager;
-    private DefaultHologramRegistry hologramRegistry;
+    private PluginHologramManager hologramManager;
     private NMSManager nMSManager;
     private Editor editor;
     private AddonLoader addonLoader;
@@ -123,19 +123,18 @@ public final class DecentHolograms extends JavaPlugin {
         replacementRegistry = new ReplacementRegistry(this);
         animationRegistry = new AnimationRegistry(this);
         contentParserManager = new ContentParserManager(this);
-        hologramRegistry = new DefaultHologramRegistry(this);
+        hologramManager = new PluginHologramManager(this);
         editor = new Editor(this);
 
         // -- Register DecentHologramsAPI
-        DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl());
+        DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl(this));
 
         // -- Initialize Utils
         BungeeUtils.init(this);
 
         // -- Register listeners
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new PlayerListener(), this);
-        pm.registerEvents(new PacketListener(this), this);
+        pm.registerEvents(new UpdateNotificationListener(), this);
 
         // -- Commands
         CommandUtil.register(this, new RootCommand(this));
@@ -164,7 +163,7 @@ public final class DecentHolograms extends JavaPlugin {
             editor.shutdown();
             ticker.shutdown();
             nMSManager.shutdown();
-            hologramRegistry.shutdown();
+            hologramManager.shutdown();
             animationRegistry.shutdown();
             replacementRegistry.shutdown();
             serverRegistry.shutdown();
@@ -187,7 +186,7 @@ public final class DecentHolograms extends JavaPlugin {
         replacementRegistry.reload();
         animationRegistry.reload();
         serverRegistry.reload();
-        hologramRegistry.reload();
+        hologramManager.reload();
         profileRegistry.reload();
         editor.reload();
         addonLoader.reload();
@@ -237,6 +236,7 @@ public final class DecentHolograms extends JavaPlugin {
                 .disableHtmlEscaping()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Location.class, new LocationSerializer())
+                .registerTypeAdapter(DecentLocation.class, new DecentLocationSerializer())
                 .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())
                 .registerTypeAdapter(ClickActionHolder.class, new ClickActionHolderSerializer())
                 .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())

@@ -21,10 +21,11 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
+import eu.decentsoftware.holograms.internal.PluginHologramPage;
 import eu.decentsoftware.holograms.utils.location.Position3D;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -86,7 +87,7 @@ public class HologramCreateCommand extends DecentCommand {
             return true;
         }
 
-        if (plugin.getHologramRegistry().isHologramRegistered(name)) {
+        if (plugin.getHologramManager().hasHologram(name)) {
             Lang.confTell(sender, "editor.error.hologram_already_exists", name);
             return true;
         }
@@ -105,8 +106,13 @@ public class HologramCreateCommand extends DecentCommand {
             return true;
         }
 
-        DefaultHologram hologram = new DefaultHologram(name, location, true, true);
-        HologramPage page = hologram.getPage(0) == null ? hologram.addPage() : hologram.getPage(0);
+        PluginHologram hologram = new PluginHologram(plugin, new DecentLocation(location), name);
+        PluginHologramPage page = hologram.getPage(0);
+        if (page == null) {
+            hologram.appendPage();
+            page = hologram.getPage(0);
+        }
+
         if (page == null) {
             // Should never happen
             return true;
@@ -124,10 +130,9 @@ public class HologramCreateCommand extends DecentCommand {
         }
 
         hologram.getConfig().save();
-        hologram.getVisibilityManager().setVisibleByDefault(true);
         hologram.recalculate();
 
-        plugin.getHologramRegistry().registerHologram(hologram);
+        plugin.getHologramManager().registerHologram(hologram);
         Lang.confTell(sender, "editor.create.success", hologram.getName());
 
         // TODO: send some options on next edits

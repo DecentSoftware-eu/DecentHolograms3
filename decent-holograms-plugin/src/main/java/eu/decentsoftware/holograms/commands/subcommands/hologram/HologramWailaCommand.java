@@ -25,6 +25,7 @@ import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,16 +60,13 @@ public class HologramWailaCommand extends DecentCommand {
     @Override
     public boolean execute(@NonNull CommandSender sender, @NonNull Arguments args) {
         Player player = (Player) sender;
-        DefaultHologram hologram = CommandCommons.getHologramInView(plugin.getHologramRegistry(), player);
+        PluginHologram hologram = CommandCommons.getHologramInView(plugin.getHologramManager(), player);
         if (hologram == null) {
             Lang.confTell(player, "editor.waila.not_found");
             return true;
         }
 
         Lang.confTell(player, "editor.waila.found", hologram.getName());
-        if (!hologram.getSettings().isEditable()) {
-            Lang.confTell(player, "editor.not_editable", hologram.getName());
-        }
         return true;
     }
 

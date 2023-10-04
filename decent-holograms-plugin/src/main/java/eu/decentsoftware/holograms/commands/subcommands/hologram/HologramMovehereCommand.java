@@ -21,12 +21,12 @@ package eu.decentsoftware.holograms.commands.subcommands.hologram;
 import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -67,21 +67,16 @@ public class HologramMovehereCommand extends DecentCommand {
             return true;
         }
 
-        DefaultHologram hologram = plugin.getHologramRegistry().getHologram(name);
+        PluginHologram hologram = plugin.getHologramManager().getHologram(name);
         if (hologram == null) {
             Lang.confTell(sender, "editor.error.invalid_hologram_name", name);
             return true;
         }
 
-        if (!hologram.getSettings().isEditable()) {
-            Lang.confTell(sender, "editor.error.not_editable");
-            return true;
-        }
-
         Player player = (Player) sender;
 
-        Location currentLocation = hologram.getPositionManager().getLocation();
-        Location newLocation = player.getLocation().clone();
+        DecentLocation currentLocation = hologram.getPositionManager().getLocation();
+        DecentLocation newLocation = new DecentLocation(player.getLocation());
         newLocation.setYaw(currentLocation.getYaw());
         newLocation.setPitch(currentLocation.getPitch());
 
@@ -95,7 +90,7 @@ public class HologramMovehereCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingEditableHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingHologramNames(plugin.getHologramManager(), args);
         }
         return null;
     }

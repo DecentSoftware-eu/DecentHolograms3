@@ -24,7 +24,7 @@ import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import eu.decentsoftware.holograms.utils.pinger.Pinger;
 import eu.decentsoftware.holograms.utils.pinger.PingerResponse;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,13 +41,13 @@ public class Server implements Ticked {
 
     // TODO: motd lines
 
-    private final @NotNull String name;
+    private final String name;
     private final Pinger pinger;
     private final AtomicBoolean online;
     private final AtomicLong lastUpdate;
     private PingerResponse data;
 
-    public Server(@NotNull String name, @NotNull InetSocketAddress address) {
+    public Server(@NonNull String name, @NonNull InetSocketAddress address) {
         this.name = name;
         this.pinger = new Pinger(address, Config.PINGER_TIMEOUT);
         this.online = new AtomicBoolean(false);
@@ -73,7 +73,7 @@ public class Server implements Ticked {
         }
     }
 
-    @NotNull
+    @NonNull
     public String getName() {
         return name;
     }

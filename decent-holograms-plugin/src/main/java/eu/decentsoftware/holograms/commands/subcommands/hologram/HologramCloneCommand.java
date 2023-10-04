@@ -24,7 +24,7 @@ import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 
@@ -63,7 +63,7 @@ public class HologramCloneCommand extends DecentCommand {
             return false;
         }
 
-        DefaultHologram hologram = args.next(DefaultHologram.class).orElse(null);
+        PluginHologram hologram = args.next(PluginHologram.class).orElse(null);
         if (hologram == null) {
             Lang.confTell(sender, "editor.error.invalid_hologram_name", args.peek(-1).orElse(""));
             return true;
@@ -75,13 +75,13 @@ public class HologramCloneCommand extends DecentCommand {
             return true;
         }
 
-        if (plugin.getHologramRegistry().isHologramRegistered(newName)) {
+        if (plugin.getHologramManager().hasHologram(newName)) {
             Lang.confTell(sender, "editor.error.already_exists", newName);
             return true;
         }
 
-        DefaultHologram newHologram = hologram.copy(newName);
-        plugin.getHologramRegistry().registerHologram(newHologram);
+        PluginHologram newHologram = hologram.copy(newName);
+        plugin.getHologramManager().registerHologram(newHologram);
         Lang.confTell(sender, "editor.clone.success", hologram.getName(), newHologram.getName());
         return false;
     }
@@ -89,7 +89,7 @@ public class HologramCloneCommand extends DecentCommand {
     @Override
     public List<String> tabComplete(@NonNull CommandSender sender, @NonNull Arguments args) {
         if (args.size() == 1) {
-            return TabCompleteCommons.getMatchingNotMovingEditableHologramNames(plugin.getHologramRegistry(), args);
+            return TabCompleteCommons.getMatchingNotMovingHologramNames(plugin.getHologramManager(), args);
         }
         return super.tabComplete(sender, args);
     }

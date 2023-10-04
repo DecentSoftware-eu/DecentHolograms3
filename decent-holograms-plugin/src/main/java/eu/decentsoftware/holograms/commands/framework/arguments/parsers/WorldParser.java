@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.commands.framework.arguments.parsers;
 
 import eu.decentsoftware.holograms.commands.framework.arguments.ArgumentParser;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
+import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -33,7 +33,7 @@ import java.util.Optional;
 public class WorldParser implements ArgumentParser<World> {
 
     @Override
-    public Optional<World> parse(@NonNull Arguments args, @Nullable CommandSender sender, @Nullable DefaultHologram hologram) {
+    public Optional<World> parse(@NonNull Arguments args, @Nullable CommandSender sender, @Nullable PluginHologram hologram) {
         final String worldName = args.nextString().orElse(null);
 
         if (worldName != null) {

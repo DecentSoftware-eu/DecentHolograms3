@@ -18,8 +18,8 @@
 
 package eu.decentsoftware.holograms.editor.move;
 
-import eu.decentsoftware.holograms.api.hologram.Hologram;
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
+import eu.decentsoftware.holograms.core.CoreHologram;
+import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.hologram.DefaultHologram;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,16 +44,16 @@ import java.util.function.Supplier;
 public class MoveLocationBinder implements Supplier<Location> {
 
     private final @NotNull Player player;
-    private final @NotNull Hologram hologram;
+    private final @NotNull CoreHologram<?> hologram;
     private int distance;
 
     @Contract(pure = true)
-    public MoveLocationBinder(@NotNull Player player, @NotNull Hologram hologram) {
+    public MoveLocationBinder(@NotNull Player player, @NotNull CoreHologram<?> hologram) {
         this(player, hologram, 5);
     }
 
     @Contract(pure = true)
-    public MoveLocationBinder(@NotNull Player player, @NotNull Hologram hologram, int distance) {
+    public MoveLocationBinder(@NotNull Player player, @NotNull CoreHologram<?> hologram, int distance) {
         this.player = player;
         this.hologram = hologram;
         this.distance = distance;
@@ -66,8 +66,7 @@ public class MoveLocationBinder implements Supplier<Location> {
 
         location.add(lookDirection.multiply(distance));
 
-        int pageIndex = hologram.getVisibilityManager().getPageIndex(player);
-        HologramPage page = hologram.getPage(pageIndex);
+        CoreHologramPage<?> page = hologram.getVisibilityManager().getPage(player);
         if (page == null) {
             return location;
         }

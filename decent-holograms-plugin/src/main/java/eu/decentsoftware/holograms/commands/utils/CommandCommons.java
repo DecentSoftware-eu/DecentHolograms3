@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.commands.utils;
 
 import eu.decentsoftware.holograms.Lang;
-import eu.decentsoftware.holograms.hologram.DefaultHologram;
-import eu.decentsoftware.holograms.hologram.DefaultHologramRegistry;
+import eu.decentsoftware.holograms.internal.PluginHologram;
+import eu.decentsoftware.holograms.internal.PluginHologramManager;
 import eu.decentsoftware.holograms.utils.ComponentMessage;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -51,14 +51,14 @@ public final class CommandCommons {
      * @return The first hologram in the player's view.
      */
     @Nullable
-    public static DefaultHologram getHologramInView(DefaultHologramRegistry hologramRegistry, @NonNull Player player) {
+    public static PluginHologram getHologramInView(PluginHologramManager hologramManager, @NonNull Player player) {
         Location location = player.getEyeLocation();
         Vector lookDirection = location.getDirection();
 
         for (int i = 3; i < 24; i += 3) {
             location.add(lookDirection);
 
-            List<DefaultHologram> holograms = getHologramsNearLocation(hologramRegistry, location);
+            List<PluginHologram> holograms = getHologramsNearLocation(hologramManager, location);
 
             if (!holograms.isEmpty()) {
                 return holograms.get(0);
@@ -75,25 +75,21 @@ public final class CommandCommons {
      * <p>
      * If the hologram is found but not editable, the sender will be notified.
      *
-     * @param sender The sender.
-     * @param name   Name of the hologram.
+     * @param hologramManager Hologram manager.
+     * @param sender          The sender.
+     * @param name            Name of the hologram.
      * @return The hologram, if found.
      */
-    public static Optional<DefaultHologram> getEditableHologramInViewOrByName(DefaultHologramRegistry hologramRegistry, @NotNull CommandSender sender, @Nullable String name) {
-        DefaultHologram hologram = null;
+    public static Optional<PluginHologram> getHologramInViewOrByName(PluginHologramManager hologramManager, @NotNull CommandSender sender, @Nullable String name) {
+        PluginHologram hologram = null;
         if (sender instanceof Player && name == null) {
-            hologram = getHologramInView(hologramRegistry, (Player) sender);
+            hologram = getHologramInView(hologramManager, (Player) sender);
         } else if (name != null) {
-            hologram = hologramRegistry.getHologram(name);
+            hologram = hologramManager.getHologram(name);
         }
 
         if (hologram == null) {
             Lang.confTell(sender, "editor.error.invalid_hologram_name_or_view");
-            return Optional.empty();
-        }
-
-        if (!hologram.getSettings().isEditable()) {
-            Lang.confTell(sender, "editor.error.not_editable", hologram.getName());
             return Optional.empty();
         }
 
@@ -107,10 +103,10 @@ public final class CommandCommons {
      * @return All holograms within 4 blocks of the location.
      */
     @NotNull
-    public static List<DefaultHologram> getHologramsNearLocation(DefaultHologramRegistry hologramRegistry, @NonNull Location location) {
-        List<DefaultHologram> holograms = new ArrayList<>();
-        for (DefaultHologram hologram : hologramRegistry.getHolograms()) {
-            if (hologram.getPositionManager().getActualLocation().distanceSquared(location) <= 4 * 4) {
+    public static List<PluginHologram> getHologramsNearLocation(PluginHologramManager hologramManager, @NonNull Location location) {
+        List<PluginHologram> holograms = new ArrayList<>();
+        for (PluginHologram hologram : hologramManager.getHolograms()) {
+            if (hologram.getPositionManager().getActualBukkitLocation().distanceSquared(location) <= 4 * 4) {
                 holograms.add(hologram);
             }
         }

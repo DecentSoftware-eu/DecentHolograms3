@@ -50,7 +50,7 @@ import java.util.Random;
  */
 public class DamageDisplayAddon implements DecentHologramsAddon, Listener {
 
-    private static final DecentHologramsAPI PLUGIN = DecentHologramsAPI.getInstance();
+    private static final DecentHologramsAPI API = DecentHologramsAPI.getInstance();
     private static final Random RANDOM = new Random();
     private static final DecimalFormat FORMAT = new DecimalFormat("#.#");
 
@@ -117,8 +117,8 @@ public class DamageDisplayAddon implements DecentHologramsAddon, Listener {
 
         Location location = randomizeLocation(entity.getLocation().clone().add(0, 1 + heightOffsetHeal, 0));
         String text = appearanceHeal.replace("{heal}", FORMAT.format(heal));
-        Hologram hologram = PLUGIN.createHologram(location, Collections.singletonList(text), false);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(getPlugin(), hologram::delete, durationHeal);
+        Hologram hologram = API.createHologram(location, Collections.singletonList(text));
+        Bukkit.getScheduler().runTaskLaterAsynchronously(getPlugin(), hologram::destroy, durationHeal);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -142,8 +142,8 @@ public class DamageDisplayAddon implements DecentHologramsAddon, Listener {
             appearance = this.appearanceDamage;
         }
         String text = appearance.replace("{damage}", FORMAT.format(damage));
-        Hologram hologram = PLUGIN.createHologram(location, Collections.singletonList(text), false);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(getPlugin(), hologram::delete, durationDamage);
+        Hologram hologram = API.createHologram(location, Collections.singletonList(text));
+        Bukkit.getScheduler().runTaskLaterAsynchronously(getPlugin(), hologram::destroy, durationDamage);
     }
 
     /**

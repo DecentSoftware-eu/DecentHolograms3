@@ -18,31 +18,25 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
-import eu.decentsoftware.holograms.api.hologram.page.HologramPage;
-import org.bukkit.Bukkit;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is responsible for managing the visibility of the hologram
  * for certain players. It is able to show/hide the hologram for specific
  * players and to automatically update the visibility according to the
- * holograms view distance setting and view conditions.
+ * holograms settings.
  * <p>
- * To change the default visibility of the hologram, use {@link #setVisibleByDefault(boolean)}.
- * To change the visibility of a specific player, use {@link #setVisibility(Player, boolean)}.
- * If you only want to show the hologram to a specific player (or players), first set the
- * default visibility to false and then use {@link #updateVisibility(Player, boolean)}. If
- * the hologram is visible by default, the visibility will automatically be updated for all
- * players, meaning that hiding it from some players will not be effective. Basically,
- * you get the most control over specific player's visibility with the default visibility
- * set to false.
+ * To modify the visibility of the hologram for a specific player, use
+ * {@link #setPlayerVisibility(Player, Visibility)} or {@link #resetPlayerVisibility(Player)}.
+ * To get the visibility of the hologram for a specific player,
+ * use {@link #getPlayerVisibility(Player)}.
+ * <p>
+ * Player visibility is always prioritized over the default visibility.
+ * <p>
+ * To modify the default visibility of the hologram, use {@link #setDefaultVisibility(Visibility)}.
+ * To get the default visibility of the hologram, use {@link #getDefaultVisibility()}.
  *
  * @author d0by
  * @since 3.0.0
@@ -50,283 +44,73 @@ import java.util.stream.Collectors;
 public interface HologramVisibilityManager {
 
     /**
-     * Get the parent hologram of this visibility manager.
+     * Set the default visibility of the hologram. This is the visibility that is used for
+     * players that don't have a custom visibility setting.
      *
-     * @return The parent hologram of this visibility manager.
-     * @see Hologram
+     * @param visibility The default visibility of the hologram.
+     * @see #setDefaultVisibility(Visibility)
+     * @see #isVisibleByDefault()
      */
-    @NotNull
-    Hologram getParent();
+    void setDefaultVisibility(@NonNull Visibility visibility);
+
+    /**
+     * Get the default visibility of the hologram. This is the visibility that is used for
+     * players that don't have a custom visibility setting.
+     *
+     * @return The default visibility of the hologram.
+     * @see #setDefaultVisibility(Visibility)
+     * @see #isVisibleByDefault()
+     */
+    @NonNull
+    Visibility getDefaultVisibility();
 
     /**
      * Check if the hologram is visible by default. This is the case if the hologram is not
-     * restricted to any players and is automatically visible for all players, that meet the
+     * restricted to any players and is automatically visible for all players, that meet any
      * view conditions.
      *
      * @return True if the hologram is visible by default, false otherwise.
+     * @see #setDefaultVisibility(Visibility)
+     * @see #getDefaultVisibility()
      */
-    boolean isVisibleByDefault();
-
-    /**
-     * Set if the hologram is visible by default. This is the case if the hologram is not
-     * restricted to any players and is automatically visible for all players, that meet the
-     * view conditions.
-     *
-     * @param visible True if the hologram is visible by default, false otherwise.
-     */
-    void setVisibleByDefault(boolean visible);
-
-    /**
-     * Hides the hologram for all players and clears the visibility cache.
-     */
-    void destroy();
-
-    /**
-     * Completely remove the given player from the visibility cache. This means that the player
-     * will only be able to see the hologram again, if the hologram is visible by default and
-     * the player meets the view conditions.
-     * <p>
-     * But all custom visibility settings for the player will be removed and all holograms
-     * that the player is currently viewing will be hidden. (Not permanently, but until the
-     * next update of the hologram's visibility.)
-     *
-     * @param player The player to remove.
-     * @see #updateVisibility(Player, boolean)
-     */
-    void removePlayer(@NotNull Player player);
-
-    /**
-     * Get the visibility settings of players. The key is the UUID of the player and the value
-     * is the visibility setting of the player. If the player is not in the map, the default
-     * visibility setting is used. (See {@link #isVisibleByDefault()})
-     *
-     * @return The visibility settings of players.
-     * @see Visibility
-     */
-    @NotNull
-    Map<UUID, Visibility> getPlayerVisibility();
-
-    /**
-     * Check if the given player is allowed to see this hologram.
-     *
-     * @param player The player to check.
-     * @return True if the player is allowed to see this hologram, false otherwise.
-     */
-    default boolean canSee(@NotNull Player player) {
-        if (getPlayerVisibility().containsKey(player.getUniqueId())) {
-            return isVisibleByDefault() || getPlayerVisibility().get(player.getUniqueId()) == Visibility.VISIBLE;
-        }
-        return isVisibleByDefault();
+    default boolean isVisibleByDefault() {
+        return getDefaultVisibility() == Visibility.VISIBLE;
     }
 
     /**
-     * Get all the players that currently see this hologram according to
-     * the view conditions and the view distance setting of this hologram.
-     * The hologram's contents are updated for all players in this list.
+     * Set the visibility of the hologram for the given player. Player visibility
+     * is always prioritized over the default visibility and the hologram will
+     * always be visible for the player if their visibility is set to visible.
      *
-     * @return The set of nicknames of the player that see this hologram.
-     */
-    @NotNull
-    Set<UUID> getViewers();
-
-    /**
-     * Get all the players that currently see this hologram according to
-     * the view conditions and the view distance setting of this hologram.
-     * The hologram's contents are updated for all players in this list.
-     *
-     * @return The set of players that see this hologram.
-     */
-    default Set<Player> getViewersAsPlayers() {
-        return getViewers().stream()
-                .map(Bukkit::getPlayer)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Get all the players that currently see this hologram according to
-     * the view conditions and the view distance setting of this hologram.
-     * The hologram's contents are updated for all players in this list.
-     *
-     * @param pageIndex The page of the players to get.
-     * @return The set of players that see this hologram at the given page.
-     */
-    default Set<Player> getViewersAsPlayers(int pageIndex) {
-        return getViewers().stream()
-                .filter((viewer) -> getPageIndex(viewer) == pageIndex)
-                .map(Bukkit::getPlayer)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Get the players that are allowed to see the hologram.
-     *
-     * @return Set of allowed players.
-     * @see #canSee(Player)
-     */
-    default Set<Player> getAllowedPlayers() {
-        return Bukkit.getOnlinePlayers().stream()
-                .filter(this::canSee)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Check if the given player is currently seeing this hologram according
-     * to the view conditions and the view distance setting of this hologram,
-     * i.e. if the player is in the set returned by {@link #getViewers()}.
-     *
-     * @param player The player to check.
-     * @return True if the player is currently seeing this hologram, false otherwise.
-     */
-    default boolean isViewing(@NotNull Player player) {
-        return getViewers().contains(player.getUniqueId());
-    }
-
-    /**
-     * Set the visibility setting of the given player. Changing this setting
-     * makes the player allowed or disallowed to see the hologram. In case
-     * this setting is not set for a player, the default value will be used.
-     * The default value being {@link #isVisibleByDefault()}.
-     *
-     * @param player     The player to set the visibility setting for.
-     * @param visibility The visibility setting to set.
-     * @see #getPlayerVisibility()
+     * @param player     The player to set the visibility for.
+     * @param visibility The visibility to set.
+     * @see #getPlayerVisibility(Player)
      * @see #isVisibleByDefault()
      */
-    void setVisibility(@NotNull Player player, @NotNull Visibility visibility);
+    void setPlayerVisibility(@NonNull Player player, @Nullable Visibility visibility);
 
     /**
-     * Set the visibility setting of the given player. Changing this setting
-     * makes the player allowed or disallowed to see the hologram. In case
-     * this setting is not set for a player, the default value will be used.
-     * The default value being {@link #isVisibleByDefault()}.
+     * Set the visibility of the hologram for the given player to the default
+     * visibility.
      *
-     * @param player  The player to set the visibility setting for.
-     * @param visible True if the player is allowed to see the hologram, false otherwise.
-     * @see #getPlayerVisibility()
+     * @param player The player to reset the visibility for.
+     * @see #setPlayerVisibility(Player, Visibility)
+     */
+    default void resetPlayerVisibility(@NonNull Player player) {
+        setPlayerVisibility(player, null);
+    }
+
+    /**
+     * Get the visibility of the hologram for the given player. Player visibility
+     * is always prioritized over the default visibility and the hologram will
+     * always be visible for the player if their visibility is set to visible.
+     *
+     * @param player The player to get the visibility for.
+     * @return The visibility of the hologram for the given player.
+     * @see #setPlayerVisibility(Player, Visibility)
      * @see #isVisibleByDefault()
      */
-    default void setVisibility(@NotNull Player player, boolean visible) {
-        setVisibility(player, visible ? Visibility.VISIBLE : Visibility.HIDDEN);
-    }
-
-    /**
-     * Set the page that is currently selected by the given player.
-     *
-     * @param player The player to set the page for.
-     * @param page   The page to set.
-     */
-    void setPage(@NotNull Player player, int page);
-
-    /**
-     * Updates the visibility of the hologram for the specified player. This
-     * method checks the holograms view distance setting and view conditions
-     * and updates the visibility accordingly.
-     *
-     * @param player The player to update the visibility for.
-     */
-    void updateVisibility(@NotNull Player player);
-
-    /**
-     * Updates the visibility of the hologram for the specified player. This
-     * method displays or hides the hologram according to the specified boolean.
-     * This method does not check the holograms view distance setting and view
-     * conditions. This method does not update the list of players that are allowed
-     * to see this hologram, it only updates the list of players that are currently
-     * viewing this hologram.
-     *
-     * <p>If the specified player is in the allowed players list, the visibility
-     * is going to be automatically updated for them on the next update. If not,
-     * the visibility will stay at the given value.</p>
-     *
-     * <p>Keep in mind, that if you only display the hologram to the player using
-     * this method, the visibility will not be updated according to the view distance
-     * setting and view conditions which may cause visibility problems like the player
-     * not seeing the hologram when they go farther away from it and then come back.</p>
-     *
-     * <p>This method is mainly used internally by the {@link HologramVisibilityManager}
-     * and should not be used anywhere else as it may cause unexpected behavior.</p>
-     *
-     * @param player  The player to update the visibility for.
-     * @param visible True to show the hologram, false to hide it.
-     * @see #getViewers()
-     * @see #getAllowedPlayers()
-     */
-    void updateVisibility(@NotNull Player player, boolean visible);
-
-    /**
-     * Updates the visibility of the hologram for all players that are allowed
-     * to see it. This method checks the holograms view distance setting and view
-     * conditions and updates the visibility accordingly. This method does not
-     * update the list of players that are allowed to see this hologram, it only
-     * updates the list of players that are currently viewing this hologram.
-     *
-     * @see #updateVisibility(Player)
-     * @see #getAllowedPlayers()
-     */
-    void updateVisibility();
-
-    /**
-     * Update the hologram's contents for the specified player. This method
-     * does not update the hologram's visibility.
-     *
-     * @param player The player to update the contents for.
-     */
-    void updateContents(@NotNull Player player);
-
-    /**
-     * Update the holograms contents for all players. This method does not
-     * update the holograms' visibility.
-     */
-    void updateContents();
-
-    /**
-     * Get the pages that are currently selected by each player.
-     *
-     * @return The pages that are currently selected by each player in the form of a map.
-     */
-    @NotNull
-    Map<UUID, Integer> getPlayerPages();
-
-    /**
-     * Get the page that is currently selected by the given player.
-     *
-     * @param player The player to get the page for.
-     * @return The page that is currently selected by the given player.
-     */
-    default int getPageIndex(@NotNull Player player) {
-        return getPlayerPages().getOrDefault(player.getUniqueId(), 0);
-    }
-
-    /**
-     * Get the page that is currently selected by the given player.
-     *
-     * @param player The player to get the page for.
-     * @return The page that is currently selected by the given player.
-     */
-    default HologramPage getPage(@NotNull Player player) {
-        return getParent().getPage(getPageIndex(player));
-    }
-
-    /**
-     * Get the page that is currently selected by the given player.
-     *
-     * @param uuid UUID of the player to get the page for.
-     * @return The page that is currently selected by the given player.
-     */
-    default int getPageIndex(@NotNull UUID uuid) {
-        return getPlayerPages().getOrDefault(uuid, 0);
-    }
-
-    /**
-     * Get the page that is currently selected by the given player.
-     *
-     * @param uuid UUID of the player to get the page for.
-     * @return The page that is currently selected by the given player.
-     */
-    default HologramPage getPage(@NotNull UUID uuid) {
-        return getParent().getPage(getPageIndex(uuid));
-    }
+    @Nullable
+    Visibility getPlayerVisibility(@NonNull Player player);
 
 }
