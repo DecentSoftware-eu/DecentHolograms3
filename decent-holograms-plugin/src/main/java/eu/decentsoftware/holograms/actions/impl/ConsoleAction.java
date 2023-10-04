@@ -18,26 +18,28 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ConsoleAction extends Action {
 
-    protected final @NotNull String command;
+    protected final String command;
 
-    public ConsoleAction(@NotNull String command) {
+    public ConsoleAction(@NonNull DecentHolograms plugin, @NonNull String command) {
+        super(plugin);
         this.command = command;
     }
 
-    public ConsoleAction(long delay, double chance, @NotNull String command) {
-        super(delay, chance);
+    public ConsoleAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String command) {
+        super(plugin, delay, chance);
         this.command = command;
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 

@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.utils;
 
 import eu.decentsoftware.holograms.Config;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -48,7 +48,7 @@ public class DatetimeUtils {
      *
      * @return The formatted time.
      */
-    @NotNull
+    @NonNull
     public static String getTimeFormatted() {
         return TIME_FORMATTER.format(Instant.now());
     }
@@ -58,12 +58,12 @@ public class DatetimeUtils {
      *
      * @return The formatted date.
      */
-    @NotNull
+    @NonNull
     public static String getDateFormatted() {
         return DATE_FORMATTER.format(Instant.now());
     }
 
-    private static DateTimeFormatter createDateTimeFormatter(@NotNull String pattern, @NotNull String zone) {
+    private static DateTimeFormatter createDateTimeFormatter(@NonNull String pattern, @NonNull String zone) {
         // Create formatter
         DateTimeFormatter formatter;
         try {

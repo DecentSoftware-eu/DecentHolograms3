@@ -22,15 +22,11 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.content.DecentEntity;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
-@Getter
-@Setter
 public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
     private DecentEntity entity;
@@ -50,7 +46,7 @@ public class EntityLineRenderer extends DoubleEntityLineRenderer {
     }
 
     @Override
-    public double getWidth() {
+    public double getWidth(@NonNull Player player) {
         return 0;
     }
 
@@ -61,18 +57,27 @@ public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
     @Override
     public void display(@NonNull Player player) {
-        // Create the entity metadata objects
-        Object metaEntityOther = this.nmsAdapter.getMetaEntityProperties(false, false, false,
-                false, false, this.entity.glowing(), false);
+        Object metaEntityOther = this.nmsAdapter.getMetaEntityProperties(
+                false,
+                false,
+                false,
+                false,
+                false,
+                this.entity.glowing(),
+                false
+        );
         Object metaSilenced = this.nmsAdapter.getMetaEntitySilenced(true);
 
-        // Display
         super.display(player, this.parent.getActualBukkitLocation(), this.entity.type(), metaEntityOther, metaSilenced);
     }
 
     @Override
     public void updateContent(@NonNull Player player) {
         // Nothing to do until animations are implemented
+    }
+
+    public void setEntity(@NonNull DecentEntity entity) {
+        this.entity = entity;
     }
 
 }

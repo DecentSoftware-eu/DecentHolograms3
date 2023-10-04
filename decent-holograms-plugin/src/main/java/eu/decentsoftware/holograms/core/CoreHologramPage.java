@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.renderer.HologramLineRenderer;
+import eu.decentsoftware.holograms.core.line.renderer.LineRenderer;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -201,9 +202,22 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     }
 
     public double getHeight() {
-        return this.lines.stream()
-                .mapToDouble(LINE::getBlockHeight)
-                .sum();
+        double height = 0d;
+        for (LINE line : this.lines) {
+            height += line.getSettings().getHeight();
+        }
+        return height;
+    }
+
+    public double getWidth(@NonNull Player player) {
+        double width = 0d;
+        for (LINE line : this.lines) {
+            LineRenderer renderer = line.getRenderer();
+            if (renderer != null) {
+                width = Math.max(width, renderer.getWidth(player));
+            }
+        }
+        return width;
     }
 
     @NonNull

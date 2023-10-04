@@ -18,8 +18,9 @@
 
 package eu.decentsoftware.holograms.utils.color;
 
+import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 
@@ -38,17 +39,18 @@ public class DecentColor {
      *
      * @param hex Hex string representation of color.
      */
-    public DecentColor(@NotNull String hex) {
+    public DecentColor(@NonNull String hex) {
         this(Integer.parseInt(hex, 16));
     }
 
     /**
      * Creates new instance of {@link DecentColor} class.
      *
-     * @param red Red component of color.
+     * @param red   Red component of color.
      * @param green Green component of color.
-     * @param blue Blue component of color.
+     * @param blue  Blue component of color.
      */
+    @Contract(pure = true)
     public DecentColor(int red, int green, int blue) {
         this.color = new Color(red, green, blue);
     }
@@ -58,6 +60,7 @@ public class DecentColor {
      *
      * @param rgb Integer representation of color.
      */
+    @Contract(pure = true)
     public DecentColor(int rgb) {
         this.color = new Color(rgb);
     }

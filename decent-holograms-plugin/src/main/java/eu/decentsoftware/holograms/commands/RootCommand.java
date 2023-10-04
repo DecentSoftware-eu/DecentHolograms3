@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 public class RootCommand extends DecentCommand {
 
-    public RootCommand(DecentHolograms plugin) {
+    public RootCommand(@NonNull DecentHolograms plugin) {
         super(
                 "decentholograms",
                 null,

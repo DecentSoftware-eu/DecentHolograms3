@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.animations.text.impl;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.animations.text.TextAnimation;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -36,7 +36,7 @@ public class ScrollAnimation extends TextAnimation {
         super("scroll", AnimationType.INTERNAL, 0, 2, 0);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public String animate(int tick, @Nullable String frameData, String... args) {
         if (frameData == null) {

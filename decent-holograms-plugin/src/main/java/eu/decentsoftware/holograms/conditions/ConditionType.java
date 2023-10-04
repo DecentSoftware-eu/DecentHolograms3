@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.conditions;
 
 import eu.decentsoftware.holograms.conditions.impl.*;
-import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -33,7 +33,6 @@ import java.util.Set;
  * @author d0by
  * @since 3.0.0
  */
-@Getter
 @SuppressWarnings("SpellCheckingInspection")
 public enum ConditionType {
     MONEY(MoneyCondition.class, "money", "has money"),
@@ -55,25 +54,36 @@ public enum ConditionType {
     STRING_CONTAINS(ComparingCondition.class, "string contains"),
     ;
 
-    private final @NotNull Class<? extends Condition> conditionClass;
-    private final @NotNull Set<String> aliases;
+    private final Class<? extends Condition> conditionClass;
+    private final Set<String> aliases = new HashSet<>();
 
-    ConditionType(@NotNull Class<? extends Condition> conditionClass, String... aliases) {
+    ConditionType(@NonNull Class<? extends Condition> conditionClass, String... aliases) {
         this.conditionClass = conditionClass;
-        this.aliases = new HashSet<>();
         if (aliases != null) {
             this.aliases.addAll(Arrays.asList(aliases));
         }
     }
 
+    @NonNull
+    @Contract(pure = true)
+    public Class<? extends Condition> getConditionClass() {
+        return conditionClass;
+    }
+
+    @NonNull
+    @Contract(pure = true)
+    public Set<String> getAliases() {
+        return aliases;
+    }
+
     /**
-     * Find a {@link ConditionType} by the given string.
+     * Find a {@link ConditionType} by the given name or alias.
      *
-     * @param string The string.
-     * @return The ConditionType or null if the string doesn't match any.
+     * @param string The name or alias to search for.
+     * @return The ConditionType or null if the given name or alias doesn't match any type.
      */
     @Nullable
-    public static ConditionType fromString(@NotNull String string) {
+    public static ConditionType byNameOrAlias(@NonNull String string) {
         for (ConditionType conditionType : values()) {
             for (String alias : conditionType.getAliases()) {
                 if (alias.trim().equalsIgnoreCase(string.trim())) {
@@ -87,11 +97,11 @@ public enum ConditionType {
     /**
      * Find an {@link ConditionType} by the given class.
      *
-     * @param clazz The class.
+     * @param clazz The class to search for.
      * @return The ConditionType or null if the class doesn't match any.
      */
     @Nullable
-    public static ConditionType fromClass(@NotNull Class<? extends Condition> clazz) {
+    public static ConditionType byClass(@NonNull Class<? extends Condition> clazz) {
         for (ConditionType conditionType : values()) {
             if (conditionType.getConditionClass().equals(clazz)) {
                 return conditionType;

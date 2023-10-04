@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.api.hologram;
 
 import eu.decentsoftware.holograms.core.CoreHologramSettings;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 public class APIHologramSettings extends CoreHologramSettings implements HologramSettings {
 
@@ -28,7 +28,7 @@ public class APIHologramSettings extends CoreHologramSettings implements Hologra
     }
 
     @Override
-    public void set(@NotNull HologramSettings settings) {
+    public void set(@NonNull HologramSettings settings) {
         if (settings instanceof APIHologramSettings) {
             super.set((CoreHologramSettings) settings);
         }

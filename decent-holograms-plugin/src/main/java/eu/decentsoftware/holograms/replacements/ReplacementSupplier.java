@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.profile.Profile;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -38,6 +39,6 @@ public interface ReplacementSupplier {
      * @param argument The argument to get it for.
      * @return The replacement optional.
      */
-    Optional<String> getReplacement(Profile profile, String argument);
+    Optional<String> getReplacement(@Nullable Profile profile, @Nullable String argument);
 
 }

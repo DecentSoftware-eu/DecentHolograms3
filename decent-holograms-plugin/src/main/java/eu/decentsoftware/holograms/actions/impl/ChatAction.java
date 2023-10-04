@@ -18,25 +18,27 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ChatAction extends Action {
 
-    protected final @NotNull String message;
+    protected final String message;
 
-    public ChatAction(@NotNull String message) {
+    public ChatAction(@NonNull DecentHolograms plugin, @NonNull String message) {
+        super(plugin);
         this.message = message;
     }
 
-    public ChatAction(long delay, double chance, @NotNull String message) {
-        super(delay, chance);
+    public ChatAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String message) {
+        super(plugin, delay, chance);
         this.message = message;
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         player.chat(message);
     }
 

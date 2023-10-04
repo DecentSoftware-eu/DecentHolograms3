@@ -22,11 +22,10 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import lombok.NonNull;
-import org.jetbrains.annotations.NotNull;
 
 public class APIHologramPage extends CoreHologramPage<APIHologramLine> implements HologramPage {
 
-    public APIHologramPage(DecentHolograms plugin, APIHologram parent) {
+    public APIHologramPage(@NonNull DecentHolograms plugin, @NonNull APIHologram parent) {
         super(plugin, parent);
     }
 
@@ -37,14 +36,14 @@ public class APIHologramPage extends CoreHologramPage<APIHologramLine> implement
     }
 
     @Override
-    public int getIndex(@NotNull HologramLine line) {
+    public int getIndex(@NonNull HologramLine line) {
         if (line instanceof APIHologramLine) {
             return super.getIndex((APIHologramLine) line);
         }
         return -1;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public APIHologram getParent() {
         return (APIHologram) super.getParent();

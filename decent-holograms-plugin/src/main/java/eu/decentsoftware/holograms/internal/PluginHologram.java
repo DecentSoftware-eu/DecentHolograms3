@@ -93,7 +93,7 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
     @NonNull
     @Override
     protected PluginHologramPage createPage() {
-        return new PluginHologramPage(plugin, this);
+        return new PluginHologramPage(this.plugin, this);
     }
 
     public void setPages(@NonNull List<PluginHologramPage> pages) {

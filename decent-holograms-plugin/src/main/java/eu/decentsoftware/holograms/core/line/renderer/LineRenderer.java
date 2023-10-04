@@ -86,6 +86,12 @@ public abstract class LineRenderer implements HologramLineRenderer {
         getViewerPlayers().forEach(this::updateContent);
     }
 
+    /**
+     * Update the location of the line for all players, that are currently viewing the hologram.
+     *
+     * @see #updateLocation(Player)
+     * @see #getViewerPlayers()
+     */
     public void updateLocationAll() {
         getViewerPlayers().forEach(this::updateLocation);
     }

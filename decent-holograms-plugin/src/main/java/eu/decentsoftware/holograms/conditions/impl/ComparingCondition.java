@@ -21,20 +21,20 @@ package eu.decentsoftware.holograms.conditions.impl;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionType;
 import eu.decentsoftware.holograms.hooks.PAPI;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ComparingCondition extends Condition {
 
-    private final @NotNull ConditionType type;
-    private final @NotNull String compare;
-    private final @NotNull String input;
+    private final ConditionType type;
+    private final String compare;
+    private final String input;
 
-    public ComparingCondition(@NotNull ConditionType type, @NotNull String compare, @NotNull String input) {
+    public ComparingCondition(@NonNull ConditionType type, @NonNull String compare, @NonNull String input) {
         this(false, type, compare, input);
     }
 
-    public ComparingCondition(boolean inverted, @NotNull ConditionType type, @NotNull String compare, @NotNull String input) {
+    public ComparingCondition(boolean inverted, @NonNull ConditionType type, @NonNull String compare, @NonNull String input) {
         super(inverted);
         this.type = type;
         this.compare = compare;
@@ -42,7 +42,7 @@ public class ComparingCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         String compareParsed = PAPI.setPlaceholders(player, this.compare);
         String inputParsed = PAPI.setPlaceholders(player, this.input);
         if (type.name().startsWith("STRING")) {

@@ -42,7 +42,7 @@ public class HologramNearCommand extends DecentCommand {
     private static final int HOLOGRAMS_PER_PAGE = 10;
     private final DecentHolograms plugin;
 
-    public HologramNearCommand(DecentHolograms plugin) {
+    public HologramNearCommand(@NonNull DecentHolograms plugin) {
         super(
                 "near",
                 Config.ADMIN_PERM,

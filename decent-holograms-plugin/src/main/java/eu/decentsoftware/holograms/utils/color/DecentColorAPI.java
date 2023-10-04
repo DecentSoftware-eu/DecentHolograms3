@@ -24,9 +24,10 @@ import eu.decentsoftware.holograms.utils.color.patterns.GradientPattern;
 import eu.decentsoftware.holograms.utils.color.patterns.Pattern;
 import eu.decentsoftware.holograms.utils.color.patterns.RainbowPattern;
 import eu.decentsoftware.holograms.utils.color.patterns.SolidPattern;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -73,8 +74,8 @@ public final class DecentColorAPI {
      * @param string The string to parse.
      * @return The parsed string.
      */
-    @NotNull
-    public static String process(@NotNull String string) {
+    @NonNull
+    public static String process(@NonNull String string) {
         // TODO: translate to minimessage format
 //        for (Pattern pattern : PATTERNS) {
 //            string = pattern.process(string);
@@ -89,8 +90,8 @@ public final class DecentColorAPI {
      * @param strings The strings to parse.
      * @return The parsed strings.
      */
-    @NotNull
-    public static List<String> process(@NotNull List<String> strings) {
+    @NonNull
+    public static List<String> process(@NonNull List<String> strings) {
         return strings.stream().map(DecentColorAPI::process).collect(Collectors.toList());
     }
 
@@ -100,8 +101,9 @@ public final class DecentColorAPI {
      * @param string The string to remove colors from.
      * @return The string without colors.
      */
-    @NotNull
-    public static String stripColors(@NotNull String string) {
+    @Contract(pure = true)
+    @NonNull
+    public static String stripColors(@NonNull String string) {
         return string.replaceAll("<#[\\dA-F]{6}>|[&§][a-f\\dlnokm]|</?[A-Z]{5,8}(:[\\dA-F]{6})?\\d*>", "");
     }
 
@@ -112,8 +114,8 @@ public final class DecentColorAPI {
      * @param color  The color to use.
      * @return The colored string.
      */
-    @NotNull
-    public static String color(@NotNull String string, @NotNull Color color) {
+    @NonNull
+    public static String color(@NonNull String string, @NonNull Color color) {
         return getColor(color) + string;
     }
 
@@ -125,8 +127,8 @@ public final class DecentColorAPI {
      * @param end    The end color.
      * @return The colored string.
      */
-    @NotNull
-    public static String color(@NotNull String string, @NotNull Color start, @NotNull Color end) {
+    @NonNull
+    public static String color(@NonNull String string, @NonNull Color start, @NonNull Color end) {
         return apply(string, createGradient(start, end, withoutSpecialChar(string).length()));
     }
 
@@ -137,8 +139,8 @@ public final class DecentColorAPI {
      * @param saturation The saturation of the rainbow.
      * @return The colored string.
      */
-    @NotNull
-    public static String rainbow(@NotNull String string, float saturation) {
+    @NonNull
+    public static String rainbow(@NonNull String string, float saturation) {
         return apply(string, createRainbow(withoutSpecialChar(string).length(), saturation));
     }
 
@@ -148,8 +150,8 @@ public final class DecentColorAPI {
      * @param string The hex code of the color
      * @since 1.0.0
      */
-    @NotNull
-    public static ChatColor getColor(@NotNull String string) {
+    @NonNull
+    public static ChatColor getColor(@NonNull String string) {
         Color color = new Color(Integer.parseInt(string, 16));
         return getColor(color);
     }
@@ -160,8 +162,8 @@ public final class DecentColorAPI {
      * @param color The color to get the color from.
      * @return The ChatColor.
      */
-    @NotNull
-    public static ChatColor getColor(@NotNull Color color) {
+    @NonNull
+    public static ChatColor getColor(@NonNull Color color) {
         return Version.supportsRGB() ? ChatColor.of(color) : getClosestColor(color);
     }
 
@@ -172,8 +174,8 @@ public final class DecentColorAPI {
      * @param def   The default color to return if hex is not supported.
      * @return The ChatColor.
      */
-    @NotNull
-    public static ChatColor getColor(@NotNull Color color, @NotNull ChatColor def) {
+    @NonNull
+    public static ChatColor getColor(@NonNull Color color, @NonNull ChatColor def) {
         return Version.supportsRGB() ? ChatColor.of(color) : def;
     }
 
@@ -183,8 +185,8 @@ public final class DecentColorAPI {
      * @param color The color to get the closest color to.
      * @return The closest color.
      */
-    @NotNull
-    public static ChatColor getClosestColor(@NotNull Color color) {
+    @NonNull
+    public static ChatColor getClosestColor(@NonNull Color color) {
         Color nearestColor = null;
         int nearestDistance = Integer.MAX_VALUE;
         for (Color constantColor : COLORS.keySet()) {
@@ -204,7 +206,7 @@ public final class DecentColorAPI {
      * @param color2 The second color.
      * @return The distance squared.
      */
-    public int getDistanceSquared(@NotNull Color color1, @NotNull Color color2) {
+    public int getDistanceSquared(@NonNull Color color1, @NonNull Color color2) {
         int dr = color1.getRed() - color2.getRed();
         int dg = color1.getGreen() - color2.getGreen();
         int db = color1.getBlue() - color2.getBlue();
@@ -218,8 +220,8 @@ public final class DecentColorAPI {
      * @param colors The colors to apply.
      * @return The string with the colors applied.
      */
-    @NotNull
-    private static String apply(@NotNull String source, ChatColor[] colors) {
+    @NonNull
+    private static String apply(@NonNull String source, ChatColor[] colors) {
         StringBuilder specialColors = new StringBuilder();
         StringBuilder stringBuilder = new StringBuilder();
         String[] characters = source.split("");
@@ -248,8 +250,8 @@ public final class DecentColorAPI {
      * @param source The string to remove the special color codes from.
      * @return The string without the special color codes.
      */
-    @NotNull
-    private static String withoutSpecialChar(@NotNull String source) {
+    @NonNull
+    private static String withoutSpecialChar(@NonNull String source) {
         String workingString = source;
         for (String color : SPECIAL_CODES) {
             if (workingString.contains(color)) {
@@ -267,8 +269,8 @@ public final class DecentColorAPI {
      * @param step  The number of steps.
      * @return The gradient as an array of colors.
      */
-    @NotNull
-    private static ChatColor[] createGradient(@NotNull Color start, @NotNull Color end, int step) {
+    @NonNull
+    private static ChatColor[] createGradient(@NonNull Color start, @NonNull Color end, int step) {
         ChatColor[] colors = new ChatColor[step];
         int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
         int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);
@@ -295,7 +297,7 @@ public final class DecentColorAPI {
      * @param saturation The saturation of the rainbow.
      * @return The rainbow as an array of colors.
      */
-    @NotNull
+    @NonNull
     private static ChatColor[] createRainbow(int step, float saturation) {
         ChatColor[] colors = new ChatColor[step];
         double colorStep = (1.00 / step);
@@ -313,7 +315,8 @@ public final class DecentColorAPI {
      * @param blue  The blue value.
      * @return The hex string.
      */
-    @NotNull
+    @Contract(pure = true)
+    @NonNull
     public static String rgbToHex(int red, int green, int blue) {
         return String.format("#%02X%02X%02X", red, green, blue);
     }

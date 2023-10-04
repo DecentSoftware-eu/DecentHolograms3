@@ -18,11 +18,10 @@
 
 package eu.decentsoftware.holograms.utils.config;
 
-import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,12 +34,11 @@ import java.io.IOException;
  * @author d0by
  * @since 1.0.0
  */
-@Getter
 public class FileConfig extends YamlConfiguration {
 
-    protected final @NotNull JavaPlugin plugin;
-    protected final @NotNull String path;
-    protected final @NotNull File file;
+    protected final JavaPlugin plugin;
+    protected final String path;
+    protected final File file;
 
     /**
      * Creates a new instance of {@link FileConfig}.
@@ -53,7 +51,7 @@ public class FileConfig extends YamlConfiguration {
      * @param path   The path to the file. Must be a relative path to .yml file.
      * @since 1.0.0
      */
-    public FileConfig(@NotNull JavaPlugin plugin, @NotNull String path) {
+    public FileConfig(@NonNull JavaPlugin plugin, @NonNull String path) {
         this.plugin = plugin;
         this.path = path;
         this.file = new File(plugin.getDataFolder(), path);
@@ -72,7 +70,7 @@ public class FileConfig extends YamlConfiguration {
      * @param file   The file to load. Must be a .yml file.
      * @since 1.0.0
      */
-    public FileConfig(@NotNull JavaPlugin plugin, @NotNull File file) {
+    public FileConfig(@NonNull JavaPlugin plugin, @NonNull File file) {
         this.plugin = plugin;
         this.path = file.getName();
         this.file = file;
@@ -127,6 +125,28 @@ public class FileConfig extends YamlConfiguration {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns the path to the file.
+     *
+     * @return The path to the file.
+     * @since 1.0.0
+     */
+    @NonNull
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * Returns the file.
+     *
+     * @return The file.
+     * @since 1.0.0
+     */
+    @NonNull
+    public File getFile() {
+        return file;
     }
 
 }

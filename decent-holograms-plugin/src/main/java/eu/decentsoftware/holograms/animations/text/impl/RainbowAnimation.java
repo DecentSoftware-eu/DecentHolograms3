@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.animations.text.impl;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.animations.text.TextAnimation;
+import lombok.NonNull;
 import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -47,7 +47,7 @@ public class RainbowAnimation extends TextAnimation {
         super("rainbow", AnimationType.INTERNAL, DEFAULT_COLORS.length, 2, 0);
     }
 
-    @NotNull
+    @NonNull
     public String animate(int tick, @Nullable String frameData, String... args) {
         return DEFAULT_COLORS[tick % (DEFAULT_COLORS.length * interval) / interval] + (frameData == null ? "" : frameData);
     }

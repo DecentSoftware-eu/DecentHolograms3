@@ -58,53 +58,52 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
      * A utility method for displaying the line. This method was created to avoid code duplication. It
      * handles the display of the main entity and the passenger entity.
      *
-     * @param player The player to display the line to.
+     * @param player    The player to display the line to.
      * @param typeOther The type of the passenger entity.
      * @param metaOther The metadata of the passenger entity.
      */
     protected void display(@NonNull Player player, @NonNull Location location, @NonNull EntityType typeOther, @NonNull Object... metaOther) {
-        // Create the armor stand metadata objects
-        Object metaEntity = this.nmsAdapter.getMetaEntityProperties(false, false, false,
-                false, true, false, false);
-        Object metaArmorStand = this.nmsAdapter.getMetaArmorStandProperties(false, false, true,
-                true);
+        Object metaEntity = this.nmsAdapter.getMetaEntityProperties(
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false
+        );
+        Object metaArmorStand = this.nmsAdapter.getMetaArmorStandProperties(
+                false,
+                false,
+                true,
+                true
+        );
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(false);
 
-        // Spawn the fake armor stand entity
         this.nmsAdapter.spawnEntityLiving(player, this.eid, UUID.randomUUID(), EntityType.ARMOR_STAND, location);
-        // Send the metadata
         this.nmsAdapter.sendEntityMetadata(player, this.eid, metaEntity, metaArmorStand, metaNameVisible);
 
-        // Spawn the passenger entity
         if (typeOther.isAlive()) {
             this.nmsAdapter.spawnEntityLiving(player, this.eidOther, UUID.randomUUID(), typeOther, location);
         } else {
             this.nmsAdapter.spawnEntity(player, this.eidOther, UUID.randomUUID(), typeOther, location);
         }
-        // Send the metadata
         this.nmsAdapter.sendEntityMetadata(player, this.eidOther, metaOther);
 
-        // Add the other entity to the armor stand
         this.nmsAdapter.updatePassengers(player, this.eid, this.eidOther);
     }
 
     @Override
     public void hide(@NonNull Player player) {
-        // Remove the entity from the armor stand
         this.nmsAdapter.updatePassengers(player, this.eid);
-        // Remove the armor stand for the player
         this.nmsAdapter.removeEntity(player, this.eid);
-        // Remove the entity for the player
         this.nmsAdapter.removeEntity(player, this.eidOther);
     }
 
     @Override
     public void updateLocation(@NonNull Player player) {
-        // Remove the entity from the armor stand
         this.nmsAdapter.updatePassengers(player, this.eid);
-        // Teleport the armor stand to the new location
         this.nmsAdapter.teleportEntity(player, this.eid, this.parent.getActualBukkitLocation(), true);
-        // Add the entity to the armor stand
         this.nmsAdapter.updatePassengers(player, this.eid, this.eidOther);
     }
 

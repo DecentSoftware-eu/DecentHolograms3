@@ -22,7 +22,7 @@ import lombok.experimental.UtilityClass;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -46,6 +46,7 @@ public final class HDB {
      *
      * @return The requested boolean.
      */
+    @Contract(pure = true)
     public static boolean isAvailable() {
         return API != null;
     }
@@ -56,8 +57,12 @@ public final class HDB {
      * @param id The id.
      * @return The head item.
      */
+    @Contract("null -> null")
     @Nullable
-    public static ItemStack getHeadItemStackById(@NotNull String id) {
+    public static ItemStack getHeadItemStackById(String id) {
+        if (id == null || id.isEmpty()) {
+            return null;
+        }
         if (isAvailable()) {
             return API.getItemHead(id);
         }

@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.animations;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 /**
  * This enum represents the different types of animations that can be used. The
@@ -59,8 +59,8 @@ public enum AnimationType {
      * @param name The name of the animation type.
      * @return The animation type or {@link #ASCEND} by default.
      */
-    @NotNull
-    public static AnimationType getByName(@NotNull String name) {
+    @NonNull
+    public static AnimationType getByName(@NonNull String name) {
         for (AnimationType value : values()) {
             if (value.name().equalsIgnoreCase(name)) {
                 return value;

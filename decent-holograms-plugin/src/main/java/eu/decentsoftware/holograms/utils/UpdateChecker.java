@@ -19,6 +19,8 @@
 package eu.decentsoftware.holograms.utils;
 
 import eu.decentsoftware.holograms.DecentHolograms;
+import lombok.NonNull;
+import org.jetbrains.annotations.Contract;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +42,8 @@ public class UpdateChecker {
      * @param plugin     The plugin to check for updates.
      * @param resourceId The resource id of the plugin.
      */
-    public UpdateChecker(DecentHolograms plugin, int resourceId) {
+    @Contract(pure = true)
+    public UpdateChecker(@NonNull DecentHolograms plugin, int resourceId) {
         this.plugin = plugin;
         this.url = "https://api.spigotmc.org/legacy/update.php?resource=" + resourceId;
     }
@@ -50,7 +53,7 @@ public class UpdateChecker {
      *
      * @param consumer The consumer to call when the latest version is found.
      */
-    public void check(final Consumer<String> consumer) {
+    public void check(final @NonNull Consumer<String> consumer) {
         SchedulerUtil.async(() -> {
             try (InputStream inputStream = new URL(url).openStream();
                  Scanner scanner = new Scanner(inputStream)) {

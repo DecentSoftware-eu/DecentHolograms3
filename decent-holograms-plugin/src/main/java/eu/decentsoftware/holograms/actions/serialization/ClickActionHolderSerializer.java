@@ -23,7 +23,7 @@ import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.actions.ActionType;
 import eu.decentsoftware.holograms.actions.ClickActionHolder;
 import eu.decentsoftware.holograms.api.hologram.click.ClickType;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.lang.reflect.Type;
 
@@ -41,7 +41,7 @@ public class ClickActionHolderSerializer implements JsonSerializer<ClickActionHo
             for (JsonElement element : array) {
                 JsonObject object = element.getAsJsonObject();
                 String typeName = object.get("type").getAsString();
-                ActionType type = ActionType.fromString(typeName);
+                ActionType type = ActionType.byNameOrAlias(typeName);
                 if (type == null) {
                     throw new JsonParseException("Could not deserialize ActionHolder: " + typeName + " is not a valid ActionType");
                 }
@@ -68,14 +68,14 @@ public class ClickActionHolderSerializer implements JsonSerializer<ClickActionHo
         return object;
     }
 
-    @NotNull
-    private JsonObject serializeAction(@NotNull Action action, @NotNull JsonSerializationContext context) {
+    @NonNull
+    private JsonObject serializeAction(@NonNull Action action, @NonNull JsonSerializationContext context) {
         JsonObject object = context.serialize(action).getAsJsonObject();
         if (object.has("type")) {
             return object;
         }
 
-        ActionType type = ActionType.fromClass(action.getClass());
+        ActionType type = ActionType.byClass(action.getClass());
         if (type == null) {
             throw new JsonParseException("Could not serialize ActionHolder: " + action.getClass().getName() + " is not a valid ActionType");
         }

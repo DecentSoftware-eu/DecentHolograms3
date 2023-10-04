@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ExpCondition extends Condition {
 
@@ -36,7 +36,7 @@ public class ExpCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         return player.getLevel() >= minLevel;
     }
 

@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.actions.impl;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,8 @@ public class TitleAction extends Action {
     protected final int stay;
     protected final int fadeOut;
 
-    public TitleAction(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+    public TitleAction(@NonNull DecentHolograms plugin, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        super(plugin);
         this.title = title;
         this.subtitle = subtitle;
         this.fadeIn = fadeIn;
@@ -40,8 +42,8 @@ public class TitleAction extends Action {
         this.fadeOut = fadeOut;
     }
 
-    public TitleAction(long delay, double chance, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        super(delay, chance);
+    public TitleAction(@NonNull DecentHolograms plugin, long delay, double chance, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        super(plugin, delay, chance);
         this.title = title;
         this.subtitle = subtitle;
         this.fadeIn = fadeIn;
@@ -51,7 +53,7 @@ public class TitleAction extends Action {
 
     @Override
     public void execute(@NotNull Player player) {
-        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
+        NMSAdapter nmsAdapter = plugin.getNMSManager().getAdapter();
         nmsAdapter.resetTitle(player);
         nmsAdapter.sendTitle(player, title, subtitle, Math.max(fadeIn, 1), Math.max(stay, 1), Math.max(fadeOut, 1));
     }

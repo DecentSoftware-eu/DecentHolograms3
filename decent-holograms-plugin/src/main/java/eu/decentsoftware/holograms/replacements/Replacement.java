@@ -19,8 +19,8 @@
 package eu.decentsoftware.holograms.replacements;
 
 import eu.decentsoftware.holograms.profile.Profile;
+import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -33,7 +33,7 @@ import java.util.Optional;
  */
 public class Replacement {
 
-    private final @NotNull ReplacementSupplier replacementSupplier;
+    private final ReplacementSupplier replacementSupplier;
 
     /**
      * Create new {@link Replacement}.
@@ -41,18 +41,17 @@ public class Replacement {
      * @param replacementSupplier The supplier, that finds a replacement for this placeholder.
      */
     @Contract(pure = true)
-    public Replacement(@NotNull ReplacementSupplier replacementSupplier) {
+    public Replacement(@NonNull ReplacementSupplier replacementSupplier) {
         this.replacementSupplier = replacementSupplier;
     }
 
     /**
      * Get the replacement for this placeholder.
      *
-     * @param profile   The profile to get the replacement for.
+     * @param profile  The profile to get the replacement for.
      * @param argument The argument to get the replacement for.
      * @return The replacement optional.
      */
-    @NotNull
     public Optional<String> getReplacement(@Nullable Profile profile, @Nullable String argument) {
         return replacementSupplier.getReplacement(profile, argument);
     }
@@ -63,7 +62,7 @@ public class Replacement {
      * @return The replacement supplier.
      * @see ReplacementSupplier
      */
-    @NotNull
+    @NonNull
     public ReplacementSupplier getReplacementSupplier() {
         return replacementSupplier;
     }

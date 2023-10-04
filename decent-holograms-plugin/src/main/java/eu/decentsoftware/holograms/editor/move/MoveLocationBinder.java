@@ -20,13 +20,12 @@ package eu.decentsoftware.holograms.editor.move;
 
 import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
-import lombok.Getter;
-import lombok.Setter;
+import eu.decentsoftware.holograms.internal.PluginHologram;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -38,21 +37,19 @@ import java.util.function.Supplier;
  * @see MoveController
  * @since 3.0.0
  */
-@Getter
-@Setter
 public class MoveLocationBinder implements Supplier<Location> {
 
-    private final @NotNull Player player;
-    private final @NotNull CoreHologram<?> hologram;
+    private final Player player;
+    private final PluginHologram hologram;
     private int distance;
 
     @Contract(pure = true)
-    public MoveLocationBinder(@NotNull Player player, @NotNull CoreHologram<?> hologram) {
+    public MoveLocationBinder(@NonNull Player player, @NonNull PluginHologram hologram) {
         this(player, hologram, 5);
     }
 
     @Contract(pure = true)
-    public MoveLocationBinder(@NotNull Player player, @NotNull CoreHologram<?> hologram, int distance) {
+    public MoveLocationBinder(@NonNull Player player, @NonNull PluginHologram hologram, int distance) {
         this.player = player;
         this.hologram = hologram;
         this.distance = distance;
@@ -107,6 +104,11 @@ public class MoveLocationBinder implements Supplier<Location> {
         if (distance > 3) {
             distance--;
         }
+    }
+
+    @NonNull
+    public Player getPlayer() {
+        return player;
     }
 
 }

@@ -38,7 +38,7 @@ public class HologramTeleportCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramTeleportCommand(DecentHolograms plugin) {
+    public HologramTeleportCommand(@NonNull DecentHolograms plugin) {
         super(
                 "teleport",
                 Config.ADMIN_PERM,

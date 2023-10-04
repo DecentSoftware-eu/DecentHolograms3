@@ -18,9 +18,10 @@
 
 package eu.decentsoftware.holograms.profile;
 
+import eu.decentsoftware.holograms.DecentHolograms;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -33,17 +34,18 @@ import java.util.UUID;
  */
 public class Profile {
 
-    private final @NotNull UUID uuid;
-    private final @NotNull ProfileContext context;
+    private final UUID uuid;
+    private final ProfileContext context;
 
     /**
      * Create a new profile for the given player.
      *
-     * @param uuid The player's UUID.
+     * @param plugin The plugin instance.
+     * @param uuid   The player's UUID.
      */
-    public Profile(@NotNull UUID uuid) {
+    public Profile(@NonNull DecentHolograms plugin, @NonNull UUID uuid) {
         this.uuid = uuid;
-        this.context = new ProfileContext();
+        this.context = new ProfileContext(plugin);
     }
 
     /**
@@ -73,7 +75,7 @@ public class Profile {
      * @return The context of this profile.
      * @see ProfileContext
      */
-    @NotNull
+    @NonNull
     public ProfileContext getContext() {
         return context;
     }

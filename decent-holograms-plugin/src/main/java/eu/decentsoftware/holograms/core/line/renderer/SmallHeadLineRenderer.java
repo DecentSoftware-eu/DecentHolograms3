@@ -23,6 +23,7 @@ import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.content.DecentItemStack;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 
 public class SmallHeadLineRenderer extends HeadLineRenderer {
 
@@ -34,4 +35,13 @@ public class SmallHeadLineRenderer extends HeadLineRenderer {
         super(plugin, parent, itemStack, HologramLineType.SMALL_HEAD, true);
     }
 
+    @Override
+    public double getHeight() {
+        return 0.6d;
+    }
+
+    @Override
+    public double getWidth(@NonNull Player player) {
+        return 0.6d;
+    }
 }

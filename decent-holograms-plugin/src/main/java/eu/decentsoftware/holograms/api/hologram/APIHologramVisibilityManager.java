@@ -19,11 +19,11 @@
 package eu.decentsoftware.holograms.api.hologram;
 
 import eu.decentsoftware.holograms.core.CoreHologramVisibilityManager;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 public class APIHologramVisibilityManager extends CoreHologramVisibilityManager implements HologramVisibilityManager {
 
-    public APIHologramVisibilityManager(@NotNull APIHologram parent) {
+    public APIHologramVisibilityManager(@NonNull APIHologram parent) {
         super(parent);
         this.defaultVisibility = Visibility.VISIBLE;
     }

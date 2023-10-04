@@ -22,7 +22,7 @@ import com.google.gson.*;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.conditions.ConditionType;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.lang.reflect.Type;
 
@@ -35,7 +35,7 @@ public class ConditionHolderSerializer implements JsonSerializer<ConditionHolder
         for (JsonElement element : elements) {
             JsonObject object = element.getAsJsonObject();
             String typeName = object.get("type").getAsString();
-            ConditionType type = ConditionType.fromString(typeName);
+            ConditionType type = ConditionType.byNameOrAlias(typeName);
             if (type == null) {
                 throw new JsonParseException("Could not deserialize ConditionHolder: " + typeName + " is not a valid ConditionType");
             }
@@ -58,14 +58,14 @@ public class ConditionHolderSerializer implements JsonSerializer<ConditionHolder
         return array;
     }
 
-    @NotNull
+    @NonNull
     private JsonElement serializeCondition(Condition condition, JsonSerializationContext context) {
         JsonObject object = context.serialize(condition).getAsJsonObject();
         if (object.has("type")) {
             return object;
         }
 
-        ConditionType type = ConditionType.fromClass(condition.getClass());
+        ConditionType type = ConditionType.byClass(condition.getClass());
         if (type == null) {
             throw new JsonParseException("Could not serialize ConditionHolder: " + condition.getClass().getName() + " is not a valid ConditionType");
         }

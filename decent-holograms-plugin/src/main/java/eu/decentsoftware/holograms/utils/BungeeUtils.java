@@ -19,11 +19,11 @@
 package eu.decentsoftware.holograms.utils;
 
 import eu.decentsoftware.holograms.DecentHolograms;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Map;
@@ -46,7 +46,7 @@ public final class BungeeUtils {
     /**
      * Init Bungee connection; Register BungeeCord channel.
      */
-    public static void init(DecentHolograms plugin) {
+    public static void init(@NonNull DecentHolograms plugin) {
         if (BungeeUtils.plugin != null) {
             throw new IllegalStateException("BungeeUtils is already initialized!");
         }
@@ -66,7 +66,7 @@ public final class BungeeUtils {
         Bukkit.getMessenger().unregisterIncomingPluginChannel(plugin, BUNGEE_CORD_CHANNEL);
     }
 
-    private static void handleReceive(@NotNull String server, int playerCount) {
+    private static void handleReceive(@NonNull String server, int playerCount) {
         if (PLAYER_COUNT_REQUESTS.containsKey(server)) {
             PLAYER_COUNT_REQUESTS.get(server).complete(playerCount);
             PLAYER_COUNT_REQUESTS.remove(server);
@@ -79,7 +79,7 @@ public final class BungeeUtils {
      * @param player The player.
      * @param server The servers name.
      */
-    public static void connect(@NotNull Player player, @NotNull String server) {
+    public static void connect(@NonNull Player player, @NonNull String server) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {
@@ -98,7 +98,7 @@ public final class BungeeUtils {
      * @param server The server.
      * @return CompletableFuture with the player count.
      */
-    public static CompletableFuture<Integer> sendPlayerCountRequest(@NotNull Player player, @NotNull String server) {
+    public static CompletableFuture<Integer> sendPlayerCountRequest(@NonNull Player player, @NonNull String server) {
         if (PLAYER_COUNT_REQUESTS.containsKey(server)) {
             return PLAYER_COUNT_REQUESTS.get(server);
         }
@@ -121,7 +121,7 @@ public final class BungeeUtils {
     private static class BungeeListener implements PluginMessageListener {
 
         @Override
-        public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte[] message) {
+        public void onPluginMessageReceived(@NonNull String channel, @NonNull Player player, byte[] message) {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message);
             DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
             try {

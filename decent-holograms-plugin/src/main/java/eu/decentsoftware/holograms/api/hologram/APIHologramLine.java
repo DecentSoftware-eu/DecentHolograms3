@@ -22,15 +22,20 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 public class APIHologramLine extends CoreHologramLine implements HologramLine {
 
-    public APIHologramLine(DecentHolograms plugin, CoreHologramPage<APIHologramLine> parent, DecentLocation location, String content) {
+    public APIHologramLine(
+            @NonNull DecentHolograms plugin,
+            @NonNull CoreHologramPage<APIHologramLine> parent,
+            @NonNull DecentLocation location,
+            @NonNull String content
+    ) {
         super(plugin, parent, location, new APIHologramLineSettings(), content);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public APIHologramPage getParent() {
         return (APIHologramPage) super.getParent();

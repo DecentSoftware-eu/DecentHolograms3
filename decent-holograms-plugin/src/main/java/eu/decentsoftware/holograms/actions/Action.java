@@ -18,10 +18,11 @@
 
 package eu.decentsoftware.holograms.actions;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.profile.Profile;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a specific action. It can be instantiated,
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class Action {
 
+    protected final DecentHolograms plugin;
     protected final long delay;
     protected final double chance;
 
@@ -40,18 +42,20 @@ public abstract class Action {
      * Create a new instance of {@link Action} with default values.
      */
     @Contract(pure = true)
-    protected Action() {
-        this(0, -1.0);
+    protected Action(@NonNull DecentHolograms plugin) {
+        this(plugin, 0, -1.0);
     }
 
     /**
      * Create a new instance of {@link Action} with the given delay and chance.
      *
+     * @param plugin The plugin instance.
      * @param delay  The delay.
      * @param chance The chance.
      */
     @Contract(pure = true)
-    protected Action(long delay, double chance) {
+    protected Action(@NonNull DecentHolograms plugin, long delay, double chance) {
+        this.plugin = plugin;
         this.delay = delay;
         this.chance = chance;
     }
@@ -61,7 +65,7 @@ public abstract class Action {
      *
      * @param player The player for whom we want to execute the action.
      */
-    public abstract void execute(@NotNull Player player);
+    public abstract void execute(@NonNull Player player);
 
     /**
      * Check if this action should be executed according to chance.

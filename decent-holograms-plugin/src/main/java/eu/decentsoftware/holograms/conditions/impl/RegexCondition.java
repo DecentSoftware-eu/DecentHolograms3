@@ -19,26 +19,26 @@
 package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class RegexCondition extends Condition {
 
-    private final @NotNull String pattern;
-    private final @NotNull String input;
+    private final String pattern;
+    private final String input;
 
-    public RegexCondition(@NotNull String pattern, @NotNull String input) {
+    public RegexCondition(@NonNull String pattern, @NonNull String input) {
         this(false, pattern, input);
     }
 
-    public RegexCondition(boolean inverted, @NotNull String pattern, @NotNull String input) {
+    public RegexCondition(boolean inverted, @NonNull String pattern, @NonNull String input) {
         super(inverted);
         this.pattern = pattern;
         this.input = input;
     }
 
     @Override
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         return input.matches(pattern);
     }
 

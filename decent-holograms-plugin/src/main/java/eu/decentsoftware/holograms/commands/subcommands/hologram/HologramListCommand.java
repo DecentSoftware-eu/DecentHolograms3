@@ -39,7 +39,7 @@ public class HologramListCommand extends DecentCommand {
     private static final int HOLOGRAMS_PER_PAGE = 10;
     private final DecentHolograms plugin;
 
-    public HologramListCommand(DecentHolograms plugin) {
+    public HologramListCommand(@NonNull DecentHolograms plugin) {
         super(
                 "list",
                 Config.ADMIN_PERM,

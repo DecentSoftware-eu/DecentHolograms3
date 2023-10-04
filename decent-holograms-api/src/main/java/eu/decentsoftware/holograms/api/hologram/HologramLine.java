@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.api.hologram;
 
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -64,9 +65,10 @@ public interface HologramLine {
     /**
      * Get the width of this line in blocks.
      *
+     * @param player The player to get the width for.
      * @return The width of this line.
      */
-    double getBlockWidth();
+    double getBlockWidth(@NonNull Player player);
 
     /**
      * Get the parent {@link HologramPage} of this line.

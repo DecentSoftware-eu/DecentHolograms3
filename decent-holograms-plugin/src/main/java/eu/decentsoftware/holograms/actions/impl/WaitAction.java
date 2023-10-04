@@ -18,18 +18,20 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class WaitAction extends Action {
 
-    public WaitAction(long delay) {
-        super(delay, -1.0);
+    public WaitAction(@NonNull DecentHolograms plugin, long delay) {
+        super(plugin, delay, -1.0);
     }
 
-    public WaitAction(long delay, double chance) {
-        super(delay, chance);
+    public WaitAction(@NonNull DecentHolograms plugin, long delay, double chance) {
+        super(plugin, delay, chance);
     }
 
     @Override

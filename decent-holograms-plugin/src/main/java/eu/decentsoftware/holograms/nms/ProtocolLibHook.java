@@ -26,9 +26,10 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 
 /**
  * This class is used to hook into ProtocolLib.
@@ -43,7 +44,8 @@ class ProtocolLibHook {
 
     private final DecentHolograms plugin;
 
-    public ProtocolLibHook(DecentHolograms plugin) {
+    @Contract(pure = true)
+    public ProtocolLibHook(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
     }
 
@@ -52,7 +54,7 @@ class ProtocolLibHook {
      *
      * @param adapter The NMS adapter.
      */
-    public void initListener(@NotNull NMSAdapter adapter) {
+    public void initListener(@NonNull NMSAdapter adapter) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         PacketAdapter packetAdapter = new PacketAdapter(
                 plugin,

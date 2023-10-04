@@ -24,10 +24,7 @@ import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -42,24 +39,21 @@ import java.util.UUID;
  * @author d0by
  * @since 3.0.0
  */
-@Getter
-@Setter
 public class ProfileContext {
 
+    private final DecentHolograms plugin;
     private final int clickableEntityId;
-    private CoreHologramLine watchedLine;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private boolean clickableEntitySpawned;
+    private CoreHologramLine watchedLine = null;
+    private boolean clickableEntitySpawned = false;
 
     /**
      * Create a new instance of {@link ProfileContext}.
+     *
+     * @param plugin The plugin instance.
      */
-    public ProfileContext() {
-        this.watchedLine = null;
-        this.clickableEntityId = DecentHolograms.getInstance().getNMSManager().getAdapter().getFreeEntityId();
-        this.clickableEntitySpawned = false;
+    public ProfileContext(@NonNull DecentHolograms plugin) {
+        this.plugin = plugin;
+        this.clickableEntityId = this.plugin.getNMSManager().getAdapter().getFreeEntityId();
     }
 
     /**
@@ -70,11 +64,11 @@ public class ProfileContext {
      * @param location The location to move the entity to.
      */
     public void moveOrCreateClickableEntity(@NonNull Player player, @NonNull Location location) {
-        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
-        if (clickableEntitySpawned) {
-            nmsAdapter.teleportEntity(player, clickableEntityId, location, false);
+        NMSAdapter nmsAdapter = this.plugin.getNMSManager().getAdapter();
+        if (this.clickableEntitySpawned) {
+            nmsAdapter.teleportEntity(player, this.clickableEntityId, location, false);
         } else {
-            nmsAdapter.spawnEntityLiving(player, clickableEntityId, UUID.randomUUID(), EntityType.SLIME, location);
+            nmsAdapter.spawnEntityLiving(player, this.clickableEntityId, UUID.randomUUID(), EntityType.SLIME, location);
             Object metaProperties = nmsAdapter.getMetaEntityProperties(
                     false,
                     false,
@@ -84,8 +78,8 @@ public class ProfileContext {
                     false,
                     false
             );
-            nmsAdapter.sendEntityMetadata(player, clickableEntityId, metaProperties);
-            clickableEntitySpawned = true;
+            nmsAdapter.sendEntityMetadata(player, this.clickableEntityId, metaProperties);
+            this.clickableEntitySpawned = true;
         }
     }
 
@@ -95,9 +89,9 @@ public class ProfileContext {
      * @param player The player to destroy the entity for.
      */
     public void destroyClickableEntity(@NonNull Player player) {
-        if (clickableEntitySpawned) {
-            DecentHolograms.getInstance().getNMSManager().getAdapter().removeEntity(player, clickableEntityId);
-            clickableEntitySpawned = false;
+        if (this.clickableEntitySpawned) {
+            this.plugin.getNMSManager().getAdapter().removeEntity(player, this.clickableEntityId);
+            this.clickableEntitySpawned = false;
         }
     }
 
@@ -108,7 +102,7 @@ public class ProfileContext {
      * @return The entity id.
      */
     public int getClickableEntityId() {
-        return clickableEntityId;
+        return this.clickableEntityId;
     }
 
     /**
@@ -120,7 +114,7 @@ public class ProfileContext {
      */
     @Nullable
     public CoreHologramLine getWatchedLine() {
-        return watchedLine;
+        return this.watchedLine;
     }
 
     /**

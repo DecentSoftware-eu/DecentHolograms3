@@ -18,26 +18,27 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class SoundBroadcastAction extends SoundAction {
 
-    public SoundBroadcastAction(@NotNull String sound) {
-        super(sound);
+    public SoundBroadcastAction(@NonNull DecentHolograms plugin, @NonNull String sound) {
+        super(plugin, sound);
     }
 
-    public SoundBroadcastAction(@NotNull String sound, float volume, float pitch) {
-        super(sound, volume, pitch);
+    public SoundBroadcastAction(@NonNull DecentHolograms plugin, @NonNull String sound, float volume, float pitch) {
+        super(plugin, sound, volume, pitch);
     }
 
-    public SoundBroadcastAction(long delay, double chance, @NotNull String sound, float volume, float pitch) {
-        super(delay, chance, sound, volume, pitch);
+    public SoundBroadcastAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String sound, float volume, float pitch) {
+        super(plugin, delay, chance, sound, volume, pitch);
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.playSound(onlinePlayer.getLocation(), sound, volume, pitch);
         }

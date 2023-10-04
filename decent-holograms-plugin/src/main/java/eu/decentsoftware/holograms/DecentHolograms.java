@@ -51,14 +51,13 @@ import eu.decentsoftware.holograms.utils.BungeeUtils;
 import eu.decentsoftware.holograms.utils.CommandUtil;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import eu.decentsoftware.holograms.utils.watcher.FileWatcher;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 
@@ -69,10 +68,8 @@ import java.util.Arrays;
  *
  * @author d0by
  */
-@Getter
 public final class DecentHolograms extends JavaPlugin {
 
-    @Getter
     private static DecentHolograms instance;
     private Gson gson;
     private Ticker ticker;
@@ -85,22 +82,18 @@ public final class DecentHolograms extends JavaPlugin {
     private NMSManager nMSManager;
     private Editor editor;
     private AddonLoader addonLoader;
-
     private BootMessenger bootMessenger;
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private boolean enabled = false;
 
     public DecentHolograms() {
-        instance = this;
+        DecentHolograms.instance = this;
     }
 
     @Override
     public void onEnable() {
         // -- Attempt to initialize the NMS adapter
         try {
-            nMSManager = new NMSManager(this);
+            this.nMSManager = new NMSManager(this);
         } catch (IllegalStateException e) {
             getLogger().severe("*** Your version (" + Version.CURRENT + ") is not supported!");
             getLogger().severe("*** Disabling...");
@@ -108,23 +101,20 @@ public final class DecentHolograms extends JavaPlugin {
             return;
         }
 
-        bootMessenger = new BootMessenger(this);
+        this.bootMessenger = new BootMessenger(this);
 
         Config.reload();
         Lang.reload();
 
-        // -- Initialize Custom Gson Instance
-        setupGson();
-
         // -- Initialize Managers
-        ticker = new Ticker();
-        profileRegistry = new ProfileRegistry(this);
-        serverRegistry = new ServerRegistry(this);
-        replacementRegistry = new ReplacementRegistry(this);
-        animationRegistry = new AnimationRegistry(this);
-        contentParserManager = new ContentParserManager(this);
-        hologramManager = new PluginHologramManager(this);
-        editor = new Editor(this);
+        this.ticker = new Ticker();
+        this.profileRegistry = new ProfileRegistry(this);
+        this.serverRegistry = new ServerRegistry(this);
+        this.replacementRegistry = new ReplacementRegistry(this);
+        this.animationRegistry = new AnimationRegistry(this);
+        this.contentParserManager = new ContentParserManager(this);
+        this.hologramManager = new PluginHologramManager(this);
+        this.editor = new Editor(this);
 
         // -- Register DecentHologramsAPI
         DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl(this));
@@ -146,29 +136,29 @@ public final class DecentHolograms extends JavaPlugin {
         setupUpdateChecker();
 
         if (PAPI.isAvailable()) {
-            bootMessenger.log("Using PlaceholderAPI for placeholder support!");
+            logOrBoot("Using PlaceholderAPI for placeholder support!");
         }
-        bootMessenger.sendAndFinish();
+        this.bootMessenger.sendAndFinish();
 
         // -- Addons
-        addonLoader = new AddonLoader("addons");
-        addonLoader.loadAllAddons();
+        this.addonLoader = new AddonLoader("addons");
+        this.addonLoader.loadAllAddons();
 
-        enabled = true;
+        this.enabled = true;
     }
 
     @Override
     public void onDisable() {
-        if (enabled) {
-            editor.shutdown();
-            ticker.shutdown();
-            nMSManager.shutdown();
-            hologramManager.shutdown();
-            animationRegistry.shutdown();
-            replacementRegistry.shutdown();
-            serverRegistry.shutdown();
-            profileRegistry.shutdown();
-            addonLoader.unloadAllAddons();
+        if (this.enabled) {
+            this.editor.shutdown();
+            this.ticker.shutdown();
+            this.nMSManager.shutdown();
+            this.hologramManager.shutdown();
+            this.animationRegistry.shutdown();
+            this.replacementRegistry.shutdown();
+            this.serverRegistry.shutdown();
+            this.profileRegistry.shutdown();
+            this.addonLoader.unloadAllAddons();
         }
 
         BungeeUtils.shutdown();
@@ -176,33 +166,63 @@ public final class DecentHolograms extends JavaPlugin {
         FileWatcher.close();
     }
 
-    /**
-     * Reload the plugins configuration and all holograms.
-     */
     public void reload() {
         Config.reload();
         Lang.reload();
 
-        replacementRegistry.reload();
-        animationRegistry.reload();
-        serverRegistry.reload();
-        hologramManager.reload();
-        profileRegistry.reload();
-        editor.reload();
-        addonLoader.reload();
+        this.replacementRegistry.reload();
+        this.animationRegistry.reload();
+        this.serverRegistry.reload();
+        this.hologramManager.reload();
+        this.profileRegistry.reload();
+        this.editor.reload();
+        this.addonLoader.reload();
 
         if (PAPI.isAvailable()) {
-            bootMessenger.log("Using PlaceholderAPI for placeholder support!");
+            logOrBoot("Using PlaceholderAPI for placeholder support!");
         }
-        bootMessenger.sendAndFinish();
+        this.bootMessenger.sendAndFinish();
 
         // Call the reload event
         Bukkit.getPluginManager().callEvent(new DecentHologramsReloadEvent());
     }
 
-    /**
-     * Set up the update checker and check for updates.
-     */
+    public void log(@NonNull String message, Object... args) {
+        getLogger().info(String.format(message, args));
+    }
+
+    public void warn(@NonNull String message, Object... args) {
+        getLogger().warning(String.format(message, args));
+    }
+
+    public void error(@NonNull String message, Object... args) {
+        getLogger().severe(String.format(message, args));
+    }
+
+    public void logOrBoot(@NonNull String message, Object... args) {
+        if (this.bootMessenger != null) {
+            this.bootMessenger.log(String.format(message, args));
+        } else {
+            log(message, args);
+        }
+    }
+
+    public void warnOrBoot(@NonNull String message, Object... args) {
+        if (this.bootMessenger != null) {
+            this.bootMessenger.log("&e" + String.format(message, args));
+        } else {
+            warn(message, args);
+        }
+    }
+
+    public void errorOrBoot(@NonNull String message, Object... args) {
+        if (this.bootMessenger != null) {
+            this.bootMessenger.log("&c" + String.format(message, args));
+        } else {
+            error(message, args);
+        }
+    }
+
     private void setupUpdateChecker() {
         if (Config.CHECK_FOR_UPDATES) {
             new UpdateChecker(this, 96927).check(s -> {
@@ -225,23 +245,77 @@ public final class DecentHolograms extends JavaPlugin {
                 // Notify if an update is available
                 if (Config.isUpdateAvailable()) {
                     Config.setUpdateVersion(s);
-                    bootMessenger.log(Lang.formatString(Lang.UPDATE_MESSAGE));
+                    logOrBoot(Lang.formatString(Lang.UPDATE_MESSAGE));
                 }
             });
         }
     }
 
-    private void setupGson() {
-        gson = new GsonBuilder()
-                .disableHtmlEscaping()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Location.class, new LocationSerializer())
-                .registerTypeAdapter(DecentLocation.class, new DecentLocationSerializer())
-                .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())
-                .registerTypeAdapter(ClickActionHolder.class, new ClickActionHolderSerializer())
-                .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
-                .registerTypeAdapter(ClickConditionHolder.class, new ClickConditionHolderSerializer())
-                .create();
+    @NonNull
+    public Gson getGson() {
+        if (this.gson == null) {
+            this.gson = new GsonBuilder()
+                    .disableHtmlEscaping()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(Location.class, new LocationSerializer())
+                    .registerTypeAdapter(DecentLocation.class, new DecentLocationSerializer())
+                    .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())
+                    .registerTypeAdapter(ClickActionHolder.class, new ClickActionHolderSerializer())
+                    .registerTypeAdapter(ConditionHolder.class, new ConditionHolderSerializer())
+                    .registerTypeAdapter(ClickConditionHolder.class, new ClickConditionHolderSerializer())
+                    .create();
+        }
+        return this.gson;
+    }
+
+    @Contract(pure = true)
+    public Ticker getTicker() {
+        return this.ticker;
+    }
+
+    @Contract(pure = true)
+    public ProfileRegistry getProfileRegistry() {
+        return this.profileRegistry;
+    }
+
+    @Contract(pure = true)
+    public ServerRegistry getServerRegistry() {
+        return this.serverRegistry;
+    }
+
+    @Contract(pure = true)
+    public ReplacementRegistry getReplacementRegistry() {
+        return this.replacementRegistry;
+    }
+
+    @Contract(pure = true)
+    public AnimationRegistry getAnimationRegistry() {
+        return this.animationRegistry;
+    }
+
+    @Contract(pure = true)
+    public ContentParserManager getContentParserManager() {
+        return this.contentParserManager;
+    }
+
+    @Contract(pure = true)
+    public PluginHologramManager getHologramManager() {
+        return this.hologramManager;
+    }
+
+    @Contract(pure = true)
+    public NMSManager getNMSManager() {
+        return this.nMSManager;
+    }
+
+    @Contract(pure = true)
+    public Editor getEditor() {
+        return this.editor;
+    }
+
+    @Contract(pure = true)
+    public static DecentHolograms getInstance() {
+        return DecentHolograms.instance;
     }
 
 }

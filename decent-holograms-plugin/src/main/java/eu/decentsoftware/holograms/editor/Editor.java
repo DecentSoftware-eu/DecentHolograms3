@@ -21,17 +21,16 @@ package eu.decentsoftware.holograms.editor;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.editor.move.MoveController;
 import eu.decentsoftware.holograms.editor.scroll.ScrollListener;
-import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 
-@Getter
 public class Editor {
 
     private final MoveController moveController;
     private final ScrollListener scrollListener;
 
-    public Editor(DecentHolograms plugin) {
+    public Editor(@NonNull DecentHolograms plugin) {
         this.moveController = new MoveController(plugin);
         this.scrollListener = new ScrollListener();
 
@@ -46,6 +45,16 @@ public class Editor {
         this.moveController.shutdown();
 
         HandlerList.unregisterAll(scrollListener);
+    }
+
+    @NonNull
+    public MoveController getMoveController() {
+        return moveController;
+    }
+
+    @NonNull
+    public ScrollListener getScrollListener() {
+        return scrollListener;
     }
 
 }

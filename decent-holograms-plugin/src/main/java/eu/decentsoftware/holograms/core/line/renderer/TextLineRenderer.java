@@ -94,8 +94,8 @@ public class TextLineRenderer extends LineRenderer {
     }
 
     @Override
-    public double getWidth() {
-        return 0;
+    public double getWidth(@NonNull Player player) {
+        return Math.min(5d, Common.getTextWidth(this.formattedTextCache.get(player.getUniqueId())) / 100d);
     }
 
     @Override
@@ -148,26 +148,32 @@ public class TextLineRenderer extends LineRenderer {
     public void display(@NonNull Player player) {
         String formattedText = getFormattedText(player);
 
-        // Create the metadata objects
-        Object metaEntity = this.nmsAdapter.getMetaEntityProperties(false, false, false,
-                false, true, false, false);
-        Object metaArmorStand = this.nmsAdapter.getMetaArmorStandProperties(false, false, true,
-                true);
+        Object metaEntity = this.nmsAdapter.getMetaEntityProperties(
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false
+        );
+        Object metaArmorStand = this.nmsAdapter.getMetaArmorStandProperties(
+                false,
+                false,
+                true,
+                true
+        );
         Object metaName = getMetaName(formattedText);
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
-        // Spawn the fake armor stand entity
         this.nmsAdapter.spawnEntityLiving(player, this.eid, UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
-        // Send the metadata
         this.nmsAdapter.sendEntityMetadata(player, this.eid, metaEntity, metaArmorStand, metaName, metaNameVisible);
     }
 
     @Override
     public void hide(@NonNull Player player) {
-        // Destroy the fake armor stand entity
         this.nmsAdapter.removeEntity(player, this.eid);
 
-        // Remove the cached text
         this.formattedTextCache.remove(player.getUniqueId());
     }
 
@@ -178,18 +184,15 @@ public class TextLineRenderer extends LineRenderer {
     }
 
     private void updateContent(@NonNull Player player, @NonNull String text) {
-        // Create the metadata objects
         Object metaName = getMetaName(text);
         boolean isNameInvisible = text.isEmpty() || text.replaceAll("§.", "").isEmpty();
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!isNameInvisible);
 
-        // Send the metadata
         this.nmsAdapter.sendEntityMetadata(player, this.eid, metaName, metaNameVisible);
     }
 
     @Override
     public void updateLocation(@NonNull Player player) {
-        // Teleport the fake armor stand entity
         this.nmsAdapter.teleportEntity(player, this.eid, this.parent.getActualBukkitLocation(), true);
     }
 

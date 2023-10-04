@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author d0by
  * @since 3.0.0
  */
+@SuppressWarnings("unused")
 class UpdateNotificationListener implements Listener {
 
     @EventHandler
@@ -53,7 +55,7 @@ class UpdateNotificationListener implements Listener {
     private final Map<String, Value> playerValueMap = new ConcurrentHashMap<>();
 
     @EventHandler
-    public void onScroll(DecentPlayerScrollEvent event) {
+    public void onScroll(@NonNull DecentPlayerScrollEvent event) {
         Player player = event.getPlayer();
         ScrollDirection direction = event.getScrollDirection();
         Value currentValue = playerValueMap.computeIfAbsent(player.getName(), s -> Value.ADD_LINE);
@@ -88,7 +90,8 @@ class UpdateNotificationListener implements Listener {
         @Getter
         private final String displayName;
 
-        Value(String displayName) {
+        @Contract(pure = true)
+        Value(@NonNull String displayName) {
             this.displayName = displayName;
         }
 

@@ -47,7 +47,7 @@ public class CorePositionManager {
 
     @NonNull
     public DecentLocation getLocation() {
-        return location;
+        return this.location;
     }
 
     public void setLocation(@NonNull DecentLocation location) {
@@ -56,18 +56,18 @@ public class CorePositionManager {
 
     @NonNull
     public DecentLocation getActualLocation() {
-        if (locationSupplier != null) {
-            return new DecentLocation(locationSupplier.get()).add(offsets);
+        if (this.locationSupplier != null) {
+            return new DecentLocation(this.locationSupplier.get()).add(this.offsets);
         }
-        return location.clone().add(offsets);
+        return this.location.clone().add(this.offsets);
     }
 
     @NonNull
     public Location getActualBukkitLocation() {
-        if (locationSupplier != null) {
-            return locationSupplier.get().clone().add(offsets);
+        if (this.locationSupplier != null) {
+            return this.locationSupplier.get().clone().add(this.offsets);
         }
-        Location location = this.location.clone().add(offsets).toBukkitLocation();
+        Location location = this.location.clone().add(this.offsets).toBukkitLocation();
         if (location == null) {
             throw new IllegalStateException("World " + this.location.getWorldName() + " is not loaded!");
         }
@@ -84,16 +84,16 @@ public class CorePositionManager {
 
     @Nullable
     public Supplier<Location> getLocationBinder() {
-        return locationSupplier;
+        return this.locationSupplier;
     }
 
     public boolean isLocationBound() {
-        return locationSupplier != null;
+        return this.locationSupplier != null;
     }
 
     @NonNull
     public Vector getOffsets() {
-        return offsets;
+        return this.offsets;
     }
 
     public void setOffsets(@NonNull Vector offsets) {

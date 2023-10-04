@@ -27,7 +27,8 @@ import eu.decentsoftware.holograms.animations.text.impl.*;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.FileUtils;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -55,15 +56,15 @@ import java.util.regex.Pattern;
 public class AnimationRegistry implements Ticked {
 
     private static final Pattern ANIMATION_REGEX = Pattern.compile("<animation:(" + Config.NAME_REGEX + ")(?::([^/]+))?>(?:(.*)</animation>)?");
-    private final @NotNull Map<String, Animation<?>> animationMap;
-    private final @NotNull AtomicInteger stepCounter;
+    private final Map<String, Animation<?>> animationMap;
+    private final AtomicInteger stepCounter;
     private final DecentHolograms plugin;
 
     /**
      * Create a new instance of {@link AnimationRegistry}. This constructor
      * also loads all animations from config by calling the {@link #reload()} method.
      */
-    public AnimationRegistry(DecentHolograms plugin) {
+    public AnimationRegistry(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
         this.animationMap = new ConcurrentHashMap<>();
         this.stepCounter = new AtomicInteger(0);
@@ -93,7 +94,7 @@ public class AnimationRegistry implements Ticked {
         final long startMillis = System.currentTimeMillis();
         int counter = 0;
 
-        File folder = new File(plugin.getDataFolder(), "animations");
+        File folder = new File(this.plugin.getDataFolder(), "animations");
         List<File> files = FileUtils.getFilesFromTree(folder, Config.NAME_REGEX + "\\.yml", true);
         if (files.isEmpty()) {
             return;
@@ -102,29 +103,29 @@ public class AnimationRegistry implements Ticked {
         for (File file : files) {
             try {
                 String name = file.getName().substring(0, file.getName().length() - 4);
-                FileConfig config = new FileConfig(plugin, file);
+                FileConfig config = new FileConfig(this.plugin, file);
                 AnimationType type = AnimationType.getByName(config.getString("type", "ASCEND"));
                 if (type == AnimationType.INTERNAL) {
-                    plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "' (Invalid type: 'INTERNAL')! Skipping...");
+                    this.plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "' (Invalid type: 'INTERNAL')! Skipping...");
                     continue;
                 }
                 int interval = config.getInt("interval", 1);
                 int pause = config.getInt("pause", 0);
                 List<String> frames = config.getStringList("frames");
                 if (frames.isEmpty()) {
-                    plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "' (No frames)! Skipping...");
+                    this.plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "' (No frames)! Skipping...");
                     continue;
                 }
                 Animation<?> animation = new CustomTextAnimation(name, type, interval, pause, frames);
                 registerAnimation(animation);
                 counter++;
             } catch (Exception e) {
-                plugin.getLogger().warning("Failed to load animation from '" + file.getName() + "'! Skipping...");
+                this.plugin.warnOrBoot("Failed to load animation from '%s'! Skipping...", file.getName());
                 e.printStackTrace();
             }
         }
         long took = System.currentTimeMillis() - startMillis;
-        plugin.getBootMessenger().log(String.format("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+        this.plugin.logOrBoot("Successfully loaded %d animation%s in %d ms!", counter, counter == 1 ? "" : "s", took);
     }
 
     public synchronized void shutdown() {
@@ -138,8 +139,8 @@ public class AnimationRegistry implements Ticked {
         this.stepCounter.incrementAndGet();
     }
 
-    @NotNull
-    public String animate(@NotNull String text) {
+    @NonNull
+    public String animate(@NonNull String text) {
         int step = this.stepCounter.get();
 
         // -- Special text animations
@@ -166,26 +167,29 @@ public class AnimationRegistry implements Ticked {
         return text;
     }
 
-    public boolean containsAnimation(@NotNull String text) {
+    public boolean containsAnimation(@NonNull String text) {
         return text.contains("&u") || ANIMATION_REGEX.matcher(text).find();
     }
 
-    public void registerAnimation(@NotNull Animation<?> animation) {
+    public void registerAnimation(@NonNull Animation<?> animation) {
         this.animationMap.put(animation.getName(), animation);
     }
 
-    public Animation<?> getAnimation(@NotNull String name) {
+    @Nullable
+    public Animation<?> getAnimation(@NonNull String name) {
         return this.animationMap.get(name);
     }
 
-    public Animation<?> removeAnimation(@NotNull String name) {
+    @Nullable
+    public Animation<?> removeAnimation(@NonNull String name) {
         return this.animationMap.remove(name);
     }
 
-    public boolean hasAnimation(@NotNull String name) {
+    public boolean hasAnimation(@NonNull String name) {
         return this.animationMap.containsKey(name);
     }
 
+    @NonNull
     public Map<String, Animation<?>> getAnimations() {
         return ImmutableMap.copyOf(this.animationMap);
     }

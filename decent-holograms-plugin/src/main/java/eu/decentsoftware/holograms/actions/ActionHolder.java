@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.List;
  */
 public class ActionHolder {
 
-    private final @NonNull List<Action> actions;
+    private final List<Action> actions;
 
     public ActionHolder() {
         this(new ArrayList<>());
@@ -85,7 +84,7 @@ public class ActionHolder {
         return this.actions.isEmpty();
     }
 
-    @NotNull
+    @NonNull
     public List<Action> getActions() {
         return ImmutableList.copyOf(this.actions);
     }

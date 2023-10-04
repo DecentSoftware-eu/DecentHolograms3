@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.List;
  */
 public class ConditionHolder {
 
-    private final @NonNull List<Condition> conditions;
+    private final List<Condition> conditions;
 
     public ConditionHolder() {
         this(new ArrayList<>());
@@ -55,7 +54,7 @@ public class ConditionHolder {
      * @param player The player for whom we want to check the conditions.
      * @return true if all the conditions are fulfilled, false otherwise.
      */
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         for (Condition condition : getConditions()) {
             // Check and flip if inverted.
             boolean fulfilled = condition.isInverted() != condition.check(player);
@@ -93,7 +92,7 @@ public class ConditionHolder {
         return this.conditions.isEmpty();
     }
 
-    @NotNull
+    @NonNull
     public List<Condition> getConditions() {
         return ImmutableList.copyOf(this.conditions);
     }

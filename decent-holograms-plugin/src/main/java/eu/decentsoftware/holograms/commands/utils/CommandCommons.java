@@ -51,7 +51,7 @@ public final class CommandCommons {
      * @return The first hologram in the player's view.
      */
     @Nullable
-    public static PluginHologram getHologramInView(PluginHologramManager hologramManager, @NonNull Player player) {
+    public static PluginHologram getHologramInView(@NonNull PluginHologramManager hologramManager, @NonNull Player player) {
         Location location = player.getEyeLocation();
         Vector lookDirection = location.getDirection();
 
@@ -80,7 +80,7 @@ public final class CommandCommons {
      * @param name            Name of the hologram.
      * @return The hologram, if found.
      */
-    public static Optional<PluginHologram> getHologramInViewOrByName(PluginHologramManager hologramManager, @NotNull CommandSender sender, @Nullable String name) {
+    public static Optional<PluginHologram> getHologramInViewOrByName(@NonNull PluginHologramManager hologramManager, @NotNull CommandSender sender, @Nullable String name) {
         PluginHologram hologram = null;
         if (sender instanceof Player && name == null) {
             hologram = getHologramInView(hologramManager, (Player) sender);
@@ -103,7 +103,7 @@ public final class CommandCommons {
      * @return All holograms within 4 blocks of the location.
      */
     @NotNull
-    public static List<PluginHologram> getHologramsNearLocation(PluginHologramManager hologramManager, @NonNull Location location) {
+    public static List<PluginHologram> getHologramsNearLocation(@NonNull PluginHologramManager hologramManager, @NonNull Location location) {
         List<PluginHologram> holograms = new ArrayList<>();
         for (PluginHologram hologram : hologramManager.getHolograms()) {
             if (hologram.getPositionManager().getActualBukkitLocation().distanceSquared(location) <= 4 * 4) {

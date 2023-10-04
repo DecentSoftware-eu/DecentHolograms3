@@ -35,7 +35,7 @@ public class HologramCloneCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramCloneCommand(DecentHolograms plugin) {
+    public HologramCloneCommand(@NonNull DecentHolograms plugin) {
         super(
                 "clone",
                 Config.ADMIN_PERM,

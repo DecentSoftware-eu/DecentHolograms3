@@ -39,7 +39,7 @@ public class HologramCenterCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramCenterCommand(DecentHolograms plugin) {
+    public HologramCenterCommand(@NonNull DecentHolograms plugin) {
         super(
                 "center",
                 Config.ADMIN_PERM,

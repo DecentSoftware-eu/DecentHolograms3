@@ -32,7 +32,7 @@ import java.util.Collections;
 
 public class HologramCommand extends DecentCommand {
 
-    public HologramCommand(DecentHolograms plugin) {
+    public HologramCommand(@NonNull DecentHolograms plugin) {
         super(
                 "hologram",
                 Config.ADMIN_PERM,

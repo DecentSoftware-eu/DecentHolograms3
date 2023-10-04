@@ -18,9 +18,9 @@
 
 package eu.decentsoftware.holograms.utils;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -45,8 +45,8 @@ public class FileUtils {
      * @return The list of file.
      * @since 3.0.0
      */
-    @NotNull
-    public static List<File> getFilesFromTree(@NotNull File root, @Nullable String regex, boolean createDir) {
+    @NonNull
+    public static List<File> getFilesFromTree(@NonNull File root, @Nullable String regex, boolean createDir) {
         List<File> files = new ArrayList<>();
         if (root.exists() && root.isDirectory()) {
             File[] children = root.listFiles();
@@ -74,8 +74,8 @@ public class FileUtils {
      * @return The list of files.
      * @since 3.0.0
      */
-    @NotNull
-    public static List<File> getFilesFromTree(@NotNull String rootPath, @Nullable String regex, boolean createDir) {
+    @NonNull
+    public static List<File> getFilesFromTree(@NonNull String rootPath, @Nullable String regex, boolean createDir) {
         return getFilesFromTree(new File(rootPath), regex, createDir);
     }
 
@@ -88,7 +88,7 @@ public class FileUtils {
      * @since 3.0.0
      */
     @Nullable
-    public static String getRelativePath(@NotNull File file, @NotNull File base) {
+    public static String getRelativePath(@NonNull File file, @NonNull File base) {
         String filePath = file.getAbsolutePath();
         String basePath = base.getAbsolutePath();
         if (filePath.startsWith(basePath)) {

@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.utils.color.patterns;
 
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.util.regex.Matcher;
 
@@ -29,9 +29,9 @@ public class RainbowPattern implements Pattern {
             "(?i)<RAINBOW(\\d{1,3})>(.*?)</RAINBOW>"
     );
 
-    @NotNull
+    @NonNull
     @Override
-    public String process(@NotNull String string) {
+    public String process(@NonNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             String saturation = matcher.group(1);
@@ -42,9 +42,9 @@ public class RainbowPattern implements Pattern {
         return string;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public String strip(@NotNull String string) {
+    public String strip(@NonNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             string = string.replace(matcher.group(), matcher.group(2));

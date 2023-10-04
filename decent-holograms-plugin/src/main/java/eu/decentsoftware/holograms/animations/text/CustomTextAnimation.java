@@ -20,21 +20,21 @@ package eu.decentsoftware.holograms.animations.text;
 
 import eu.decentsoftware.holograms.animations.AnimationType;
 import eu.decentsoftware.holograms.utils.Common;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class CustomTextAnimation extends TextAnimation {
 
-    protected final @NotNull List<String> frameList;
+    protected final List<String> frameList;
 
-    public CustomTextAnimation(@NotNull String name, @NotNull AnimationType type, int interval, int pause, @NotNull List<String> frameList) {
+    public CustomTextAnimation(@NonNull String name, @NonNull AnimationType type, int interval, int pause, @NonNull List<String> frameList) {
         super(name, type, frameList.size(), interval, pause);
         this.frameList = frameList;
     }
 
-    @NotNull
+    @NonNull
     public String animate(int tick, @Nullable String frameData, String... args) {
         if (type == AnimationType.RANDOM) {
             return frameList.get(Common.irand(0, totalSteps - 1));

@@ -143,8 +143,8 @@ public class CoreHologramLine extends CoreHologramComponent {
         return this.renderer != null ? this.renderer.getHeight() : 0d;
     }
 
-    public double getBlockWidth() {
-        return this.renderer != null ? this.renderer.getWidth() : 0d;
+    public double getBlockWidth(@NonNull Player player) {
+        return this.renderer != null ? this.renderer.getWidth(player) : 0d;
     }
 
     @NonNull

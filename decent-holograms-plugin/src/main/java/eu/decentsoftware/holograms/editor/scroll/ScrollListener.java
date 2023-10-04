@@ -18,20 +18,23 @@
 
 package eu.decentsoftware.holograms.editor.scroll;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.jetbrains.annotations.Contract;
 
 public class ScrollListener implements Listener {
 
     @EventHandler
-    public void onHeldItemChange(PlayerItemHeldEvent event) {
+    public void onHeldItemChange(@NonNull PlayerItemHeldEvent event) {
         ScrollDirection scrollDirection = getScrollDirection(event.getPreviousSlot(), event.getNewSlot());
         DecentPlayerScrollEvent scrollEvent = new DecentPlayerScrollEvent(event.getPlayer(), scrollDirection);
         Bukkit.getPluginManager().callEvent(scrollEvent);
     }
 
+    @Contract(pure = true)
     private ScrollDirection getScrollDirection(final int previousSlot, final int newSlot) {
         return ((newSlot - previousSlot + 9) % 9 <= 9 / 2) ? ScrollDirection.UP : ScrollDirection.DOWN;
     }

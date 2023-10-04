@@ -22,11 +22,11 @@ import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.server.Server;
 import eu.decentsoftware.holograms.server.ServerRegistry;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -34,7 +34,7 @@ import java.util.function.Function;
 @UtilityClass
 final class ReplacementCommons {
 
-    static int getFromServerOrServersInt(ServerRegistry serverRegistry, Player player, @NotNull String argument, @NotNull Function<Server, Integer> getValue) {
+    static int getFromServerOrServersInt(@NonNull ServerRegistry serverRegistry, Player player, @NonNull String argument, @NonNull Function<Server, Integer> getValue) {
         // -- Get from multiple servers
         if (argument.contains(",")) {
             int total = 0;
@@ -70,7 +70,7 @@ final class ReplacementCommons {
         return -1;
     }
 
-    static int getFromWorldOrWorldsInt(@NotNull String argument, @NotNull Function<World, Integer> getValue) {
+    static int getFromWorldOrWorldsInt(@NonNull String argument, @NonNull Function<World, Integer> getValue) {
         // -- Get from multiple servers
         if (argument.contains(",")) {
             int total = 0;

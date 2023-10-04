@@ -23,7 +23,6 @@ import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -40,14 +39,14 @@ import java.util.Map;
  */
 public class ClickConditionHolder {
 
-    private final @NotNull Map<ClickType, List<Condition>> conditions = new EnumMap<>(ClickType.class);
+    private final Map<ClickType, List<Condition>> conditions = new EnumMap<>(ClickType.class);
 
     public ClickConditionHolder() {
         this(new EnumMap<>(ClickType.class));
     }
 
     @Contract(pure = true)
-    public ClickConditionHolder(@NotNull Map<ClickType, List<Condition>> conditions) {
+    public ClickConditionHolder(@NonNull Map<ClickType, List<Condition>> conditions) {
         for (ClickType clickType : ClickType.values()) {
             this.conditions.put(clickType, conditions.getOrDefault(clickType, new ArrayList<>()));
         }
@@ -61,7 +60,7 @@ public class ClickConditionHolder {
      * @param player    The player for whom we want to check the conditions.
      * @return true if all the conditions are fulfilled, false otherwise.
      */
-    public boolean check(@NonNull ClickType clickType, @NotNull Player player) {
+    public boolean check(@NonNull ClickType clickType, @NonNull Player player) {
         for (Condition condition : getConditions(clickType)) {
             // Check and flip if inverted.
             boolean fulfilled = condition.isInverted() != condition.check(player);
@@ -79,11 +78,11 @@ public class ClickConditionHolder {
         return true;
     }
 
-    public void addCondition(@NonNull ClickType clickType, @NotNull Condition condition) {
+    public void addCondition(@NonNull ClickType clickType, @NonNull Condition condition) {
         this.conditions.get(clickType).add(condition);
     }
 
-    public void removeCondition(@NonNull ClickType clickType, @NotNull Condition condition) {
+    public void removeCondition(@NonNull ClickType clickType, @NonNull Condition condition) {
         this.conditions.get(clickType).remove(condition);
     }
 
@@ -99,7 +98,7 @@ public class ClickConditionHolder {
         return this.conditions.get(clickType).isEmpty();
     }
 
-    @NotNull
+    @NonNull
     public List<Condition> getConditions(@NonNull ClickType clickType) {
         return ImmutableList.copyOf(this.conditions.get(clickType));
     }

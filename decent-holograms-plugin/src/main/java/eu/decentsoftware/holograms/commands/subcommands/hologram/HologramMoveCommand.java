@@ -45,7 +45,7 @@ public class HologramMoveCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramMoveCommand(DecentHolograms plugin) {
+    public HologramMoveCommand(@NonNull DecentHolograms plugin) {
         super(
                 "move",
                 Config.ADMIN_PERM,

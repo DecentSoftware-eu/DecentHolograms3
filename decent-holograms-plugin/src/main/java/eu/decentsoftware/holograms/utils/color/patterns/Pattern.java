@@ -18,14 +18,14 @@
 
 package eu.decentsoftware.holograms.utils.color.patterns;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 public interface Pattern {
 
-    @NotNull
-    String process(@NotNull String string);
+    @NonNull
+    String process(@NonNull String string);
 
-    @NotNull
-    String strip(@NotNull String string);
+    @NonNull
+    String strip(@NonNull String string);
 
 }

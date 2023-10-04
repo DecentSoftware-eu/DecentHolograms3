@@ -56,7 +56,7 @@ public interface HologramLineRenderer {
      *
      * @return The width of the rendered line.
      */
-    double getWidth();
+    double getWidth(@NonNull Player player);
 
     /**
      * Called when the parent {@link HologramLine} is ticked.

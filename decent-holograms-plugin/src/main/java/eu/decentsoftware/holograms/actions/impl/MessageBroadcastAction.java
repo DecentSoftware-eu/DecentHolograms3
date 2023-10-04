@@ -18,23 +18,24 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class MessageBroadcastAction extends MessageAction {
 
-    public MessageBroadcastAction(@NotNull String message) {
-        super(message);
+    public MessageBroadcastAction(@NonNull DecentHolograms plugin, @NonNull String message) {
+        super(plugin, message);
     }
 
-    public MessageBroadcastAction(long delay, double chance, @NotNull String message) {
-        super(delay, chance, message);
+    public MessageBroadcastAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String message) {
+        super(plugin, delay, chance, message);
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         Bukkit.broadcastMessage(Lang.formatString(message, player));
     }
 

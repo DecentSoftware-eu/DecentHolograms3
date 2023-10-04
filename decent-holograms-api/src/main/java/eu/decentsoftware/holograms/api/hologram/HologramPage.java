@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.api.hologram;
 
 import lombok.NonNull;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -113,5 +114,13 @@ public interface HologramPage {
      * @return The height of this page.
      */
     double getHeight();
+
+    /**
+     * Get the width of this page. The width is the width of the widest line.
+     *
+     * @param player The player to get the width for.
+     * @return The width of this page.
+     */
+    double getWidth(@NonNull Player player);
 
 }

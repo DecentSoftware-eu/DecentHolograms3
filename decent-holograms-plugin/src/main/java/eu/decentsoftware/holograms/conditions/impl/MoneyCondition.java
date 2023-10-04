@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.hooks.VaultHook;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class MoneyCondition extends Condition {
 
@@ -37,7 +37,7 @@ public class MoneyCondition extends Condition {
     }
 
     @Override
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         return VaultHook.getMoney(player) >= amount;
     }
 

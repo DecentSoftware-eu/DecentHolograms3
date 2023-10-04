@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.animations.item;
 import com.cryptomorin.xseries.XMaterial;
 import eu.decentsoftware.holograms.animations.Animation;
 import eu.decentsoftware.holograms.animations.AnimationType;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,16 +40,16 @@ public class MaterialAnimation extends Animation<XMaterial> {
 
     private final XMaterial[] frames;
 
-    public MaterialAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause, @NotNull XMaterial... frames) {
+    public MaterialAnimation(@NonNull String name, @NonNull AnimationType type, int totalSteps, int interval, int pause, @NonNull XMaterial... frames) {
         super(name, type, totalSteps, interval, pause);
         this.frames = frames;
     }
 
-    public MaterialAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause, @NotNull List<XMaterial> frames) {
+    public MaterialAnimation(@NonNull String name, @NonNull AnimationType type, int totalSteps, int interval, int pause, @NonNull List<XMaterial> frames) {
         this(name, type, totalSteps, interval, pause, frames.toArray(new XMaterial[0]));
     }
 
-    @NotNull
+    @NonNull
     @Override
     public XMaterial animate(int tick, @Nullable XMaterial frameData, String... args) {
         return frames[tick % (frames.length * interval) / interval];

@@ -22,25 +22,26 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ActionBarAction extends Action {
 
-    private final @NotNull String message;
+    private final String message;
 
-    public ActionBarAction(@NotNull String message) {
+    public ActionBarAction(@NonNull DecentHolograms plugin, @NonNull String message) {
+        super(plugin);
         this.message = message;
     }
 
-    public ActionBarAction(long delay, double chance, @NotNull String message) {
-        super(delay, chance);
+    public ActionBarAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String message) {
+        super(plugin, delay, chance);
         this.message = message;
     }
 
     @Override
-    public void execute(@NotNull Player player) {
-        NMSAdapter nmsAdapter = DecentHolograms.getInstance().getNMSManager().getAdapter();
+    public void execute(@NonNull Player player) {
+        NMSAdapter nmsAdapter = plugin.getNMSManager().getAdapter();
         nmsAdapter.sendActionBar(player, Lang.formatString(message, player));
     }
 

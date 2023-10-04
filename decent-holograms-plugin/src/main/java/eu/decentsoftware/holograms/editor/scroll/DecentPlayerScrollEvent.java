@@ -18,10 +18,11 @@
 
 package eu.decentsoftware.holograms.editor.scroll;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Called when a player scrolls on their mouse wheel. This event is called
@@ -35,7 +36,7 @@ public class DecentPlayerScrollEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final ScrollDirection scrollDirection;
 
-    public DecentPlayerScrollEvent(@NotNull Player who, @NotNull ScrollDirection scrollDirection) {
+    public DecentPlayerScrollEvent(@NonNull Player who, @NonNull ScrollDirection scrollDirection) {
         super(who);
         this.scrollDirection = scrollDirection;
     }
@@ -47,17 +48,18 @@ public class DecentPlayerScrollEvent extends PlayerEvent {
      * @see ScrollDirection
      * @since 3.0.0
      */
-    @NotNull
+    @NonNull
     public ScrollDirection getScrollDirection() {
         return scrollDirection;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 
+    @Contract(pure = true)
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }

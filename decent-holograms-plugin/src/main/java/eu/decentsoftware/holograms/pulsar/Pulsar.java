@@ -18,7 +18,7 @@
 
 package eu.decentsoftware.holograms.pulsar;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 /**
  * This class represents a pulsar. It is used to play some "pulse" animations.
@@ -34,7 +34,7 @@ public class Pulsar {
      * @param type The PulseType to play.
      * @see PulseType
      */
-    public void pulse(@NotNull PulseType type) {
+    public void pulse(@NonNull PulseType type) {
 
         // TODO implement pulse effects
     }

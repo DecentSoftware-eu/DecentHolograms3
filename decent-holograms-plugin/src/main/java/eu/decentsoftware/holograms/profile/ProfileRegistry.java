@@ -19,10 +19,10 @@
 package eu.decentsoftware.holograms.profile;
 
 import eu.decentsoftware.holograms.DecentHolograms;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
@@ -36,14 +36,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ProfileRegistry {
 
+    private final DecentHolograms plugin;
     private final Map<UUID, Profile> profileMap = new ConcurrentHashMap<>();
     private final ProfileListener listener;
 
-    public ProfileRegistry(DecentHolograms plugin) {
+    public ProfileRegistry(@NonNull DecentHolograms plugin) {
+        this.plugin = plugin;
         this.listener = new ProfileListener(this);
         this.reload();
 
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
+        Bukkit.getPluginManager().registerEvents(this.listener, this.plugin);
     }
 
     public synchronized void reload() {
@@ -55,7 +57,7 @@ public class ProfileRegistry {
     }
 
     public synchronized void shutdown() {
-        HandlerList.unregisterAll(listener);
+        HandlerList.unregisterAll(this.listener);
 
         this.profileMap.values().forEach(profile -> {
             Player player = profile.getPlayer();
@@ -71,8 +73,8 @@ public class ProfileRegistry {
      *
      * @param uuid The UUID of the player.
      */
-    public void registerProfile(@NotNull UUID uuid) {
-        this.profileMap.put(uuid, new Profile(uuid));
+    public void registerProfile(@NonNull UUID uuid) {
+        this.profileMap.put(uuid, new Profile(this.plugin, uuid));
     }
 
     /**
@@ -81,7 +83,7 @@ public class ProfileRegistry {
      * @param uuid The UUID of the player.
      * @return The profile or null if the given player doesn't have one.
      */
-    public Profile getProfile(@NotNull UUID uuid) {
+    public Profile getProfile(@NonNull UUID uuid) {
         return this.profileMap.get(uuid);
     }
 
@@ -90,7 +92,7 @@ public class ProfileRegistry {
      *
      * @param uuid The UUID of the player.
      */
-    public void removeProfile(@NotNull UUID uuid) {
+    public void removeProfile(@NonNull UUID uuid) {
         this.profileMap.remove(uuid);
     }
 

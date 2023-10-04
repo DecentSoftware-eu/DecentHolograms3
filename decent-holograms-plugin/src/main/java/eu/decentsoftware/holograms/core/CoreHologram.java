@@ -101,7 +101,20 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
         }
     }
 
-    public abstract void onClick(@NonNull Player player, @NonNull ClickType clickType, @NonNull CoreHologramPage<?> page, @NonNull CoreHologramLine line);
+    /**
+     * Called when a player clicks on the hologram.
+     *
+     * @param player    The player that clicked.
+     * @param clickType The type of click.
+     * @param page      The page that was clicked.
+     * @param line      The line that was clicked.
+     */
+    public abstract void onClick(
+            @NonNull Player player,
+            @NonNull ClickType clickType,
+            @NonNull CoreHologramPage<?> page,
+            @NonNull CoreHologramLine line
+    );
 
     /**
      * Switches the page of the hologram for the specified player.
@@ -158,6 +171,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             hologramLocation.add(0, totalHeight, 0);
         }
 
+        // TODO: hologram must be text-only for vertical rotation
         if (!this.settings.isRotateHorizontal() && !this.settings.isRotateVertical()) {
             page.updateLocation(player);
             return;
@@ -249,7 +263,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
         Location playerEyeLocation = player.getEyeLocation();
         Vector playerLookDirection = playerEyeLocation.getDirection().clone().normalize();
         Vector pivotToTop = verticalPerpendicular.clone().multiply(totalHeight / 2);
-        Vector pivotToRight = horizontalPerpendicular.clone().multiply(2.5);
+        Vector pivotToRight = horizontalPerpendicular.clone().multiply(page.getWidth(player) / 2);
         Vector intersection = MathUtil.getIntersectionBetweenPlaneAndVector(
                 playerEyeLocation.toVector(),
                 playerLookDirection,

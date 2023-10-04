@@ -33,7 +33,7 @@ public class ReloadCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public ReloadCommand(DecentHolograms plugin) {
+    public ReloadCommand(@NonNull DecentHolograms plugin) {
         super(
                 "reload",
                 Config.ADMIN_PERM,

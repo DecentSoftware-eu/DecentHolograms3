@@ -23,7 +23,7 @@ public abstract class CoreHologramComponent {
     private boolean destroyed = false;
 
     protected void checkDestroyed() {
-        if (this.destroyed) {
+        if (this.isDestroyed()) {
             throw new IllegalStateException("Cannot use a destroyed hologram component!");
         }
     }

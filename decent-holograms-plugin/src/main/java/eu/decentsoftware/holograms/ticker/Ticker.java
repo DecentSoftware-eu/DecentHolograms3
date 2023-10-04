@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.ticker;
 
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,44 +62,44 @@ public class Ticker {
         this.tickedObjectsToRemove.clear();
     }
 
-    public void register(@NotNull Ticked ticked) {
-        synchronized (tickedObjectsToAdd) {
-            if (!tickedObjects.contains(ticked)) {
-                tickedObjectsToAdd.add(ticked);
+    public void register(@NonNull Ticked ticked) {
+        synchronized (this.tickedObjectsToAdd) {
+            if (!this.tickedObjects.contains(ticked)) {
+                this.tickedObjectsToAdd.add(ticked);
             }
         }
     }
 
-    public void unregister(@NotNull Ticked ticked) {
-        synchronized (tickedObjectsToRemove) {
-            if (tickedObjects.contains(ticked)) {
-                tickedObjectsToRemove.add(ticked);
+    public void unregister(@NonNull Ticked ticked) {
+        synchronized (this.tickedObjectsToRemove) {
+            if (this.tickedObjects.contains(ticked)) {
+                this.tickedObjectsToRemove.add(ticked);
             }
         }
     }
 
     public void unregisterAll() {
-        synchronized (tickedObjectsToAdd) {
-            tickedObjectsToAdd.clear();
+        synchronized (this.tickedObjectsToAdd) {
+            this.tickedObjectsToAdd.clear();
         }
-        synchronized (tickedObjectsToRemove) {
-            tickedObjectsToRemove.addAll(tickedObjects);
+        synchronized (this.tickedObjectsToRemove) {
+            this.tickedObjectsToRemove.addAll(this.tickedObjects);
         }
     }
 
     public synchronized void start() {
-        taskId = SchedulerUtil.scheduleAsync(this::tick, 1L);
+        this.taskId = SchedulerUtil.scheduleAsync(this::tick, 1L);
     }
 
     public synchronized void stop() {
-        SchedulerUtil.cancel(taskId);
+        SchedulerUtil.cancel(this.taskId);
     }
 
     private void tick() {
-        if (ticking.compareAndSet(false, true)) {
+        if (this.ticking.compareAndSet(false, true)) {
             // Tick all ticked objects
-            synchronized (tickedObjects) {
-                for (Ticked ticked : tickedObjects) {
+            synchronized (this.tickedObjects) {
+                for (Ticked ticked : this.tickedObjects) {
                     try {
                         ticked.tick();
                     } catch (Exception e) {
@@ -109,18 +109,18 @@ public class Ticker {
             }
 
             // Add ticked objects
-            synchronized (tickedObjectsToAdd) {
-                tickedObjects.addAll(tickedObjectsToAdd);
-                tickedObjectsToAdd.clear();
+            synchronized (this.tickedObjectsToAdd) {
+                this.tickedObjects.addAll(this.tickedObjectsToAdd);
+                this.tickedObjectsToAdd.clear();
             }
 
             // Remove ticked objects
-            synchronized (tickedObjectsToRemove) {
-                tickedObjects.removeAll(tickedObjectsToRemove);
-                tickedObjectsToRemove.clear();
+            synchronized (this.tickedObjectsToRemove) {
+                this.tickedObjects.removeAll(this.tickedObjectsToRemove);
+                this.tickedObjectsToRemove.clear();
             }
         }
-        ticking.set(false);
+        this.ticking.set(false);
     }
 
 }

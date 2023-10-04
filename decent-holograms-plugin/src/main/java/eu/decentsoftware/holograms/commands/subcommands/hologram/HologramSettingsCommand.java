@@ -33,7 +33,7 @@ public class HologramSettingsCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramSettingsCommand(DecentHolograms plugin) {
+    public HologramSettingsCommand(@NonNull DecentHolograms plugin) {
         super(
                 "settings",
                 Config.ADMIN_PERM,

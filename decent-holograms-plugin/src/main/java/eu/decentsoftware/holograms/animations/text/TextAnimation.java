@@ -20,7 +20,7 @@ package eu.decentsoftware.holograms.animations.text;
 
 import eu.decentsoftware.holograms.animations.Animation;
 import eu.decentsoftware.holograms.animations.AnimationType;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 /**
  * This animation is used to animate text.
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class TextAnimation extends Animation<String> {
 
-    public TextAnimation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause) {
+    public TextAnimation(@NonNull String name, @NonNull AnimationType type, int totalSteps, int interval, int pause) {
         super(name, type, totalSteps, interval, pause);
     }
 

@@ -22,10 +22,11 @@ import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.utils.Common;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
@@ -55,6 +56,7 @@ public final class Lang {
      *
      * @return The "lang.yml" file as a {@link FileConfig}.
      */
+    @Contract(pure = true)
     public static FileConfig getConfig() {
         return fileConfig;
     }
@@ -90,8 +92,8 @@ public final class Lang {
      * @param profile The profile to format the string for. (Can be null)
      * @return The formatted string.
      */
-    @NotNull
-    public static String formatString(@NotNull String string, @Nullable Profile profile) {
+    @NonNull
+    public static String formatString(@NonNull String string, @Nullable Profile profile) {
         return formatString(string, profile, (Object) null);
     }
 
@@ -107,8 +109,8 @@ public final class Lang {
      * @param args    Java style arguments.
      * @return The formatted string.
      */
-    @NotNull
-    public static String formatString(@NotNull String string, @Nullable Profile profile, Object... args) {
+    @NonNull
+    public static String formatString(@NonNull String string, @Nullable Profile profile, Object... args) {
         if (args != null && args.length > 0) {
             string = Common.format(string, args);
         }
@@ -133,8 +135,8 @@ public final class Lang {
      * @param player The player to format the string for. (Can be null)
      * @return The formatted string.
      */
-    @NotNull
-    public static String formatString(@NotNull String string, @Nullable Player player) {
+    @NonNull
+    public static String formatString(@NonNull String string, @Nullable Player player) {
         if (player == null) {
             return formatString(string, (Profile) null);
         }
@@ -153,8 +155,8 @@ public final class Lang {
      * @param args   Java style arguments.
      * @return The formatted string.
      */
-    @NotNull
-    public static String formatString(@NotNull String string, Object... args) {
+    @NonNull
+    public static String formatString(@NonNull String string, Object... args) {
         return formatString(string, null, args);
     }
 
@@ -165,7 +167,7 @@ public final class Lang {
      * @param message The message to send.
      * @see #formatString(String, Profile, Object...) for more information.
      */
-    public static void tell(@NotNull CommandSender sender, @NotNull String message) {
+    public static void tell(@NonNull CommandSender sender, @NonNull String message) {
         if (sender instanceof Player) {
             message = formatString(message, (Player) sender);
         } else {
@@ -181,7 +183,7 @@ public final class Lang {
      * @param sender The recipient of the message.
      * @param path   The path to the message in the config.
      */
-    public static void confTell(@NotNull CommandSender sender, @NotNull String path) {
+    public static void confTell(@NonNull CommandSender sender, @NonNull String path) {
         confTell(sender, path, (Object) null);
     }
 
@@ -193,7 +195,7 @@ public final class Lang {
      * @param path   The path to the message in the config.
      * @param args   Java style arguments.
      */
-    public static void confTell(@NotNull CommandSender sender, @NotNull String path, Object... args) {
+    public static void confTell(@NonNull CommandSender sender, @NonNull String path, Object... args) {
         if (fileConfig.isString(path)) {
             tell(sender, fileConfig.getString(path, ""), args);
         } else if (fileConfig.isList(path)) {
@@ -211,7 +213,7 @@ public final class Lang {
      * @param args    Java style arguments.
      * @see #formatString(String, Profile, Object...) for more information.
      */
-    public static void tell(@NotNull CommandSender sender, @NotNull String message, @NotNull Object... args) {
+    public static void tell(@NonNull CommandSender sender, @NonNull String message, @NonNull Object... args) {
         tell(sender, Common.format(message, args));
     }
 

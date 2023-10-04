@@ -18,26 +18,28 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class TeleportAction extends Action {
 
-    protected final @NotNull Location location;
+    protected final Location location;
 
-    public TeleportAction(@NotNull Location location) {
+    public TeleportAction(@NonNull DecentHolograms plugin, @NonNull Location location) {
+        super(plugin);
         this.location = location;
     }
 
-    public TeleportAction(long delay, double chance, @NotNull Location location) {
-        super(delay, chance);
+    public TeleportAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull Location location) {
+        super(plugin, delay, chance);
         this.location = location;
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         player.teleport(location);
     }
 

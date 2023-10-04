@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.utils.color.patterns;
 
 import eu.decentsoftware.holograms.utils.color.DecentColorAPI;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.util.regex.Matcher;
 
@@ -30,9 +30,9 @@ public class SolidPattern implements Pattern {
             "(?i)<(?:c(?:olou?r)?:)?&?#(?<color>[0-9A-F]{6})>"
     );
 
-    @NotNull
+    @NonNull
     @Override
-    public String process(@NotNull String string) {
+    public String process(@NonNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             String color = matcher.group("color");
@@ -41,9 +41,9 @@ public class SolidPattern implements Pattern {
         return string;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public String strip(@NotNull String string) {
+    public String strip(@NonNull String string) {
         Matcher matcher = PATTERN.matcher(string);
         while (matcher.find()) {
             string = string.replace(matcher.group(), "");

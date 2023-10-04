@@ -24,7 +24,6 @@ import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -41,7 +40,7 @@ import java.util.Map;
  */
 public class ClickActionHolder {
 
-    private final @NonNull Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
+    private final Map<ClickType, List<Action>> actions = new EnumMap<>(ClickType.class);
 
     public ClickActionHolder() {
         this(new EnumMap<>(ClickType.class));
@@ -90,7 +89,7 @@ public class ClickActionHolder {
         return this.actions.get(clickType).isEmpty();
     }
 
-    @NotNull
+    @NonNull
     public List<Action> getActions(@NonNull ClickType clickType) {
         return ImmutableList.copyOf(this.actions.get(clickType));
     }

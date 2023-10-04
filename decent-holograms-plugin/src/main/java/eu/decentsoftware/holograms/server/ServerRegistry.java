@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 public class ServerRegistry {
 
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("\\S+:(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3}):\\d{1,5}");
-    private final Map<String, Server> serverMap = new ConcurrentHashMap<>();
     private final DecentHolograms plugin;
+    private final Map<String, Server> serverMap = new ConcurrentHashMap<>();
 
     public ServerRegistry(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
@@ -54,24 +54,21 @@ public class ServerRegistry {
                 if (!ADDRESS_PATTERN.matcher(serverString).matches()) {
                     continue;
                 }
-                // -- Parse data
                 String[] spl = serverString.split(":");
                 String serverName = spl[0];
                 String serverAddress = spl[1];
                 int serverPort = Integer.parseInt(spl[2]);
-                // -- Register the server
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(serverAddress, serverPort);
                 Server server = new Server(serverName, inetSocketAddress);
                 registerServer(server);
                 counter++;
             }
             long took = System.currentTimeMillis() - startMillis;
-            plugin.getBootMessenger().log(String.format("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+            this.plugin.logOrBoot("Successfully loaded %d server%s in %d ms!", counter, counter == 1 ? "" : "s", took);
         }
     }
 
     public synchronized void shutdown() {
-        // -- Stop the existing servers from ticking
         for (Server server : this.serverMap.values()) {
             server.stopTicking();
         }

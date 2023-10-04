@@ -19,8 +19,6 @@
 package eu.decentsoftware.holograms.conditions;
 
 import eu.decentsoftware.holograms.actions.ActionHolder;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -34,13 +32,11 @@ import java.util.Optional;
  * @author d0by
  * @since 3.0.0
  */
-@Getter
-@Setter
 public abstract class Condition {
 
     protected boolean inverted;
     protected boolean required;
-    protected @Nullable ActionHolder notMetActions;
+    protected ActionHolder notMetActions;
 
     /**
      * Create a new instance of {@link Condition}.
@@ -62,6 +58,14 @@ public abstract class Condition {
     }
 
     /**
+     * Check whether this {@link Condition} is met.
+     *
+     * @param player The player to check this condition for.
+     * @return true if the condition is met, false otherwise.
+     */
+    public abstract boolean check(@NotNull Player player);
+
+    /**
      * Get the {@link ActionHolder} that should be executed if the condition is not met.
      *
      * @return Optional of the {@link ActionHolder}.
@@ -70,12 +74,46 @@ public abstract class Condition {
         return Optional.ofNullable(notMetActions);
     }
 
+    public void setNotMetActions(@Nullable ActionHolder notMetActions) {
+        this.notMetActions = notMetActions;
+    }
+
     /**
-     * Check whether this {@link Condition} is met.
+     * Check whether this {@link Condition} is inverted. If it is inverted,
+     * the result of the check will be inverted.
      *
-     * @param player The player to check this condition for.
-     * @return true if the condition is met, false otherwise.
+     * @return true if the condition is inverted, false otherwise.
      */
-    public abstract boolean check(@NotNull Player player);
+    public boolean isInverted() {
+        return inverted;
+    }
+
+    /**
+     * Set whether this {@link Condition} should be inverted. If it is inverted,
+     * the result of the check will be inverted.
+     *
+     * @param inverted true if the condition should be inverted, false otherwise.
+     */
+    public void setInverted(boolean inverted) {
+        this.inverted = inverted;
+    }
+
+    /**
+     * Check whether this {@link Condition} is required.
+     *
+     * @return true if the condition is required, false otherwise.
+     */
+    public boolean isRequired() {
+        return required;
+    }
+
+    /**
+     * Set whether this {@link Condition} is required.
+     *
+     * @param required true if the condition is required, false otherwise.
+     */
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
 
 }

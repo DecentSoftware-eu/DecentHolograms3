@@ -58,37 +58,37 @@ public class Server implements Ticked {
     @Override
     public void tick() {
         long now = System.currentTimeMillis();
-        if (now - lastUpdate.get() > Config.PINGER_UPDATE_INTERVAL * 50L) {
+        if (now - this.lastUpdate.get() > Config.PINGER_UPDATE_INTERVAL * 50L) {
             SchedulerUtil.async(this::update);
-            lastUpdate.set(now);
+            this.lastUpdate.set(now);
         }
     }
 
     public void update() {
         try {
-            data = pinger.fetchData();
-            online.set(true);
+            this.data = this.pinger.fetchData();
+            this.online.set(true);
         } catch (Exception e) {
-            online.set(false);
+            this.online.set(false);
         }
     }
 
     @NonNull
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public PingerResponse getData() {
-        return data;
+        return this.data;
     }
 
     public boolean isOnline() {
-        return data != null && online.get();
+        return this.data != null && this.online.get();
     }
 
     public boolean isFull() {
         if (isOnline()) {
-            PingerResponse.Players players = getData().getPlayers();
+            PingerResponse.Players players = this.data.getPlayers();
             return players.getMax() >= players.getOnline();
         }
         return false;

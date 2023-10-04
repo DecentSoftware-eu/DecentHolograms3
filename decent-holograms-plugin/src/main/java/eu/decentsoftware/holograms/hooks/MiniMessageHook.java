@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.hooks;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.BuildableComponent;
@@ -28,7 +29,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provides methods for using MiniMessage.
@@ -55,19 +55,19 @@ public final class MiniMessageHook {
             StandardTags.selector()
     };
 
-    @NotNull
-    public static Object serializeToIChatBaseComponent(@NotNull String string, boolean legacy) {
+    @NonNull
+    public static Object serializeToIChatBaseComponent(@NonNull String string, boolean legacy) {
         TextComponent component = serializeToComponent(string, legacy);
         return MinecraftComponentSerializer.get().serialize(component);
     }
 
-    @NotNull
-    public static String serializeToString(@NotNull String string, boolean legacy) {
+    @NonNull
+    public static String serializeToString(@NonNull String string, boolean legacy) {
         TextComponent component = serializeToComponent(string, legacy);
         return SERIALIZER.serialize(component);
     }
 
-    private static TextComponent serializeToComponent(@NotNull String string, boolean legacy) {
+    private static TextComponent serializeToComponent(@NonNull String string, boolean legacy) {
         String serialized = MiniMessage.miniMessage().serialize(SERIALIZER.deserialize(string));
         serialized = serialized.replace("\\<", "<");
         TextComponent component = (TextComponent) MiniMessage.miniMessage().deserialize(serialized, HOLOGRAM_RESOLVERS);
@@ -77,8 +77,8 @@ public final class MiniMessageHook {
         return component;
     }
 
-    @NotNull
-    public static TextComponent mapRGBColorsToLegacy(@NotNull TextComponent component) {
+    @NonNull
+    public static TextComponent mapRGBColorsToLegacy(@NonNull TextComponent component) {
         TextComponent.Builder builder = component.toBuilder().mapChildren((child) -> {
             TextColor color = child.color();
             if (color == null) {

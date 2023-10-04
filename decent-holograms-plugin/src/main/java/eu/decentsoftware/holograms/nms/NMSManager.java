@@ -24,10 +24,10 @@ import eu.decentsoftware.holograms.nms.utils.Version;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -50,7 +50,7 @@ public class NMSManager {
      *
      * @throws IllegalStateException If the current version is not supported.
      */
-    public NMSManager(DecentHolograms plugin) throws IllegalStateException {
+    public NMSManager(@NonNull DecentHolograms plugin) throws IllegalStateException {
         this.plugin = plugin;
         this.adapter = initNMSAdapter();
         if (this.adapter == null) {
@@ -96,7 +96,7 @@ public class NMSManager {
      * @param player The player to listen to.
      * @return True if the packet handler was created, false otherwise.
      */
-    public boolean hook(@NotNull Player player) {
+    public boolean hook(@NonNull Player player) {
         if (usingProtocolLib()) {
             return true;
         }
@@ -149,7 +149,7 @@ public class NMSManager {
      * @param player The player to stop listening to.
      * @return True if the packet handler was destroyed, false otherwise.
      */
-    public boolean unhook(@NotNull Player player) {
+    public boolean unhook(@NonNull Player player) {
         if (usingProtocolLib()) {
             return true;
         }

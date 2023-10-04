@@ -18,26 +18,28 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
 import eu.decentsoftware.holograms.utils.BungeeUtils;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ConnectAction extends Action {
 
-    protected final @NotNull String server;
+    protected final String server;
 
-    public ConnectAction(@NotNull String server) {
+    public ConnectAction(@NonNull DecentHolograms plugin, @NonNull String server) {
+        super(plugin);
         this.server = server;
     }
 
-    public ConnectAction(long delay, double chance, @NotNull String server) {
-        super(delay, chance);
+    public ConnectAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String server) {
+        super(plugin, delay, chance);
         this.server = server;
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         BungeeUtils.connect(player, server);
     }
 

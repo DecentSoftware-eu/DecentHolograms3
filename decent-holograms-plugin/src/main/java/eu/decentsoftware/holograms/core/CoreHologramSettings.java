@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.core;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
@@ -42,7 +42,7 @@ public class CoreHologramSettings {
         this.enabled = enabled;
     }
 
-    public void set(@NotNull CoreHologramSettings settings) {
+    public void set(@NonNull CoreHologramSettings settings) {
         this.enabled = settings.isEnabled();
         this.interactive = settings.isInteractive();
         this.downOrigin = settings.isDownOrigin();

@@ -22,17 +22,13 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.content.DecentItemStack;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 
-@Getter
-@Setter
 public class IconLineRenderer extends DoubleEntityLineRenderer {
 
     private DecentItemStack itemStack;
@@ -48,12 +44,12 @@ public class IconLineRenderer extends DoubleEntityLineRenderer {
 
     @Override
     public double getHeight() {
-        return 0;
+        return 0.6d;
     }
 
     @Override
-    public double getWidth() {
-        return 0;
+    public double getWidth(@NonNull Player player) {
+        return 0.6d;
     }
 
     @Override
@@ -65,12 +61,17 @@ public class IconLineRenderer extends DoubleEntityLineRenderer {
     public void display(@NonNull Player player) {
         ItemStack item = itemStack.toItemStack(player);
 
-        // Create the item metadata objects
-        Object metaEntityItem = nmsAdapter.getMetaEntityProperties(false, false, false,
-                false, false, itemStack.glowing(), false);
+        Object metaEntityItem = nmsAdapter.getMetaEntityProperties(
+                false,
+                false,
+                false,
+                false,
+                false,
+                itemStack.glowing(),
+                false
+        );
         Object metaItem = nmsAdapter.getMetaItemStack(item);
 
-        // Display
         super.display(player, parent.getActualBukkitLocation(), EntityType.DROPPED_ITEM, metaEntityItem, metaItem);
     }
 
@@ -78,11 +79,13 @@ public class IconLineRenderer extends DoubleEntityLineRenderer {
     public void updateContent(@NonNull Player player) {
         ItemStack item = itemStack.toItemStack(player);
 
-        // Create the item metadata objects
         Object metaItem = nmsAdapter.getMetaItemStack(item);
 
-        // Send the metadata
         nmsAdapter.sendEntityMetadata(player, eidOther, metaItem);
+    }
+
+    public void setItemStack(@NonNull DecentItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
 }

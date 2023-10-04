@@ -18,9 +18,8 @@
 
 package eu.decentsoftware.holograms.animations;
 
-import lombok.Getter;
+import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,11 +33,10 @@ import org.jetbrains.annotations.Nullable;
  * @see AnimationType
  * @since 3.0.0
  */
-@Getter
 public abstract class Animation<T> {
 
-    protected final @NotNull String name;
-    protected final @NotNull AnimationType type;
+    protected final String name;
+    protected final AnimationType type;
     protected final int totalSteps;
     protected final int interval;
     protected final int pause;
@@ -50,7 +48,7 @@ public abstract class Animation<T> {
      * @param totalSteps the total number of steps of the animation
      */
     @Contract(pure = true)
-    public Animation(@NotNull String name, @NotNull AnimationType type, int totalSteps, int interval, int pause) {
+    public Animation(@NonNull String name, @NonNull AnimationType type, int totalSteps, int interval, int pause) {
         this.name = name;
         this.type = type;
         this.totalSteps = type == AnimationType.ASCEND_DESCEND ? totalSteps * 2 : totalSteps;
@@ -66,7 +64,7 @@ public abstract class Animation<T> {
      * @param args      The arguments of the animation.
      * @return The current step of the animation.
      */
-    @NotNull
+    @NonNull
     public abstract T animate(int tick, @Nullable T frameData, String... args);
 
     /**
@@ -94,6 +92,16 @@ public abstract class Animation<T> {
         int actualPause = pause <= 0 ? 0 : pause / interval;
         int currentStep = actualStep % (totalSteps + actualPause);
         return Math.min(currentStep, totalSteps - 1);
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    @NonNull
+    public AnimationType getType() {
+        return type;
     }
 
 }

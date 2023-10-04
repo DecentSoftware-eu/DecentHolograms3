@@ -18,35 +18,37 @@
 
 package eu.decentsoftware.holograms.actions.impl;
 
+import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.actions.Action;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class SoundAction extends Action {
 
-    protected final @NotNull String sound;
+    protected final String sound;
     protected final float volume;
     protected final float pitch;
 
-    public SoundAction(@NotNull String sound) {
-        this(sound, 1.0f, 1.0f);
+    public SoundAction(@NonNull DecentHolograms plugin, @NonNull String sound) {
+        this(plugin, sound, 1.0f, 1.0f);
     }
 
-    public SoundAction(@NotNull String sound, float volume, float pitch) {
+    public SoundAction(@NonNull DecentHolograms plugin, @NonNull String sound, float volume, float pitch) {
+        super(plugin);
         this.sound = sound;
         this.volume = volume;
         this.pitch = pitch;
     }
 
-    public SoundAction(long delay, double chance, @NotNull String sound, float volume, float pitch) {
-        super(delay, chance);
+    public SoundAction(@NonNull DecentHolograms plugin, long delay, double chance, @NonNull String sound, float volume, float pitch) {
+        super(plugin, delay, chance);
         this.sound = sound;
         this.volume = volume;
         this.pitch = pitch;
     }
 
     @Override
-    public void execute(@NotNull Player player) {
+    public void execute(@NonNull Player player) {
         player.playSound(player.getLocation(), sound, volume, pitch);
     }
 

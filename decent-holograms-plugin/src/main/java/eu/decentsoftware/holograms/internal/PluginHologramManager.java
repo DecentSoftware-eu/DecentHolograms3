@@ -68,12 +68,12 @@ public class PluginHologramManager {
                 registerHologram(hologram.toHologram(this.plugin, name));
                 counter++;
             } catch (Exception e) {
-                this.plugin.getLogger().severe("Failed to load hologram from '" + file.getName() + "'! Skipping...");
+                this.plugin.warnOrBoot("Failed to load hologram from '%s'! Skipping...", file.getName());
                 e.printStackTrace();
             }
         }
         long took = System.currentTimeMillis() - startMillis;
-        this.plugin.getBootMessenger().log(String.format("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took));
+        this.plugin.logOrBoot("Successfully loaded %d hologram%s in %d ms!", counter, counter == 1 ? "" : "s", took);
     }
 
     public synchronized void shutdown() {

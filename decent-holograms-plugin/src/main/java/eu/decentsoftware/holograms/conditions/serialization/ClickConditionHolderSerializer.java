@@ -23,7 +23,7 @@ import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionType;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.lang.reflect.Type;
 
@@ -41,7 +41,7 @@ public class ClickConditionHolderSerializer implements JsonSerializer<ClickCondi
             for (JsonElement element : array) {
                 JsonObject object = element.getAsJsonObject();
                 String typeName = object.get("type").getAsString();
-                ConditionType type = ConditionType.fromString(typeName);
+                ConditionType type = ConditionType.byNameOrAlias(typeName);
                 if (type == null) {
                     throw new JsonParseException("Could not deserialize ClickConditionHolder: " + typeName + " is not a valid ConditionType");
                 }
@@ -69,14 +69,14 @@ public class ClickConditionHolderSerializer implements JsonSerializer<ClickCondi
         return object;
     }
 
-    @NotNull
+    @NonNull
     private JsonElement serializeCondition(Condition condition, JsonSerializationContext context) {
         JsonObject object = context.serialize(condition).getAsJsonObject();
         if (object.has("type")) {
             return object;
         }
 
-        ConditionType type = ConditionType.fromClass(condition.getClass());
+        ConditionType type = ConditionType.byClass(condition.getClass());
         if (type == null) {
             throw new JsonParseException("Could not serialize ClickConditionHolder: " + condition.getClass().getName() + " is not a valid ConditionType");
         }

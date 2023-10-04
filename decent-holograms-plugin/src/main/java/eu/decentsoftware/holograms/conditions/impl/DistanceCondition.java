@@ -19,28 +19,28 @@
 package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class DistanceCondition extends Condition {
 
-    private final @NotNull Location location;
+    private final Location location;
     private final double maxDistanceSquared;
 
-    public DistanceCondition(@NotNull Location location, double maxDistance) {
+    public DistanceCondition(@NonNull Location location, double maxDistance) {
         this(false, location, maxDistance);
     }
 
-    public DistanceCondition(boolean inverted, @NotNull Location location, double maxDistance) {
+    public DistanceCondition(boolean inverted, @NonNull Location location, double maxDistance) {
         super(inverted);
         this.location = location;
         this.maxDistanceSquared = maxDistance * maxDistance;
     }
 
     @Override
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         Location pLocation = player.getLocation();
         World pWorld = pLocation.getWorld();
         World world = location.getWorld();

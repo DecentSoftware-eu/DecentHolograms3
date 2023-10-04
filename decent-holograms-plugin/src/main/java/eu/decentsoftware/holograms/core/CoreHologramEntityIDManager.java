@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.core;
 
 import eu.decentsoftware.holograms.nms.NMSAdapter;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class CoreHologramEntityIDManager {
     private final NMSAdapter nmsAdapter;
     private final List<List<Integer>> perLineEntityIds = new ArrayList<>();
 
-    public CoreHologramEntityIDManager(NMSAdapter nmsAdapter) {
+    public CoreHologramEntityIDManager(@NonNull NMSAdapter nmsAdapter) {
         this.nmsAdapter = nmsAdapter;
     }
 

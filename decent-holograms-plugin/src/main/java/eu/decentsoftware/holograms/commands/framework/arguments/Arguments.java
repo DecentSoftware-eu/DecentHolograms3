@@ -416,6 +416,10 @@ public class Arguments {
      * @return True if the flag was found and removed, false otherwise.
      */
     public boolean extractFlag(String... aliases) {
+        if (aliases == null || aliases.length == 0) {
+            return false;
+        }
+
         boolean found = false;
         final int index = this.index.get();
         for (String alias : aliases) {

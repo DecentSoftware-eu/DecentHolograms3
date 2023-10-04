@@ -18,12 +18,12 @@
 
 package eu.decentsoftware.holograms.hooks;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is used to hook into Vault. It contains methods
@@ -43,7 +43,7 @@ public final class VaultHook {
      * @param player The player to get the money from.
      * @return The amount of money the player has.
      */
-    public static double getMoney(@NotNull Player player) {
+    public static double getMoney(@NonNull Player player) {
         if (economy == null && !setupEconomy()) {
             return 0.0;
         }
@@ -57,7 +57,7 @@ public final class VaultHook {
      * @param amount The amount of money to add.
      * @return True if the operation was successful, false otherwise.
      */
-    public static boolean addMoney(@NotNull Player player, double amount) {
+    public static boolean addMoney(@NonNull Player player, double amount) {
         if (economy == null && !setupEconomy()) {
             return false;
         }
@@ -71,7 +71,7 @@ public final class VaultHook {
      * @param amount The amount of money to remove.
      * @return True if the operation was successful, false otherwise.
      */
-    public static boolean removeMoney(@NotNull Player player, double amount) {
+    public static boolean removeMoney(@NonNull Player player, double amount) {
         if (economy == null && !setupEconomy()) {
             return false;
         }

@@ -18,26 +18,31 @@
 
 package eu.decentsoftware.holograms.profile;
 
+import lombok.NonNull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Contract;
 
+@SuppressWarnings("unused")
 class ProfileListener implements Listener {
 
     private final ProfileRegistry profileRegistry;
 
-    public ProfileListener(ProfileRegistry profileRegistry) {
+    @Contract(pure = true)
+    public ProfileListener(@NonNull ProfileRegistry profileRegistry) {
         this.profileRegistry = profileRegistry;
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(@NonNull PlayerJoinEvent event) {
         profileRegistry.registerProfile(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    public void onQuit(@NonNull PlayerQuitEvent event) {
         profileRegistry.removeProfile(event.getPlayer().getUniqueId());
     }
+
 }

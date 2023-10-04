@@ -37,7 +37,7 @@ public class HologramDeleteCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramDeleteCommand(DecentHolograms plugin) {
+    public HologramDeleteCommand(@NonNull DecentHolograms plugin) {
         super(
                 "delete",
                 Config.ADMIN_PERM,

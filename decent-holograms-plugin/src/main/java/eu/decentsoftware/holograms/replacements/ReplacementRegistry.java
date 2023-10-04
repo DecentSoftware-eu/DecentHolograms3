@@ -25,10 +25,10 @@ import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.server.Server;
 import eu.decentsoftware.holograms.utils.DatetimeUtils;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -60,7 +60,7 @@ public class ReplacementRegistry {
     /**
      * Create a new instance of {@link ReplacementRegistry}.
      */
-    public ReplacementRegistry(DecentHolograms plugin) {
+    public ReplacementRegistry(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
         this.defaultReplacementMap = new ConcurrentHashMap<>();
         this.normalReplacementMap = new ConcurrentHashMap<>();
@@ -103,7 +103,8 @@ public class ReplacementRegistry {
      * @param profile The profile to replace the placeholders for.
      * @return The resulting String.
      */
-    public String replace(@NotNull String string, @Nullable Profile profile) {
+    @NonNull
+    public String replace(@NonNull String string, @Nullable Profile profile) {
         // Replace default replacements
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(string);
         while (matcher.find()) {
@@ -115,7 +116,7 @@ public class ReplacementRegistry {
         }
 
         // Replace normal replacements
-        for (Map.Entry<String, Replacement> entry : normalReplacementMap.entrySet()) {
+        for (Map.Entry<String, Replacement> entry : this.normalReplacementMap.entrySet()) {
             String key = entry.getKey();
             Replacement replacement = entry.getValue();
             if (string.contains(key)) {
@@ -135,8 +136,8 @@ public class ReplacementRegistry {
      * @return The replacement for the placeholder string or null
      * if the given placeholder string cannot be replaced.
      */
-    private Optional<String> getDefaultReplacement(@Nullable Profile profile, @NotNull String name, @Nullable String argument) {
-        Replacement replacement = defaultReplacementMap.get(name);
+    private Optional<String> getDefaultReplacement(@Nullable Profile profile, @NonNull String name, @Nullable String argument) {
+        Replacement replacement = this.defaultReplacementMap.get(name);
         if (replacement != null) {
             return replacement.getReplacement(profile, argument);
         }
@@ -150,12 +151,14 @@ public class ReplacementRegistry {
         // -- QoL replacements
 
         this.defaultReplacementMap.put("space", new Replacement((profile, argument) -> {
-            try {
-                int amount = Integer.parseInt(argument);
-                return Optional.of(Strings.repeat(" ", amount));
-            } catch (NumberFormatException e) {
-                return Optional.of(" ");
+            if (argument != null) {
+                try {
+                    int amount = Integer.parseInt(argument);
+                    return Optional.of(Strings.repeat(" ", amount));
+                } catch (NumberFormatException ignored) {
+                }
             }
+            return Optional.of(" ");
         }));
 
         // -- Player replacements

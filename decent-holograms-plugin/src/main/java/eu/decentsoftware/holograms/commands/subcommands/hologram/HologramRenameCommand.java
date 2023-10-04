@@ -35,7 +35,7 @@ public class HologramRenameCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramRenameCommand(DecentHolograms plugin) {
+    public HologramRenameCommand(@NonNull DecentHolograms plugin) {
         super(
                 "rename",
                 Config.ADMIN_PERM,

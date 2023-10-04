@@ -41,7 +41,7 @@ public class HologramCreateCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramCreateCommand(DecentHolograms plugin) {
+    public HologramCreateCommand(@NonNull DecentHolograms plugin) {
         super(
                 "create",
                 Config.ADMIN_PERM,

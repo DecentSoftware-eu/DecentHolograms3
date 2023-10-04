@@ -20,8 +20,8 @@ package eu.decentsoftware.holograms.conditions.impl;
 
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.hooks.PAPI;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class represents a {@link Condition} that checks
@@ -29,19 +29,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PermissionCondition extends Condition {
 
-    private final @NotNull String permission;
+    private final String permission;
 
-    public PermissionCondition(@NotNull String permission) {
+    public PermissionCondition(@NonNull String permission) {
         this(false, permission);
     }
 
-    public PermissionCondition(boolean inverted, @NotNull String permission) {
+    public PermissionCondition(boolean inverted, @NonNull String permission) {
         super(inverted);
         this.permission = permission;
     }
 
     @Override
-    public boolean check(@NotNull Player player) {
+    public boolean check(@NonNull Player player) {
         return player.hasPermission(PAPI.setPlaceholders(player, this.permission));
     }
 

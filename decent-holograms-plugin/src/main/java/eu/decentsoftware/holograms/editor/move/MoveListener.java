@@ -19,6 +19,7 @@
 package eu.decentsoftware.holograms.editor.move;
 
 import eu.decentsoftware.holograms.Lang;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,6 +28,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Contract;
 
 /**
  * This listener handles events related to moving of holograms. It is used in the editor.
@@ -35,16 +37,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @see MoveController
  * @since 3.0.0
  */
+@SuppressWarnings("unused")
 public class MoveListener implements Listener {
 
     private final MoveController moveController;
 
-    public MoveListener(MoveController moveController) {
+    @Contract(pure = true)
+    public MoveListener(@NonNull MoveController moveController) {
         this.moveController = moveController;
     }
 
     @EventHandler
-    public void onLeftClickAir(PlayerInteractEvent e) {
+    public void onLeftClickAir(@NonNull PlayerInteractEvent e) {
         if (e.getAction() != Action.LEFT_CLICK_AIR) {
             return;
         }
@@ -56,7 +60,7 @@ public class MoveListener implements Listener {
     }
 
     @EventHandler
-    public void onHotbarScroll(PlayerItemHeldEvent e) {
+    public void onHotbarScroll(@NonNull PlayerItemHeldEvent e) {
         Player player = e.getPlayer();
 
         moveController.findMovedHologram(player).ifPresent((hologram) -> {
@@ -84,7 +88,7 @@ public class MoveListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onQuit(PlayerQuitEvent e) {
+    public void onQuit(@NonNull PlayerQuitEvent e) {
         Player player = e.getPlayer();
         if (moveController.cancel(player)) {
             Lang.confTell(player, "editor.move.cancel");

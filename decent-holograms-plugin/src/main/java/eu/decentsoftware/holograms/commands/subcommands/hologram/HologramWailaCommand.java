@@ -35,7 +35,7 @@ public class HologramWailaCommand extends DecentCommand {
 
     private final DecentHolograms plugin;
 
-    public HologramWailaCommand(DecentHolograms plugin) {
+    public HologramWailaCommand(@NonNull DecentHolograms plugin) {
         super(
                 "waila",
                 Config.ADMIN_PERM,

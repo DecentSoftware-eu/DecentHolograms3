@@ -22,6 +22,7 @@ import eu.decentsoftware.holograms.utils.config.CFG;
 import eu.decentsoftware.holograms.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -93,6 +94,7 @@ public final class Config {
      *
      * @return The "config.yml" file as a {@link FileConfig}.
      */
+    @Contract(pure = true)
     public static FileConfig getFileConfig() {
         return fileConfig;
     }
@@ -121,6 +123,7 @@ public final class Config {
      *
      * @return True if an update is available.
      */
+    @Contract(pure = true)
     public static boolean isUpdateAvailable() {
         return updateAvailable;
     }
@@ -139,6 +142,7 @@ public final class Config {
      *
      * @return The version of the update.
      */
+    @Contract(pure = true)
     @Nullable
     public static String getUpdateVersion() {
         return updateVersion;
