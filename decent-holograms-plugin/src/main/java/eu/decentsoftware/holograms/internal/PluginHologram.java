@@ -19,13 +19,15 @@
 package eu.decentsoftware.holograms.internal;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.hologram.click.ClickHandler;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
 import eu.decentsoftware.holograms.core.CoreHologram;
+import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.core.CoreHologramSettings;
+import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -50,19 +52,7 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
             @NonNull CoreHologramSettings settings,
             @NonNull ConditionHolder viewConditions
     ) {
-        super(plugin, location, ((player, clickType, page, line) -> {
-            if (line instanceof PluginHologramLine) {
-                PluginHologramLine pluginLine = (PluginHologramLine) line;
-                if (pluginLine.getClickConditions().check(clickType, player)) {
-                    pluginLine.getClickActions().execute(clickType, player);
-                }
-            } else if (line instanceof PluginHologramPage) {
-                PluginHologramPage pluginPage = (PluginHologramPage) page;
-                if (pluginPage.getClickConditions().check(clickType, player)) {
-                    pluginPage.getClickActions().execute(clickType, player);
-                }
-            }
-        }));
+        super(plugin, location);
         this.name = name;
         this.config = new PluginHologramConfig(this.plugin, this);
         this.viewConditions = viewConditions;
@@ -85,6 +75,21 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
         this.config.delete();
     }
 
+    @Override
+    public void onClick(@NonNull Player player, @NonNull ClickType clickType, @NonNull CoreHologramPage<?> page, @NonNull CoreHologramLine line) {
+        if (line instanceof PluginHologramLine) {
+            PluginHologramLine pluginLine = (PluginHologramLine) line;
+            if (pluginLine.getClickConditions().check(clickType, player)) {
+                pluginLine.getClickActions().execute(clickType, player);
+            }
+        } else if (page instanceof PluginHologramPage) {
+            PluginHologramPage pluginPage = (PluginHologramPage) page;
+            if (pluginPage.getClickConditions().check(clickType, player)) {
+                pluginPage.getClickActions().execute(clickType, player);
+            }
+        }
+    }
+
     @NonNull
     @Override
     protected PluginHologramPage createPage() {
@@ -102,11 +107,6 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
     @NonNull
     public String getName() {
         return this.name;
-    }
-
-    @Override
-    public void setClickHandler(@Nullable ClickHandler clickHandler) {
-        throw new UnsupportedOperationException("ClickHandler is not supported for PluginHolograms");
     }
 
     @NonNull

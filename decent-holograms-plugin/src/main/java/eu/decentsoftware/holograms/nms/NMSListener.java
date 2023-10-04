@@ -19,8 +19,10 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.hologram.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.click.ClickType;
+import eu.decentsoftware.holograms.core.CoreHologram;
+import eu.decentsoftware.holograms.core.CoreHologramPage;
+import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.profile.Profile;
 import lombok.NonNull;
@@ -31,6 +33,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.Contract;
 
+@SuppressWarnings("unused")
 class NMSListener implements Listener {
 
     private final DecentHolograms plugin;
@@ -65,22 +68,15 @@ class NMSListener implements Listener {
             return;
         }
 
-        HologramLine clickedLine = profile.getContext().getWatchedLine();
-        if (clickedLine == null) {
+        ClickType clickType = event.getClickType();
+        CoreHologramLine clickedLine = profile.getContext().getWatchedLine();
+        CoreHologramPage<?> clickedPage = profile.getContext().getWatchedPage();
+        CoreHologram<?> clickedHologram = profile.getContext().getWatchedHologram();
+        if (clickedLine == null || clickedPage == null || clickedHologram == null) {
             return;
         }
 
-        ClickType clickType = event.getClickType();
-//        if (clickedLine.getClickHandler() != null && clickedLine.getClickHandler().onClick(player, clickType)) {
-//            // If line has a click handler, and it handled the click, return.
-//            return;
-//        }
-//
-//        // Otherwise, pass the click to the parent page.
-//        if (clickedLine.getParent().getClickHandler() != null) {
-//            clickedLine.getParent().getClickHandler().onClick(player, clickType);
-//        }
-        // TODO: fix click detection
+        clickedHologram.onClick(player, clickType, clickedPage, clickedLine);
     }
 
 }

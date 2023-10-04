@@ -20,17 +20,24 @@ package eu.decentsoftware.holograms.api.hologram;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.click.ClickHandler;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.CoreHologram;
+import eu.decentsoftware.holograms.core.CoreHologramPage;
+import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class APIHologram extends CoreHologram<APIHologramPage> implements Hologram {
 
-    public APIHologram(DecentHolograms plugin, DecentLocation location) {
+    private ClickHandler clickHandler;
+
+    public APIHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location) {
         this(plugin, location, null);
     }
 
-    public APIHologram(DecentHolograms plugin, DecentLocation location, ClickHandler clickHandler) {
+    public APIHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location, @Nullable ClickHandler clickHandler) {
         super(plugin);
         this.positionManager = new APIPositionManager(location);
         this.visibilityManager = new APIHologramVisibilityManager(this);
@@ -38,10 +45,28 @@ public class APIHologram extends CoreHologram<APIHologramPage> implements Hologr
         this.clickHandler = clickHandler;
     }
 
+    @Override
+    public void onClick(@NonNull Player player, @NonNull ClickType clickType, @NonNull CoreHologramPage<?> page, @NonNull CoreHologramLine line) {
+        if (clickHandler != null && page instanceof APIHologramPage && line instanceof APIHologramLine) {
+            clickHandler.onClick(player, clickType, (APIHologramPage) page, (APIHologramLine) line);
+        }
+    }
+
     @NonNull
     @Override
     protected APIHologramPage createPage() {
         return new APIHologramPage(plugin, this);
+    }
+
+    @Nullable
+    @Override
+    public ClickHandler getClickHandler() {
+        return clickHandler;
+    }
+
+    @Override
+    public void setClickHandler(@Nullable ClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
     }
 
     @NonNull

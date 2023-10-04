@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.core;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineSettings;
-import eu.decentsoftware.holograms.api.hologram.click.ClickHandler;
+import eu.decentsoftware.holograms.api.hologram.click.ClickType;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.renderer.HologramLineRenderer;
@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends CoreHologramComponent implements Ticked {
@@ -50,26 +49,19 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
     protected CoreHologramSettings settings;
     protected CoreHologramVisibilityManager visibilityManager;
     protected CoreHologramEntityIDManager entityIDManager;
-    protected ClickHandler clickHandler;
     private final AtomicLong lastVisibilityUpdate = new AtomicLong(0);
     private final AtomicLong lastContentUpdate = new AtomicLong(0);
-    private final Map<UUID, CoreHologramLine> playerWatchedLines = new ConcurrentHashMap<>();
 
     protected CoreHologram(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
     }
 
     public CoreHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location) {
-        this(plugin, location, null);
-    }
-
-    public CoreHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location, @Nullable ClickHandler clickHandler) {
         this.plugin = plugin;
         this.visibilityManager = new CoreHologramVisibilityManager(this);
         this.positionManager = new CorePositionManager(location);
         this.settings = new CoreHologramSettings(true);
         this.entityIDManager = new CoreHologramEntityIDManager(plugin.getNMSManager().getAdapter());
-        this.clickHandler = clickHandler;
 
         startTicking();
     }
@@ -108,6 +100,8 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             this.lastContentUpdate.set(currentTime);
         }
     }
+
+    public abstract void onClick(@NonNull Player player, @NonNull ClickType clickType, @NonNull CoreHologramPage<?> page, @NonNull CoreHologramLine line);
 
     /**
      * Switches the page of the hologram for the specified player.
@@ -288,9 +282,9 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
         }
 
         Profile profile = this.plugin.getProfileRegistry().getProfile(player.getUniqueId());
-        CoreHologramLine currentWatchedLine = this.playerWatchedLines.get(player.getUniqueId());
+        CoreHologramLine currentWatchedLine = profile.getContext().getWatchedLine();
         if (intersectingLine != null && (currentWatchedLine == null || page.equals(currentWatchedLine.getParent()))) {
-            this.playerWatchedLines.put(player.getUniqueId(), intersectingLine);
+            profile.getContext().setWatchedLine(intersectingLine);
 
             Location clickableEntityLocation = new Location(
                     playerEyeLocation.getWorld(),
@@ -302,7 +296,6 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             );
             clickableEntityLocation.add(playerLookDirection.clone().normalize().multiply(-0.5d));
 
-            // TODO
             profile.getContext().moveOrCreateClickableEntity(player, clickableEntityLocation);
         } else if (currentWatchedLine != null && page.equals(currentWatchedLine.getParent())) {
             profile.getContext().setWatchedLine(null);
@@ -380,17 +373,6 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
     @NonNull
     public List<PAGE> getPages() {
         return ImmutableList.copyOf(this.pages);
-    }
-
-    @Nullable
-    public ClickHandler getClickHandler() {
-        return this.clickHandler;
-    }
-
-    public void setClickHandler(@Nullable ClickHandler clickHandler) {
-        checkDestroyed();
-
-        this.clickHandler = clickHandler;
     }
 
     @NonNull

@@ -19,9 +19,10 @@
 package eu.decentsoftware.holograms.profile;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.hologram.HologramLine;
-import eu.decentsoftware.holograms.api.hologram.HologramPage;
+import eu.decentsoftware.holograms.core.CoreHologram;
+import eu.decentsoftware.holograms.core.CoreHologramPage;
+import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,7 +47,7 @@ import java.util.UUID;
 public class ProfileContext {
 
     private final int clickableEntityId;
-    private HologramLine watchedLine;
+    private CoreHologramLine watchedLine;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -115,10 +116,10 @@ public class ProfileContext {
      * looking at and can interact with.
      *
      * @return The currently watched line or null if no line is watched.
-     * @see HologramLine
+     * @see CoreHologramLine
      */
     @Nullable
-    public HologramLine getWatchedLine() {
+    public CoreHologramLine getWatchedLine() {
         return watchedLine;
     }
 
@@ -129,7 +130,7 @@ public class ProfileContext {
      * @param line The line to watch or null to stop watching.
      * @see HologramLine
      */
-    public void setWatchedLine(@Nullable HologramLine line) {
+    public void setWatchedLine(@Nullable CoreHologramLine line) {
         this.watchedLine = line;
     }
 
@@ -138,11 +139,11 @@ public class ProfileContext {
      * looking at and can interact with.
      *
      * @return The currently watched page or null if no page is watched.
-     * @see HologramPage
+     * @see CoreHologramPage
      */
     @Nullable
-    public HologramPage getWatchedPage() {
-        HologramLine line = getWatchedLine();
+    public CoreHologramPage<?> getWatchedPage() {
+        CoreHologramLine line = getWatchedLine();
         return line == null ? null : line.getParent();
     }
 
@@ -151,11 +152,11 @@ public class ProfileContext {
      * looking at and can interact with.
      *
      * @return The currently watched hologram or null if no hologram is watched.
-     * @see Hologram
+     * @see CoreHologram
      */
     @Nullable
-    public Hologram getWatchedHologram() {
-        HologramPage page = getWatchedPage();
+    public CoreHologram<?> getWatchedHologram() {
+        CoreHologramPage<?> page = getWatchedPage();
         return page == null ? null : page.getParent();
     }
 
