@@ -18,9 +18,9 @@
 
 package eu.decentsoftware.holograms.conditions.impl;
 
+import eu.decentsoftware.holograms.Lang;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionType;
-import eu.decentsoftware.holograms.hooks.PAPI;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 
@@ -43,8 +43,8 @@ public class ComparingCondition extends Condition {
 
     @Override
     public boolean check(@NonNull Player player) {
-        String compareParsed = PAPI.setPlaceholders(player, this.compare);
-        String inputParsed = PAPI.setPlaceholders(player, this.input);
+        String compareParsed = Lang.formatString(this.compare, player);
+        String inputParsed = Lang.formatString(this.input, player);
         if (type.name().startsWith("STRING")) {
             switch (type) {
                 case STRING_CONTAINS:
