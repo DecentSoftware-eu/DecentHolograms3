@@ -22,8 +22,6 @@ check-for-updates: true
 
 # Some default values.
 defaults:
-  # Default content of a hologram line
-  line-content: "Blank Line"
   # Default view distance of holograms
   view-distance: 48
   # Default update distance of holograms
@@ -32,10 +30,26 @@ defaults:
   update-interval: 20
   # Default value of down-origin of holograms
   down-origin: false
-  # Default value of fixed-offsets setting of holograms
-  fixed-offsets: false
-  # Default value of fixed-rotation setting of holograms
-  fixed-rotation: false
+  # Default value of rotate-horizontal setting of holograms
+  rotate-horizontal: false
+  # Default value of rotate-vertical setting of holograms
+  rotate-vertical: false
+  # Default value of action-execution-strategy setting of holograms
+  #
+  # Options:
+  # - "ONLY_BOTTOM"   - If there are actions on the clicked line, only the actions
+  #                     on the clicked line will be executed. If there are no actions
+  #                     on the clicked line, the actions on the page will be executed
+  #                     (if any). [DEFAULT]
+  # - "ONLY_TOP"      - If there are actions on the clicked page, only the actions
+  #                     on the clicked page will be executed. If there are no actions
+  #                     on the clicked page, the actions on the line will be executed
+  #                     (if any).
+  # - "TOP_TO_BOTTOM" - Starting with actions on the page, this will execute both actions
+  #                     on the page and the line.
+  # - "BOTTOM_TO_TOP" - Starting with actions on the line, this will execute both actions
+  #                     on the line and the page.
+  action-execution-strategy: "ONLY_BOTTOM"
 
 # Timezone and formats of date and time.
 datetime:

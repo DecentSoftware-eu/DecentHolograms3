@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms;
 
+import eu.decentsoftware.holograms.internal.ActionExecutionStrategy;
 import eu.decentsoftware.holograms.utils.config.CFG;
 import eu.decentsoftware.holograms.utils.config.ConfigValue;
 import eu.decentsoftware.holograms.utils.config.FileConfig;
@@ -51,6 +52,23 @@ public final class Config {
 
     @ConfigValue("check-for-updates")
     public static boolean CHECK_FOR_UPDATES = true;
+
+    // ========== DEFAULTS ========== //
+
+    @ConfigValue("defaults.view-distance")
+    public static int DEFAULTS_VIEW_DISTANCE = 48;
+    @ConfigValue("defaults.update-distance")
+    public static int DEFAULTS_UPDATE_DISTANCE = 48;
+    @ConfigValue("defaults.update-interval")
+    public static int DEFAULTS_UPDATE_INTERVAL = 20;
+    @ConfigValue("defaults.down-origin")
+    public static boolean DEFAULTS_DOWN_ORIGIN = false;
+    @ConfigValue("defaults.rotate-horizontal")
+    public static boolean DEFAULTS_ROTATE_HORIZONTAL = false;
+    @ConfigValue("defaults.rotate-vertical")
+    public static boolean DEFAULTS_ROTATE_VERTICAL = false;
+    @ConfigValue("defaults.action-execution-strategy")
+    public static ActionExecutionStrategy DEFAULTS_ACTION_EXECUTION_STRATEGY = ActionExecutionStrategy.ONLY_BOTTOM;
 
     // ========== DATETIME ========== //
 

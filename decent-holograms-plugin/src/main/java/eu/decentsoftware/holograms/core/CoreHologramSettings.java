@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.core;
 
+import eu.decentsoftware.holograms.Config;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -29,12 +30,12 @@ public class CoreHologramSettings {
 
     private boolean enabled;
     private boolean interactive = false;
-    private boolean downOrigin = false;
-    private boolean rotateHorizontal = true;
-    private boolean rotateVertical = true;
-    private int viewDistance = 48;
-    private int updateDistance = 48;
-    private int updateInterval = 20;
+    private boolean downOrigin = Config.DEFAULTS_DOWN_ORIGIN;
+    private boolean rotateHorizontal = Config.DEFAULTS_ROTATE_HORIZONTAL;
+    private boolean rotateVertical = Config.DEFAULTS_ROTATE_VERTICAL;
+    private int viewDistance = Config.DEFAULTS_VIEW_DISTANCE;
+    private int updateDistance = Config.DEFAULTS_UPDATE_DISTANCE;
+    private int updateInterval = Config.DEFAULTS_UPDATE_INTERVAL;
     private boolean updating = true;
 
     @Contract(pure = true)

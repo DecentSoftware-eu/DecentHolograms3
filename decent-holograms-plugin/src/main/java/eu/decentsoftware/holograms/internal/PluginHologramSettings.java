@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.internal;
 
+import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.core.CoreHologramSettings;
 import lombok.Getter;
 import lombok.NonNull;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @Setter
 public class PluginHologramSettings extends CoreHologramSettings {
 
-    private ActionExecutionStrategy actionExecutionStrategy = ActionExecutionStrategy.ONLY_BOTTOM;
+    private ActionExecutionStrategy actionExecutionStrategy = Config.DEFAULTS_ACTION_EXECUTION_STRATEGY;
 
     public PluginHologramSettings(boolean enabled) {
         super(enabled);

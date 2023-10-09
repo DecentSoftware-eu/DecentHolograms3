@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.internal;
 
+import eu.decentsoftware.holograms.Config;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.ClickType;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
@@ -109,7 +110,7 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
 
         ActionExecutionStrategy strategy = getSettings().getActionExecutionStrategy();
         if (strategy == null) {
-            strategy = ActionExecutionStrategy.ONLY_BOTTOM;
+            strategy = Config.DEFAULTS_ACTION_EXECUTION_STRATEGY;
         }
 
         if (strategy.isBottomFirst()) {
