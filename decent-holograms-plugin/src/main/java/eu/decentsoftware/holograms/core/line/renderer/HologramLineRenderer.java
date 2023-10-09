@@ -21,9 +21,8 @@ package eu.decentsoftware.holograms.core.line.renderer;
 import eu.decentsoftware.holograms.api.hologram.HologramLine;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import lombok.NonNull;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 /**
  * This class represents a line renderer. A line renderer is a class that
@@ -45,6 +44,12 @@ public interface HologramLineRenderer {
     HologramLineType getType();
 
     /**
+     * Destroy this line renderer. This method should be called when the parent
+     * {@link HologramLine} is destroyed.
+     */
+    void destroy();
+
+    /**
      * Get the height of the rendered line.
      *
      * @return The height of the rendered line.
@@ -57,13 +62,6 @@ public interface HologramLineRenderer {
      * @return The width of the rendered line.
      */
     double getWidth(@NonNull Player player);
-
-    /**
-     * Called when the parent {@link HologramLine} is ticked.
-     *
-     * @param viewers The current viewers of the parent {@link HologramLine}.
-     */
-    void tick(@NonNull Collection<Player> viewers);
 
     /**
      * Display the parent {@link HologramLine} for a player.
@@ -91,6 +89,6 @@ public interface HologramLineRenderer {
      *
      * @param player   The player to teleport the line to.
      */
-    void updateLocation(@NonNull Player player);
+    void updateLocation(@NonNull Player player, @NonNull Location location);
 
 }

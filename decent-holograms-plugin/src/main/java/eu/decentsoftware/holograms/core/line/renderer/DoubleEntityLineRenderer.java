@@ -101,9 +101,9 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
     }
 
     @Override
-    public void updateLocation(@NonNull Player player) {
+    public void updateLocation(@NonNull Player player, @NonNull Location location) {
         this.nmsAdapter.updatePassengers(player, this.eid);
-        this.nmsAdapter.teleportEntity(player, this.eid, this.parent.getActualBukkitLocation(), true);
+        this.nmsAdapter.teleportEntity(player, this.eid, location, true);
         this.nmsAdapter.updatePassengers(player, this.eid, this.eidOther);
     }
 

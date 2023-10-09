@@ -47,6 +47,11 @@ public abstract class LineRenderer implements HologramLineRenderer {
         this.type = type;
     }
 
+    @Override
+    public void destroy() {
+        this.hideAll();
+    }
+
     /**
      * Get a set of players, that are currently viewing the hologram.
      *
@@ -84,16 +89,6 @@ public abstract class LineRenderer implements HologramLineRenderer {
      */
     public void updateContentAll() {
         getViewerPlayers().forEach(this::updateContent);
-    }
-
-    /**
-     * Update the location of the line for all players, that are currently viewing the hologram.
-     *
-     * @see #updateLocation(Player)
-     * @see #getViewerPlayers()
-     */
-    public void updateLocationAll() {
-        getViewerPlayers().forEach(this::updateLocation);
     }
 
     @NonNull

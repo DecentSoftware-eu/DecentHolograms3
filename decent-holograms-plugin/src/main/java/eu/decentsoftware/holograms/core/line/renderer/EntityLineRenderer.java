@@ -25,8 +25,6 @@ import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-
 public class EntityLineRenderer extends DoubleEntityLineRenderer {
 
     private DecentEntity entity;
@@ -48,11 +46,6 @@ public class EntityLineRenderer extends DoubleEntityLineRenderer {
     @Override
     public double getWidth(@NonNull Player player) {
         return 0;
-    }
-
-    @Override
-    public void tick(@NonNull Collection<Player> viewers) {
-
     }
 
     @Override

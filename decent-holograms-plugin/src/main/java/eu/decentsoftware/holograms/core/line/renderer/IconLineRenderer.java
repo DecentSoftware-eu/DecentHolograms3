@@ -22,14 +22,13 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.content.DecentItemStack;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
+import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.NonNull;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
-
-public class IconLineRenderer extends DoubleEntityLineRenderer {
+public class IconLineRenderer extends DoubleEntityLineRenderer implements Ticked {
 
     private DecentItemStack itemStack;
 
@@ -40,6 +39,18 @@ public class IconLineRenderer extends DoubleEntityLineRenderer {
     ) {
         super(plugin, parent, HologramLineType.ICON);
         this.itemStack = itemStack;
+        this.startTicking();
+    }
+
+    @Override
+    public void destroy() {
+        this.stopTicking();
+        super.destroy();
+    }
+
+    @Override
+    public void tick() {
+
     }
 
     @Override
@@ -50,11 +61,6 @@ public class IconLineRenderer extends DoubleEntityLineRenderer {
     @Override
     public double getWidth(@NonNull Player player) {
         return 0.6d;
-    }
-
-    @Override
-    public void tick(@NonNull Collection<Player> viewers) {
-
     }
 
     @Override

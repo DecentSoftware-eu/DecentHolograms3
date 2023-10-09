@@ -23,16 +23,17 @@ import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.content.DecentItemStack;
 import eu.decentsoftware.holograms.core.CoreHologramEntityIDManager;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
+import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.NonNull;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
 import java.util.UUID;
 
-public class HeadLineRenderer extends LineRenderer {
+public class HeadLineRenderer extends LineRenderer implements Ticked {
 
     private final int eid;
     private boolean small;
@@ -59,6 +60,18 @@ public class HeadLineRenderer extends LineRenderer {
         CoreHologramEntityIDManager entityIDManager = parent.getParent().getParent().getEntityIDManager();
         int index = parent.getParent().getIndex(parent);
         this.eid = entityIDManager.getEntityId(index, 0);
+        this.startTicking();
+    }
+
+    @Override
+    public void destroy() {
+        this.stopTicking();
+        super.destroy();
+    }
+
+    @Override
+    public void tick() {
+
     }
 
     @Override
@@ -69,11 +82,6 @@ public class HeadLineRenderer extends LineRenderer {
     @Override
     public double getWidth(@NonNull Player player) {
         return 0.7d;
-    }
-
-    @Override
-    public void tick(@NonNull Collection<Player> viewers) {
-
     }
 
     @Override
@@ -115,8 +123,8 @@ public class HeadLineRenderer extends LineRenderer {
     }
 
     @Override
-    public void updateLocation(@NonNull Player player) {
-        this.nmsAdapter.teleportEntity(player, this.eid, this.parent.getActualBukkitLocation(), true);
+    public void updateLocation(@NonNull Player player, @NonNull Location location) {
+        this.nmsAdapter.teleportEntity(player, this.eid, location, true);
     }
 
     public void setItemStack(@NonNull DecentItemStack itemStack) {

@@ -26,17 +26,18 @@ import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.Profile;
+import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.Common;
 import lombok.NonNull;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TextLineRenderer extends LineRenderer {
+public class TextLineRenderer extends LineRenderer implements Ticked {
 
     /**
      * The cache of formatted text for each player. This formatted text already
@@ -47,7 +48,7 @@ public class TextLineRenderer extends LineRenderer {
      * then this cache is not used.
      */
     private final Map<UUID, String> formattedTextCache = new ConcurrentHashMap<>();
-    private final int eid;
+    //    private final int eid;
     private boolean containsAnimations;
     private String hoverText; // TODO: Hover text
     private String text;
@@ -68,10 +69,20 @@ public class TextLineRenderer extends LineRenderer {
     ) {
         super(plugin, parent, HologramLineType.TEXT);
         this.hoverText = hoverText;
+        this.setText(text);
+        this.startTicking();
+    }
+
+    @Override
+    public void destroy() {
+        this.stopTicking();
+        super.destroy();
+    }
+
+    private int getEntityId() {
         CoreHologramEntityIDManager entityIDManager = parent.getParent().getParent().getEntityIDManager();
         int lineIndex = parent.getParent().getIndex(parent);
-        this.eid = entityIDManager.getEntityId(lineIndex, 0);
-        this.setText(text);
+        return entityIDManager.getEntityId(lineIndex, 0);
     }
 
     /**
@@ -95,16 +106,16 @@ public class TextLineRenderer extends LineRenderer {
 
     @Override
     public double getWidth(@NonNull Player player) {
-        return Math.min(5d, Common.getTextWidth(this.formattedTextCache.get(player.getUniqueId())) / 100d);
+        return Math.min(5d, Common.getTextWidth(getFormattedText(player)) / 100d);
     }
 
     @Override
-    public void tick(@NonNull Collection<Player> viewers) {
+    public void tick() {
         if (!this.containsAnimations) {
             return;
         }
 
-        for (Player viewerPlayer : viewers) {
+        for (Player viewerPlayer : getViewerPlayers()) {
             String formattedText = this.formattedTextCache.get(viewerPlayer.getUniqueId());
             if (formattedText == null) {
                 formattedText = getFormattedText(viewerPlayer);
@@ -166,13 +177,13 @@ public class TextLineRenderer extends LineRenderer {
         Object metaName = getMetaName(formattedText);
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
-        this.nmsAdapter.spawnEntityLiving(player, this.eid, UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
-        this.nmsAdapter.sendEntityMetadata(player, this.eid, metaEntity, metaArmorStand, metaName, metaNameVisible);
+        this.nmsAdapter.spawnEntityLiving(player, this.getEntityId(), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
+        this.nmsAdapter.sendEntityMetadata(player, this.getEntityId(), metaEntity, metaArmorStand, metaName, metaNameVisible);
     }
 
     @Override
     public void hide(@NonNull Player player) {
-        this.nmsAdapter.removeEntity(player, this.eid);
+        this.nmsAdapter.removeEntity(player, this.getEntityId());
 
         this.formattedTextCache.remove(player.getUniqueId());
     }
@@ -188,12 +199,12 @@ public class TextLineRenderer extends LineRenderer {
         boolean isNameInvisible = text.isEmpty() || text.replaceAll("§.", "").isEmpty();
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!isNameInvisible);
 
-        this.nmsAdapter.sendEntityMetadata(player, this.eid, metaName, metaNameVisible);
+        this.nmsAdapter.sendEntityMetadata(player, this.getEntityId(), metaName, metaNameVisible);
     }
 
     @Override
-    public void updateLocation(@NonNull Player player) {
-        this.nmsAdapter.teleportEntity(player, this.eid, this.parent.getActualBukkitLocation(), true);
+    public void updateLocation(@NonNull Player player, @NonNull Location location) {
+        this.nmsAdapter.teleportEntity(player, this.getEntityId(), location, true);
     }
 
     private Object getMetaName(@NonNull String formattedText) {

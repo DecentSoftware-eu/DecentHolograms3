@@ -207,10 +207,6 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
                     pivot.toVector(),
                     totalHeight
             );
-        } else {
-            Profile profile = this.plugin.getProfileRegistry().getProfile(player.getUniqueId());
-            profile.getContext().destroyClickableEntity(player);
-            profile.getContext().setWatchedLine(null);
         }
 
         double height = 0.0d;
@@ -247,7 +243,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             }
 
             if (renderer != null) {
-                renderer.updateLocation(player);
+                renderer.updateLocation(player, location);
             }
         }
     }
