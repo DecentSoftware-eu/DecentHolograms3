@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 public class DistanceCondition extends Condition {
 
     private final Location location;
-    private final double maxDistanceSquared;
+    private final double maxDistance;
 
     public DistanceCondition(@NonNull Location location, double maxDistance) {
         this(false, location, maxDistance);
@@ -36,7 +36,7 @@ public class DistanceCondition extends Condition {
     public DistanceCondition(boolean inverted, @NonNull Location location, double maxDistance) {
         super(inverted);
         this.location = location;
-        this.maxDistanceSquared = maxDistance * maxDistance;
+        this.maxDistance = maxDistance;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class DistanceCondition extends Condition {
         Location pLocation = player.getLocation();
         World pWorld = pLocation.getWorld();
         World world = location.getWorld();
-        return pWorld != null && pWorld.equals(world) && pLocation.distanceSquared(location) < maxDistanceSquared;
+        return pWorld != null && pWorld.equals(world) && pLocation.distanceSquared(location) < maxDistance * maxDistance;
     }
 
 }
