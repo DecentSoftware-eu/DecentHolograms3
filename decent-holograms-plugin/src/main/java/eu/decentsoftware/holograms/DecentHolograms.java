@@ -43,6 +43,7 @@ import eu.decentsoftware.holograms.nms.NMSManager;
 import eu.decentsoftware.holograms.nms.utils.Version;
 import eu.decentsoftware.holograms.profile.ProfileRegistry;
 import eu.decentsoftware.holograms.replacements.ReplacementRegistry;
+import eu.decentsoftware.holograms.serialization.DecentHologramsSerializer;
 import eu.decentsoftware.holograms.serialization.DecentLocationSerializer;
 import eu.decentsoftware.holograms.serialization.LocationSerializer;
 import eu.decentsoftware.holograms.server.ServerRegistry;
@@ -257,6 +258,7 @@ public final class DecentHolograms extends JavaPlugin {
             this.gson = new GsonBuilder()
                     .disableHtmlEscaping()
                     .setPrettyPrinting()
+                    .registerTypeAdapter(DecentHolograms.class, new DecentHologramsSerializer(this))
                     .registerTypeAdapter(Location.class, new LocationSerializer())
                     .registerTypeAdapter(DecentLocation.class, new DecentLocationSerializer())
                     .registerTypeAdapter(ActionHolder.class, new ActionHolderSerializer())

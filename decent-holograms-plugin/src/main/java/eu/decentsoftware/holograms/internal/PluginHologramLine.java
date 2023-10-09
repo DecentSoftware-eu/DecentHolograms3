@@ -37,10 +37,9 @@ public class PluginHologramLine extends CoreHologramLine {
     public PluginHologramLine(
             @NonNull DecentHolograms plugin,
             @NonNull CoreHologramPage<? extends CoreHologramLine> parent,
-            @NonNull DecentLocation location,
-            @NonNull String content
+            @NonNull DecentLocation location
     ) {
-        super(plugin, parent, location, content);
+        super(plugin, parent, location);
         this.viewConditions = new ConditionHolder();
         this.clickConditions = new ClickConditionHolder();
         this.clickActions = new ClickActionHolder();
@@ -50,12 +49,11 @@ public class PluginHologramLine extends CoreHologramLine {
             @NonNull DecentHolograms plugin,
             @NonNull CoreHologramPage<? extends CoreHologramLine> parent,
             @NonNull DecentLocation location,
-            @NonNull String content,
             @NonNull ConditionHolder viewConditions,
             @NonNull ClickConditionHolder clickConditions,
             @NonNull ClickActionHolder clickActions
     ) {
-        super(plugin, parent, location, content);
+        super(plugin, parent, location);
         this.viewConditions = viewConditions;
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;
@@ -66,12 +64,11 @@ public class PluginHologramLine extends CoreHologramLine {
             @NonNull CoreHologramPage<? extends CoreHologramLine> parent,
             @NonNull DecentLocation location,
             @NonNull CoreHologramLineSettings settings,
-            @NonNull String content,
             @NonNull ConditionHolder viewConditions,
             @NonNull ClickConditionHolder clickConditions,
             @NonNull ClickActionHolder clickActions
     ) {
-        super(plugin, parent, location, settings, content);
+        super(plugin, parent, location, settings);
         this.viewConditions = viewConditions;
         this.clickConditions = clickConditions;
         this.clickActions = clickActions;

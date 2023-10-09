@@ -42,7 +42,7 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
             @NonNull DecentLocation location,
             @NonNull String name
     ) {
-        this(plugin, location, name, new CoreHologramSettings(true), new ConditionHolder());
+        this(plugin, location, name, new PluginHologramSettings(true), new ConditionHolder());
     }
 
     public PluginHologram(
@@ -102,6 +102,12 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
         this.pages.addAll(pages);
 
         recalculate();
+    }
+
+    @NonNull
+    @Override
+    public PluginHologramSettings getSettings() {
+        return (PluginHologramSettings) super.getSettings();
     }
 
     @NonNull

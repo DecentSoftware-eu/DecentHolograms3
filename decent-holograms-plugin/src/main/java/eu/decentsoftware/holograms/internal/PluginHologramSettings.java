@@ -16,28 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram;
+package eu.decentsoftware.holograms.internal;
 
-import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.util.DecentLocation;
-import eu.decentsoftware.holograms.core.CoreHologramPage;
-import eu.decentsoftware.holograms.core.line.CoreHologramLine;
+import eu.decentsoftware.holograms.core.CoreHologramSettings;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
-public class APIHologramLine extends CoreHologramLine implements HologramLine {
+@Getter
+@Setter
+public class PluginHologramSettings extends CoreHologramSettings {
 
-    public APIHologramLine(
-            @NonNull DecentHolograms plugin,
-            @NonNull CoreHologramPage<APIHologramLine> parent,
-            @NonNull DecentLocation location
-    ) {
-        super(plugin, parent, location, new APIHologramLineSettings());
+    private ActionExecutionStrategy actionExecutionStrategy = ActionExecutionStrategy.ONLY_BOTTOM;
+
+    public PluginHologramSettings(boolean enabled) {
+        super(enabled);
     }
 
-    @NonNull
-    @Override
-    public APIHologramPage getParent() {
-        return (APIHologramPage) super.getParent();
+    public void set(@NonNull CoreHologramSettings otherSettings) {
+        super.set(otherSettings);
+        if (otherSettings instanceof PluginHologramSettings) {
+            this.actionExecutionStrategy = ((PluginHologramSettings) otherSettings).actionExecutionStrategy;
+        }
     }
 
 }

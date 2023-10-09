@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Contract;
  */
 public abstract class Action {
 
-    protected final DecentHolograms plugin;
+    protected transient final DecentHolograms plugin;
     protected final long delay;
     protected final double chance;
 

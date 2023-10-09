@@ -54,7 +54,9 @@ public class PluginHologramPage extends CoreHologramPage<PluginHologramLine> {
     @NonNull
     @Override
     protected PluginHologramLine createLine(@NonNull DecentLocation location, @NonNull String content) {
-        return new PluginHologramLine(this.plugin, this, location, content);
+        PluginHologramLine line = new PluginHologramLine(this.plugin, this, location);
+        line.setContent(content);
+        return line;
     }
 
     @NonNull

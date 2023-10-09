@@ -21,9 +21,9 @@ package eu.decentsoftware.holograms.internal.serialization;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.core.CoreHologramSettings;
 import eu.decentsoftware.holograms.internal.PluginHologram;
 import eu.decentsoftware.holograms.internal.PluginHologramPage;
+import eu.decentsoftware.holograms.internal.PluginHologramSettings;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 public class SerializableHologram {
 
     private final DecentLocation location;
-    private CoreHologramSettings settings;
+    private PluginHologramSettings settings;
     private ConditionHolder viewConditions;
     private final List<SerializablePage> pages;
 
@@ -57,36 +57,39 @@ public class SerializableHologram {
 
     @NonNull
     public PluginHologram toHologram(@NonNull DecentHolograms plugin, @NonNull String name) {
-        if (location == null) {
-            throw new IllegalArgumentException("Location cannot be null.");
-        }
-        if (settings == null) {
-            settings = new CoreHologramSettings(true);
-        }
-        if (viewConditions == null) {
-            viewConditions = new ConditionHolder();
-        }
-        PluginHologram hologram = new PluginHologram(plugin, location, name, settings, viewConditions);
-        hologram.setPages(new ArrayList<>(pages).stream()
-                .map(page -> page.toPage(plugin, hologram))
-                .collect(Collectors.toList())
+        PluginHologram hologram = new PluginHologram(plugin, this.getLocation(), name, this.getSettings(), this.getViewConditions());
+        hologram.setPages(
+                this.getPages().stream()
+                        .map(page -> page.toPage(plugin, hologram))
+                        .collect(Collectors.toList())
         );
         return hologram;
     }
 
+    @NonNull
     public DecentLocation getLocation() {
-        return location;
+        return this.location;
     }
 
-    public CoreHologramSettings getSettings() {
-        return settings;
+    @NonNull
+    public PluginHologramSettings getSettings() {
+        if (this.settings == null) {
+            this.settings = new PluginHologramSettings(true);
+        }
+        return this.settings;
     }
 
+    @NonNull
     public ConditionHolder getViewConditions() {
-        return viewConditions;
+        if (this.viewConditions == null) {
+            this.viewConditions = new ConditionHolder();
+        }
+        return this.viewConditions;
     }
 
+    @NonNull
     public List<SerializablePage> getPages() {
-        return pages;
+        return new ArrayList<>(this.pages);
     }
+
 }

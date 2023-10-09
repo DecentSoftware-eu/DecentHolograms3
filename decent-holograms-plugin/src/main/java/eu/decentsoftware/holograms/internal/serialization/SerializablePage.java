@@ -54,23 +54,38 @@ public class SerializablePage {
 
     @NonNull
     public PluginHologramPage toPage(@NonNull DecentHolograms plugin, @NonNull PluginHologram hologram) {
-        if (clickConditions == null) {
-            clickConditions = new ClickConditionHolder();
-        }
-        if (clickActions == null) {
-            clickActions = new ClickActionHolder();
-        }
         PluginHologramPage page = new PluginHologramPage(
                 plugin,
                 hologram,
-                clickConditions,
-                clickActions
+                this.getClickConditions(),
+                this.getClickActions()
         );
-        for (SerializableLine line : this.lines) {
+        for (SerializableLine line : this.getLines()) {
             PluginHologramLine defaultLine = line.toLine(plugin, page, page.getNextLineLocation());
             page.appendLine(defaultLine);
         }
         return page;
+    }
+
+    @NonNull
+    public ClickConditionHolder getClickConditions() {
+        if (this.clickConditions == null) {
+            this.clickConditions = new ClickConditionHolder();
+        }
+        return this.clickConditions;
+    }
+
+    @NonNull
+    public ClickActionHolder getClickActions() {
+        if (this.clickActions == null) {
+            this.clickActions = new ClickActionHolder();
+        }
+        return this.clickActions;
+    }
+
+    @NonNull
+    public List<SerializableLine> getLines() {
+        return new ArrayList<>(this.lines);
     }
 
 }

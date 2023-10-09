@@ -16,28 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram;
+package eu.decentsoftware.holograms.serialization;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.util.DecentLocation;
-import eu.decentsoftware.holograms.core.CoreHologramPage;
-import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
+import org.jetbrains.annotations.Contract;
 
-public class APIHologramLine extends CoreHologramLine implements HologramLine {
+import java.lang.reflect.Type;
 
-    public APIHologramLine(
-            @NonNull DecentHolograms plugin,
-            @NonNull CoreHologramPage<APIHologramLine> parent,
-            @NonNull DecentLocation location
-    ) {
-        super(plugin, parent, location, new APIHologramLineSettings());
+public class DecentHologramsSerializer implements JsonDeserializer<DecentHolograms> {
+
+    private final DecentHolograms plugin;
+
+    @Contract(pure = true)
+    public DecentHologramsSerializer(@NonNull DecentHolograms plugin) {
+        this.plugin = plugin;
     }
 
-    @NonNull
     @Override
-    public APIHologramPage getParent() {
-        return (APIHologramPage) super.getParent();
+    public DecentHolograms deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return this.plugin;
     }
 
 }

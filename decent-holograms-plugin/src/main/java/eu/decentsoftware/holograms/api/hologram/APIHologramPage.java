@@ -32,7 +32,9 @@ public class APIHologramPage extends CoreHologramPage<APIHologramLine> implement
     @NonNull
     @Override
     protected APIHologramLine createLine(@NonNull DecentLocation location, @NonNull String content) {
-        return new APIHologramLine(this.plugin, this, location, content);
+        APIHologramLine line = new APIHologramLine(this.plugin, this, location);
+        line.setContent(content);
+        return line;
     }
 
     @Override

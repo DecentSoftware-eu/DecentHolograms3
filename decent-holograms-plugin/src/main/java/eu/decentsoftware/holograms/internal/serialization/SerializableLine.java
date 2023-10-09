@@ -51,29 +51,59 @@ public class SerializableLine {
     }
 
     @NonNull
-    public PluginHologramLine toLine(@NonNull DecentHolograms plugin, @NonNull PluginHologramPage page, @NonNull DecentLocation location) {
-        if (settings == null) {
-            settings = new CoreHologramLineSettings();
-        }
-        if (viewConditions == null) {
-            viewConditions = new ConditionHolder();
-        }
-        if (clickConditions == null) {
-            clickConditions = new ClickConditionHolder();
-        }
-        if (clickActions == null) {
-            clickActions = new ClickActionHolder();
-        }
-        return new PluginHologramLine(
+    public PluginHologramLine toLine(
+            @NonNull DecentHolograms plugin,
+            @NonNull PluginHologramPage page,
+            @NonNull DecentLocation location
+    ) {
+        PluginHologramLine line = new PluginHologramLine(
                 plugin,
                 page,
                 location,
-                settings,
-                content,
-                viewConditions,
-                clickConditions,
-                clickActions
+                this.getSettings(),
+                this.getViewConditions(),
+                this.getClickConditions(),
+                this.getClickActions()
         );
+        line.setContent(this.getContent());
+        return line;
+    }
+
+    @NonNull
+    public CoreHologramLineSettings getSettings() {
+        if (settings == null) {
+            settings = new CoreHologramLineSettings();
+        }
+        return settings;
+    }
+
+    @NonNull
+    public ConditionHolder getViewConditions() {
+        if (viewConditions == null) {
+            viewConditions = new ConditionHolder();
+        }
+        return viewConditions;
+    }
+
+    @NonNull
+    public ClickConditionHolder getClickConditions() {
+        if (clickConditions == null) {
+            clickConditions = new ClickConditionHolder();
+        }
+        return clickConditions;
+    }
+
+    @NonNull
+    public ClickActionHolder getClickActions() {
+        if (clickActions == null) {
+            clickActions = new ClickActionHolder();
+        }
+        return clickActions;
+    }
+
+    @NonNull
+    public String getContent() {
+        return this.content;
     }
 
 }

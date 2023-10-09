@@ -42,31 +42,28 @@ public class CoreHologramLine extends CoreHologramComponent {
     public CoreHologramLine(
             @NonNull DecentHolograms plugin,
             @NonNull CoreHologramPage<? extends CoreHologramLine> parent,
-            @NonNull DecentLocation location,
-            @NonNull String content
+            @NonNull DecentLocation location
     ) {
-        this(plugin, parent, location, new CoreHologramLineSettings(), content);
+        this(plugin, parent, location, new CoreHologramLineSettings());
     }
 
     public CoreHologramLine(
             @NonNull DecentHolograms plugin,
             @NonNull CoreHologramPage<? extends CoreHologramLine> parent,
             @NonNull DecentLocation location,
-            @NonNull CoreHologramLineSettings settings,
-            @NonNull String content
+            @NonNull CoreHologramLineSettings settings
     ) {
         this.plugin = plugin;
         this.parent = parent;
         this.location = location;
         this.settings = settings;
-        this.setContent(content);
     }
 
     public void destroy() {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.hideAll();
+            this.renderer.destroy();
             this.renderer = null;
         }
 
@@ -121,7 +118,7 @@ public class CoreHologramLine extends CoreHologramComponent {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.updateLocation(player);
+            this.renderer.updateLocation(player, getActualBukkitLocation());
         }
     }
 

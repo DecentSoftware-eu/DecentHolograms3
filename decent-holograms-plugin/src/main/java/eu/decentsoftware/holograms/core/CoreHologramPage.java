@@ -129,8 +129,9 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
         return this.lines.get(index);
     }
 
+    @SuppressWarnings("unchecked")
     public int getIndex(@NonNull CoreHologramLine line) {
-        return this.lines.indexOf(line);
+        return this.lines.indexOf((LINE) line);
     }
 
     public void removeLine(int index) {
