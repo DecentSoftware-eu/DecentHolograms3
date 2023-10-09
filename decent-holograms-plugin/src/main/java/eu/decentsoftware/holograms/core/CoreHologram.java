@@ -364,7 +364,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
         }
         this.pages.clear();
 
-        this.visibilityManager.getPlayerPages().clear();
+        this.visibilityManager.resetPlayerPages();
     }
 
     /**

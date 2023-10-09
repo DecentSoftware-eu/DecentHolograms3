@@ -50,28 +50,30 @@ public class CoreHologramVisibilityManager {
 
     public void setDefaultVisibility(@NonNull Visibility visibility) {
         this.defaultVisibility = visibility;
+        updateVisibility();
     }
 
     @NonNull
     public Visibility getDefaultVisibility() {
-        return defaultVisibility;
+        return this.defaultVisibility;
     }
 
     boolean isVisibleByDefault() {
-        return defaultVisibility == Visibility.VISIBLE;
+        return this.defaultVisibility == Visibility.VISIBLE;
     }
 
     public void setPlayerVisibility(@NonNull Player player, @Nullable Visibility visibility) {
         if (visibility == null) {
-            playerVisibilityMap.remove(player.getUniqueId());
+            this.playerVisibilityMap.remove(player.getUniqueId());
             return;
         }
-        playerVisibilityMap.put(player.getUniqueId(), visibility);
+        this.playerVisibilityMap.put(player.getUniqueId(), visibility);
+        updateVisibility(player);
     }
 
     @Nullable
     public Visibility getPlayerVisibility(@NonNull Player player) {
-        return playerVisibilityMap.get(player.getUniqueId());
+        return this.playerVisibilityMap.get(player.getUniqueId());
     }
 
     /**
@@ -125,11 +127,11 @@ public class CoreHologramVisibilityManager {
         }
 
         boolean inViewDistance = MathUtil.inDistance(
-                parent.getPositionManager().getActualBukkitLocation(),
+                this.parent.getPositionManager().getActualBukkitLocation(),
                 player.getLocation(),
-                parent.getSettings().getViewDistance()
+                this.parent.getSettings().getViewDistance()
         );
-        boolean visibleByDefault = !isVisibleByDefault();
+        boolean visibleByDefault = isVisibleByDefault();
         if (isViewing(player) && (!inViewDistance || !visibleByDefault)) {
             updateVisibility(player, false);
         } else if (!isViewing(player) && inViewDistance && visibleByDefault) {
@@ -167,10 +169,10 @@ public class CoreHologramVisibilityManager {
         pageOpt.ifPresent(page -> {
             if (visible) {
                 page.display(player);
-                currentViewers.add(player.getUniqueId());
+                this.currentViewers.add(player.getUniqueId());
             } else {
                 page.hide(player);
-                currentViewers.remove(player.getUniqueId());
+                this.currentViewers.remove(player.getUniqueId());
             }
         });
     }
@@ -217,7 +219,7 @@ public class CoreHologramVisibilityManager {
     public void setPage(@NonNull Player player, int page) {
         CoreHologramPage<?> oldPage = getPage(player);
 
-        playerPages.put(player.getUniqueId(), page);
+        this.playerPages.put(player.getUniqueId(), page);
 
         if (oldPage != null && isViewing(player)) {
             CoreHologramPage<?> newPage = getPage(player);
@@ -230,6 +232,11 @@ public class CoreHologramVisibilityManager {
                         continue;
                     }
 
+                    /*
+                     * If the line type is the same, we can just update the content. This is
+                     * more efficient than hiding the old line and displaying the new one. It
+                     * also prevents flickering when the line is updated.
+                     */
                     if (newLine.getType() == oldLine.getType()) {
                         newLine.updateContent(player);
                     } else {
@@ -247,8 +254,15 @@ public class CoreHologramVisibilityManager {
             }
         }
 
-        parent.recalculate(player);
+        this.parent.recalculate(player);
         updateVisibility(player);
+    }
+
+    /**
+     * Reset all the pages that are currently selected by each player.
+     */
+    public void resetPlayerPages() {
+        this.playerPages.clear();
     }
 
     /**
@@ -324,7 +338,7 @@ public class CoreHologramVisibilityManager {
     @NonNull
     private Optional<CoreHologramPage<?>> getPageObject(@NonNull Player player) {
         int pageIndex = getPageIndex(player.getUniqueId());
-        CoreHologramPage<?> page = parent.getPage(pageIndex);
+        CoreHologramPage<?> page = this.parent.getPage(pageIndex);
         return Optional.ofNullable(page);
     }
 
@@ -345,7 +359,7 @@ public class CoreHologramVisibilityManager {
      */
     @NonNull
     public CoreHologram<?> getParent() {
-        return parent;
+        return this.parent;
     }
 
     /**
@@ -357,7 +371,7 @@ public class CoreHologramVisibilityManager {
      */
     @NonNull
     public Set<UUID> getViewers() {
-        return ImmutableSet.copyOf(currentViewers);
+        return ImmutableSet.copyOf(this.currentViewers);
     }
 
     /**
@@ -367,7 +381,7 @@ public class CoreHologramVisibilityManager {
      */
     @NonNull
     public Map<UUID, Integer> getPlayerPages() {
-        return ImmutableMap.copyOf(playerPages);
+        return ImmutableMap.copyOf(this.playerPages);
     }
 
     /**
@@ -380,7 +394,7 @@ public class CoreHologramVisibilityManager {
      */
     @NonNull
     public Map<UUID, Visibility> getPlayerVisibilityMap() {
-        return ImmutableMap.copyOf(playerVisibilityMap);
+        return ImmutableMap.copyOf(this.playerVisibilityMap);
     }
 
 }
