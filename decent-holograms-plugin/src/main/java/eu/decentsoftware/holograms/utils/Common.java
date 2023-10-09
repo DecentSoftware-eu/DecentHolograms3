@@ -267,7 +267,11 @@ public final class Common {
      * @param text The string.
      * @return The width.
      */
-    public static int getTextWidth(@NotNull String text) {
+    public static int getTextWidth(String text) {
+        if (text == null || text.isEmpty()) {
+            return 0;
+        }
+
         if (text.contains("\n")) {
             throw new IllegalArgumentException("Text cannot contain newline characters.");
         }
