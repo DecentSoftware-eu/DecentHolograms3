@@ -86,18 +86,59 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
     }
 
     @Override
-    public void onClick(@NonNull Player player, @NonNull ClickType clickType, @NonNull CoreHologramPage<?> page, @NonNull CoreHologramLine line) {
-        if (line instanceof PluginHologramLine) {
-            PluginHologramLine pluginLine = (PluginHologramLine) line;
-            if (pluginLine.getClickConditions().check(clickType, player)) {
-                pluginLine.getClickActions().execute(clickType, player);
+    public void onClick(
+            @NonNull Player player,
+            @NonNull ClickType clickType,
+            @NonNull CoreHologramPage<?> page,
+            @NonNull CoreHologramLine line
+    ) {
+        checkDestroyed();
+
+        if (!(page instanceof PluginHologramPage) || !(line instanceof PluginHologramLine)) {
+            throw new IllegalArgumentException("Invalid hologram page or line.");
+        }
+
+        PluginHologramPage pluginPage = (PluginHologramPage) page;
+        if (!this.equals(pluginPage.getParent())) {
+            throw new IllegalArgumentException("Hologram page is not part of this hologram.");
+        }
+        PluginHologramLine pluginLine = (PluginHologramLine) line;
+        if (!pluginPage.equals(pluginLine.getParent())) {
+            throw new IllegalArgumentException("Hologram line is not part of this hologram page.");
+        }
+
+        ActionExecutionStrategy strategy = getSettings().getActionExecutionStrategy();
+        if (strategy == null) {
+            strategy = ActionExecutionStrategy.ONLY_BOTTOM;
+        }
+
+        if (strategy.isBottomFirst()) {
+            boolean executedLine = executeActions(pluginLine, player, clickType);
+            if (strategy == ActionExecutionStrategy.BOTTOM_TO_TOP || !executedLine) {
+                executeActions(pluginPage, player, clickType);
             }
-        } else if (page instanceof PluginHologramPage) {
-            PluginHologramPage pluginPage = (PluginHologramPage) page;
-            if (pluginPage.getClickConditions().check(clickType, player)) {
-                pluginPage.getClickActions().execute(clickType, player);
+        } else {
+            boolean executedPage = executeActions(pluginPage, player, clickType);
+            if (strategy == ActionExecutionStrategy.TOP_TO_BOTTOM || !executedPage) {
+                executeActions(pluginLine, player, clickType);
             }
         }
+    }
+
+    private boolean executeActions(@NonNull PluginHologramLine line, @NonNull Player player, @NonNull ClickType clickType) {
+        if (line.getClickConditions().check(clickType, player) && !line.getClickActions().isEmpty(clickType)) {
+            line.getClickActions().execute(clickType, player);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean executeActions(@NonNull PluginHologramPage page, @NonNull Player player, @NonNull ClickType clickType) {
+        if (page.getClickConditions().check(clickType, player) && !page.getClickActions().isEmpty(clickType)) {
+            page.getClickActions().execute(clickType, player);
+            return true;
+        }
+        return false;
     }
 
     @NonNull
