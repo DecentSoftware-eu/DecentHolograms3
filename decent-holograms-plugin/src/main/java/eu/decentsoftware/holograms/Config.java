@@ -55,11 +55,11 @@ public final class Config {
 
     // ========== DEFAULTS ========== //
 
-    @ConfigValue("defaults.view-distance")
+    @ConfigValue(value = "defaults.view-distance", min = 1, max = 48)
     public static int DEFAULTS_VIEW_DISTANCE = 48;
-    @ConfigValue("defaults.update-distance")
+    @ConfigValue(value = "defaults.update-distance", min = 1, max = 48)
     public static int DEFAULTS_UPDATE_DISTANCE = 48;
-    @ConfigValue("defaults.update-interval")
+    @ConfigValue(value = "defaults.update-interval", min = 5, max = 1200)
     public static int DEFAULTS_UPDATE_INTERVAL = 20;
     @ConfigValue("defaults.down-origin")
     public static boolean DEFAULTS_DOWN_ORIGIN = false;
