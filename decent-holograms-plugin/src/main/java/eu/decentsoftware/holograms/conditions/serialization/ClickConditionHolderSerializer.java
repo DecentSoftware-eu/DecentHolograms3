@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.conditions.serialization;
 
 import com.google.gson.*;
-import eu.decentsoftware.holograms.api.hologram.click.ClickType;
+import eu.decentsoftware.holograms.api.hologram.ClickType;
 import eu.decentsoftware.holograms.conditions.ClickConditionHolder;
 import eu.decentsoftware.holograms.conditions.Condition;
 import eu.decentsoftware.holograms.conditions.ConditionType;

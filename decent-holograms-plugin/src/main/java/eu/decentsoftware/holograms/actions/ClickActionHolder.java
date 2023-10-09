@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.actions;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.api.hologram.click.ClickType;
+import eu.decentsoftware.holograms.api.hologram.ClickType;
 import eu.decentsoftware.holograms.utils.SchedulerUtil;
 import lombok.NonNull;
 import org.bukkit.entity.Player;

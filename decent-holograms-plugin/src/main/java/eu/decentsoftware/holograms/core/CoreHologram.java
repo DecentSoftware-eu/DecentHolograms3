@@ -21,7 +21,7 @@ package eu.decentsoftware.holograms.core;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineSettings;
-import eu.decentsoftware.holograms.api.hologram.click.ClickType;
+import eu.decentsoftware.holograms.api.hologram.ClickType;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.renderer.HologramLineRenderer;

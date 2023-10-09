@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.click;
+package eu.decentsoftware.holograms.api.hologram;
 
 import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * This enum represents the type of click on a hologram.
  *
  * @author d0by
- * @see ClickHandler
+ * @see HologramClickHandler
  * @since 3.0.0
  */
 public enum ClickType {

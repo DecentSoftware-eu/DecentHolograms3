@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
-import eu.decentsoftware.holograms.api.hologram.click.Clickable;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 3.0.0
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public interface Hologram extends Clickable {
+public interface Hologram {
 
     /**
      * Destroy this hologram. This method hides the hologram and destroys all components.
@@ -78,6 +77,23 @@ public interface Hologram extends Clickable {
      * Remove all pages from this hologram.
      */
     void clearPages();
+
+    /**
+     * Get the click handler of this hologram.
+     *
+     * @return The click handler of this hologram.
+     * @see HologramClickHandler
+     */
+    @Nullable
+    HologramClickHandler getClickHandler();
+
+    /**
+     * Set the click handler of this hologram.
+     *
+     * @param clickHandler The click handler of this hologram.
+     * @see HologramClickHandler
+     */
+    void setClickHandler(@Nullable HologramClickHandler clickHandler);
 
     /**
      * The settings manager of the hologram, storing various settings.

@@ -16,10 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram.click;
+package eu.decentsoftware.holograms.api.hologram;
 
-import eu.decentsoftware.holograms.api.hologram.HologramLine;
-import eu.decentsoftware.holograms.api.hologram.HologramPage;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 
@@ -30,7 +28,7 @@ import org.bukkit.entity.Player;
  * @since 3.0.0
  */
 @FunctionalInterface
-public interface ClickHandler {
+public interface HologramClickHandler {
 
     /**
      * Handle a click on a hologram.
@@ -40,6 +38,6 @@ public interface ClickHandler {
      * @param page      The page that was clicked.
      * @param line      The line that was clicked.
      */
-    void onClick(@NonNull Player player, @NonNull ClickType clickType, HologramPage page, HologramLine line);
+    void onClick(@NonNull Player player, @NonNull ClickType clickType, @NonNull HologramPage page, @NonNull HologramLine line);
 
 }
