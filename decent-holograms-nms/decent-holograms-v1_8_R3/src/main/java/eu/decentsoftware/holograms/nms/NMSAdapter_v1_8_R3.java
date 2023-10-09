@@ -61,10 +61,6 @@ public class NMSAdapter_v1_8_R3 implements NMSAdapter {
      */
     private final PacketDataSerializer serializer = new PacketDataSerializer(Unpooled.buffer());
 
-    public NMSAdapter_v1_8_R3() {
-        System.out.println("Entity Type ID for ArmorStand: " + getEntityTypeId(EntityType.ARMOR_STAND));
-    }
-
     /*
      *  Utils
      */
