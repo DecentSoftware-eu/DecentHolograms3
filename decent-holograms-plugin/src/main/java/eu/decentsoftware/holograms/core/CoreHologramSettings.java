@@ -42,16 +42,16 @@ public class CoreHologramSettings {
         this.enabled = enabled;
     }
 
-    public void set(@NonNull CoreHologramSettings settings) {
-        this.enabled = settings.isEnabled();
-        this.interactive = settings.isInteractive();
-        this.downOrigin = settings.isDownOrigin();
-        this.rotateHorizontal = settings.isRotateHorizontal();
-        this.rotateVertical = settings.isRotateVertical();
-        this.viewDistance = settings.getViewDistance();
-        this.updateDistance = settings.getUpdateDistance();
-        this.updateInterval = settings.getUpdateInterval();
-        this.updating = settings.isUpdating();
+    public void set(@NonNull CoreHologramSettings otherSettings) {
+        this.enabled = otherSettings.isEnabled();
+        this.interactive = otherSettings.isInteractive();
+        this.downOrigin = otherSettings.isDownOrigin();
+        this.rotateHorizontal = otherSettings.isRotateHorizontal();
+        this.rotateVertical = otherSettings.isRotateVertical();
+        this.viewDistance = otherSettings.getViewDistance();
+        this.updateDistance = otherSettings.getUpdateDistance();
+        this.updateInterval = otherSettings.getUpdateInterval();
+        this.updating = otherSettings.isUpdating();
     }
 
 }

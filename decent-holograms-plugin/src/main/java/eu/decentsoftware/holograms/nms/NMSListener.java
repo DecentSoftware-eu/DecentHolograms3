@@ -47,18 +47,18 @@ class NMSListener implements Listener {
 
     @EventHandler
     public void onJoin(@NonNull PlayerJoinEvent event) {
-        nmsManager.hook(event.getPlayer());
+        this.nmsManager.hook(event.getPlayer());
     }
 
     @EventHandler
     public void onQuit(@NonNull PlayerQuitEvent event) {
-        nmsManager.unhook(event.getPlayer());
+        this.nmsManager.unhook(event.getPlayer());
     }
 
     @EventHandler
     public void onPacketPlayInUseEntity(@NonNull PacketPlayInUseEntityEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileRegistry().getProfile(player.getUniqueId());
+        Profile profile = this.plugin.getProfileRegistry().getProfile(player.getUniqueId());
         if (profile == null) {
             return;
         }

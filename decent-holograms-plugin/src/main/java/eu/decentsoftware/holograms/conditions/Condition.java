@@ -19,9 +19,9 @@
 package eu.decentsoftware.holograms.conditions;
 
 import eu.decentsoftware.holograms.actions.ActionHolder;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -63,7 +63,7 @@ public abstract class Condition {
      * @param player The player to check this condition for.
      * @return true if the condition is met, false otherwise.
      */
-    public abstract boolean check(@NotNull Player player);
+    public abstract boolean check(@NonNull Player player);
 
     /**
      * Get the {@link ActionHolder} that should be executed if the condition is not met.

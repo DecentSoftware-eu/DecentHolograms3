@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends CoreHologramComponent {
 
@@ -139,7 +138,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
 
         forEachViewerUseLineRendererSafe(line, HologramLineRenderer::hide);
         updateLinePositions();
-        parent.recalculate();
+        this.parent.recalculate();
     }
 
     public void appendLine(@NonNull String content) {
@@ -153,7 +152,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
 
         forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
         updateLinePositions();
-        parent.recalculate();
+        this.parent.recalculate();
     }
 
     public void insertLine(int index, @NonNull String content) {
@@ -164,7 +163,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
 
         forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
         updateLinePositions();
-        parent.recalculate();
+        this.parent.recalculate();
     }
 
     public void setLine(int index, @NonNull String content) {
@@ -174,7 +173,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
         line.setContent(content);
 
         updateLinePositions();
-        parent.recalculate();
+        this.parent.recalculate();
     }
 
     public void clearLines() {
@@ -228,21 +227,6 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
             location.add(0, getHeight(), 0);
         }
         return new DecentLocation(location.subtract(0, getHeight(), 0));
-    }
-
-    private void forEachLineRendererSafe(@NonNull Consumer<HologramLineRenderer> consumer) {
-        for (CoreHologramLine line : this.lines) {
-            HologramLineRenderer renderer = line.getRenderer();
-            if (renderer != null) {
-                consumer.accept(renderer);
-            }
-        }
-    }
-
-    private void forEachLineRendererAndViewerSafe(@NonNull BiConsumer<HologramLineRenderer, Player> consumer) {
-        for (CoreHologramLine line : this.lines) {
-            forEachViewerUseLineRendererSafe(line, consumer);
-        }
     }
 
     private void forEachViewerUseLineRendererSafe(@NonNull CoreHologramLine line, @NonNull BiConsumer<HologramLineRenderer, Player> consumer) {
