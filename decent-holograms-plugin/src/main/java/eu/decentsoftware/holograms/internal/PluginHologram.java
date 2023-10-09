@@ -59,8 +59,18 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
         this.settings = settings;
     }
 
+    /**
+     * Copy this hologram to a new one with the specified name.
+     *
+     * @param newName The name of the new hologram.
+     * @return The new hologram.
+     * @throws IllegalArgumentException If a hologram with the specified name already exists.
+     */
     @NonNull
     public PluginHologram copy(@NonNull String newName) {
+        if (this.plugin.getHologramManager().hasHologram(newName)) {
+            throw new IllegalArgumentException("Hologram with name '" + newName + "' already exists.");
+        }
         return new PluginHologram(
                 this.plugin,
                 this.positionManager.getLocation(),
