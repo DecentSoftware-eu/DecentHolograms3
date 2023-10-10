@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.editor.move;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.core.CorePositionManager;
+import eu.decentsoftware.holograms.core.CoreHologramPositionManager;
 import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -99,7 +99,7 @@ public class MoveController {
         Optional<PluginHologram> optional = findMovedHologram(player);
         if (optional.isPresent()) {
             PluginHologram hologram = optional.get();
-            CorePositionManager positionManager = hologram.getPositionManager();
+            CoreHologramPositionManager positionManager = hologram.getPositionManager();
             positionManager.setLocation(positionManager.getActualLocation());
             positionManager.unbindLocation();
 

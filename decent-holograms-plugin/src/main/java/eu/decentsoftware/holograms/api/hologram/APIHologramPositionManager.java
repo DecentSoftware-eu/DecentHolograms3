@@ -19,20 +19,20 @@
 package eu.decentsoftware.holograms.api.hologram;
 
 import eu.decentsoftware.holograms.api.util.DecentLocation;
-import eu.decentsoftware.holograms.core.CorePositionManager;
+import eu.decentsoftware.holograms.core.CoreHologramPositionManager;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class APIPositionManager extends CorePositionManager implements HologramPositionManager {
+public class APIHologramPositionManager extends CoreHologramPositionManager implements HologramPositionManager {
 
-    public APIPositionManager(@NonNull DecentLocation location) {
+    public APIHologramPositionManager(@NonNull DecentLocation location) {
         super(location);
     }
 
-    public APIPositionManager(@NonNull DecentLocation location, @Nullable Supplier<Location> locationSupplier) {
+    public APIHologramPositionManager(@NonNull DecentLocation location, @Nullable Supplier<Location> locationSupplier) {
         super(location, locationSupplier);
     }
 

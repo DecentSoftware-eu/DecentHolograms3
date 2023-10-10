@@ -37,7 +37,7 @@ public class APIHologram extends CoreHologram<APIHologramPage> implements Hologr
 
     public APIHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location, @Nullable HologramClickHandler clickHandler) {
         super(plugin);
-        this.positionManager = new APIPositionManager(location);
+        this.positionManager = new APIHologramPositionManager(location);
         this.visibilityManager = new APIHologramVisibilityManager(this);
         this.settings = new APIHologramSettings(true);
         this.clickHandler = clickHandler;
@@ -75,8 +75,8 @@ public class APIHologram extends CoreHologram<APIHologramPage> implements Hologr
 
     @NonNull
     @Override
-    public APIPositionManager getPositionManager() {
-        return (APIPositionManager) super.getPositionManager();
+    public APIHologramPositionManager getPositionManager() {
+        return (APIHologramPositionManager) super.getPositionManager();
     }
 
     @NonNull

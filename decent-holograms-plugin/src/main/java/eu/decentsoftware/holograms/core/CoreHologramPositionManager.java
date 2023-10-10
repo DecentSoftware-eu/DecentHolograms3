@@ -27,19 +27,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class CorePositionManager {
+public class CoreHologramPositionManager {
 
     protected DecentLocation location;
     protected Vector offsets;
     protected Supplier<Location> locationSupplier;
 
     @Contract(pure = true)
-    public CorePositionManager(@NonNull DecentLocation location) {
+    public CoreHologramPositionManager(@NonNull DecentLocation location) {
         this(location, null);
     }
 
     @Contract(pure = true)
-    public CorePositionManager(@NonNull DecentLocation location, @Nullable Supplier<Location> locationSupplier) {
+    public CoreHologramPositionManager(@NonNull DecentLocation location, @Nullable Supplier<Location> locationSupplier) {
         this.location = location;
         this.locationSupplier = locationSupplier;
         this.offsets = new Vector();

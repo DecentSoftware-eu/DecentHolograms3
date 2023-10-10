@@ -45,7 +45,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
 
     protected final DecentHolograms plugin;
     protected final List<PAGE> pages = new ArrayList<>();
-    protected CorePositionManager positionManager;
+    protected CoreHologramPositionManager positionManager;
     protected CoreHologramSettings settings;
     protected CoreHologramVisibilityManager visibilityManager;
     protected CoreHologramEntityIDManager entityIDManager;
@@ -59,7 +59,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
     public CoreHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location) {
         this.plugin = plugin;
         this.visibilityManager = new CoreHologramVisibilityManager(this);
-        this.positionManager = new CorePositionManager(location);
+        this.positionManager = new CoreHologramPositionManager(location);
         this.settings = new CoreHologramSettings(true);
         this.entityIDManager = new CoreHologramEntityIDManager(plugin.getNMSManager().getAdapter());
 
@@ -391,7 +391,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
     }
 
     @NonNull
-    public CorePositionManager getPositionManager() {
+    public CoreHologramPositionManager getPositionManager() {
         return this.positionManager;
     }
 

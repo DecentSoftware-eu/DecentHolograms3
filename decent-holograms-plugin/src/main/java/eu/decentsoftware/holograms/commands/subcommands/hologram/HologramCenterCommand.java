@@ -26,7 +26,7 @@ import eu.decentsoftware.holograms.commands.framework.DecentCommand;
 import eu.decentsoftware.holograms.commands.framework.arguments.Arguments;
 import eu.decentsoftware.holograms.commands.utils.CommandCommons;
 import eu.decentsoftware.holograms.commands.utils.TabCompleteCommons;
-import eu.decentsoftware.holograms.core.CorePositionManager;
+import eu.decentsoftware.holograms.core.CoreHologramPositionManager;
 import eu.decentsoftware.holograms.internal.PluginHologram;
 import lombok.NonNull;
 import org.bukkit.command.CommandSender;
@@ -77,7 +77,7 @@ public class HologramCenterCommand extends DecentCommand {
             return false;
         }
 
-        CorePositionManager positionManager = hologram.getPositionManager();
+        CoreHologramPositionManager positionManager = hologram.getPositionManager();
         DecentLocation newLocation = positionManager.getLocation().clone();
         newLocation.setX(newLocation.getBlockX() + 0.5);
         newLocation.setZ(newLocation.getBlockZ() + 0.5);
