@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.core.line.renderer;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
-import eu.decentsoftware.holograms.core.CoreHologramEntityIDManager;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.hooks.MiniMessageHook;
 import eu.decentsoftware.holograms.hooks.PAPI;
@@ -77,12 +76,6 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     public void destroy() {
         this.stopTicking();
         super.destroy();
-    }
-
-    private int getEntityId() {
-        CoreHologramEntityIDManager entityIDManager = parent.getParent().getParent().getEntityIDManager();
-        int lineIndex = parent.getParent().getIndex(parent);
-        return entityIDManager.getEntityId(lineIndex, 0);
     }
 
     /**
@@ -177,13 +170,13 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         Object metaName = getMetaName(formattedText);
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
-        this.nmsAdapter.spawnEntityLiving(player, this.getEntityId(), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
-        this.nmsAdapter.sendEntityMetadata(player, this.getEntityId(), metaEntity, metaArmorStand, metaName, metaNameVisible);
+        this.nmsAdapter.spawnEntityLiving(player, getEntityId(0), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaEntity, metaArmorStand, metaName, metaNameVisible);
     }
 
     @Override
     public void hide(@NonNull Player player) {
-        this.nmsAdapter.removeEntity(player, this.getEntityId());
+        this.nmsAdapter.removeEntity(player, getEntityId(0));
 
         this.formattedTextCache.remove(player.getUniqueId());
     }
@@ -199,12 +192,12 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         boolean isNameInvisible = text.isEmpty() || text.replaceAll("§.", "").isEmpty();
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!isNameInvisible);
 
-        this.nmsAdapter.sendEntityMetadata(player, this.getEntityId(), metaName, metaNameVisible);
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaName, metaNameVisible);
     }
 
     @Override
     public void updateLocation(@NonNull Player player, @NonNull Location location) {
-        this.nmsAdapter.teleportEntity(player, this.getEntityId(), location, true);
+        this.nmsAdapter.teleportEntity(player, getEntityId(0), location, true);
     }
 
     private Object getMetaName(@NonNull String formattedText) {

@@ -20,7 +20,6 @@ package eu.decentsoftware.holograms.core.line.renderer;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
-import eu.decentsoftware.holograms.core.CoreHologramEntityIDManager;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -39,19 +38,12 @@ import java.util.UUID;
  */
 public abstract class DoubleEntityLineRenderer extends LineRenderer {
 
-    protected final int eid;
-    protected final int eidOther;
-
     public DoubleEntityLineRenderer(
             @NonNull DecentHolograms plugin,
             @NonNull CoreHologramLine parent,
             @NonNull HologramLineType type
     ) {
         super(plugin, parent, type);
-        CoreHologramEntityIDManager entityIDManager = parent.getParent().getParent().getEntityIDManager();
-        int lineIndex = parent.getParent().getIndex(parent);
-        this.eid = entityIDManager.getEntityId(lineIndex, 0);
-        this.eidOther = entityIDManager.getEntityId(lineIndex, 1);
     }
 
     /**
@@ -80,31 +72,31 @@ public abstract class DoubleEntityLineRenderer extends LineRenderer {
         );
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(false);
 
-        this.nmsAdapter.spawnEntityLiving(player, this.eid, UUID.randomUUID(), EntityType.ARMOR_STAND, location);
-        this.nmsAdapter.sendEntityMetadata(player, this.eid, metaEntity, metaArmorStand, metaNameVisible);
+        this.nmsAdapter.spawnEntityLiving(player, getEntityId(0), UUID.randomUUID(), EntityType.ARMOR_STAND, location);
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaEntity, metaArmorStand, metaNameVisible);
 
         if (typeOther.isAlive()) {
-            this.nmsAdapter.spawnEntityLiving(player, this.eidOther, UUID.randomUUID(), typeOther, location);
+            this.nmsAdapter.spawnEntityLiving(player, getEntityId(1), UUID.randomUUID(), typeOther, location);
         } else {
-            this.nmsAdapter.spawnEntity(player, this.eidOther, UUID.randomUUID(), typeOther, location);
+            this.nmsAdapter.spawnEntity(player, getEntityId(1), UUID.randomUUID(), typeOther, location);
         }
-        this.nmsAdapter.sendEntityMetadata(player, this.eidOther, metaOther);
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(1), metaOther);
 
-        this.nmsAdapter.updatePassengers(player, this.eid, this.eidOther);
+        this.nmsAdapter.updatePassengers(player, getEntityId(0), getEntityId(1));
     }
 
     @Override
     public void hide(@NonNull Player player) {
-        this.nmsAdapter.updatePassengers(player, this.eid);
-        this.nmsAdapter.removeEntity(player, this.eid);
-        this.nmsAdapter.removeEntity(player, this.eidOther);
+        this.nmsAdapter.updatePassengers(player, getEntityId(0));
+        this.nmsAdapter.removeEntity(player, getEntityId(0));
+        this.nmsAdapter.removeEntity(player, getEntityId(1));
     }
 
     @Override
     public void updateLocation(@NonNull Player player, @NonNull Location location) {
-        this.nmsAdapter.updatePassengers(player, this.eid);
-        this.nmsAdapter.teleportEntity(player, this.eid, location, true);
-        this.nmsAdapter.updatePassengers(player, this.eid, this.eidOther);
+        this.nmsAdapter.updatePassengers(player, getEntityId(0));
+        this.nmsAdapter.teleportEntity(player, getEntityId(0), location, true);
+        this.nmsAdapter.updatePassengers(player, getEntityId(0), getEntityId(1));
     }
 
 }

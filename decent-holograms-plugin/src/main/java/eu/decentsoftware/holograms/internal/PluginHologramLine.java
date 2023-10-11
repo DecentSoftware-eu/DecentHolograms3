@@ -30,7 +30,7 @@ import lombok.NonNull;
 
 public class PluginHologramLine extends CoreHologramLine {
 
-    private final ConditionHolder viewConditions;
+    private final ConditionHolder viewConditions; // TODO: checking the conditions
     private final ClickConditionHolder clickConditions;
     private final ClickActionHolder clickActions;
 
@@ -39,10 +39,7 @@ public class PluginHologramLine extends CoreHologramLine {
             @NonNull CoreHologramPage<? extends CoreHologramLine> parent,
             @NonNull DecentLocation location
     ) {
-        super(plugin, parent, location);
-        this.viewConditions = new ConditionHolder();
-        this.clickConditions = new ClickConditionHolder();
-        this.clickActions = new ClickActionHolder();
+        this(plugin, parent, location, new ConditionHolder(), new ClickConditionHolder(), new ClickActionHolder());
     }
 
     public PluginHologramLine(

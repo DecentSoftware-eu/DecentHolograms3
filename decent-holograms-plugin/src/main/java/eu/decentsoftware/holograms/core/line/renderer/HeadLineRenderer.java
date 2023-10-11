@@ -21,7 +21,6 @@ package eu.decentsoftware.holograms.core.line.renderer;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.content.DecentItemStack;
-import eu.decentsoftware.holograms.core.CoreHologramEntityIDManager;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import lombok.NonNull;
@@ -35,7 +34,6 @@ import java.util.UUID;
 
 public class HeadLineRenderer extends LineRenderer implements Ticked {
 
-    private final int eid;
     private boolean small;
     private DecentItemStack itemStack;
 
@@ -57,9 +55,6 @@ public class HeadLineRenderer extends LineRenderer implements Ticked {
         super(plugin, parent, type);
         this.itemStack = itemStack;
         this.small = small;
-        CoreHologramEntityIDManager entityIDManager = parent.getParent().getParent().getEntityIDManager();
-        int index = parent.getParent().getIndex(parent);
-        this.eid = entityIDManager.getEntityId(index, 0);
         this.startTicking();
     }
 
@@ -105,26 +100,26 @@ public class HeadLineRenderer extends LineRenderer implements Ticked {
         );
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(false);
 
-        this.nmsAdapter.spawnEntityLiving(player, this.eid, UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
-        this.nmsAdapter.sendEntityMetadata(player, this.eid, metaEntity, metaArmorStand, metaNameVisible);
-        this.nmsAdapter.setEquipment(player, this.eid, EquipmentSlot.HEAD, item);
+        this.nmsAdapter.spawnEntityLiving(player, getEntityId(0), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaEntity, metaArmorStand, metaNameVisible);
+        this.nmsAdapter.setEquipment(player, getEntityId(0), EquipmentSlot.HEAD, item);
     }
 
     @Override
     public void updateContent(@NonNull Player player) {
         ItemStack item = itemStack.toItemStack(player);
 
-        this.nmsAdapter.setEquipment(player, this.eid, EquipmentSlot.HEAD, item);
+        this.nmsAdapter.setEquipment(player, getEntityId(0), EquipmentSlot.HEAD, item);
     }
 
     @Override
     public void hide(@NonNull Player player) {
-        this.nmsAdapter.removeEntity(player, this.eid);
+        this.nmsAdapter.removeEntity(player, getEntityId(0));
     }
 
     @Override
     public void updateLocation(@NonNull Player player, @NonNull Location location) {
-        this.nmsAdapter.teleportEntity(player, this.eid, location, true);
+        this.nmsAdapter.teleportEntity(player, getEntityId(0), location, true);
     }
 
     public void setItemStack(@NonNull DecentItemStack itemStack) {

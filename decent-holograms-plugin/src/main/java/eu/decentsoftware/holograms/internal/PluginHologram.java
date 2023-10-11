@@ -23,9 +23,7 @@ import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.ClickType;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.conditions.ConditionHolder;
-import eu.decentsoftware.holograms.core.CoreHologram;
-import eu.decentsoftware.holograms.core.CoreHologramPage;
-import eu.decentsoftware.holograms.core.CoreHologramSettings;
+import eu.decentsoftware.holograms.core.*;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
@@ -53,11 +51,16 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
             @NonNull CoreHologramSettings settings,
             @NonNull ConditionHolder viewConditions
     ) {
-        super(plugin, location);
+        super(plugin);
         this.name = name;
+        this.visibilityManager = new PluginHologramVisibilityManager(this);
+        this.positionManager = new CoreHologramPositionManager(location);
+        this.entityIDManager = new CoreHologramEntityIDManager(this.plugin.getNMSManager().getAdapter());
         this.config = new PluginHologramConfig(this.plugin, this);
         this.viewConditions = viewConditions;
         this.settings = settings;
+
+        startTicking();
     }
 
     /**

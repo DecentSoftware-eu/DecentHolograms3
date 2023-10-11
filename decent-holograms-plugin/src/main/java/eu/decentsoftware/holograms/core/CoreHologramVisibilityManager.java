@@ -126,15 +126,12 @@ public class CoreHologramVisibilityManager {
             return;
         }
 
-        boolean inViewDistance = MathUtil.inDistance(
-                this.parent.getPositionManager().getActualBukkitLocation(),
-                player.getLocation(),
-                this.parent.getSettings().getViewDistance()
-        );
-        boolean visibleByDefault = isVisibleByDefault();
-        if (isViewing(player) && (!inViewDistance || !visibleByDefault)) {
+        boolean inViewDistance = isInViewDistance(player);
+        boolean isAllowed = isAllowed(player);
+        boolean canSee = canSee(player);
+        if (isViewing(player) && (!inViewDistance || !canSee || !isAllowed)) {
             updateVisibility(player, false);
-        } else if (!isViewing(player) && inViewDistance && visibleByDefault) {
+        } else if (!isViewing(player) && inViewDistance && canSee && isAllowed) {
             updateVisibility(player, true);
         }
     }
@@ -288,6 +285,32 @@ public class CoreHologramVisibilityManager {
             return isVisibleByDefault() || getPlayerVisibilityMap().get(player.getUniqueId()) == Visibility.VISIBLE;
         }
         return isVisibleByDefault();
+    }
+
+    /**
+     * Check if the given player is within the view distance of this hologram. Meaning
+     * that the player is close enough to the hologram to be able to see it.
+     *
+     * @param player The player to check.
+     * @return True if the player is within the view distance of this hologram, false otherwise.
+     */
+    private boolean isInViewDistance(@NonNull Player player) {
+        return MathUtil.inDistance(
+                this.parent.getPositionManager().getActualBukkitLocation(),
+                player.getLocation(),
+                this.parent.getSettings().getViewDistance()
+        );
+    }
+
+    /**
+     * Check if the given player is allowed to see this hologram.
+     *
+     * @param player The player to check.
+     * @return True if the player is allowed to see this hologram, false otherwise.
+     */
+    protected boolean isAllowed(@SuppressWarnings("unused") @NonNull Player player) {
+        // Can be overridden by subclasses to add additional checks
+        return true;
     }
 
     /**
