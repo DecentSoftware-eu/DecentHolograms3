@@ -19,41 +19,42 @@
 package eu.decentsoftware.holograms.api.internal;
 
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
+import lombok.NonNull;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * !! INTERNAL USE ONLY !!
  * <p>
- * Internal class to provide the {@link DecentHologramsAPI} instance.
+ * Use {@link DecentHologramsAPI#getInstance(Plugin)} to get an instance of the API.
  *
  * @author d0by
+ * @see DecentHologramsAPI#getInstance(Plugin)
  * @since 3.0.0
  */
 @ApiStatus.Internal
-public final class DecentHologramsAPIProvider {
+public abstract class DecentHologramsAPIProvider {
 
-    private static DecentHologramsAPI instance;
-
-    @Contract(value = " -> fail", pure = true)
-    private DecentHologramsAPIProvider() {
-        throw new UnsupportedOperationException("This class cannot be instantiated.");
-    }
+    private static DecentHologramsAPIProvider implementation;
 
     @Contract(pure = true)
-    public static DecentHologramsAPI getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("DecentHologramsAPI instance is not set.");
+    @ApiStatus.Internal
+    public static DecentHologramsAPIProvider getImplementation() {
+        if (DecentHologramsAPIProvider.implementation == null) {
+            throw new IllegalStateException("DecentHologramsAPIProvider implementation is not set.");
         }
-        return instance;
+        return DecentHologramsAPIProvider.implementation;
     }
 
-    public static void setInstance(@NotNull DecentHologramsAPI api) {
-        if (instance != null) {
-            throw new IllegalStateException("DecentHologramsAPI instance is already set.");
+    @ApiStatus.Internal
+    public static void setImplementation(@NonNull DecentHologramsAPIProvider implementation) {
+        if (DecentHologramsAPIProvider.implementation != null) {
+            throw new IllegalStateException("DecentHologramsAPIProvider implementation is already set.");
         }
-        instance = api;
+        DecentHologramsAPIProvider.implementation = implementation;
     }
+
+    public abstract DecentHologramsAPI getAPI(@NonNull Plugin plugin);
 
 }

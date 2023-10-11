@@ -26,8 +26,7 @@ import eu.decentsoftware.holograms.actions.serialization.ActionHolderSerializer;
 import eu.decentsoftware.holograms.actions.serialization.ClickActionHolderSerializer;
 import eu.decentsoftware.holograms.addons.AddonLoader;
 import eu.decentsoftware.holograms.animations.AnimationRegistry;
-import eu.decentsoftware.holograms.api.DecentHologramsAPIImpl;
-import eu.decentsoftware.holograms.api.event.DecentHologramsReloadEvent;
+import eu.decentsoftware.holograms.api.DecentHologramsAPIProviderImpl;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.commands.RootCommand;
@@ -53,7 +52,6 @@ import eu.decentsoftware.holograms.utils.CommandUtil;
 import eu.decentsoftware.holograms.utils.UpdateChecker;
 import eu.decentsoftware.holograms.utils.watcher.FileWatcher;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
@@ -83,6 +81,7 @@ public final class DecentHolograms extends JavaPlugin {
     private NMSManager nMSManager;
     private Editor editor;
     private AddonLoader addonLoader;
+    private DecentHologramsAPIProviderImpl apiProvider;
     private BootMessenger bootMessenger;
     private boolean enabled = false;
 
@@ -117,8 +116,9 @@ public final class DecentHolograms extends JavaPlugin {
         this.hologramManager = new PluginHologramManager(this);
         this.editor = new Editor(this);
 
-        // -- Register DecentHologramsAPI
-        DecentHologramsAPIProvider.setInstance(new DecentHologramsAPIImpl(this));
+        // -- Initialize DecentHologramsAPIProvider
+        this.apiProvider = new DecentHologramsAPIProviderImpl(this);
+        DecentHologramsAPIProvider.setImplementation(this.apiProvider);
 
         // -- Initialize Utils
         BungeeUtils.init(this);
@@ -151,6 +151,7 @@ public final class DecentHolograms extends JavaPlugin {
     @Override
     public void onDisable() {
         if (this.enabled) {
+            this.apiProvider.shutdown();
             this.editor.shutdown();
             this.ticker.shutdown();
             this.nMSManager.shutdown();

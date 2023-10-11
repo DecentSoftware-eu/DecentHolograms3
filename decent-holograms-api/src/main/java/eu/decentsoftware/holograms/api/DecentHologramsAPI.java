@@ -20,10 +20,13 @@ package eu.decentsoftware.holograms.api;
 
 import eu.decentsoftware.holograms.api.hologram.Hologram;
 import eu.decentsoftware.holograms.api.internal.DecentHologramsAPIProvider;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
 import lombok.NonNull;
-import org.bukkit.Location;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -35,13 +38,15 @@ import java.util.List;
 public interface DecentHologramsAPI {
 
     /**
-     * Get the instance of the API.
+     * Get an instance of the DecentHolograms API for the given plugin.
      *
+     * @param plugin The plugin to get the API for (instance of your plugin).
      * @return The instance of the API.
      */
+    @SuppressWarnings("unused")
     @Contract(pure = true)
-    static DecentHologramsAPI getInstance() {
-        return DecentHologramsAPIProvider.getInstance();
+    static DecentHologramsAPI getInstance(@NonNull Plugin plugin) {
+        return DecentHologramsAPIProvider.getImplementation().getAPI(plugin);
     }
 
     /**
@@ -52,7 +57,7 @@ public interface DecentHologramsAPI {
      * @see Hologram
      */
     @NonNull
-    Hologram createHologram(@NonNull Location location);
+    Hologram createHologram(@NonNull DecentLocation location);
 
     /**
      * Create a new hologram with the given lines at the first page.
@@ -66,6 +71,36 @@ public interface DecentHologramsAPI {
      * @see Hologram
      */
     @NonNull
-    Hologram createHologram(@NonNull Location location, @NonNull List<String> lines);
+    Hologram createHologram(@NonNull DecentLocation location, @NonNull List<String> lines);
+
+    /**
+     * Create a new hologram with the given lines at the first page.
+     * <p>
+     * You can use any kind of formatting in the lines. It will be automatically
+     * parsed just like if you were using the commands.
+     *
+     * @param location The location of the hologram.
+     * @param lines    The lines of the first page of the hologram.
+     * @return The new hologram.
+     * @see Hologram
+     */
+    @NonNull
+    default Hologram createHologram(@NonNull DecentLocation location, @NonNull String... lines) {
+        return createHologram(location, Arrays.asList(lines));
+    }
+
+    /**
+     * Get a collection of all holograms, created by this API instance.
+     *
+     * @return The collection of holograms.
+     */
+    Collection<Hologram> getHolograms();
+
+    /**
+     * Destroy all holograms, created by this API instance.
+     *
+     * @see Hologram#destroy()
+     */
+    void destroyHolograms();
 
 }
