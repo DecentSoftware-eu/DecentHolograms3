@@ -183,9 +183,6 @@ public final class DecentHolograms extends JavaPlugin {
             logOrBoot("Using PlaceholderAPI for placeholder support!");
         }
         this.bootMessenger.sendAndFinish();
-
-        // Call the reload event
-        Bukkit.getPluginManager().callEvent(new DecentHologramsReloadEvent());
     }
 
     public void log(@NonNull String message, Object... args) {
