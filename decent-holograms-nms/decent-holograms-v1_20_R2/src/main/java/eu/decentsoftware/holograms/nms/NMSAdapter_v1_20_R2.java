@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import com.mojang.datafixers.util.Pair;
-import eu.decentsoftware.holograms.api.hologram.ClickType;
+import eu.decentsoftware.holograms.api.util.ClickType;
 import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.ReflectField;
 import eu.decentsoftware.holograms.nms.utils.ReflectUtil;

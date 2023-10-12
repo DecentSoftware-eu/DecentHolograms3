@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram;
+package eu.decentsoftware.holograms.api.util;
 
+import eu.decentsoftware.holograms.api.hologram.HologramClickHandler;
 import lombok.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;

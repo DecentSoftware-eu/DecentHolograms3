@@ -18,6 +18,7 @@
 
 package eu.decentsoftware.holograms.api.hologram;
 
+import eu.decentsoftware.holograms.api.util.ClickType;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 

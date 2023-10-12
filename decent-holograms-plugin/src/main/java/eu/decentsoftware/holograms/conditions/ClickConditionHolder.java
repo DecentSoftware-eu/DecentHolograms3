@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.conditions;
 
 import com.google.common.collect.ImmutableList;
-import eu.decentsoftware.holograms.api.hologram.ClickType;
+import eu.decentsoftware.holograms.api.util.ClickType;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;

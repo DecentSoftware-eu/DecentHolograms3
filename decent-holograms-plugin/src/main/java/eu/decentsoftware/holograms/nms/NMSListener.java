@@ -19,7 +19,7 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.api.hologram.ClickType;
+import eu.decentsoftware.holograms.api.util.ClickType;
 import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
