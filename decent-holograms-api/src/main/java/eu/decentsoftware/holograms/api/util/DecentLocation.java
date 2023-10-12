@@ -22,51 +22,29 @@ import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * A thread-safe location without World object.
+ * A thread-safe, immutable location without yaw and pitch. This class
+ * does not store the {@link World} object, but only the world name,
+ * which makes it possible to use this class even if the world is not
+ * loaded.
  *
  * @author d0by
  * @since 3.0.0
  */
 public class DecentLocation {
 
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private @NonNull String worldName;
-    private double x;
-    private double y;
-    private double z;
-    private float yaw;
-    private float pitch;
+    private final String worldName;
+    private final double x;
+    private final double y;
+    private final double z;
 
     /**
-     * Create a new ThreadSafeLocation.
-     *
-     * @param worldName The world name.
-     * @param x         The x coordinate.
-     * @param y         The y coordinate.
-     * @param z         The z coordinate.
-     * @param yaw       The yaw.
-     * @param pitch     The pitch.
-     */
-    @Contract(pure = true)
-    public DecentLocation(@NonNull String worldName, double x, double y, double z, float yaw, float pitch) {
-        this.worldName = worldName;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.yaw = yaw;
-        this.pitch = pitch;
-    }
-
-    /**
-     * Create a new ThreadSafeLocation.
+     * Create a new instance of DecentLocation.
      *
      * @param worldName The world name.
      * @param x         The x coordinate.
@@ -75,16 +53,35 @@ public class DecentLocation {
      */
     @Contract(pure = true)
     public DecentLocation(@NonNull String worldName, double x, double y, double z) {
-        this(worldName, x, y, z, 0.0f, 0.0f);
+        this.worldName = worldName;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
-     * Create a new ThreadSafeLocation from a bukkit location.
+     * Create a new instance of DecentLocation.
+     *
+     * @param world The world.
+     * @param x     The x coordinate.
+     * @param y     The y coordinate.
+     * @param z     The z coordinate.
+     */
+    @Contract(pure = true)
+    public DecentLocation(@NonNull World world, double x, double y, double z) {
+        this.worldName = world.getName();
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    /**
+     * Create a new instance of DecentLocation from a bukkit location.
      *
      * @param location The bukkit location.
      */
     public DecentLocation(@NonNull Location location) {
-        this(location.getWorld().getName(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        this(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
     }
 
     /**
@@ -94,44 +91,7 @@ public class DecentLocation {
      */
     @NonNull
     public String getWorldName() {
-        lock.readLock().lock();
-        try {
-            return worldName;
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Set the world name of this location.
-     *
-     * @param worldName The new world name.
-     * @return This location.
-     */
-    public DecentLocation setWorldName(@NonNull String worldName) {
-        lock.writeLock().lock();
-        try {
-            this.worldName = worldName;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    /**
-     * Set the world of this location.
-     *
-     * @param world The new world.
-     * @return This location.
-     */
-    public DecentLocation setWorld(@NonNull World world) {
-        lock.writeLock().lock();
-        try {
-            this.worldName = world.getName();
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
+        return this.worldName;
     }
 
     /**
@@ -140,12 +100,7 @@ public class DecentLocation {
      * @return The x coordinate of this location.
      */
     public double getX() {
-        lock.readLock().lock();
-        try {
-            return x;
-        } finally {
-            lock.readLock().unlock();
-        }
+        return this.x;
     }
 
     /**
@@ -154,28 +109,7 @@ public class DecentLocation {
      * @return The block x coordinate of this location.
      */
     public int getBlockX() {
-        lock.readLock().lock();
-        try {
-            return (int) Math.floor(x);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Set the x coordinate of this location.
-     *
-     * @param x The new x coordinate.
-     * @return This location.
-     */
-    public DecentLocation setX(double x) {
-        lock.writeLock().lock();
-        try {
-            this.x = x;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
+        return (int) Math.floor(this.x);
     }
 
     /**
@@ -184,12 +118,7 @@ public class DecentLocation {
      * @return The y coordinate of this location.
      */
     public double getY() {
-        lock.readLock().lock();
-        try {
-            return y;
-        } finally {
-            lock.readLock().unlock();
-        }
+        return this.y;
     }
 
     /**
@@ -198,28 +127,7 @@ public class DecentLocation {
      * @return The block y coordinate of this location.
      */
     public int getBlockY() {
-        lock.readLock().lock();
-        try {
-            return (int) Math.floor(y);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Set the y coordinate of this location.
-     *
-     * @param y The new y coordinate.
-     * @return This location.
-     */
-    public DecentLocation setY(double y) {
-        lock.writeLock().lock();
-        try {
-            this.y = y;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
+        return (int) Math.floor(this.y);
     }
 
     /**
@@ -228,12 +136,7 @@ public class DecentLocation {
      * @return The z coordinate of this location.
      */
     public double getZ() {
-        lock.readLock().lock();
-        try {
-            return z;
-        } finally {
-            lock.readLock().unlock();
-        }
+        return this.z;
     }
 
     /**
@@ -242,136 +145,7 @@ public class DecentLocation {
      * @return The block z coordinate of this location.
      */
     public int getBlockZ() {
-        lock.readLock().lock();
-        try {
-            return (int) Math.floor(z);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Set the z coordinate of this location.
-     *
-     * @param z The new z coordinate.
-     * @return This location.
-     */
-    public DecentLocation setZ(double z) {
-        lock.writeLock().lock();
-        try {
-            this.z = z;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    /**
-     * Get the yaw of this location.
-     *
-     * @return The yaw of this location.
-     */
-    public float getYaw() {
-        lock.readLock().lock();
-        try {
-            return yaw;
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Set the yaw of this location.
-     *
-     * @param yaw The new yaw.
-     * @return This location.
-     */
-    public DecentLocation setYaw(float yaw) {
-        lock.writeLock().lock();
-        try {
-            this.yaw = yaw;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    /**
-     * Get the pitch of this location.
-     *
-     * @return The pitch of this location.
-     */
-    public float getPitch() {
-        lock.readLock().lock();
-        try {
-            return pitch;
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Set the pitch of this location.
-     *
-     * @param pitch The new pitch.
-     * @return This location.
-     */
-    public DecentLocation setPitch(float pitch) {
-        lock.writeLock().lock();
-        try {
-            this.pitch = pitch;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    public DecentLocation add(double x, double y, double z) {
-        lock.writeLock().lock();
-        try {
-            this.x += x;
-            this.y += y;
-            this.z += z;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    public DecentLocation add(Vector vector) {
-        lock.writeLock().lock();
-        try {
-            this.x += vector.getX();
-            this.y += vector.getY();
-            this.z += vector.getZ();
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    public DecentLocation subtract(double x, double y, double z) {
-        lock.writeLock().lock();
-        try {
-            this.x -= x;
-            this.y -= y;
-            this.z -= z;
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    public DecentLocation subtract(Vector vector) {
-        lock.writeLock().lock();
-        try {
-            this.x -= vector.getX();
-            this.y -= vector.getY();
-            this.z -= vector.getZ();
-            return this;
-        } finally {
-            lock.writeLock().unlock();
-        }
+        return (int) Math.floor(this.z);
     }
 
     /**
@@ -395,7 +169,7 @@ public class DecentLocation {
         if (world == null) {
             return null;
         }
-        return new Location(world, getX(), getY(), getZ(), getYaw(), getPitch());
+        return new Location(world, getX(), getY(), getZ());
     }
 
     /**
@@ -423,14 +197,15 @@ public class DecentLocation {
      *
      * @param location The other location.
      * @return The squared distance between the two locations.
+     * @throws IllegalArgumentException If the locations are in different worlds.
      */
     public double distanceSquared(@NonNull DecentLocation location) {
         if (!isSameWorld(location)) {
             throw new IllegalArgumentException("Cannot calculate distance between locations in different worlds");
         }
-        final double dx = getX() - location.getX();
-        final double dy = getY() - location.getY();
-        final double dz = getZ() - location.getZ();
+        double dx = getX() - location.getX();
+        double dy = getY() - location.getY();
+        double dz = getZ() - location.getZ();
         return dx * dx + dy * dy + dz * dz;
     }
 
@@ -439,14 +214,15 @@ public class DecentLocation {
      *
      * @param location The other location.
      * @return The squared distance between the two locations.
+     * @throws IllegalArgumentException If the locations are in different worlds.
      */
     public double distanceSquared(@NonNull Location location) {
         if (!isSameWorld(location)) {
             throw new IllegalArgumentException("Cannot calculate distance between locations in different worlds");
         }
-        final double dx = getX() - location.getX();
-        final double dy = getY() - location.getY();
-        final double dz = getZ() - location.getZ();
+        double dx = getX() - location.getX();
+        double dy = getY() - location.getY();
+        double dz = getZ() - location.getZ();
         return dx * dx + dy * dy + dz * dz;
     }
 
@@ -481,13 +257,13 @@ public class DecentLocation {
     }
 
     /**
-     * Clone this location.
+     * Make an identical copy of this location.
      *
-     * @return A clone of this location.
+     * @return The copy of this location.
      */
-    @Override
-    public DecentLocation clone() {
-        return new DecentLocation(getWorldName(), getX(), getY(), getZ(), getYaw(), getPitch());
+    @NonNull
+    public DecentLocation copy() {
+        return new DecentLocation(getWorldName(), getX(), getY(), getZ());
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -503,14 +279,12 @@ public class DecentLocation {
         return getWorldName().equals(other.getWorldName())
                 && getX() == other.getX()
                 && getY() == other.getY()
-                && getZ() == other.getZ()
-                && getYaw() == other.getYaw()
-                && getPitch() == other.getPitch();
+                && getZ() == other.getZ();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getWorldName(), getX(), getY(), getZ(), getYaw(), getPitch());
+        return Objects.hash(getWorldName(), getX(), getY(), getZ());
     }
 
     @Override
@@ -519,9 +293,7 @@ public class DecentLocation {
                 "world=" + getWorldName() + "," +
                 "x=" + getX() + "," +
                 "y=" + getY() + "," +
-                "z=" + getZ() + "," +
-                "yaw=" + getYaw() + "," +
-                "pitch=" + getPitch() +
+                "z=" + getZ() +
                 "}";
     }
 

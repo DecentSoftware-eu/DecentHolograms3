@@ -78,12 +78,13 @@ public class HologramCenterCommand extends DecentCommand {
         }
 
         CoreHologramPositionManager positionManager = hologram.getPositionManager();
-        DecentLocation newLocation = positionManager.getLocation().clone();
-        newLocation.setX(newLocation.getBlockX() + 0.5);
-        newLocation.setZ(newLocation.getBlockZ() + 0.5);
-        if (centerOnY) {
-            newLocation.setY(newLocation.getBlockY() + 0.5);
-        }
+        DecentLocation location = positionManager.getLocation();
+        DecentLocation newLocation = new DecentLocation(
+                location.getWorldName(),
+                location.getBlockX() + 0.5d,
+                centerOnY ? location.getBlockY() + 0.5d : location.getY(),
+                location.getBlockZ() + 0.5d
+        );
         positionManager.setLocation(newLocation);
         hologram.getConfig().save();
         Lang.confTell(sender, "editor.center.success", hologram.getName());

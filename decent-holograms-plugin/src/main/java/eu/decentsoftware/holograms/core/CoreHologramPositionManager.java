@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.core;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import lombok.NonNull;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -57,9 +58,24 @@ public class CoreHologramPositionManager {
     @NonNull
     public DecentLocation getActualLocation() {
         if (this.locationSupplier != null) {
-            return new DecentLocation(this.locationSupplier.get()).add(this.offsets);
+            Location suppliedLocation = this.locationSupplier.get();
+            World world = suppliedLocation.getWorld();
+            if (world == null) {
+                throw new IllegalStateException("World " + suppliedLocation.getWorld() + " is not loaded!");
+            }
+            return new DecentLocation(
+                    world,
+                    suppliedLocation.getX() + this.offsets.getX(),
+                    suppliedLocation.getY() + this.offsets.getY(),
+                    suppliedLocation.getZ() + this.offsets.getZ()
+            );
         }
-        return this.location.clone().add(this.offsets);
+        return new DecentLocation(
+                this.location.getWorldName(),
+                this.location.getX() + this.offsets.getX(),
+                this.location.getY() + this.offsets.getY(),
+                this.location.getZ() + this.offsets.getZ()
+        );
     }
 
     @NonNull
@@ -67,11 +83,11 @@ public class CoreHologramPositionManager {
         if (this.locationSupplier != null) {
             return this.locationSupplier.get().clone().add(this.offsets);
         }
-        Location location = this.location.clone().add(this.offsets).toBukkitLocation();
+        Location location = this.location.toBukkitLocation();
         if (location == null) {
             throw new IllegalStateException("World " + this.location.getWorldName() + " is not loaded!");
         }
-        return location;
+        return location.add(this.offsets);
     }
 
     public void bindLocation(@Nullable Supplier<Location> locationSupplier) {

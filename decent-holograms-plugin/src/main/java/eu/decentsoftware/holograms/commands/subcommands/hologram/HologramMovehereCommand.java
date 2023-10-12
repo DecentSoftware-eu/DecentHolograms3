@@ -74,11 +74,7 @@ public class HologramMovehereCommand extends DecentCommand {
         }
 
         Player player = (Player) sender;
-
-        DecentLocation currentLocation = hologram.getPositionManager().getLocation();
         DecentLocation newLocation = new DecentLocation(player.getLocation());
-        newLocation.setYaw(currentLocation.getYaw());
-        newLocation.setPitch(currentLocation.getPitch());
 
         hologram.getPositionManager().setLocation(newLocation);
         hologram.getConfig().save();

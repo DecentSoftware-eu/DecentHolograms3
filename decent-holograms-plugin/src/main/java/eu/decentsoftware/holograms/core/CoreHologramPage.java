@@ -109,14 +109,24 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void updateLinePositions() {
         checkDestroyed();
 
-        DecentLocation hologramLocation = this.parent.getPositionManager().getLocation().clone();
+        DecentLocation hologramLocation = this.parent.getPositionManager().getLocation();
         if (this.parent.getSettings().isDownOrigin()) {
-            hologramLocation.add(0, getHeight(), 0);
+            hologramLocation = new DecentLocation(
+                    hologramLocation.getWorldName(),
+                    hologramLocation.getX(),
+                    hologramLocation.getY() - getHeight(),
+                    hologramLocation.getZ()
+            );
         }
 
         for (LINE line : this.lines) {
-            line.setLocation(hologramLocation.clone());
-            hologramLocation.subtract(0, line.getSettings().getHeight(), 0);
+            line.setLocation(hologramLocation);
+            hologramLocation = new DecentLocation(
+                    hologramLocation.getWorldName(),
+                    hologramLocation.getX(),
+                    hologramLocation.getY() - line.getSettings().getHeight(),
+                    hologramLocation.getZ()
+            );
         }
     }
 

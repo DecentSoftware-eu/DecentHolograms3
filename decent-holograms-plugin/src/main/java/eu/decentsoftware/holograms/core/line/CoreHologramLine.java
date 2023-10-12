@@ -194,11 +194,11 @@ public class CoreHologramLine extends CoreHologramComponent {
     }
 
     public Location getActualBukkitLocation() {
-        DecentLocation actualLocation = this.location.clone();
-        actualLocation.add(
-                this.settings.getOffsetX(),
-                this.settings.getOffsetY() + getTypeYOffset(),
-                this.settings.getOffsetZ()
+        DecentLocation actualLocation = new DecentLocation(
+                this.location.getWorldName(),
+                this.location.getX() + this.settings.getOffsetX(),
+                this.location.getY() + this.settings.getOffsetY() + getTypeYOffset(),
+                this.location.getZ() + this.settings.getOffsetZ()
         );
         return actualLocation.toBukkitLocation();
     }

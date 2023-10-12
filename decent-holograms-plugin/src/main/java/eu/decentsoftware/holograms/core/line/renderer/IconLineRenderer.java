@@ -87,7 +87,7 @@ public class IconLineRenderer extends DoubleEntityLineRenderer implements Ticked
 
         Object metaItem = nmsAdapter.getMetaItemStack(item);
 
-        nmsAdapter.sendEntityMetadata(player, eidOther, metaItem);
+        nmsAdapter.sendEntityMetadata(player, getEntityId(1), metaItem);
     }
 
     public void setItemStack(@NonNull DecentItemStack itemStack) {

@@ -32,9 +32,7 @@ public class DecentLocationSerializer implements JsonSerializer<DecentLocation>,
         double x = parent.get("x").getAsDouble();
         double y = parent.get("y").getAsDouble();
         double z = parent.get("z").getAsDouble();
-        float yaw = parent.get("yaw").getAsFloat();
-        float pitch = parent.get("pitch").getAsFloat();
-        return new DecentLocation(worldName, x, y, z, yaw, pitch);
+        return new DecentLocation(worldName, x, y, z);
     }
 
     @Override
@@ -44,8 +42,6 @@ public class DecentLocationSerializer implements JsonSerializer<DecentLocation>,
         parent.addProperty("x", src.getX());
         parent.addProperty("y", src.getY());
         parent.addProperty("z", src.getZ());
-        parent.addProperty("yaw", src.getYaw());
-        parent.addProperty("pitch", src.getPitch());
         return parent;
     }
 

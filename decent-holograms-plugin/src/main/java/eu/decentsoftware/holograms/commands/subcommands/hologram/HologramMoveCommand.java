@@ -183,14 +183,13 @@ public class HologramMoveCommand extends DecentCommand {
     }
 
     private void setHologramLocation(@NonNull PluginHologram hologram, @NonNull Position3D position, @Nullable World world) {
-        DecentLocation newLocation = hologram.getPositionManager().getLocation().clone();
-        newLocation.setX(position.getX());
-        newLocation.setY(position.getY());
-        newLocation.setZ(position.getZ());
-        if (world != null) {
-            newLocation.setWorld(world);
-        }
-
+        DecentLocation location = hologram.getPositionManager().getLocation();
+        DecentLocation newLocation = new DecentLocation(
+                world == null ? location.getWorldName() : world.getName(),
+                position.getX(),
+                position.getY(),
+                position.getZ()
+        );
         hologram.getPositionManager().setLocation(newLocation);
         hologram.getConfig().save();
     }
