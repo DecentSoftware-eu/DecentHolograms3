@@ -35,7 +35,7 @@ class PluginHologramListener implements Listener {
     private final PluginHologramManager manager;
 
     @Contract(pure = true)
-    public PluginHologramListener(@NonNull PluginHologramManager manager) {
+    PluginHologramListener(@NonNull PluginHologramManager manager) {
         this.manager = manager;
     }
 
