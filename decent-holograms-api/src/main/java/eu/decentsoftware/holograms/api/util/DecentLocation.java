@@ -36,7 +36,7 @@ import java.util.Objects;
  * @author d0by
  * @since 3.0.0
  */
-public class DecentLocation {
+public class DecentLocation implements Cloneable {
 
     private final String worldName;
     private final double x;
@@ -256,14 +256,14 @@ public class DecentLocation {
         return getWorldName().equals(world.getName());
     }
 
-    /**
-     * Make an identical copy of this location.
-     *
-     * @return The copy of this location.
-     */
     @NonNull
-    public DecentLocation copy() {
-        return new DecentLocation(getWorldName(), getX(), getY(), getZ());
+    @Override
+    public DecentLocation clone() {
+        try {
+            return (DecentLocation) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new Error(e);
+        }
     }
 
     @Contract(value = "null -> false", pure = true)

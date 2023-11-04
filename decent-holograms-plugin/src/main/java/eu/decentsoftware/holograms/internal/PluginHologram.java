@@ -54,7 +54,7 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
         super(plugin);
         this.name = name;
         this.visibilityManager = new PluginHologramVisibilityManager(this);
-        this.positionManager = new CoreHologramPositionManager(location);
+        this.positionManager = new PluginHologramPositionManager(location);
         this.entityIDManager = new CoreHologramEntityIDManager(this.plugin.getNMSManager().getAdapter());
         this.config = new PluginHologramConfig(this.plugin, this);
         this.viewConditions = viewConditions;

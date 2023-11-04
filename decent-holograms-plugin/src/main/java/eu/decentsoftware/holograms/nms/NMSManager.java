@@ -19,16 +19,16 @@
 package eu.decentsoftware.holograms.nms;
 
 import eu.decentsoftware.holograms.DecentHolograms;
-import eu.decentsoftware.holograms.nms.event.PacketPlayInUseEntityEvent;
 import eu.decentsoftware.holograms.nms.utils.Version;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoop;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * This class is responsible for initializing the NMS adapter,
@@ -39,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class NMSManager {
 
-    private static final String IDENTIFIER = "DecentHolograms";
     private final DecentHolograms plugin;
     private final NMSAdapter adapter;
     private final NMSListener listener;
@@ -57,89 +56,73 @@ public class NMSManager {
             throw new IllegalStateException(String.format("Version %s is not supported!", Version.CURRENT.name()));
         }
         this.listener = new NMSListener(plugin, this);
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
+        Bukkit.getPluginManager().registerEvents(this.listener, plugin);
     }
 
     /**
-     * (Re)initialize the packet listener.
+     * Reload the NMS manager, re-hooking all online players.
      */
     public void reload() {
-        this.shutdown();
-
-        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            if (protocolLibHook == null) {
-                protocolLibHook = new ProtocolLibHook(plugin);
-            }
-            protocolLibHook.initListener(adapter);
-        } else {
-            hookAll();
-        }
+        hookAll();
+        // TODO: Test without ProtocolLib to see if the support is even needed.
+//        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+//            if (this.protocolLibHook == null) {
+//                this.protocolLibHook = new ProtocolLibHook(this.plugin);
+//            }
+//            this.protocolLibHook.initListener(this.adapter);
+//        } else {
+//            hookAll();
+//        }
     }
 
     /**
-     * Shutdown the NMS manager, unhooking all players.
+     * Shutdown the NMS manager, unhooking all players. This will make this
+     * manager unusable. After calling this method, this manager should not
+     * be referenced anymore.
      */
     public void shutdown() {
-        HandlerList.unregisterAll(listener);
+        HandlerList.unregisterAll(this.listener);
 
-        if (usingProtocolLib()) {
-            protocolLibHook.shutdownListener();
-        } else {
-            unhookAll();
-        }
+        unhookAll();
+//        if (usingProtocolLib()) {
+//            this.protocolLibHook.shutdownListener();
+//        } else {
+//            unhookAll();
+//        }
     }
 
     /**
      * Create a packet handler for the given players. This will start listening
      * to the packets for the given player.
+     * <p>
+     * If the player already has a packet handler, it will be replaced.
      *
      * @param player The player to listen to.
-     * @return True if the packet handler was created, false otherwise.
      */
-    public boolean hook(@NonNull Player player) {
+    public void hook(@NonNull Player player) {
         if (usingProtocolLib()) {
-            return true;
+            return;
         }
 
-        try {
-            ChannelPipeline pipeline = adapter.getPipeline(player);
-            if (pipeline.get(IDENTIFIER) == null) {
-                ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
-                    @Override
-                    public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-                        PacketPlayInUseEntityEvent event = adapter.extractEventFromPacketPlayInUseEntity(player, packet);
-                        if (event == null) {
-                            super.channelRead(channelHandlerContext, packet);
-                            return;
-                        }
-
-                        Bukkit.getPluginManager().callEvent(event);
-
-                        if (!event.isCancelled()) {
-                            super.channelRead(channelHandlerContext, packet);
-                        }
-                    }
-                };
-                pipeline.addBefore("packet_handler", IDENTIFIER, channelDuplexHandler);
+        executeOnPipeline(player, pipeline -> {
+            if (pipeline.get(PlayerPacketHandler.IDENTIFIER) != null) {
+                pipeline.remove(PlayerPacketHandler.IDENTIFIER);
             }
-            return true;
-        } catch (Exception e) {
-            plugin.getLogger().warning("Failed to hook player " + player.getName() + "!");
-            e.printStackTrace();
-        }
-        return false;
+            pipeline.addBefore(
+                    "packet_handler",
+                    PlayerPacketHandler.IDENTIFIER,
+                    new PlayerPacketHandler(player, this)
+            );
+        });
     }
 
-    /**
-     * Hook all players.
-     *
-     * @see #hook(Player)
-     */
     public void hookAll() {
-        if (!usingProtocolLib()) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                hook(player);
-            }
+        if (usingProtocolLib()) {
+            return;
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            hook(player);
         }
     }
 
@@ -147,31 +130,19 @@ public class NMSManager {
      * Stop listening to the packets for the given player.
      *
      * @param player The player to stop listening to.
-     * @return True if the packet handler was destroyed, false otherwise.
      */
-    public boolean unhook(@NonNull Player player) {
+    public void unhook(@NonNull Player player) {
         if (usingProtocolLib()) {
-            return true;
+            return;
         }
 
-        try {
-            ChannelPipeline pipeline = adapter.getPipeline(player);
-            if (pipeline.get(IDENTIFIER) != null) {
-                pipeline.remove(IDENTIFIER);
+        executeOnPipeline(player, pipeline -> {
+            if (pipeline.get(PlayerPacketHandler.IDENTIFIER) != null) {
+                pipeline.remove(PlayerPacketHandler.IDENTIFIER);
             }
-            return true;
-        } catch (Exception e) {
-            plugin.getLogger().warning("Failed to unhook player " + player.getName() + "!");
-            e.printStackTrace();
-        }
-        return false;
+        });
     }
 
-    /**
-     * Unhook all players.
-     *
-     * @see #unhook(Player)
-     */
     public void unhookAll() {
         if (!usingProtocolLib()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -180,12 +151,32 @@ public class NMSManager {
         }
     }
 
+    private void executeOnPipeline(@NonNull Player player, @NonNull Consumer<ChannelPipeline> operation) {
+        try {
+            if (!player.isOnline()) {
+                return;
+            }
+
+            ChannelPipeline pipeline = this.adapter.getPipeline(player);
+            EventLoop eventLoop = pipeline.channel().eventLoop();
+
+            if (eventLoop.inEventLoop()) {
+                operation.accept(pipeline);
+            } else {
+                eventLoop.execute(() -> executeOnPipeline(player, operation));
+            }
+        } catch (Exception e) {
+            this.plugin.getLogger().warning("Failed to execute operation on " + player.getName() + "'s channel pipeline!");
+            e.printStackTrace();
+        }
+    }
+
     public NMSAdapter getAdapter() {
-        return adapter;
+        return this.adapter;
     }
 
     private boolean usingProtocolLib() {
-        return Bukkit.getPluginManager().isPluginEnabled("ProtocolLib") && protocolLibHook != null;
+        return false;//Bukkit.getPluginManager().isPluginEnabled("ProtocolLib") && this.protocolLibHook != null;
     }
 
     @Nullable

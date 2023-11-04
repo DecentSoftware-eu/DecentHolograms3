@@ -59,11 +59,11 @@ public class CoreHologramLine extends CoreHologramComponent {
         this.settings = settings;
     }
 
-    public void destroy() {
+    public void destroy(int index) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.destroy();
+            this.renderer.destroy(index);
             this.renderer = null;
         }
 
@@ -75,11 +75,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to display this line to.
      */
-    public void display(@NonNull Player player) {
+    public void display(@NonNull Player player, int index) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.display(player);
+            this.renderer.display(player, index);
         }
     }
 
@@ -88,11 +88,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to hide this line from.
      */
-    public void hide(@NonNull Player player) {
+    public void hide(@NonNull Player player, int index) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.hide(player);
+            this.renderer.hide(player, index);
         }
     }
 
@@ -101,11 +101,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to update this line for.
      */
-    public void updateContent(@NonNull Player player) {
+    public void updateContent(@NonNull Player player, int index) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.updateContent(player);
+            this.renderer.updateContent(player, index);
         }
     }
 
@@ -114,11 +114,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to update this line for.
      */
-    public void updateLocation(@NonNull Player player) {
+    public void updateLocation(@NonNull Player player, int index) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.updateLocation(player, getActualBukkitLocation());
+            this.renderer.updateLocation(player, index, getActualBukkitLocation());
         }
     }
 

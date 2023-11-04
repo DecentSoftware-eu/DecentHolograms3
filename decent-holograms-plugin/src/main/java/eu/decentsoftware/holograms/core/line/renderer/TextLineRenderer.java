@@ -73,9 +73,9 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     }
 
     @Override
-    public void destroy() {
+    public void destroy(int index) {
         this.stopTicking();
-        super.destroy();
+        super.destroy(index);
     }
 
     /**
@@ -116,7 +116,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
             }
             formattedText = this.plugin.getAnimationRegistry().animate(formattedText);
             formattedText = Common.colorize(formattedText);
-            updateContent(viewerPlayer, formattedText);
+            updateContent(viewerPlayer, index, formattedText);
         }
     }
 
@@ -149,7 +149,7 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
     }
 
     @Override
-    public void display(@NonNull Player player) {
+    public void display(@NonNull Player player, int index) {
         String formattedText = getFormattedText(player);
 
         Object metaEntity = this.nmsAdapter.getMetaEntityProperties(
@@ -170,34 +170,34 @@ public class TextLineRenderer extends LineRenderer implements Ticked {
         Object metaName = getMetaName(formattedText);
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!formattedText.isEmpty());
 
-        this.nmsAdapter.spawnEntityLiving(player, getEntityId(0), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
-        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaEntity, metaArmorStand, metaName, metaNameVisible);
+        this.nmsAdapter.spawnEntityLiving(player, getEntityId(index, 0), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(index, 0), metaEntity, metaArmorStand, metaName, metaNameVisible);
     }
 
     @Override
-    public void hide(@NonNull Player player) {
-        this.nmsAdapter.removeEntity(player, getEntityId(0));
+    public void hide(@NonNull Player player, int index) {
+        this.nmsAdapter.removeEntity(player, getEntityId(index, 0));
 
         this.formattedTextCache.remove(player.getUniqueId());
     }
 
     @Override
-    public void updateContent(@NonNull Player player) {
+    public void updateContent(@NonNull Player player, int index) {
         String formattedText = getFormattedText(player);
-        updateContent(player, formattedText);
+        updateContent(player, index, formattedText);
     }
 
-    private void updateContent(@NonNull Player player, @NonNull String text) {
+    private void updateContent(@NonNull Player player, int index, @NonNull String text) {
         Object metaName = getMetaName(text);
         boolean isNameInvisible = text.isEmpty() || text.replaceAll("§.", "").isEmpty();
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(!isNameInvisible);
 
-        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaName, metaNameVisible);
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(index, 0), metaName, metaNameVisible);
     }
 
     @Override
-    public void updateLocation(@NonNull Player player, @NonNull Location location) {
-        this.nmsAdapter.teleportEntity(player, getEntityId(0), location, true);
+    public void updateLocation(@NonNull Player player, int index, @NonNull Location location) {
+        this.nmsAdapter.teleportEntity(player, getEntityId(index, 0), location, true);
     }
 
     private Object getMetaName(@NonNull String formattedText) {

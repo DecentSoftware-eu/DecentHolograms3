@@ -16,33 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.internal;
+package eu.decentsoftware.holograms.api.hologram;
 
 import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.core.CoreHologramView;
-import eu.decentsoftware.holograms.core.CoreHologramVisibilityManager;
+import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 
-public class PluginHologramVisibilityManager extends CoreHologramVisibilityManager {
+public class APIHologramView extends CoreHologramView {
 
-    public PluginHologramVisibilityManager(@NonNull CoreHologram<?> parent) {
-        super(parent);
+    public APIHologramView(
+            @NonNull Player player,
+            @NonNull CoreHologram<?> hologram,
+            @NonNull CoreHologramPage<?> currentPage
+    ) {
+        super(player, hologram, currentPage);
     }
 
     @Override
-    protected boolean checkHologramViewConditions(@NonNull Player player) {
-        if (this.parent instanceof PluginHologram) {
-            PluginHologram hologram = (PluginHologram) this.parent;
-            return hologram.getViewConditions().check(player);
-        }
-        return super.checkHologramViewConditions(player);
-    }
-
-    @Override
-    protected CoreHologramView createView(@NonNull Player player, @NonNull CoreHologramPage<?> page) {
-        return new PluginHologramView(player, this.parent, page);
+    protected boolean checkLineViewConditions(@NonNull CoreHologramLine line) {
+        return true;
     }
 
 }

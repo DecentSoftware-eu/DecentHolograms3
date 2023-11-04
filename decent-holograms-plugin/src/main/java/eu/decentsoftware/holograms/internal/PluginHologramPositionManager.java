@@ -16,24 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.decentsoftware.holograms.api.hologram;
+package eu.decentsoftware.holograms.internal;
 
-import eu.decentsoftware.holograms.core.CoreHologramPage;
-import eu.decentsoftware.holograms.core.CoreHologramView;
-import eu.decentsoftware.holograms.core.CoreHologramVisibilityManager;
+import eu.decentsoftware.holograms.api.util.DecentLocation;
+import eu.decentsoftware.holograms.core.CoreHologramPositionManager;
 import lombok.NonNull;
-import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.jetbrains.annotations.Nullable;
 
-public class APIHologramVisibilityManager extends CoreHologramVisibilityManager implements HologramVisibilityManager {
+import java.util.function.Supplier;
 
-    public APIHologramVisibilityManager(@NonNull APIHologram parent) {
-        super(parent);
-        this.defaultVisibility = Visibility.VISIBLE;
+public class PluginHologramPositionManager extends CoreHologramPositionManager {
+
+    public PluginHologramPositionManager(@NonNull DecentLocation location) {
+        super(location);
     }
 
-    @Override
-    protected CoreHologramView createView(@NonNull Player player, @NonNull CoreHologramPage<?> page) {
-        return new APIHologramView(player, this.parent, page);
+    public PluginHologramPositionManager(@NonNull DecentLocation location, @Nullable Supplier<Location> locationSupplier) {
+        super(location, locationSupplier);
     }
 
 }

@@ -59,9 +59,9 @@ public class HeadLineRenderer extends LineRenderer implements Ticked {
     }
 
     @Override
-    public void destroy() {
+    public void destroy(int index) {
         this.stopTicking();
-        super.destroy();
+        super.destroy(index);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class HeadLineRenderer extends LineRenderer implements Ticked {
     }
 
     @Override
-    public void display(@NonNull Player player) {
+    public void display(@NonNull Player player, int index) {
         ItemStack item = this.itemStack.toItemStack(player);
 
         Object metaEntity = this.nmsAdapter.getMetaEntityProperties(
@@ -100,26 +100,26 @@ public class HeadLineRenderer extends LineRenderer implements Ticked {
         );
         Object metaNameVisible = this.nmsAdapter.getMetaEntityCustomNameVisible(false);
 
-        this.nmsAdapter.spawnEntityLiving(player, getEntityId(0), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
-        this.nmsAdapter.sendEntityMetadata(player, getEntityId(0), metaEntity, metaArmorStand, metaNameVisible);
-        this.nmsAdapter.setEquipment(player, getEntityId(0), EquipmentSlot.HEAD, item);
+        this.nmsAdapter.spawnEntityLiving(player, getEntityId(index, 0), UUID.randomUUID(), EntityType.ARMOR_STAND, this.parent.getActualBukkitLocation());
+        this.nmsAdapter.sendEntityMetadata(player, getEntityId(index, 0), metaEntity, metaArmorStand, metaNameVisible);
+        this.nmsAdapter.setEquipment(player, getEntityId(index, 0), EquipmentSlot.HEAD, item);
     }
 
     @Override
-    public void updateContent(@NonNull Player player) {
+    public void updateContent(@NonNull Player player, int index) {
         ItemStack item = itemStack.toItemStack(player);
 
-        this.nmsAdapter.setEquipment(player, getEntityId(0), EquipmentSlot.HEAD, item);
+        this.nmsAdapter.setEquipment(player, getEntityId(index, 0), EquipmentSlot.HEAD, item);
     }
 
     @Override
-    public void hide(@NonNull Player player) {
-        this.nmsAdapter.removeEntity(player, getEntityId(0));
+    public void hide(@NonNull Player player, int index) {
+        this.nmsAdapter.removeEntity(player, getEntityId(index, 0));
     }
 
     @Override
-    public void updateLocation(@NonNull Player player, @NonNull Location location) {
-        this.nmsAdapter.teleportEntity(player, getEntityId(0), location, true);
+    public void updateLocation(@NonNull Player player, int index, @NonNull Location location) {
+        this.nmsAdapter.teleportEntity(player, getEntityId(index, 0), location, true);
     }
 
     public void setItemStack(@NonNull DecentItemStack itemStack) {

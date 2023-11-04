@@ -21,15 +21,13 @@ package eu.decentsoftware.holograms.core;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineSettings;
-import eu.decentsoftware.holograms.api.hologram.ClickType;
-import eu.decentsoftware.holograms.api.util.DecentLocation;
+import eu.decentsoftware.holograms.api.util.ClickType;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.renderer.HologramLineRenderer;
 import eu.decentsoftware.holograms.profile.Profile;
 import eu.decentsoftware.holograms.ticker.Ticked;
 import eu.decentsoftware.holograms.utils.math.MathUtil;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -37,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends CoreHologramComponent implements Ticked {
@@ -54,16 +50,6 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
 
     protected CoreHologram(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
-    }
-
-    public CoreHologram(@NonNull DecentHolograms plugin, @NonNull DecentLocation location) {
-        this.plugin = plugin;
-        this.visibilityManager = new CoreHologramVisibilityManager(this);
-        this.positionManager = new CoreHologramPositionManager(location);
-        this.settings = new CoreHologramSettings(true);
-        this.entityIDManager = new CoreHologramEntityIDManager(plugin.getNMSManager().getAdapter());
-
-        startTicking();
     }
 
     public void destroy() {
@@ -210,7 +196,8 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
         }
 
         double height = 0.0d;
-        for (CoreHologramLine line : page.getLines()) {
+        for (int i = 0; i < page.getLines().size(); i++) {
+            CoreHologramLine line = page.getLines().get(i);
             HologramLineRenderer renderer = line.getRenderer();
             HologramLineSettings settings = line.getSettings();
             double totalOffsetY = line.getTypeYOffset() + settings.getOffsetY();
@@ -243,7 +230,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             }
 
             if (renderer != null) {
-                renderer.updateLocation(player, location);
+                renderer.updateLocation(player, i, location);
             }
         }
     }
@@ -370,12 +357,9 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
      * @param shift The amount to shift by.
      */
     private void shiftPlayerPages(int index, int shift) {
-        for (Map.Entry<UUID, Integer> entry : this.visibilityManager.getPlayerPages().entrySet()) {
-            if (entry.getValue() >= index) {
-                Player player = Bukkit.getPlayer(entry.getKey());
-                if (player != null) {
-                    switchPage(player, entry.getValue() + shift);
-                }
+        for (CoreHologramView view : this.visibilityManager.getViews()) {
+            if (view.getCurrentPageIndex() >= index) {
+                switchPage(view.getPlayer(), view.getCurrentPageIndex() + shift);
             }
         }
     }

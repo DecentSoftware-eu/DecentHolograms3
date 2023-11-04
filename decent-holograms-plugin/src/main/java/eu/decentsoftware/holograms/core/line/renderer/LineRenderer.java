@@ -49,8 +49,8 @@ public abstract class LineRenderer implements HologramLineRenderer {
     }
 
     @Override
-    public void destroy() {
-        this.hideAll();
+    public void destroy(int index) {
+        this.hideAll(index);
     }
 
     /**
@@ -65,43 +65,43 @@ public abstract class LineRenderer implements HologramLineRenderer {
     /**
      * Get the entity ID for the specified index of the parent line.
      *
-     * @param index The index of the entity. Starts at 0.
+     * @param lineIndex   The index of the line in the parent hologram page. Starts at 0.
+     * @param entityIndex The index of the entity. Starts at 0.
      * @return The entity ID.
      */
-    protected int getEntityId(int index) {
+    protected int getEntityId(int lineIndex, int entityIndex) {
         CoreHologramEntityIDManager entityIDManager = this.parent.getParent().getParent().getEntityIDManager();
-        int lineIndex = this.parent.getParent().getIndex(this.parent);
-        return entityIDManager.getEntityId(lineIndex, index);
+        return entityIDManager.getEntityId(lineIndex, entityIndex);
     }
 
     /**
      * Display the line to all players, that are currently viewing the hologram.
      *
-     * @see #display(Player)
+     * @see #display(Player, int)
      * @see #getViewerPlayers()
      */
-    public void displayAll() {
-        getViewerPlayers().forEach(this::display);
+    public void displayAll(int index) {
+        getViewerPlayers().forEach(player -> display(player, index));
     }
 
     /**
      * Hide the line from all players, that are currently viewing the hologram.
      *
-     * @see #hide(Player)
+     * @see #hide(Player, int)
      * @see #getViewerPlayers()
      */
-    public void hideAll() {
-        getViewerPlayers().forEach(this::hide);
+    public void hideAll(int index) {
+        getViewerPlayers().forEach(player -> hide(player, index));
     }
 
     /**
      * Update the line for all players, that are currently viewing the hologram.
      *
-     * @see #updateContent(Player)
+     * @see #updateContent(Player, int)
      * @see #getViewerPlayers()
      */
-    public void updateContentAll() {
-        getViewerPlayers().forEach(this::updateContent);
+    public void updateContentAll(int index) {
+        getViewerPlayers().forEach(player -> updateContent(player, index));
     }
 
     @NonNull

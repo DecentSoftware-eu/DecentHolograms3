@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class CoreHologramPositionManager {
+public abstract class CoreHologramPositionManager {
 
     protected DecentLocation location;
     protected Vector offsets;

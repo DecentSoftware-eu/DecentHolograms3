@@ -45,7 +45,7 @@ class ProtocolLibHook {
     private final DecentHolograms plugin;
 
     @Contract(pure = true)
-    public ProtocolLibHook(@NonNull DecentHolograms plugin) {
+    ProtocolLibHook(@NonNull DecentHolograms plugin) {
         this.plugin = plugin;
     }
 
@@ -57,7 +57,7 @@ class ProtocolLibHook {
     public void initListener(@NonNull NMSAdapter adapter) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         PacketAdapter packetAdapter = new PacketAdapter(
-                plugin,
+                this.plugin,
                 ListenerPriority.HIGHEST,
                 PacketType.Play.Server.ENTITY_METADATA
         ) {
@@ -90,7 +90,7 @@ class ProtocolLibHook {
      */
     public void shutdownListener() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.removePacketListeners(plugin);
+        protocolManager.removePacketListeners(this.plugin);
     }
 
 }

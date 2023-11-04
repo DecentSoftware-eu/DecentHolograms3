@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.hologram.Visibility;
-import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.utils.math.MathUtil;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -34,12 +33,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class CoreHologramVisibilityManager {
+public abstract class CoreHologramVisibilityManager {
 
     protected final CoreHologram<?> parent;
     protected final Map<UUID, Visibility> playerVisibilityMap = new ConcurrentHashMap<>();
-    protected final Map<UUID, Integer> playerPages = new ConcurrentHashMap<>();
-    protected final Set<UUID> currentViewers = new HashSet<>();
+    protected final Map<UUID, CoreHologramView> currentViewers = new ConcurrentHashMap<>();
     protected Visibility defaultVisibility;
 
     @Contract(pure = true)
@@ -76,6 +74,8 @@ public class CoreHologramVisibilityManager {
         return this.playerVisibilityMap.get(player.getUniqueId());
     }
 
+    protected abstract CoreHologramView createView(@NonNull Player player, @NonNull CoreHologramPage<?> page);
+
     /**
      * Hides the hologram for all players and clears the visibility cache.
      */
@@ -85,7 +85,6 @@ public class CoreHologramVisibilityManager {
 
         getViewersAsPlayers().forEach(player -> updateVisibility(player, false));
 
-        this.playerPages.clear();
         this.currentViewers.clear();
     }
 
@@ -94,7 +93,7 @@ public class CoreHologramVisibilityManager {
      * will only be able to see the hologram again, if the hologram is visible by default and
      * the player meets the view conditions.
      * <p>
-     * But all custom visibility settings for the player will be removed and all holograms
+     * But all custom visibility settings for the player will be removed and all hologram lines
      * that the player is currently viewing will be hidden. (Not permanently, but until the
      * next update of the hologram's visibility.)
      *
@@ -107,8 +106,6 @@ public class CoreHologramVisibilityManager {
         if (isViewing(player)) {
             updateVisibility(player, false);
         }
-
-        this.playerPages.remove(player.getUniqueId());
     }
 
     /**
@@ -127,7 +124,7 @@ public class CoreHologramVisibilityManager {
         }
 
         boolean inViewDistance = isInViewDistance(player);
-        boolean isAllowed = isAllowed(player);
+        boolean isAllowed = checkHologramViewConditions(player);
         boolean canSee = canSee(player);
         if (isViewing(player) && (!inViewDistance || !canSee || !isAllowed)) {
             updateVisibility(player, false);
@@ -166,10 +163,10 @@ public class CoreHologramVisibilityManager {
         pageOpt.ifPresent(page -> {
             if (visible) {
                 page.display(player);
-                this.currentViewers.add(player.getUniqueId());
+                this.currentViewers.put(player.getUniqueId(), createView(player, page));
             } else {
                 page.hide(player);
-                this.currentViewers.remove(player.getUniqueId());
+                this.currentViewers.remove(player.getUniqueId()).destroy();
             }
         });
     }
@@ -212,54 +209,28 @@ public class CoreHologramVisibilityManager {
      *
      * @param player The player to set the page for.
      * @param page   The page to set.
+     * @throws IllegalArgumentException If the page is not part of this hologram.
      */
     public void setPage(@NonNull Player player, int page) {
-        CoreHologramPage<?> oldPage = getPage(player);
-
-        this.playerPages.put(player.getUniqueId(), page);
-
-        if (oldPage != null && isViewing(player)) {
-            CoreHologramPage<?> newPage = getPage(player);
-            if (newPage != null) {
-                int i = 0;
-                for (; i < newPage.getLines().size(); i++) {
-                    CoreHologramLine newLine = newPage.getLine(i);
-                    CoreHologramLine oldLine = oldPage.getLine(i);
-                    if (newLine == null || oldLine == null) {
-                        continue;
-                    }
-
-                    /*
-                     * If the line type is the same, we can just update the content. This is
-                     * more efficient than hiding the old line and displaying the new one. It
-                     * also prevents flickering when the line is updated.
-                     */
-                    if (newLine.getType() == oldLine.getType()) {
-                        newLine.updateContent(player);
-                    } else {
-                        newLine.display(player);
-                        oldLine.hide(player);
-                    }
-                }
-                for (; i < oldPage.getLines().size(); i++) {
-                    CoreHologramLine oldLine = oldPage.getLine(i);
-                    if (oldLine == null) {
-                        continue;
-                    }
-                    oldLine.hide(player);
-                }
-            }
+        CoreHologramView view = this.currentViewers.get(player.getUniqueId());
+        if (view == null) {
+            return;
         }
-
-        this.parent.recalculate(player);
-        updateVisibility(player);
+        view.setCurrentPage(page);
     }
 
     /**
      * Reset all the pages that are currently selected by each player.
      */
     public void resetPlayerPages() {
-        this.playerPages.clear();
+        CoreHologramPage<?> firstPage = this.parent.getPage(0);
+        for (CoreHologramView view : this.currentViewers.values()) {
+            if (firstPage == null || firstPage.isDestroyed()) {
+                view.destroy();
+                continue;
+            }
+            view.setCurrentPage(firstPage);
+        }
     }
 
     /**
@@ -308,7 +279,7 @@ public class CoreHologramVisibilityManager {
      * @param player The player to check.
      * @return True if the player is allowed to see this hologram, false otherwise.
      */
-    protected boolean isAllowed(@SuppressWarnings("unused") @NonNull Player player) {
+    protected boolean checkHologramViewConditions(@SuppressWarnings("unused") @NonNull Player player) {
         // Can be overridden by subclasses to add additional checks
         return true;
     }
@@ -340,7 +311,7 @@ public class CoreHologramVisibilityManager {
                 .filter(this::canSee)
                 .collect(Collectors.toSet());
     }
-    
+
     /**
      * Get the page that is currently selected by the given player.
      *
@@ -360,7 +331,7 @@ public class CoreHologramVisibilityManager {
      */
     @NonNull
     private Optional<CoreHologramPage<?>> getPageObject(@NonNull Player player) {
-        int pageIndex = getPageIndex(player.getUniqueId());
+        int pageIndex = getPageIndex(player);
         CoreHologramPage<?> page = this.parent.getPage(pageIndex);
         return Optional.ofNullable(page);
     }
@@ -368,11 +339,16 @@ public class CoreHologramVisibilityManager {
     /**
      * Get the page that is currently selected by the given player.
      *
-     * @param playerId UUID of the player to get the page for.
-     * @return The page that is currently selected by the given player.
+     * @param player The player to get the page for.
+     * @return The page that is currently selected by the given player. If the player
+     * is not viewing this hologram, -1 is returned.
      */
-    private int getPageIndex(@NonNull UUID playerId) {
-        return getPlayerPages().getOrDefault(playerId, 0);
+    private int getPageIndex(@NonNull Player player) {
+        CoreHologramView view = this.currentViewers.get(player.getUniqueId());
+        if (view == null) {
+            return -1;
+        }
+        return view.getCurrentPageIndex();
     }
 
     /**
@@ -394,17 +370,16 @@ public class CoreHologramVisibilityManager {
      */
     @NonNull
     public Set<UUID> getViewers() {
-        return ImmutableSet.copyOf(this.currentViewers);
+        return ImmutableSet.copyOf(this.currentViewers.keySet());
     }
 
-    /**
-     * Get the pages that are currently selected by each player.
-     *
-     * @return The pages that are currently selected by each player in the form of a map.
-     */
+    public Optional<CoreHologramView> getView(@NonNull Player player) {
+        return Optional.ofNullable(this.currentViewers.get(player.getUniqueId()));
+    }
+
     @NonNull
-    public Map<UUID, Integer> getPlayerPages() {
-        return ImmutableMap.copyOf(this.playerPages);
+    public Collection<CoreHologramView> getViews() {
+        return ImmutableSet.copyOf(this.currentViewers.values());
     }
 
     /**
