@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 public class PluginHologramManager {
 
@@ -68,8 +69,7 @@ public class PluginHologramManager {
                 registerHologram(hologram.toHologram(this.plugin, name));
                 counter++;
             } catch (Exception e) {
-                this.plugin.warnOrBoot("Failed to load hologram from '%s'! Skipping...", file.getName());
-                e.printStackTrace();
+                this.plugin.getLogger().log(Level.WARNING, String.format("Failed to load hologram from '%s'! Skipping...", file.getName()), e);
             }
         }
         long took = System.currentTimeMillis() - startMillis;

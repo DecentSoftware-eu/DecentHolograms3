@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 public class PluginHologramConfig {
 
@@ -60,8 +61,7 @@ public class PluginHologramConfig {
             try (FileWriter writer = new FileWriter(this.file.getPath())) {
                 this.plugin.getGson().toJson(new SerializableHologram(this.parent), writer);
             } catch (IOException e) {
-                this.plugin.getLogger().severe("Failed to save hologram " + this.parent.getName() + ":");
-                e.printStackTrace();
+                this.plugin.getLogger().log(Level.SEVERE, "Failed to save hologram " + this.parent.getName() + ":", e);
             }
         });
     }
@@ -85,8 +85,7 @@ public class PluginHologramConfig {
                     this.parent.getViewConditions().addCondition(condition);
                 }
             } catch (JsonSyntaxException | IOException e) {
-                this.plugin.getLogger().severe("Failed to load hologram " + this.parent.getName() + ":");
-                e.printStackTrace();
+                this.plugin.getLogger().log(Level.SEVERE, "Failed to load hologram " + this.parent.getName() + ":", e);
             }
         });
     }
@@ -95,6 +94,7 @@ public class PluginHologramConfig {
         // Run asynchronously to prevent blocking the main thread
         if (Bukkit.isPrimaryThread()) {
             SchedulerUtil.async(this::delete);
+            return;
         }
         this.file.delete();
     }
@@ -107,8 +107,7 @@ public class PluginHologramConfig {
         try {
             this.file.createNewFile();
         } catch (IOException e) {
-            this.plugin.getLogger().severe("Failed to create hologram file " + this.file.getName() + ":");
-            e.printStackTrace();
+            this.plugin.getLogger().log(Level.SEVERE, "Failed to create hologram file " + this.file.getName() + ":", e);
         }
     }
 
