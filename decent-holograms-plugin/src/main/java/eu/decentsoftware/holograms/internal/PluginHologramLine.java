@@ -28,7 +28,7 @@ import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.CoreHologramLineSettings;
 import lombok.NonNull;
 
-public class PluginHologramLine extends CoreHologramLine {
+public class PluginHologramLine extends CoreHologramLine implements IHasClickActions {
 
     private final ConditionHolder viewConditions; // TODO: checking the conditions
     private final ClickConditionHolder clickConditions;
@@ -77,11 +77,13 @@ public class PluginHologramLine extends CoreHologramLine {
     }
 
     @NonNull
+    @Override
     public ClickConditionHolder getClickConditions() {
         return this.clickConditions;
     }
 
     @NonNull
+    @Override
     public ClickActionHolder getClickActions() {
         return this.clickActions;
     }

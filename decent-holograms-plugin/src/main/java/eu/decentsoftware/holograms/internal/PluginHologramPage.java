@@ -26,7 +26,7 @@ import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import lombok.NonNull;
 
-public class PluginHologramPage extends CoreHologramPage<PluginHologramLine> {
+public class PluginHologramPage extends CoreHologramPage<PluginHologramLine> implements IHasClickActions {
 
     private final ClickConditionHolder clickConditions;
     private final ClickActionHolder clickActions;
@@ -60,12 +60,15 @@ public class PluginHologramPage extends CoreHologramPage<PluginHologramLine> {
     }
 
     @NonNull
+    @Override
     public ClickConditionHolder getClickConditions() {
         return this.clickConditions;
     }
 
     @NonNull
+    @Override
     public ClickActionHolder getClickActions() {
         return this.clickActions;
     }
+
 }

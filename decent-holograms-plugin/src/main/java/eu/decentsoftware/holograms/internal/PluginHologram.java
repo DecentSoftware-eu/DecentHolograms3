@@ -129,17 +129,9 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
         }
     }
 
-    private boolean executeActions(@NonNull PluginHologramLine line, @NonNull Player player, @NonNull ClickType clickType) {
-        if (line.getClickConditions().check(clickType, player) && !line.getClickActions().isEmpty(clickType)) {
-            line.getClickActions().execute(clickType, player);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean executeActions(@NonNull PluginHologramPage page, @NonNull Player player, @NonNull ClickType clickType) {
-        if (page.getClickConditions().check(clickType, player) && !page.getClickActions().isEmpty(clickType)) {
-            page.getClickActions().execute(clickType, player);
+    private boolean executeActions(@NonNull IHasClickActions iHasClickActions, @NonNull Player player, @NonNull ClickType clickType) {
+        if (iHasClickActions.getClickConditions().check(clickType, player) && !iHasClickActions.getClickActions().isEmpty(clickType)) {
+            iHasClickActions.getClickActions().execute(clickType, player);
             return true;
         }
         return false;
