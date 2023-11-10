@@ -129,9 +129,9 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
         }
     }
 
-    private boolean executeActions(@NonNull IHasClickActions iHasClickActions, @NonNull Player player, @NonNull ClickType clickType) {
-        if (iHasClickActions.getClickConditions().check(clickType, player) && !iHasClickActions.getClickActions().isEmpty(clickType)) {
-            iHasClickActions.getClickActions().execute(clickType, player);
+    private boolean executeActions(@NonNull PluginClickable clickable, @NonNull Player player, @NonNull ClickType clickType) {
+        if (clickable.getClickConditions().check(clickType, player) && !clickable.getClickActions().isEmpty(clickType)) {
+            clickable.getClickActions().execute(clickType, player);
             return true;
         }
         return false;

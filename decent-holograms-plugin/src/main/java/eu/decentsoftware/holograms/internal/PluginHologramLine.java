@@ -28,7 +28,7 @@ import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.CoreHologramLineSettings;
 import lombok.NonNull;
 
-public class PluginHologramLine extends CoreHologramLine implements IHasClickActions {
+public class PluginHologramLine extends CoreHologramLine implements PluginClickable {
 
     private final ConditionHolder viewConditions; // TODO: checking the conditions
     private final ClickConditionHolder clickConditions;

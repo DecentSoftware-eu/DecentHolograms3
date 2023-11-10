@@ -26,7 +26,7 @@ import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramPage;
 import lombok.NonNull;
 
-public class PluginHologramPage extends CoreHologramPage<PluginHologramLine> implements IHasClickActions {
+public class PluginHologramPage extends CoreHologramPage<PluginHologramLine> implements PluginClickable {
 
     private final ClickConditionHolder clickConditions;
     private final ClickActionHolder clickActions;
