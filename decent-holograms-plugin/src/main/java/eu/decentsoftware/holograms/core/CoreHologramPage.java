@@ -59,9 +59,8 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void display(@NonNull Player player) {
         checkDestroyed();
 
-        for (int i = 0; i < this.lines.size(); i++) {
-            LINE line = this.lines.get(i);
-            line.display(player, i);
+        for (LINE line : this.lines) {
+            line.display(player);
         }
     }
 
@@ -74,9 +73,8 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void hide(@NonNull Player player) {
         checkDestroyed();
 
-        for (int i = 0; i < this.lines.size(); i++) {
-            LINE line = this.lines.get(i);
-            line.hide(player, i);
+        for (LINE line : this.lines) {
+            line.hide(player);
         }
     }
 
@@ -89,9 +87,8 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void updateContent(@NonNull Player player) {
         checkDestroyed();
 
-        for (int i = 0; i < this.lines.size(); i++) {
-            LINE line = this.lines.get(i);
-            line.updateContent(player, i);
+        for (LINE line : this.lines) {
+            line.updateContent(player);
         }
     }
 
@@ -104,9 +101,8 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void updateLocation(@NonNull Player player) {
         checkDestroyed();
 
-        for (int i = 0; i < this.lines.size(); i++) {
-            LINE line = this.lines.get(i);
-            line.updateLocation(player, i);
+        for (LINE line : this.lines) {
+            line.updateLocation(player);
         }
     }
 
@@ -158,7 +154,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void removeLine(int index) {
         LINE line = this.lines.remove(index);
 
-        forEachViewerUseLineRendererSafe(line, (renderer, player) -> renderer.hide(player, index));
+        forEachViewerUseLineRendererSafe(line, HologramLineRenderer::hide);
         updateLinePositions();
         this.parent.recalculate();
     }
@@ -171,9 +167,8 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
         checkDestroyed();
 
         this.lines.add(line);
-        int index = this.lines.size() - 1;
 
-        forEachViewerUseLineRendererSafe(line, (renderer, player) -> renderer.display(player, index));
+        forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
         updateLinePositions();
         this.parent.recalculate();
     }
@@ -184,7 +179,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
         LINE line = createLine(getNextLineLocation(), content);
         this.lines.add(index, line);
 
-        forEachViewerUseLineRendererSafe(line, (renderer, player) -> renderer.display(player, index));
+        forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
         updateLinePositions();
         this.parent.recalculate();
     }

@@ -230,7 +230,7 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             }
 
             if (renderer != null) {
-                renderer.updateLocation(player, i, location);
+                renderer.updateLocation(player, location);
             }
         }
     }

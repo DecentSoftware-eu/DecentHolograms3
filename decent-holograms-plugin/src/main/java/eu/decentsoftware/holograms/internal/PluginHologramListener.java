@@ -18,7 +18,6 @@
 
 package eu.decentsoftware.holograms.internal;
 
-import eu.decentsoftware.holograms.core.CoreHologramVisibilityManager;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,13 +50,13 @@ class PluginHologramListener implements Listener {
 
     @EventHandler
     public void onTeleport(@NonNull PlayerTeleportEvent event) {
-        // TODO: is this needed?
+        // TODO: is this needed? it most likely is but only for some client versions, figure out which ones
         hideAllHologramsOnTeleport(event.getPlayer());
     }
 
     @EventHandler
     public void onRespawn(@NonNull PlayerRespawnEvent event) {
-        // TODO: is this needed?
+        // TODO: is this needed? it most likely is but only for some client versions, figure out which ones
         hideAllHologramsOnTeleport(event.getPlayer());
     }
 
@@ -67,12 +66,11 @@ class PluginHologramListener implements Listener {
      * due to how client handles teleportation.
      *
      * @param player Player to hide the holograms for.
-     * @see CoreHologramVisibilityManager#updateVisibility(Player, boolean)
      */
     private void hideAllHologramsOnTeleport(@NonNull Player player) {
         this.manager.getHolograms().forEach((hologram) -> {
             //
-            hologram.getVisibilityManager().updateVisibility(player, false);
+            hologram.getVisibilityManager().updateVisibility(player);
         });
     }
 

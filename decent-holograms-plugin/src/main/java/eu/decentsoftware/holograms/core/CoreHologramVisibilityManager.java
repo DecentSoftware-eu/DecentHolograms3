@@ -20,16 +20,20 @@ package eu.decentsoftware.holograms.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import eu.decentsoftware.holograms.api.hologram.HologramVisibilityManager;
 import eu.decentsoftware.holograms.api.hologram.Visibility;
-import eu.decentsoftware.holograms.utils.math.MathUtil;
+import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -83,29 +87,20 @@ public abstract class CoreHologramVisibilityManager {
         this.defaultVisibility = Visibility.HIDDEN;
         this.playerVisibilityMap.clear();
 
-        getViewersAsPlayers().forEach(player -> updateVisibility(player, false));
+        getViewersAsPlayers().forEach(this::removePlayer);
 
         this.currentViewers.clear();
     }
 
-    /**
-     * Completely remove the given player from the visibility cache. This means that the player
-     * will only be able to see the hologram again, if the hologram is visible by default and
-     * the player meets the view conditions.
-     * <p>
-     * But all custom visibility settings for the player will be removed and all hologram lines
-     * that the player is currently viewing will be hidden. (Not permanently, but until the
-     * next update of the hologram's visibility.)
-     *
-     * @param player The player to remove.
-     * @see #updateVisibility(Player, boolean)
-     */
     public void removePlayer(@NonNull Player player) {
-        this.playerVisibilityMap.remove(player.getUniqueId());
-
-        if (isViewing(player)) {
-            updateVisibility(player, false);
+        CoreHologramView view = getView(player).orElse(null);
+        if (view == null) {
+            return;
         }
+
+        view.destroy();
+
+        this.currentViewers.remove(player.getUniqueId());
     }
 
     /**
@@ -116,59 +111,18 @@ public abstract class CoreHologramVisibilityManager {
      * @param player The player to update the visibility for.
      */
     public void updateVisibility(@NonNull Player player) {
-        if (!canSee(player)) {
-            if (isViewing(player)) {
-                updateVisibility(player, false);
+        CoreHologramView view = getView(player).orElse(null);
+        if (view == null) {
+            CoreHologramPage<?> page = parent.getPage(0);
+            if (page == null) {
+                return;
             }
-            return;
+
+            view = createView(player, page);
+            this.currentViewers.put(player.getUniqueId(), view);
         }
 
-        boolean inViewDistance = isInViewDistance(player);
-        boolean isAllowed = checkHologramViewConditions(player);
-        boolean canSee = canSee(player);
-        if (isViewing(player) && (!inViewDistance || !canSee || !isAllowed)) {
-            updateVisibility(player, false);
-        } else if (!isViewing(player) && inViewDistance && canSee && isAllowed) {
-            updateVisibility(player, true);
-        }
-    }
-
-    /**
-     * Updates the visibility of the hologram for the specified player. This
-     * method displays or hides the hologram according to the specified boolean.
-     * This method does not check the holograms view distance setting and view
-     * conditions. This method does not update the list of players that are allowed
-     * to see this hologram, it only updates the list of players that are currently
-     * viewing this hologram.
-     *
-     * <p>If the specified player is in the allowed players list, the visibility
-     * is going to be automatically updated for them on the next update. If not,
-     * the visibility will stay at the given value.</p>
-     *
-     * <p>Keep in mind, that if you only display the hologram to the player using
-     * this method, the visibility will not be updated according to the view distance
-     * setting and view conditions which may cause visibility problems like the player
-     * not seeing the hologram when they go farther away from it and then come back.</p>
-     *
-     * <p>This method is mainly used internally by the {@link HologramVisibilityManager}
-     * and should not be used anywhere else as it may cause unexpected behavior.</p>
-     *
-     * @param player  The player to update the visibility for.
-     * @param visible True to show the hologram, false to hide it.
-     * @see #getViewers()
-     * @see #getAllowedPlayers()
-     */
-    public void updateVisibility(@NonNull Player player, boolean visible) {
-        Optional<CoreHologramPage<?>> pageOpt = getPageObject(player);
-        pageOpt.ifPresent(page -> {
-            if (visible) {
-                page.display(player);
-                this.currentViewers.put(player.getUniqueId(), createView(player, page));
-            } else {
-                page.hide(player);
-                this.currentViewers.remove(player.getUniqueId()).destroy();
-            }
-        });
+        view.updateVisibleLines();
     }
 
     /**
@@ -234,18 +188,6 @@ public abstract class CoreHologramVisibilityManager {
     }
 
     /**
-     * Check if the given player is currently seeing this hologram according
-     * to the view conditions and the view distance setting of this hologram,
-     * i.e. if the player is in the set returned by {@link #getViewers()}.
-     *
-     * @param player The player to check.
-     * @return True if the player is currently seeing this hologram, false otherwise.
-     */
-    private boolean isViewing(@NonNull Player player) {
-        return getViewers().contains(player.getUniqueId());
-    }
-
-    /**
      * Check if the given player is allowed to see this hologram.
      *
      * @param player The player to check.
@@ -256,21 +198,6 @@ public abstract class CoreHologramVisibilityManager {
             return isVisibleByDefault() || getPlayerVisibilityMap().get(player.getUniqueId()) == Visibility.VISIBLE;
         }
         return isVisibleByDefault();
-    }
-
-    /**
-     * Check if the given player is within the view distance of this hologram. Meaning
-     * that the player is close enough to the hologram to be able to see it.
-     *
-     * @param player The player to check.
-     * @return True if the player is within the view distance of this hologram, false otherwise.
-     */
-    private boolean isInViewDistance(@NonNull Player player) {
-        return MathUtil.inDistance(
-                this.parent.getPositionManager().getActualBukkitLocation(),
-                player.getLocation(),
-                this.parent.getSettings().getViewDistance()
-        );
     }
 
     /**
@@ -296,6 +223,23 @@ public abstract class CoreHologramVisibilityManager {
         return getViewers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Get all the players that currently see the given line according to
+     * the view conditions and the view distance setting of this hologram.
+     * The hologram line's contents are updated for all players in this list.
+     *
+     * @param line The line to get the viewers for.
+     * @return The set of players that see the given line.
+     */
+    @NonNull
+    public Set<Player> getViewersAsPlayers(@NonNull CoreHologramLine line) {
+        return getViewers().stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .filter(player -> getView(player).map(view -> view.canSeeLine(line)).orElse(false))
                 .collect(Collectors.toSet());
     }
 

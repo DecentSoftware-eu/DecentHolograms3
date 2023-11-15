@@ -98,8 +98,12 @@ public class PluginHologram extends CoreHologram<PluginHologramPage> {
     ) {
         checkDestroyed();
 
-        if (!(page instanceof PluginHologramPage) || !(line instanceof PluginHologramLine)) {
-            throw new IllegalArgumentException("Invalid hologram page or line.");
+        if (!(page instanceof PluginHologramPage)) {
+            throw new IllegalArgumentException("Invalid hologram page.");
+        }
+
+        if (!(line instanceof PluginHologramLine)) {
+            throw new IllegalArgumentException("Invalid hologram line.");
         }
 
         PluginHologramPage pluginPage = (PluginHologramPage) page;

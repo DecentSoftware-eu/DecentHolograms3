@@ -237,8 +237,8 @@ public final class DecentHolograms extends JavaPlugin {
                 // Compare the versions
                 Config.setUpdateAvailable(
                         (latest[0] > current[0]) || // Major
-                                (latest[0] == current[0] && latest[1] > current[1]) || // Minor
-                                (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2]) // Patch
+                        (latest[0] == current[0] && latest[1] > current[1]) || // Minor
+                        (latest[0] == current[0] && latest[1] == current[1] && latest[2] > current[2]) // Patch
                 );
 
                 // Notify if an update is available

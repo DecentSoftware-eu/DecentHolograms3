@@ -59,11 +59,12 @@ public class CoreHologramLine extends CoreHologramComponent {
         this.settings = settings;
     }
 
-    public void destroy(int index) {
+    @Override
+    public void destroy() {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.destroy(index);
+            this.renderer.destroy();
             this.renderer = null;
         }
 
@@ -71,15 +72,24 @@ public class CoreHologramLine extends CoreHologramComponent {
     }
 
     /**
+     * Get the index of this line in the parent page.
+     *
+     * @return The index.
+     */
+    public int getIndex() {
+        return getParent().getIndex(this);
+    }
+
+    /**
      * Display this line to the specified player.
      *
      * @param player The player to display this line to.
      */
-    public void display(@NonNull Player player, int index) {
+    public void display(@NonNull Player player) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.display(player, index);
+            this.renderer.display(player);
         }
     }
 
@@ -88,11 +98,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to hide this line from.
      */
-    public void hide(@NonNull Player player, int index) {
+    public void hide(@NonNull Player player) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.hide(player, index);
+            this.renderer.hide(player);
         }
     }
 
@@ -101,11 +111,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to update this line for.
      */
-    public void updateContent(@NonNull Player player, int index) {
+    public void updateContent(@NonNull Player player) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.updateContent(player, index);
+            this.renderer.updateContent(player);
         }
     }
 
@@ -114,11 +124,11 @@ public class CoreHologramLine extends CoreHologramComponent {
      *
      * @param player The player to update this line for.
      */
-    public void updateLocation(@NonNull Player player, int index) {
+    public void updateLocation(@NonNull Player player) {
         checkDestroyed();
 
         if (this.renderer != null) {
-            this.renderer.updateLocation(player, index, getActualBukkitLocation());
+            this.renderer.updateLocation(player, getActualBukkitLocation());
         }
     }
 

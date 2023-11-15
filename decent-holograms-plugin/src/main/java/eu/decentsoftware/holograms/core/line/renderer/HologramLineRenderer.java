@@ -46,10 +46,8 @@ public interface HologramLineRenderer {
     /**
      * Destroy this line renderer. This method should be called when the parent
      * {@link HologramLine} is destroyed.
-     *
-     * @param index The index of the line in the parent hologram page.
      */
-    void destroy(int index);
+    void destroy();
 
     /**
      * Get the height of the rendered line.
@@ -69,33 +67,29 @@ public interface HologramLineRenderer {
      * Display the parent {@link HologramLine} for a player.
      *
      * @param player The player to display the line for.
-     * @param index  The index of the line in the parent hologram page.
      */
-    void display(@NonNull Player player, int index);
+    void display(@NonNull Player player);
 
     /**
      * Hide the parent {@link HologramLine} for a player.
      *
      * @param player The player to hide the line for.
-     * @param index  The index of the line in the parent hologram page.
      */
-    void hide(@NonNull Player player, int index);
+    void hide(@NonNull Player player);
 
     /**
      * Update the contents of the parent {@link HologramLine} for a player.
      *
      * @param player The player to update the line for.
-     * @param index  The index of the line in the parent hologram page.
      */
-    void updateContent(@NonNull Player player, int index);
+    void updateContent(@NonNull Player player);
 
     /**
      * Teleport the parent {@link HologramLine} to a location for a player.
      *
      * @param player   The player to teleport the line to.
-     * @param index    The index of the line in the parent hologram page.
      * @param location The location to teleport the line to.
      */
-    void updateLocation(@NonNull Player player, int index, @NonNull Location location);
+    void updateLocation(@NonNull Player player, @NonNull Location location);
 
 }

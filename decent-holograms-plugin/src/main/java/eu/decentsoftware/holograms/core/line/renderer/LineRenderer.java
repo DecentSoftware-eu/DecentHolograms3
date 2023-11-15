@@ -49,59 +49,58 @@ public abstract class LineRenderer implements HologramLineRenderer {
     }
 
     @Override
-    public void destroy(int index) {
-        this.hideAll(index);
+    public void destroy() {
+        this.hideAll();
     }
 
     /**
-     * Get a set of players, that are currently viewing the hologram.
+     * Get a set of players, that are currently seeing the parent line.
      *
      * @return The set of players.
      */
     protected Set<Player> getViewerPlayers() {
-        return this.parent.getParent().getParent().getVisibilityManager().getViewersAsPlayers();
+        return this.parent.getParent().getParent().getVisibilityManager().getViewersAsPlayers(this.parent);
     }
 
     /**
      * Get the entity ID for the specified index of the parent line.
      *
-     * @param lineIndex   The index of the line in the parent hologram page. Starts at 0.
      * @param entityIndex The index of the entity. Starts at 0.
      * @return The entity ID.
      */
-    protected int getEntityId(int lineIndex, int entityIndex) {
+    protected int getEntityId(int entityIndex) {
         CoreHologramEntityIDManager entityIDManager = this.parent.getParent().getParent().getEntityIDManager();
-        return entityIDManager.getEntityId(lineIndex, entityIndex);
+        return entityIDManager.getEntityId(parent.getIndex(), entityIndex);
     }
 
     /**
-     * Display the line to all players, that are currently viewing the hologram.
+     * Display the line to all players, that are currently seeing the parent line.
      *
-     * @see #display(Player, int)
+     * @see #display(Player)
      * @see #getViewerPlayers()
      */
-    public void displayAll(int index) {
-        getViewerPlayers().forEach(player -> display(player, index));
+    public void displayAll() {
+        getViewerPlayers().forEach(this::display);
     }
 
     /**
-     * Hide the line from all players, that are currently viewing the hologram.
+     * Hide the line from all players, that are currently seeing the parent line.
      *
-     * @see #hide(Player, int)
+     * @see #hide(Player)
      * @see #getViewerPlayers()
      */
-    public void hideAll(int index) {
-        getViewerPlayers().forEach(player -> hide(player, index));
+    public void hideAll() {
+        getViewerPlayers().forEach(this::hide);
     }
 
     /**
-     * Update the line for all players, that are currently viewing the hologram.
+     * Update the line for all players, that are currently seeing the parent line.
      *
-     * @see #updateContent(Player, int)
+     * @see #updateContent(Player)
      * @see #getViewerPlayers()
      */
-    public void updateContentAll(int index) {
-        getViewerPlayers().forEach(player -> updateContent(player, index));
+    public void updateContentAll() {
+        getViewerPlayers().forEach(this::updateContent);
     }
 
     @NonNull

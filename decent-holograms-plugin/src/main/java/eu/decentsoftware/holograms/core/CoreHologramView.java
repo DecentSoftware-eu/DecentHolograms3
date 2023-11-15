@@ -104,7 +104,7 @@ public abstract class CoreHologramView {
             }
 
             if (this.visibleLines.size() <= visibleLinesIndex) {
-                line.display(this.player, visibleLinesIndex);
+                line.display(this.player);
                 this.visibleLines.add(line);
                 continue;
             }
@@ -121,46 +121,42 @@ public abstract class CoreHologramView {
                  * more efficient than hiding the old line and displaying the new one. It
                  * also prevents flickering when the line is updated.
                  */
-                line.updateContent(this.player, visibleLinesIndex);
+                line.updateContent(this.player);
             } else {
-                currentLine.hide(this.player, visibleLinesIndex);
-                line.display(this.player, visibleLinesIndex);
+                currentLine.hide(this.player);
+                line.display(this.player);
             }
         }
 
         if (newVisibleLinesCount < this.visibleLines.size()) {
             for (int i = newVisibleLinesCount; i < this.visibleLines.size(); i++) {
                 CoreHologramLine currentLine = this.visibleLines.remove(i);
-                currentLine.hide(this.player, i);
+                currentLine.hide(this.player);
             }
         }
     }
 
     protected synchronized void hideVisibleLines() {
-        for (int i = 0; i < this.visibleLines.size(); i++) {
-            CoreHologramLine line = this.visibleLines.get(i);
-            line.hide(this.player, i);
+        for (CoreHologramLine line : this.visibleLines) {
+            line.hide(this.player);
         }
     }
 
     protected synchronized void displayVisibleLines() {
-        for (int i = 0; i < this.visibleLines.size(); i++) {
-            CoreHologramLine line = this.visibleLines.get(i);
-            line.display(this.player, i);
+        for (CoreHologramLine line : this.visibleLines) {
+            line.display(this.player);
         }
     }
 
     protected synchronized void updateVisibleLinesContents() {
-        for (int i = 0; i < this.visibleLines.size(); i++) {
-            CoreHologramLine line = this.visibleLines.get(i);
-            line.updateContent(this.player, i);
+        for (CoreHologramLine line : this.visibleLines) {
+            line.updateContent(this.player);
         }
     }
 
     protected synchronized void updateVisibleLinesLocations() {
-        for (int i = 0; i < this.visibleLines.size(); i++) {
-            CoreHologramLine line = this.visibleLines.get(i);
-            line.updateLocation(this.player, i);
+        for (CoreHologramLine line : this.visibleLines) {
+            line.updateLocation(this.player);
         }
     }
 
@@ -208,6 +204,16 @@ public abstract class CoreHologramView {
         this.setCurrentPage(page, index);
     }
 
+    /**
+     * Check if the specified line is currently visible to the player.
+     *
+     * @param line The line to check.
+     * @return True if the line is visible, false otherwise.
+     */
+    public boolean canSeeLine(@NonNull CoreHologramLine line) {
+        return this.visibleLines.contains(line);
+    }
+
     @NonNull
     public CoreHologramPage<?> getCurrentPage() {
         return this.currentPage;
@@ -219,7 +225,7 @@ public abstract class CoreHologramView {
 
     @NonNull
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
 }
