@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.util.DecentLocation;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
-import eu.decentsoftware.holograms.core.line.renderer.HologramLineRenderer;
 import eu.decentsoftware.holograms.core.line.renderer.LineRenderer;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends CoreHologramComponent {
 
@@ -51,62 +49,6 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     }
 
     /**
-     * Show this page to the specified player. This method displays all the lines
-     * of this page to the player.
-     *
-     * @param player The player to show this page to.
-     */
-    public void display(@NonNull Player player) {
-        checkDestroyed();
-
-        for (LINE line : this.lines) {
-            line.display(player);
-        }
-    }
-
-    /**
-     * Hide this page from the specified player. This method hides all the lines
-     * of this page from the player.
-     *
-     * @param player The player to hide this page from.
-     */
-    public void hide(@NonNull Player player) {
-        checkDestroyed();
-
-        for (LINE line : this.lines) {
-            line.hide(player);
-        }
-    }
-
-    /**
-     * Update this page for the specified player. This method updates all the lines
-     * of this page for the player.
-     *
-     * @param player The player to update this page for.
-     */
-    public void updateContent(@NonNull Player player) {
-        checkDestroyed();
-
-        for (LINE line : this.lines) {
-            line.updateContent(player);
-        }
-    }
-
-    /**
-     * Update the location of this page for the given player. This method updates
-     * the location of all lines in this page for the player.
-     *
-     * @param player The player to teleport this page for.
-     */
-    public void updateLocation(@NonNull Player player) {
-        checkDestroyed();
-
-        for (LINE line : this.lines) {
-            line.updateLocation(player);
-        }
-    }
-
-    /**
      * Update the positions of all lines in this page. This method
      * does not update the locations for all viewers of this page.
      * <p>
@@ -114,7 +56,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
      * starting from the origin of the hologram and going down.
      * Lines are positioned in the center of the hologram.
      */
-    public void updateLinePositions() {
+    private void updateLinePositions() {
         checkDestroyed();
 
         DecentLocation hologramLocation = this.parent.getPositionManager().getLocation();
@@ -154,8 +96,9 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
     public void removeLine(int index) {
         LINE line = this.lines.remove(index);
 
-        forEachViewerUseLineRendererSafe(line, HologramLineRenderer::hide);
         updateLinePositions();
+
+        this.parent.getVisibilityManager().updateVisibility(line);
         this.parent.recalculate();
     }
 
@@ -168,8 +111,9 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
 
         this.lines.add(line);
 
-        forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
         updateLinePositions();
+
+        this.parent.getVisibilityManager().updateVisibility(line);
         this.parent.recalculate();
     }
 
@@ -179,8 +123,9 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
         LINE line = createLine(getNextLineLocation(), content);
         this.lines.add(index, line);
 
-        forEachViewerUseLineRendererSafe(line, HologramLineRenderer::display);
         updateLinePositions();
+
+        this.parent.getVisibilityManager().updateVisibility(line);
         this.parent.recalculate();
     }
 
@@ -191,6 +136,7 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
         line.setContent(content);
 
         updateLinePositions();
+
         this.parent.recalculate();
     }
 
@@ -245,15 +191,6 @@ public abstract class CoreHologramPage<LINE extends CoreHologramLine> extends Co
             location.add(0, getHeight(), 0);
         }
         return new DecentLocation(location.subtract(0, getHeight(), 0));
-    }
-
-    private void forEachViewerUseLineRendererSafe(@NonNull CoreHologramLine line, @NonNull BiConsumer<HologramLineRenderer, Player> consumer) {
-        HologramLineRenderer renderer = line.getRenderer();
-        if (renderer != null) {
-            for (Player viewerPlayer : this.parent.getVisibilityManager().getViewersAsPlayers()) {
-                consumer.accept(renderer, viewerPlayer);
-            }
-        }
     }
 
 }

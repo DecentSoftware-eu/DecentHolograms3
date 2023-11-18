@@ -80,9 +80,6 @@ public abstract class CoreHologramVisibilityManager {
 
     protected abstract CoreHologramView createView(@NonNull Player player, @NonNull CoreHologramPage<?> page);
 
-    /**
-     * Hides the hologram for all players and clears the visibility cache.
-     */
     public void destroy() {
         this.defaultVisibility = Visibility.HIDDEN;
         this.playerVisibilityMap.clear();
@@ -103,13 +100,6 @@ public abstract class CoreHologramVisibilityManager {
         this.currentViewers.remove(player.getUniqueId());
     }
 
-    /**
-     * Updates the visibility of the hologram for the specified player. This
-     * method checks the holograms view distance setting and view conditions
-     * and updates the visibility accordingly.
-     *
-     * @param player The player to update the visibility for.
-     */
     public void updateVisibility(@NonNull Player player) {
         CoreHologramView view = getView(player).orElse(null);
         if (view == null) {
@@ -125,37 +115,26 @@ public abstract class CoreHologramVisibilityManager {
         view.updateVisibleLines();
     }
 
-    /**
-     * Updates the visibility of the hologram for all players that are allowed
-     * to see it. This method checks the holograms view distance setting and view
-     * conditions and updates the visibility accordingly. This method does not
-     * update the list of players that are allowed to see this hologram, it only
-     * updates the list of players that are currently viewing this hologram.
-     *
-     * @see #updateVisibility(Player)
-     * @see #getAllowedPlayers()
-     */
     public void updateVisibility() {
         getAllowedPlayers().forEach(this::updateVisibility);
     }
 
-    /**
-     * Update the hologram's contents for the specified player. This method
-     * does not update the hologram's visibility.
-     *
-     * @param player The player to update the contents for.
-     */
-    public void updateContents(@NonNull Player player) {
-        Optional<CoreHologramPage<?>> pageOpt = getPageObject(player);
-        pageOpt.ifPresent(page -> page.updateContent(player));
+    public void updateVisibility(CoreHologramPage<?> page) {
+        getViews().stream()
+                .filter(view -> view.getCurrentPage().equals(page))
+                .forEach(CoreHologramView::updateVisibleLines);
     }
 
-    /**
-     * Update the holograms contents for all players. This method does not
-     * update the holograms' visibility.
-     */
+    public void updateVisibility(CoreHologramLine line) {
+        updateVisibility(line.getParent());
+    }
+
     public void updateContents() {
-        getViewersAsPlayers().forEach(this::updateContents);
+        getViews().forEach(CoreHologramView::updateVisibleLinesContents);
+    }
+
+    public void updateLocations(@NonNull Player player) {
+        getView(player).ifPresent(CoreHologramView::updateVisibleLinesLocations);
     }
 
     /**
@@ -173,9 +152,6 @@ public abstract class CoreHologramVisibilityManager {
         view.setCurrentPage(page);
     }
 
-    /**
-     * Reset all the pages that are currently selected by each player.
-     */
     public void resetPlayerPages() {
         CoreHologramPage<?> firstPage = this.parent.getPage(0);
         for (CoreHologramView view : this.currentViewers.values()) {

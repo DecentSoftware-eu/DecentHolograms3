@@ -21,6 +21,7 @@ package eu.decentsoftware.holograms.core;
 import com.google.common.collect.ImmutableList;
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineSettings;
+import eu.decentsoftware.holograms.api.hologram.HologramLineType;
 import eu.decentsoftware.holograms.api.util.ClickType;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.core.line.renderer.HologramLineRenderer;
@@ -157,9 +158,9 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             hologramLocation.add(0, totalHeight, 0);
         }
 
-        // TODO: hologram must be text-only for vertical rotation
-        if (!this.settings.isRotateHorizontal() && !this.settings.isRotateVertical()) {
-            page.updateLocation(player);
+        boolean isTextOnly = page.getLines().stream().noneMatch(line -> line.getType() != HologramLineType.TEXT);
+        if (isTextOnly && !this.settings.isRotateHorizontal() && !this.settings.isRotateVertical()) {
+            this.visibilityManager.updateLocations(player);
             return;
         }
 
