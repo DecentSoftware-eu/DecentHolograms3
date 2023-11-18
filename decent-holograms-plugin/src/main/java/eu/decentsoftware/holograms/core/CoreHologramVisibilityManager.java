@@ -159,7 +159,7 @@ public abstract class CoreHologramVisibilityManager {
     }
 
     /**
-     * Set the page that is currently selected by the given player.
+     * Set the page currently selected by the given player.
      *
      * @param player The player to set the page for.
      * @param page   The page to set.
@@ -257,7 +257,7 @@ public abstract class CoreHologramVisibilityManager {
     }
 
     /**
-     * Get the page that is currently selected by the given player.
+     * Get the page currently selected by the given player.
      *
      * @param player The player to get the page for.
      * @return The page that is currently selected by the given player.
@@ -281,7 +281,7 @@ public abstract class CoreHologramVisibilityManager {
     }
 
     /**
-     * Get the page that is currently selected by the given player.
+     * Get the page currently selected by the given player.
      *
      * @param player The player to get the page for.
      * @return The page that is currently selected by the given player. If the player
@@ -327,9 +327,12 @@ public abstract class CoreHologramVisibilityManager {
     }
 
     /**
-     * Get the visibility settings of players. The key is the UUID of the player and the value
-     * is the visibility setting of the player. If the player is not in the map, the default
-     * visibility setting is used. (See {@link #isVisibleByDefault()})
+     * Get the visibility settings of players.
+     * The key is the UUID of the player, and the value
+     * is the visibility setting of the player.
+     * If the player is not in the map, the default
+     * visibility setting is used.
+     * (See {@link #isVisibleByDefault()})
      *
      * @return The visibility settings of players.
      * @see Visibility

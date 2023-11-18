@@ -68,9 +68,9 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
             return;
         }
 
-        if (this.positionManager.isLocationBound()
-                || this.settings.isRotateHorizontal()
-                || this.settings.isRotateVertical()
+        if (this.positionManager.isLocationBound() ||
+            this.settings.isRotateHorizontal() ||
+            this.settings.isRotateVertical()
         ) {
             recalculate();
         }
@@ -351,7 +351,8 @@ public abstract class CoreHologram<PAGE extends CoreHologramPage<?>> extends Cor
     }
 
     /**
-     * Shift the player page indexes in visibility manager by the given amount at the given index.
+     * Shift the player page indexes in visibility manager
+     * by the given amount at the given index.
      *
      * @param index The index to start shifting from.
      * @param shift The amount to shift by.

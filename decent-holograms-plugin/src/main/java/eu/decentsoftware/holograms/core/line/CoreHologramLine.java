@@ -142,7 +142,7 @@ public class CoreHologramLine extends CoreHologramComponent {
 
         this.rawContent = content;
 
-        // Conversion to the new renderer is handled by the content parsers
+        // The content parsers handle conversion to the new renderer
         this.plugin.getContentParserManager().parse(this);
     }
 

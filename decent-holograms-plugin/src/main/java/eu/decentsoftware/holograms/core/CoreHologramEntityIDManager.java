@@ -29,7 +29,7 @@ import java.util.List;
  * line entities in a hologram.
  * <p>
  * Entity IDs provided by this class are shared between all pages of a hologram.
- * This means that if you have a hologram with 3 lines and 2 pages, the entity
+ * This means that if you have a hologram with three lines and two pages, the entity
  * ids for the first line on the first page and the first line on the second page
  * will be the same. This makes it possible to use the same entity for the same
  * line on different pages and prevent flickering caused by entity removal and
@@ -51,8 +51,10 @@ public class CoreHologramEntityIDManager {
      * Returns the entity id for the line entity at the given index on the given
      * line.
      * <p>
-     * Each line can have multiple entities. For example, an item line has 2
-     * entities - the item and the armor stand. This method returns the entity id
+     * Each line can have multiple entities.
+     * For example, an item line has two
+     * entities - the item and the armor stand.
+     * This method returns the entity id
      * for the entity at the given index.
      *
      * @param lineIndex       The index of the line.

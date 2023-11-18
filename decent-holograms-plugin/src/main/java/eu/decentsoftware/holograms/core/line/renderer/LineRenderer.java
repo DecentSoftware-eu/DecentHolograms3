@@ -20,7 +20,9 @@ package eu.decentsoftware.holograms.core.line.renderer;
 
 import eu.decentsoftware.holograms.DecentHolograms;
 import eu.decentsoftware.holograms.api.hologram.HologramLineType;
+import eu.decentsoftware.holograms.core.CoreHologram;
 import eu.decentsoftware.holograms.core.CoreHologramEntityIDManager;
+import eu.decentsoftware.holograms.core.CoreHologramPage;
 import eu.decentsoftware.holograms.core.line.CoreHologramLine;
 import eu.decentsoftware.holograms.nms.NMSAdapter;
 import lombok.NonNull;
@@ -59,7 +61,9 @@ public abstract class LineRenderer implements HologramLineRenderer {
      * @return The set of players.
      */
     protected Set<Player> getViewerPlayers() {
-        return this.parent.getParent().getParent().getVisibilityManager().getViewersAsPlayers(this.parent);
+        CoreHologramPage<?> parentPage = this.parent.getParent();
+        CoreHologram<?> parentHologram = parentPage.getParent();
+        return parentHologram.getVisibilityManager().getViewersAsPlayers(this.parent);
     }
 
     /**
@@ -69,7 +73,9 @@ public abstract class LineRenderer implements HologramLineRenderer {
      * @return The entity ID.
      */
     protected int getEntityId(int entityIndex) {
-        CoreHologramEntityIDManager entityIDManager = this.parent.getParent().getParent().getEntityIDManager();
+        CoreHologramPage<?> parentPage = this.parent.getParent();
+        CoreHologram<?> parentHologram = parentPage.getParent();
+        CoreHologramEntityIDManager entityIDManager = parentHologram.getEntityIDManager();
         return entityIDManager.getEntityId(parent.getIndex(), entityIndex);
     }
 

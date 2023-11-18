@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * This class is responsible for managing the visibility of the hologram
  * for certain players. It is able to show/hide the hologram for specific
  * players and to automatically update the visibility according to the
- * holograms settings.
+ * hologram's settings.
  * <p>
  * To modify the visibility of the hologram for a specific player, use
  * {@link #setPlayerVisibility(Player, Visibility)} or {@link #resetPlayerVisibility(Player)}.
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 public interface HologramVisibilityManager {
 
     /**
-     * Set the default visibility of the hologram. This is the visibility that is used for
+     * Set the default visibility of the hologram. This is the visibility used for
      * players that don't have a custom visibility setting.
      *
      * @param visibility The default visibility of the hologram.
@@ -54,7 +54,7 @@ public interface HologramVisibilityManager {
     void setDefaultVisibility(@NonNull Visibility visibility);
 
     /**
-     * Get the default visibility of the hologram. This is the visibility that is used for
+     * Get the default visibility of the hologram. This is the visibility used for
      * players that don't have a custom visibility setting.
      *
      * @return The default visibility of the hologram.
@@ -102,7 +102,7 @@ public interface HologramVisibilityManager {
 
     /**
      * Get the visibility of the hologram for the given player. Player visibility
-     * is always prioritized over the default visibility and the hologram will
+     * is always prioritized over the default visibility, and the hologram will
      * always be visible for the player if their visibility is set to visible.
      *
      * @param player The player to get the visibility for.
